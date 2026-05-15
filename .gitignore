@@ -1,0 +1,15 @@
+# dependencies
+node_modules/
+
+# Nuxt build output
+.nuxt/
+.output/
+dist/
+
+# env files
+.env
+.env.* 
+
+# OS junk
+.DS_Store
+._*
