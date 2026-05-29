@@ -5,7 +5,7 @@ COMPLEMENT = str.maketrans("ACGTRYKMSWBDHVNacgtrykmswbdhvn",
     "TGCAYRMKSWVHDBNtgcayrmkswvhdbn")
     #definiert die Komplementierung der DNA-Basen, damit die reverse complement gebildet werden kann
 
-def read_fasta_sequence(fasta_file: str) -> str:  
+def read_fasta_sequence(fasta_file: str) -> str:
     #liest die Sequenz aus einer FASTA-Datei ein und gibt sie als String zurück
     path = Path(fasta_file)
     if not path.exists():
