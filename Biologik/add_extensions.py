@@ -7,7 +7,7 @@ TYPE_EXTENSIONS = {
 
 
 def add_extensions(primer_fw: str, primer_rv: str, ext_type: str = None, ext_fw: str = None, ext_rv: str = None):
-    #Fügt 5' Extensions zu den Primer Sequenzen hinzu basierend auf einem vordefinierten Typ
+    # Fügt 5' Extensions zu den Primer Sequenzen hinzu basierend auf einem vordefinierten Typ
     primer_fw = primer_fw.upper()
     primer_rv = primer_rv.upper()
 

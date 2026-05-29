@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
 from pathlib import Path
 
-COMPLEMENT = str.maketrans("ACGTRYKMSWBDHVNacgtrykmswbdhvn",
-    "TGCAYRMKSWVHDBNtgcayrmkswvhdbn")
-    #definiert die Komplementierung der DNA-Basen, damit die reverse complement gebildet werden kann
+COMPLEMENT = str.maketrans(
+    "ACGTRYKMSWBDHVNacgtrykmswbdhvn",
+    "TGCAYRMKSWVHDBNtgcayrmkswvhdbn",
+)
+
+# definiert die Komplementierung der DNA-Basen, damit die reverse complement gebildet werden kann
+
 
 def read_fasta_sequence(fasta_file: str) -> str:
     #liest die Sequenz aus einer FASTA-Datei ein und gibt sie als String zurück
@@ -20,12 +24,14 @@ def read_fasta_sequence(fasta_file: str) -> str:
 
     return seq
 
+
 def rc(seq: str) -> str:
-    #wandelt die Sequenz in die reverse complement um
+    # wandelt die Sequenz in die reverse complement um
     return seq.translate(COMPLEMENT)[::-1]
 
+
 def get_primer_sequences(fasta_file: str, primer_length: int = 25):
-    #Extrahiert die Primer Sequenzen aus der FASTA-Datei basierend auf der angegebenen Primerlänge (25bp)
+    # Extrahiert die Primer Sequenzen aus der FASTA-Datei basierend auf der angegebenen Primerlänge (25bp)
 
     seq = read_fasta_sequence(fasta_file)
 

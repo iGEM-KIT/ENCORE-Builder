@@ -12,9 +12,10 @@ HAIRPIN_THRESHOLD = -3000     # Hairpins wichtiger und daher strenger bewertet (
 
 TM_THRESHOLD = 45.0           # Strukturen, die unter 45°C schmelzen, sind meist unkritisch
 
+
 def evaluate_primer(primer_fw: str, primer_rv: str):
-    #Beurteilt ein Primerpaar auf Sekundärstrukturen (Heterodimer, Homodimer, Hairpin)
-    #gibt eine detaillierte Bewertung mit Empfehlung zurück
+    # Beurteilt ein Primerpaar auf Sekundärstrukturen (Heterodimer, Homodimer, Hairpin)
+    # gibt eine detaillierte Bewertung mit Empfehlung zurück
 
     fw = primer_fw.upper()
     rv = primer_rv.upper()

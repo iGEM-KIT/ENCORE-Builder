@@ -2,7 +2,9 @@
 from get_primer import get_primer_sequences
 from evaluate_primer import evaluate_primer
 
-def count_bases(seq: str):#Zählt die Anzahl der Basen A, T, G, C in der Primer Sequenz
+
+def count_bases(seq: str):
+    # Zählt die Anzahl der Basen A, T, G, C in der Primer Sequenz
     seq = seq.upper()
     return {
         "A": seq.count("A"),
@@ -11,12 +13,16 @@ def count_bases(seq: str):#Zählt die Anzahl der Basen A, T, G, C in der Primer 
         "C": seq.count("C"),
     }
 
+
 def tm_wallace(seq: str) -> float: #berechnet die Tm mit der Wallace-Regel: Tm = 2°C * (A+T) + 4°C * (G+C)
     counts = count_bases(seq)
     return 2 * (counts["A"] + counts["T"]) + 4 * (counts["G"] + counts["C"])
 
-def shorten_one_base(primer: str) -> str: #kürzt den Primer um ein Base am 3'-Ende, um die Tm zu senken
+
+def shorten_one_base(primer: str) -> str:
+    # kürzt den Primer um ein Base am 3'-Ende, um die Tm zu senken
     return primer[:-1]
+
 
 def balance_primers(primer1: str, primer2: str, min_len: int = 18, max_diff: float = 2.0, max_tm: float = 72.0):
     'Balanciert die Tm von zwei Primer'
@@ -53,9 +59,10 @@ def balance_primers(primer1: str, primer2: str, min_len: int = 18, max_diff: flo
                 raise ValueError(f"Primer 2 cannot be shortened below {min_len} bp")
             p2 = shorten_one_base(p2)
 
+
 def find_best_primers(fasta_file: str, min_len: int = 18, max_len: int = 25):
-    #bezieht die Gibbs-Energie-Werte für Heterodimer, Homodimer und Hairpin-Strukturen der Primer
-    #bewertet die Primerpaare basierend auf den definierten Grenzwerten
+    # bezieht die Gibbs-Energie-Werte für Heterodimer, Homodimer und Hairpin-Strukturen der Primer
+    # bewertet die Primerpaare basierend auf den definierten Grenzwerten
     best_result = None
     best_issues_count = float('inf')
 
@@ -86,6 +93,7 @@ def find_best_primers(fasta_file: str, min_len: int = 18, max_len: int = 25):
             continue
 
     return best_result
+
 
 def q5_annealing_temp(tm_fwd, tm_rev):
     tm = min(tm_fwd, tm_rev)
