@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
+import primer3
 from get_primer import get_primer_sequences
 from evaluate_primer import evaluate_primer
 
 
-def count_bases(seq: str):
-    # Zählt die Anzahl der Basen A, T, G, C in der Primer Sequenz
+class BalancingError(Exception):
+    """Raised when primers cannot be balanced to meet Tm constraints at a given length."""
+
+
+def count_bases(seq: str) -> dict:
     seq = seq.upper()
     return {
         "A": seq.count("A"),
@@ -14,36 +18,39 @@ def count_bases(seq: str):
     }
 
 
-def tm_wallace(seq: str) -> float: #berechnet die Tm mit der Wallace-Regel: Tm = 2°C * (A+T) + 4°C * (G+C)
+def tm_wallace(seq: str) -> float:
     counts = count_bases(seq)
     return 2 * (counts["A"] + counts["T"]) + 4 * (counts["G"] + counts["C"])
 
 
 def shorten_one_base(primer: str) -> str:
-    # kürzt den Primer um ein Base am 3'-Ende, um die Tm zu senken
     return primer[:-1]
 
 
-def balance_primers(primer1: str, primer2: str, min_len: int = 18, max_diff: float = 2.0, max_tm: float = 72.0):
-    'Balanciert die Tm von zwei Primer'
-    'Primer werden gekürzt, bis sie unter max_tm liegen und die Tm-Differenz innerhalb max_diff ist'
+def balance_primers(
+    primer1: str,
+    primer2: str,
+    min_len: int = 18,
+    max_diff: float = 2.0,
+    max_tm: float = 72.0,
+) -> tuple:
+    """Shorten primers from the 3' end until both are below max_tm and their Tm difference is within max_diff."""
     p1 = primer1.upper()
     p2 = primer2.upper()
 
     while True:
-        tm1 = tm_wallace(p1)
-        tm2 = tm_wallace(p2)
+        tm1 = primer3.bindings.calc_tm(p1)
+        tm2 = primer3.bindings.calc_tm(p2)
 
-        # Zuerst sicherstellen, dass kein Primer das Tm-Maximum überschreitet
         if tm1 > max_tm:
             if len(p1) <= min_len:
-                raise ValueError(f"Primer 1 exceeds {max_tm}°C even at minimum length {min_len}")
+                raise BalancingError(f"Primer 1 exceeds {max_tm}°C even at minimum length {min_len}")
             p1 = shorten_one_base(p1)
             continue
 
         if tm2 > max_tm:
             if len(p2) <= min_len:
-                raise ValueError(f"Primer 2 exceeds {max_tm}°C even at minimum length {min_len}")
+                raise BalancingError(f"Primer 2 exceeds {max_tm}°C even at minimum length {min_len}")
             p2 = shorten_one_base(p2)
             continue
 
@@ -52,17 +59,15 @@ def balance_primers(primer1: str, primer2: str, min_len: int = 18, max_diff: flo
 
         if tm1 > tm2:
             if len(p1) <= min_len:
-                raise ValueError(f"Primer 1 cannot be shortened below {min_len} bp")
+                raise BalancingError(f"Primer 1 cannot be shortened below {min_len} bp")
             p1 = shorten_one_base(p1)
         else:
             if len(p2) <= min_len:
-                raise ValueError(f"Primer 2 cannot be shortened below {min_len} bp")
+                raise BalancingError(f"Primer 2 cannot be shortened below {min_len} bp")
             p2 = shorten_one_base(p2)
 
 
 def find_best_primers(fasta_file: str, min_len: int = 18, max_len: int = 25):
-    # bezieht die Gibbs-Energie-Werte für Heterodimer, Homodimer und Hairpin-Strukturen der Primer
-    # bewertet die Primerpaare basierend auf den definierten Grenzwerten
     best_result = None
     best_issues_count = float('inf')
 
@@ -89,13 +94,13 @@ def find_best_primers(fasta_file: str, min_len: int = 18, max_len: int = 25):
             if result["valid"]:
                 break
 
-        except ValueError:
+        except BalancingError:
             continue
 
     return best_result
 
 
-def q5_annealing_temp(tm_fwd, tm_rev):
+def q5_annealing_temp(tm_fwd: float, tm_rev: float) -> float:
     tm = min(tm_fwd, tm_rev)
     if tm >= 70:
         offset = 2
