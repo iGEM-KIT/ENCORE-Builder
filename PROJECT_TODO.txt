@@ -1,0 +1,182 @@
+===============================================================================
+ ENCORE Builder — PROJECT TODO
+ Stand: 2026-07-16
+===============================================================================
+
+Dieses Dokument listet die offenen Punkte des Projekts. In diesem Schritt wurde
+NUR das Golden-Gate-Backend (Logik + API) neu gebaut; der Rest des Projekts ist
+noch ein Gerüst. Reihenfolge grob nach Priorität.
+
+
+-------------------------------------------------------------------------------
+ 0. WAS IN DIESEM SCHRITT NEU DAZUKAM (zur Orientierung)
+-------------------------------------------------------------------------------
+Backend-Logik an einem Ort:  server/services/goldenGate/
+  - data.js       Libraries + Golden-Gate-Konstanten (Single Source of Truth)
+  - sequence.js   DNA-Helfer + Cargo-Validierung (Stopcodon-Erkennung)
+  - design.js     Engine: Level 0 (mit Typ-Overhangs), Level 1/2, Primer,
+                  Plate-Plan, Order-Liste, FASTA
+  - index.js      Sammel-Export + getLibraries()
+
+API-Endpunkte (Nuxt/Nitro):
+  - GET  /api/libraries        -> Nanokompartments, Cargo-Presets, Linker, ...
+  - POST /api/cargo/validate   -> Cargo-CDS prüfen (Stopcodons etc.)
+  - POST /api/design           -> komplettes Golden-Gate-Design aus den
+                                  3 Entscheidungen (NC, Cargo, C/N-Fusion)
+
+Frontend-Anbindung (minimal, additiv, bricht nichts):
+  - public/encore-builder.html: unten ein optionaler Block window.ENCORE_API
+    (Health-Check + fetch-Helfer). Der Prototyp läuft weiter standalone.
+
+WICHTIG: Konnte in dieser Umgebung NICHT ausgeführt werden, weil weder Node
+noch pnpm installiert/auffindbar sind. Logik wurde per Code-Review gegen den
+Prototyp verifiziert. Bitte lokal testen (siehe Abschnitt 8).
+
+
+-------------------------------------------------------------------------------
+ 1. ECHTE BIOLOGIE-DATEN  (aktuell Platzhalter!)  — HÖCHSTE PRIORITÄT
+-------------------------------------------------------------------------------
+[ ] Standard-Modul-SEQUENZEN sind derzeit Platzhalter. Für TP, Linker, Shell,
+    Promoter und NCS gibt es noch KEINE echten DNA-Sequenzen. Der FASTA-Export
+    erzeugt für diese Teile deterministische Dummy-Sequenzen
+    (design.js -> placeholderSeq). -> Echte Sequenzen der ENCORE-Toolbox
+    hinterlegen (siehe Abschnitt 5, DB).
+[ ] Typ-Overhangs (data.js -> TYPE_OVERHANGS) und die Level-1/2-Flanken
+    (CARGO_L1_FLANK, NC_L1_FLANK, PROMO_FLANK) stammen aus dem Prototyp-Diagramm.
+    -> Gegen die REALE Toolbox verifizieren (4-nt-Fusionsstellen müssen exakt
+    stimmen, sonst ligiert die Assembly nicht).
+[ ] Nominale bp-Längen (data.js -> NOMINAL_BP: TP=54, PROMO=680, NCS=15) und
+    shellBp in NANOCOMPARTMENTS sind Näherungen für die Grafik. -> Durch echte
+    Längen ersetzen.
+[ ] Reconcile mit der Python-Pipeline: Biologik/add_extensions.py hat eigene
+    Overhang-Kassetten (TYPE_EXTENSIONS: type0.3 / type1.3, inkl. BbsI/BsaI).
+    JS-TYPE_OVERHANGS und Python-TYPE_EXTENSIONS müssen DIESELBE Toolbox
+    beschreiben. -> abgleichen und vereinheitlichen.
+
+
+-------------------------------------------------------------------------------
+ 2. PRIMER / Tm — Biologik-Pipeline (Python, primer3) anbinden
+-------------------------------------------------------------------------------
+Aktuell: server/services/goldenGate/design.js -> makePrimerPair() nutzt nur die
+vereinfachte Wallace-Regel (2/4 °C) — reine Vorschau, wie im Prototyp.
+
+[ ] Echte Primer aus Biologik/ (primer3) verwenden:
+    - calc_tm.py           Nearest-Neighbor-Tm + Balancing + Q5-Annealing-Temp
+    - evaluate_primer.py   Dimer-/Hairpin-Checks
+    - add_extensions.py    Golden-Gate-Overhang-Extensions
+    - primer_pipeline.py   Orchestrator (CLI: FASTA rein -> bester Primer)
+[ ] Integrationsweg wählen (eine Option):
+    (a) Python als Subprozess aus einem Nitro-Endpoint aufrufen
+        (POST /api/primer -> ruft primer_pipeline.py, parst dessen Ausgabe).
+        primer_pipeline.py auf JSON-Ausgabe erweitern (statt print).
+    (b) Python-Microservice (FastAPI) daneben betreiben, Nitro proxied.
+    (c) Tm-Logik nach JS portieren (aufwändig; primer3 hat kein direktes
+        JS-Äquivalent für die Thermodynamik).
+    -> Empfehlung: (a) für den Anfang, Ausgabe von primer_pipeline.py auf JSON
+       umstellen.
+[ ] Der Prototyp verweist bereits auf "POST /api/primer" (Info-Box in
+    encore-builder.html, Abschnitt 4.3). Diesen Endpoint entsprechend bauen.
+
+
+-------------------------------------------------------------------------------
+ 3. DOMESTIZIERUNG / interne Schnittstellen (fehlt komplett)
+-------------------------------------------------------------------------------
+Die UI nennt "BbsI domestication -> BsaI assembly", aber es wird NICHTS geprüft.
+
+[ ] Cargo-CDS auf interne BsaI- (GGTCTC) und BbsI-Sites (GAAGAC) scannen.
+[ ] Wenn interne Sites vorhanden: Domestizierung planen (stille Mutation /
+    Split-Primer), damit die Assembly nicht an unerwünschten Sites schneidet.
+[ ] Ergebnis in die Cargo-Validierung (sequence.js -> validateCargo) und in die
+    Design-Warnungen aufnehmen.
+
+
+-------------------------------------------------------------------------------
+ 4. FRONTEND vollständig anbinden (optional, aktuell bewusst minimal)
+-------------------------------------------------------------------------------
+Der Prototyp public/encore-builder.html rechnet noch INLINE. window.ENCORE_API
+(unten im File) stellt die Verbindung bereit, wird aber noch nicht genutzt.
+
+[ ] Dropdowns aus dem Backend füllen: in initNcDropdown()/initPresetChips()/
+    initLinkerDropdown() statt der Konstanten NANOCOMPARTMENTS/CARGO_PRESETS/
+    LINKERS -> await window.ENCORE_API.libraries() (mit Fallback auf inline).
+[ ] Cargo-Prüfung serverseitig: in handleCargoInput() zusätzlich
+    window.ENCORE_API.validateCargo(seq) aufrufen.
+[ ] Design serverseitig: in compute() -> window.ENCORE_API.designFromState(state)
+    und renderAll() auf die API-Antwort mappen (Response-Shape spiegelt bereits
+    buildModel()/compute()). FASTA kann dann aus design.fasta kommen.
+[ ] Grundsatzentscheidung: statischer HTML-Prototyp beibehalten ODER in echte
+    Nuxt-Vue-Komponenten (app/pages, app/components) überführen? Aktuell zeigt
+    app/app.vue nur <NuxtWelcome/>; die eigentliche UI liegt statisch in public/.
+
+
+-------------------------------------------------------------------------------
+ 5. DATENBANK / PERSISTENZ  (Schema ist nur Platzhalter)
+-------------------------------------------------------------------------------
+[ ] server/db/database.sql enthält nur eine Beispiel-Tabelle "posts".
+    -> Echtes Schema entwerfen:
+       - nanocompartments (id, label, T, dia, tp, shell, shell_bp, sequenzen)
+       - modules / level0_parts (typ, rolle, overhang5, overhang3, seq, well)
+       - linkers, promoters
+       - saved_designs / constructs (Nutzer-Designs speichern)
+[ ] prisma/ ist leer (nur migrations/.gitkeep). Prisma-Schema + erste Migration
+    anlegen ODER auf reines SQL/anderen Client festlegen.
+[ ] getLibraries() (index.js) und die Lookups in data.js so umstellen, dass sie
+    aus der DB lesen; data.js wird dann zu Seed-Daten.
+[ ] Decision 1.2 "neue Nanokompartments hinzufügen" braucht einen Schreibpfad
+    (POST /api/nanocompartments) inkl. Validierung — und damit Auth (Abschnitt 7).
+
+
+-------------------------------------------------------------------------------
+ 6. NANOKOMPARTMENT-FILTER (Vorstufe zu Entscheidung 1)
+-------------------------------------------------------------------------------
+[ ] Die UI verweist auf ein SEPARATES "nanocompartment filter"-Tool, das dem
+    Nutzer hilft, das passende NC für sein Cargo zu finden ("Before you start").
+    Dieses Tool existiert noch nicht. -> Scope klären: eigenes Modul? Kriterien?
+    (Größe, Cargo-Kapazität, Thermostabilität, T-Zahl ...)
+
+
+-------------------------------------------------------------------------------
+ 7. AUTH / USER  (leer)
+-------------------------------------------------------------------------------
+[ ] server/api/auth/ und server/api/user/ sind leer. Nur nötig, wenn Nutzer
+    Designs speichern oder neue NCs beitragen können sollen. Sonst vorerst
+    weglassen.
+
+
+-------------------------------------------------------------------------------
+ 8. SETUP / DEVOPS  (blockiert lokales Testen!)
+-------------------------------------------------------------------------------
+[ ] Node.js + pnpm sind auf der aktuellen Maschine NICHT installiert/auffindbar.
+    -> Node LTS (>=20) installieren, dann:
+         corepack enable
+         pnpm install
+         pnpm dev            # http://localhost:3000
+       UI-Prototyp:          http://localhost:3000/encore-builder.html
+       API-Test:             http://localhost:3000/api/libraries
+[ ] Beispiel-Request:
+       POST http://localhost:3000/api/design
+       { "nanocompartment":"tmari", "cargoSeq":"ATG...(kein Stopp am Ende)",
+         "fusion":"C", "cargoLabel":"GFP", "fasta":true }
+[ ] Python-Umgebung für Biologik/: pip install -r Biologik/requirements.txt
+    (primer3-py). Für Abschnitt 2 relevant.
+
+
+-------------------------------------------------------------------------------
+ 9. TESTS  (keine vorhanden)
+-------------------------------------------------------------------------------
+[ ] tests/ ist leeres Gerüst. Unit-Tests für die Engine ergänzen:
+    - sequence.js: cleanSeq, reverseComplement, validateCargo (Stopp am Ende
+      blockt, interner Stopp warnt, GC/aa korrekt)
+    - design.js: Level-0-Layout C vs. N, Typ-Overhangs pro Slot, 10 Level-0-
+      Teile, Primer-Balancing, unbekanntes NC wirft 400
+[ ] Integrationstests für die 3 API-Endpoints (tests/integration/api).
+[ ] Test-Runner wählen (Vitest passt gut zu Nuxt) + package.json "test"-Script.
+
+
+-------------------------------------------------------------------------------
+ 10. VISUALISIERUNG / EXPORT (Feinschliff)
+-------------------------------------------------------------------------------
+[ ] Level-2-Plasmidkarte (encore-builder.html, Abschnitt 4.4): Origin- und
+    Marker-Größen sind Platzhalter, bis die finale pESC-Variante feststeht.
+[ ] Optional: GenBank-/SBOL-Export zusätzlich zu FASTA.
+===============================================================================
