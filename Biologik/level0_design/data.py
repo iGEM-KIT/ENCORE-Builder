@@ -41,8 +41,6 @@ NOMINAL_BP = {
 # Bibliotheken für Nanokompartimente
 # Jedes vordefinierte Nanokompartment hat: ID (interne Kommunikation); Label (angezeigt in der Benutzeroberfäche);
 # Temperatur T; Durchmesser dia; Targeting Peptide tp; Protein, aus dem Nanokompartment Hülle besteht Shell 
-# ACHTUNG!!!!!!!! Eingaben beispielhaft. Als Nanokompartmente werden aktuell Bakterien verwendet.
-# Was sind unsere drei Beispiel Nanokompartmente? 
 
 NANOCOMPARTMENTS = [
     {"id": "tmari", "label": "Thermotoga maritima", "T": 1, "dia": "24 nm", "tp": "TP-Tm", "shell": "E-Tm", "shellBp": 516},
