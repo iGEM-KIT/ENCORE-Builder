@@ -52,7 +52,7 @@ def build_modules(nc: dict, link: dict, cargo_label: str, cargo_bp: int, fusion:
         return {"role": "surface", "label": label, "kind": "ncs", "note": "open · e.g. SpyCatcher", "bp": NOMINAL_BP["NCS"], "surface": True}
 
     cargo_layout = [tp, lk, cg, ncs(), ncs()] if fusion == "C" else [ncs(), ncs(), cg, lk, tp]
-    # Eine List-Comprehension baut aus einer Liste schnell eine neue Liste mit verarbeiteten Elementen.
+    # Eine List-Comprehension baut aus einer Liste schnell eine Liste mit verarbeiteten Elementen.
     cargo_module = [level0_part(index + 1, spec) for index, spec in enumerate(cargo_layout)]
 
     nc_layout = [surf(), surf(), {"role": "shell", "label": nc["shell"], "kind": "shell", "note": f"{nc['shellBp']} bp", "bp": nc["shellBp"]}, surf("NCS*"), surf()]
@@ -65,17 +65,20 @@ def make_primer_pair(sequence: str, oh_f: str, oh_r: str):
     # len_f und len_r sind die Annealing-Längen der Primer. Sie werden angepasst, damit die Tm-Werte passend sind.
     len_f = 22
     len_r = 22
+    balanced = False
     for _ in range(12):
         # Eine for-Schleife wiederholt denselben Schritt mehrfach, bis sie die gewünschte Anzahl erreicht hat.
         tm_f = wallace_tm(sequence[:len_f])
         tm_r = wallace_tm(reverse_complement(sequence[-len_r:]))
         if abs(tm_f - tm_r) <= 5:
+            balanced = True
             break
         if tm_f > tm_r and len_f > 16:
             len_f -= 1
         elif tm_r > tm_f and len_r > 16:
             len_r -= 1
         else:
+            # Abbruch, weil keine sinnvolle Anpassung mehr möglich
             break
 
     anneal_f = sequence[:len_f]
@@ -84,10 +87,24 @@ def make_primer_pair(sequence: str, oh_f: str, oh_r: str):
     def build(overhang: str, anneal: str) -> str:
         return f"{BSAI_PRIMER_PREFIX}{overhang}{anneal}"
 
-    return [
+    hint = None
+    if not balanced:
+        hint = (
+            "Hinweis: Die automatische Anpassung der Primer-Längen konnte die Schmelztemperaturen nicht auf "
+            "weniger als 5°C Differenz bringen. Überprüfe die Primer manuell oder passe die Sequenz/Annealing-Längen an."
+        )
+
+    primers = [
         {"name": "Cargo_F", "role": "forward", "overhang": oh_f, "anneal": anneal_f, "full": build(oh_f, anneal_f), "length": len(build(oh_f, anneal_f)), "tm": wallace_tm(anneal_f)},
         {"name": "Cargo_R", "role": "reverse", "overhang": oh_r, "anneal": anneal_r, "full": build(oh_r, anneal_r), "length": len(build(oh_r, anneal_r)), "tm": wallace_tm(anneal_r)},
     ]
+
+    if hint:
+        # Ergänze ein Hinweisfeld in beiden Primer-Einträgen, damit der UI-Nutzer informiert wird.
+        for p in primers:
+            p["note"] = hint
+
+    return primers
 
 
 def build_plate_plan(nc: dict, link: dict, cargo_label: str):
@@ -100,6 +117,10 @@ def build_plate_plan(nc: dict, link: dict, cargo_label: str):
         {"well": "B2", "kind": "promo", "name": "GAL1-10", "tip": "P"},
         {"well": "C1", "kind": "ncs", "name": "NCS", "tip": "N"},
         {"well": "C2", "kind": "ncs", "name": "NCS", "tip": "N"},
+        {"well": "C3", "kind": "ncs", "name": "NCS", "tip": "N"},
+        {"well": "C4", "kind": "ncs", "name": "NCS", "tip": "N"},
+        {"well": "C5", "kind": "ncs", "name": "NCS", "tip": "N"},
+        {"well": "C6", "kind": "ncs", "name": "NCS", "tip": "N"},
     ]
 
 
@@ -156,8 +177,8 @@ def design_construct(decisions: dict = None):
         "cargo": {"label": cargo_label, "sequence": cargo["clean"], "bp": cargo_bp, "aa": cargo["aa"], "gc": cargo["gc"], "validation": cargo},
         "fusion": fusion,
         "level0": {"total": len(cargo_module) + len(nc_module), "cargoModule": cargo_module, "ncModule": nc_module},
-        "level1": {"cargoModule": {"role": f"{fusion}-terminal cargo module", "enzyme": "BsaI", "flanks": {"left": CARGO_L1_FLANK[0], "right": CARGO_L1_FLANK[1]}, "parts": cargo_module}, "ncModule": {"role": "nanocompartment module", "enzyme": "BsaI", "flanks": {"left": NC_L1_FLANK[0], "right": NC_L1_FLANK[1]}, "parts": nc_module}},
-        "level2": {"promoter": {"id": promoter_entry["id"], "label": promoter_entry["label"], "kind": "promo", "bp": NOMINAL_BP["PROMO"], "flanks": {"left": PROMO_FLANK[0], "right": PROMO_FLANK[1]}}, "totalLevel0": len(cargo_module) + len(nc_module), "layout": {"left": {"module": "cargoModule", "strand": "antisense (−)", "direction": "3' ◄ 5'"}, "centre": {"module": "promoter", "label": promoter_entry["label"]}, "right": {"module": "ncModule", "strand": "sense (+)", "direction": "5' ► 3'"}}},
+        "level1": {"cargoModule": {"role": f"{fusion}-terminal cargo module", "enzyme": "BsaI", "flanks": {"left": CARGO_L1_FLANK[0], "right": CARGO_L1_FLANK[1]}, "parts": cargo_module}, "ncModule": nc_module},
+        "level2": {"promoter": {"id": promoter_entry["id"], "label": promoter_entry["label"], "kind": "promo", "bp": NOMINAL_BP["PROMO"], "flanks": {"left": PROMO_FLANK[0], "right": PROMO_FLANK[1]}}},
         "primers": primers,
         "platePlan": build_plate_plan(nc, link, cargo_label),
         "orderList": build_order_list(nc, link, cargo_module, cargo_label, cargo_bp, cargo["clean"]),
