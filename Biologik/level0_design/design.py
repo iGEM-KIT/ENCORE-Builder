@@ -20,7 +20,7 @@ from .sequence import reverse_complement, validate_cargo, wallace_tm
 
 
 def level0_part(slot: int, spec: dict) -> dict:
-    # Eine Funktion definiert ein eigenes kleines Verfahren, hier die Erstellung eines Level-0-Parts.
+    # Funktion zur Erstellung eines Level-0-Moduls.
     # TYPE_OVERHANGS enthält die festen Überhänge für jeden Slot eines Level-0-Parts.
     overhang5, overhang3 = TYPE_OVERHANGS[slot]
     return {
@@ -39,7 +39,6 @@ def level0_part(slot: int, spec: dict) -> dict:
 
 
 def build_modules(nc: dict, link: dict, cargo_label: str, cargo_bp: int, fusion: str):
-    # Eine Funktion kann andere Funktionen oder Datenstrukturen zusammenbringen.
     # Ein Modul besteht aus mehreren Level-0-Teilen. Hier werden die Bausteine für Cargo- und NC-Modul aufgebaut.
     tp = {"role": "targeting-peptide", "label": nc["tp"], "kind": "t1", "note": "Targeting peptide", "bp": NOMINAL_BP["TP"]}
     lk = {"role": "linker", "label": link["label"], "kind": "t2", "note": f"{link['aa']} aa", "bp": link["bp"]}
@@ -130,7 +129,6 @@ def build_order_list(nc: dict, link: dict, cargo_module: List[dict], cargo_label
 
 def design_construct(decisions: dict = None):
     # Der Hauptaufbau: Aus den Eingaben wird ein kompletter Design-Plan erzeugt.
-    # Diese Funktion ist der Einstiegspunkt für die gesamte Logik.
     decisions = decisions or {}
     nc = find_nanocompartment(decisions.get("nanocompartment"))
     if not nc:
