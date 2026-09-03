@@ -20,7 +20,7 @@ from .sequence import reverse_complement, validate_cargo, wallace_tm
 
 
 def level0_part(slot: int, spec: dict) -> dict:
-    # Funktion zur Erstellung eines Level-0-Moduls.
+    # Funktion zur Erstellung eines Level-0-Moduls, eine Art Steckbrief.
     # TYPE_OVERHANGS enthält die festen Überhänge für jeden Slot eines Level-0-Parts.
     overhang5, overhang3 = TYPE_OVERHANGS[slot]
     return {
