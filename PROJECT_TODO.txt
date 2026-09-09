@@ -25,7 +25,7 @@ API-Endpunkte (Nuxt/Nitro):
                                   3 Entscheidungen (NC, Cargo, C/N-Fusion)
 
 Frontend-Anbindung (minimal, additiv, bricht nichts):
-  - public/encore-builder.html: unten ein optionaler Block window.ENCORE_API
+  - frontend/encore-builder.html: unten ein optionaler Block window.ENCORE_API
     (Health-Check + fetch-Helfer). Der Prototyp läuft weiter standalone.
 
 WICHTIG: Konnte in dieser Umgebung NICHT ausgeführt werden, weil weder Node
@@ -93,7 +93,7 @@ Die UI nennt "BbsI domestication -> BsaI assembly", aber es wird NICHTS geprüft
 -------------------------------------------------------------------------------
  4. FRONTEND vollständig anbinden (optional, aktuell bewusst minimal)
 -------------------------------------------------------------------------------
-Der Prototyp public/encore-builder.html rechnet noch INLINE. window.ENCORE_API
+Der Prototyp frontend/encore-builder.html rechnet noch INLINE. window.ENCORE_API
 (unten im File) stellt die Verbindung bereit, wird aber noch nicht genutzt.
 
 [ ] Dropdowns aus dem Backend füllen: in initNcDropdown()/initPresetChips()/

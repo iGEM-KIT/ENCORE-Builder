@@ -14,7 +14,7 @@
  *   Level 2 : cargo module  <- promoter ->  NC module  (bidirectional).
  *
  * This is a pure, dependency-free port of the prototype logic
- * (public/encore-builder.html) so the same result can be produced server-side.
+ * (frontend/encore-builder.html) so the same result can be produced server-side.
  */
 
 import {

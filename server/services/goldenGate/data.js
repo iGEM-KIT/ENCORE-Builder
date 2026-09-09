@@ -5,7 +5,7 @@
  * libraries the user picks from (decisions 1 + 2) and the fixed 4 nt fusion
  * overhangs that define how Level 0 parts ligate into Level 1 modules.
  *
- * Keep this file in sync with the prototype UI (public/encore-builder.html).
+ * Keep this file in sync with the prototype UI (frontend/encore-builder.html).
  * When the real toolbox parts / sequences are known they should move into the
  * database (see PROJECT_TODO.txt) — this file then becomes the seed data.
  */
