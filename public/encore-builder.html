@@ -1445,3 +1445,39 @@ window.addEventListener('scroll',updateProgress,{passive:true}); window.addEvent
 initNcDropdown(); initPresetChips(); initLinkerDropdown(); initMarkerDropdown(); applyLocks(); updateStepperLocks(); updateProgress();
 
 </script>
+
+<!-- ============================================================= -->
+<!-- OPTIONAL backend connection layer. Additive & non-breaking:   -->
+<!-- the prototype above keeps working standalone (inline logic).  -->
+<!-- When this page is served by the Nuxt server, window.ENCORE_API -->
+<!-- talks to the real Golden Gate engine (server/services/         -->
+<!-- goldenGate). See PROJECT_TODO.txt for how to fully switch the  -->
+<!-- prototype over to backend-driven data.                         -->
+<!-- ============================================================= -->
+<script>
+window.ENCORE_API = (function(){
+  const base = '/api';
+  const json = async (url, opts) => {
+    const r = await fetch(url, opts);
+    if(!r.ok){ const e = await r.json().catch(()=>({})); throw Object.assign(new Error(e.statusMessage||('HTTP '+r.status)), {status:r.status, data:e.data}); }
+    return r.json();
+  };
+  const post = (path, body) => json(base+path, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body||{}) });
+  const api = {
+    available: false,
+    libraries: () => json(base+'/libraries'),
+    validateCargo: (cargoSeq) => post('/cargo/validate', { cargoSeq }),
+    design: (decisions) => post('/design', decisions),
+    // Convenience: translate the prototype's `state` object into a design request.
+    designFromState: (s) => post('/design', {
+      nanocompartment: s.nc && s.nc.id, cargoSeq: s.cargoSeq, cargoLabel: s.cargoLabel,
+      fusion: s.fusion, linker: s.linker, promoter: s.promoter, fasta: true,
+    }),
+  };
+  // Passive health check — never alters the prototype's behaviour.
+  api.libraries()
+    .then(()=>{ api.available = true; console.info('[ENCORE] backend connected — window.ENCORE_API ready'); })
+    .catch(()=>{ console.info('[ENCORE] backend not reachable — prototype running standalone (inline logic)'); });
+  return api;
+})();
+</script>
