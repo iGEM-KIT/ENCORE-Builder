@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from __future__ import annotations
 
 # 5' overhang sequences for Golden Gate assembly (BsaI-based cloning).
 # Keys are restriction cassette versions; values are (forward, reverse) extensions.

@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 import primer3
-from get_primer import get_primer_sequences
-from evaluate_primer import evaluate_primer
+
+from .evaluate_primer import evaluate_primer
+from .get_primer import resolve_sequence, slice_primers
 
 
 class BalancingError(Exception):
@@ -67,13 +70,27 @@ def balance_primers(
             p2 = shorten_one_base(p2)
 
 
-def find_best_primers(fasta_file: str, min_len: int = 18, max_len: int = 25):
+def find_best_primers(
+    fasta_file: str | None = None,
+    min_len: int = 18,
+    max_len: int = 25,
+    *,
+    sequence: str | None = None,
+):
+    """Beste Primerlänge suchen — akzeptiert FASTA-Datei ODER Sequenz-String.
+
+    Die Sequenz wird einmal aufgelöst und danach nur noch geschnitten (vorher
+    wurde die FASTA-Datei in jedem Schleifendurchlauf neu von der Platte
+    gelesen). Ergebnis identisch.
+    """
+    seq = resolve_sequence(sequence=sequence, fasta_file=fasta_file)
+
     best_result = None
     best_issues_count = float('inf')
 
     for primer_len in range(max_len, min_len - 1, -1):
         try:
-            sense, antisense_rc = get_primer_sequences(fasta_file, primer_length=primer_len)
+            sense, antisense_rc = slice_primers(seq, primer_length=primer_len)
             primer_fw, primer_rv, tm_fw, tm_rv = balance_primers(sense, antisense_rc)
             result = evaluate_primer(primer_fw, primer_rv)
 
