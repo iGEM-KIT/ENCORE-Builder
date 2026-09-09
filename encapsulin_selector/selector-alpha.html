@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Open Encapsulin Selector — Alpha</title>
+  <link rel="stylesheet" href="selector-alpha.css">
+</head>
+<body>
+  <main class="selector-shell">
+    <header class="selector-header">
+      <div>
+        <p class="eyebrow">OPEN ENCAPSULIN DATABANK</p>
+        <h1>Encapsulin Selector <span>Alpha</span></h1>
+        <p class="lede">Search a known encapsulin or find assemblies by structural requirements.</p>
+      </div>
+      <div class="dataset-badge" id="datasetBadge"></div>
+    </header>
+
+    <div class="alpha-note" id="alphaNote"></div>
+
+    <nav class="mode-tabs" aria-label="Selector modes">
+      <button class="mode-tab active" data-mode="search">Search</button>
+      <button class="mode-tab" data-mode="finder">Find a capsule</button>
+    </nav>
+
+    <section id="searchMode" class="mode-panel">
+      <div class="search-box">
+        <label for="globalSearch">Organism, accession, protein, gene, strain or construct</label>
+        <input id="globalSearch" type="search" placeholder="e.g. Thermotoga maritima, Q9WZP2, encA">
+        <p class="hint">Direct search returns the candidate and all curated assemblies linked to it.</p>
+      </div>
+      <div id="searchSummary" class="summary-line"></div>
+      <div id="searchResults" class="results-stack"></div>
+    </section>
+
+    <section id="finderMode" class="mode-panel hidden">
+      <div class="finder-grid">
+        <aside class="filter-panel">
+          <h2>Required</h2>
+
+          <div class="field-group">
+            <label>Shell diameter (nm)</label>
+            <div class="two-col">
+              <input id="diameterMin" type="text" inputmode="decimal" placeholder="Min">
+              <input id="diameterMax" type="text" inputmode="decimal" placeholder="Max">
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="tNumber">T-number</label>
+            <select id="tNumber">
+              <option value="">Any</option>
+              <option value="1">T=1</option>
+              <option value="3">T=3</option>
+              <option value="4">T=4</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label for="variantStatus">Variant status</label>
+            <select id="variantStatus">
+              <option value="">Any</option>
+              <option value="wild_type">WT only</option>
+              <option value="engineered">Engineered only</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label for="symmetry">Assembly symmetry</label>
+            <select id="symmetry">
+              <option value="">Any</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label for="subunitCount">Shell subunit count</label>
+            <select id="subunitCount">
+              <option value="">Any</option>
+            </select>
+          </div>
+
+          <label class="check-row">
+            <input id="structureRequired" type="checkbox">
+            <span>Structure ID recorded</span>
+          </label>
+
+          <label class="check-row">
+            <input id="includeUnknown" type="checkbox" checked>
+            <span>Include assemblies with missing required data as potential matches</span>
+          </label>
+
+          <hr>
+
+          <h2>Preferred</h2>
+          <div class="field-group">
+            <label for="targetDiameter">Prefer diameter close to (nm)</label>
+            <input id="targetDiameter" type="text" inputmode="decimal" placeholder="e.g. 30">
+          </div>
+
+          <label class="check-row">
+            <input id="preferStructure" type="checkbox">
+            <span>Prefer assemblies with a recorded structure</span>
+          </label>
+
+          <button id="searchCapsules" class="primary-btn">Search capsules</button>
+          <div id="filterError" class="filter-error hidden"></div>
+
+          <div class="ranking-note">
+            Ranking is transparent: exact matches first; then closest preferred diameter; then structure preference; then assembly ID.
+          </div>
+
+          <button id="clearFilters" class="secondary-btn">Clear filters</button>
+        </aside>
+
+        <div>
+          <div id="finderSummary" class="summary-line"></div>
+          <div id="matchResults" class="results-stack"></div>
+          <div id="potentialBlock">
+            <h2 class="section-title">Potential matches</h2>
+            <p class="hint">These are not known to fail the filters; one or more required properties are unreported.</p>
+            <div id="potentialResults" class="results-stack"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="selector-data.js"></script>
+  <script src="selector-alpha.js"></script>
+</body>
+</html>
