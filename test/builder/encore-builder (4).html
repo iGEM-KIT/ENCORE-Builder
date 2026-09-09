@@ -1,0 +1,1447 @@
+<!-- ENCORE Builder v6 — English UI, toolKIT branding, dark mode, dropdown NC, well-plate pick plan, info bubbles -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ENCORE toolKIT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* ============ THEME TOKENS ============ */
+  :root{
+    /* The ENTIRE palette is colour-blind-safe by default — there is no separate CB
+       mode to switch on. Chrome (header, accents, links, buttons) uses dark blue
+       instead of forest green, CB blue instead of turquoise, and CB orange. */
+    --ink:#0d1b26; --ink-soft:#37454f;
+    --forest:#12283a; --forest-deep:#0c1c29;
+    --teal:#0072B2; --teal-deep:#005f93; --teal-soft:#dbe9f3;
+    --orange:#E69F00; --orange-ink:#3a2200; --orange-deep:#8a5a00;
+    --paper:#F3F6F3; --card:#FFFFFF; --card-2:#FAFCFA;
+    --line:#D7E1DB; --line-soft:#E9EFEB; --muted:#5C6B62;
+    --shadow:0 1px 2px rgba(20,38,32,.06), 0 10px 30px rgba(20,38,32,.07);
+    --radius:14px; --hdr-h:64px; --stepper-h:74px; --side-w:214px;
+    /* Module type colours — Okabe-Ito. Each visual role gets a maximally distinct
+       hue AND a spread in lightness, so the palette holds up for every CVD type
+       incl. monochromacy. Colour stays a REDUNDANT cue: every block, legend row
+       and well carries its text label as well. Each ink clears WCAG AA on its
+       own fill.
+         Type 1 = sky · Type 2 = yellow · Type 3 = vermillion · Type 4 = purple
+         Type 5 = orange · shell = green · promoter = blue · NCS = grey */
+    --t1:#56B4E9; --t2:#F0E442; --t3:#D55E00; --t4:#CC79A7; --t5:#E69F00;
+    --shell:#009E73; --promo:#0072B2; --ncs:#9AA6A0;
+    --t1-ink:#06202b; --t2-ink:#2a2600; --t3-ink:#2a1200; --t4-ink:#2e0f22;
+    --t5-ink:#241a00; --shell-ink:#04120d; --promo-ink:#ffffff; --ncs-ink:#1f2b26;
+    /* Surface-display marker (e.g. SpyCatcher) — Okabe-Ito's 8th colour (black),
+       so it never collides with the Type 4 purple inside the same module row.
+       Inverted under [data-theme="dark"] to stay distinct on a dark card. */
+    --mark:#000000; --mark-ink:#ffffff;
+  }
+  /* Darkmode */
+  [data-theme="dark"]{
+    --ink:#E7EEF4; --ink-soft:#B7C2CC;
+    --forest:#0c1a29; --forest-deep:#08131f;
+    --teal:#3fa9d8; --teal-deep:#7fc4ea; --teal-soft:#0e2a3d;
+    --orange:#F0A93A; --orange-deep:#F0A93A;
+    --paper:#0d1814; --card:#13211c; --card-2:#172821;
+    --line:#26362f; --line-soft:#1d2c25; --muted:#8da095;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 32px rgba(0,0,0,.35);
+    --mark:#EDEDED; --mark-ink:#111111;
+  }
+
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  html,body{margin:0}
+  body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;
+    font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;transition:background .25s,color .25s}
+  h1,h2,h3,h4,.display{font-family:'Space Grotesk',sans-serif;letter-spacing:-.01em}
+  .mono{font-family:'JetBrains Mono',monospace}
+  img,svg{max-width:100%}
+
+  /* ============ HEADER ============ */
+  header{background:linear-gradient(160deg,var(--forest-deep),var(--forest));color:#E9F2EE;
+    padding:0 24px;height:var(--hdr-h);display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:40}
+  .brand{display:flex;align-items:center;gap:11px;min-width:0}
+  .brand-symbol{height:34px;width:auto;flex:none;display:block}
+  .brand-wordmark{height:30px;width:auto;flex:none;display:block;color:#fff}
+  .brand-sub{font-size:12.5px;color:#aebfd2;letter-spacing:.01em;
+    padding-left:11px;margin-left:3px;border-left:1px solid rgba(255,255,255,.2);line-height:1.2;font-weight:500}
+  .brand-sub b{color:#E69F00;font-weight:700}
+  @media(max-width:600px){.brand-sub{display:none}}
+  header .spacer{flex:1}
+  .hbtn{border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.06);color:#E9F2EE;
+    font-family:inherit;font-size:11.5px;font-weight:600;padding:7px 11px;border-radius:9px;cursor:pointer;
+    transition:.15s;display:flex;align-items:center;gap:6px}
+  .hbtn:hover{background:rgba(255,255,255,.14)}
+  .hbtn.on{background:var(--teal);border-color:var(--teal);color:#fff}
+
+  /* ============ INFO-BUBBLE ============ */
+  .info{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;
+    background:var(--teal-soft);color:var(--teal-deep);border:0;cursor:pointer;font-family:'Space Grotesk';
+    font-weight:700;font-size:11px;margin-left:7px;flex:none;transition:.15s;vertical-align:middle;padding:0}
+  .info:hover{background:var(--teal-deep);color:#fff}
+  /* Popover */
+  .popover{position:fixed;z-index:60;max-width:340px;background:var(--card);border:1px solid var(--line);
+    border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.18);padding:0;display:none}
+  .popover.show{display:block}
+  .popover .pop-img{height:120px;background:var(--line-soft);border-radius:12px 12px 0 0;display:grid;place-items:center;
+    color:var(--muted);font-size:12px;text-align:center;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+  .popover .pop-img .ph-tag{position:absolute;top:8px;left:8px;font-family:'JetBrains Mono';font-size:9px;
+    background:rgba(0,0,0,.06);padding:2px 6px;border-radius:4px;color:var(--muted)}
+  .popover .pop-body{padding:14px 16px}
+  .popover h5{margin:0 0 7px;font-size:14px;font-family:'Space Grotesk'}
+  .popover p{margin:0 0 8px;font-size:12.5px;color:var(--ink-soft);line-height:1.55}
+  .popover p:last-child{margin-bottom:0}
+  .popover .pop-close{position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;
+    background:rgba(0,0,0,.35);color:#fff;border:0;cursor:pointer;display:grid;place-items:center;z-index:2}
+
+  /* ============ INTRO ============ */
+  .intro{max-width:860px;margin:0 auto;padding:60px 24px 52px}
+  .intro .kicker{display:inline-flex;align-items:center;gap:8px;font-family:'Space Grotesk';font-size:16px;
+    letter-spacing:.01em;color:var(--teal-deep);font-weight:800;background:var(--teal-soft);padding:7px 16px;border-radius:999px;margin-bottom:22px}
+  .intro .kicker b{color:var(--ink)}
+  .intro h1{font-size:clamp(30px,5vw,44px);line-height:1.09;margin:0 0 18px}
+  .intro h1 em{font-style:normal;color:var(--teal-deep)}
+  .intro p.lead{font-size:17px;color:var(--ink-soft);max-width:640px;margin:0 0 34px;line-height:1.6}
+  .flowrow{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:38px}
+  .flowstep{display:flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--line);
+    border-radius:11px;padding:10px 15px;font-size:13px;font-weight:600;box-shadow:var(--shadow)}
+  .flowstep .dot{width:8px;height:8px;border-radius:50%;flex:none}
+  .flowarrow{color:var(--line);font-size:18px}
+  .prereq{display:flex;gap:12px;align-items:flex-start;background:var(--teal-soft);border:1px dashed var(--teal-deep);
+    border-radius:12px;padding:15px 17px;margin-bottom:36px;font-size:13px;color:var(--ink-soft)}
+  .prereq svg{flex:none;margin-top:2px;color:var(--teal-deep)}
+  .prereq b{color:var(--ink)}
+  .prereq-link{color:var(--teal-deep);font-weight:700;white-space:nowrap;text-decoration:underline}
+  .start-cta{display:inline-flex;align-items:center;gap:10px;background:var(--orange);color:var(--orange-ink);border:0;
+    font-family:'Space Grotesk';font-weight:600;font-size:15.5px;padding:14px 26px;border-radius:12px;
+    cursor:pointer;box-shadow:0 8px 22px rgba(230,159,0,.32);transition:.15s}
+  .start-cta:hover{transform:translateY(-1px);filter:brightness(1.03)}
+  .intro-foot{margin-top:14px;font-size:12px;color:var(--muted)}
+
+  /* ============ STEPPER ============ */
+  .stepper-wrap{position:sticky;top:var(--hdr-h);z-index:35;background:var(--paper);border-bottom:1px solid var(--line);
+    box-shadow:0 4px 14px rgba(20,38,32,.05);display:none}
+  .stepper-wrap.show{display:block}
+  .stepper{max-width:1080px;margin:0 auto;display:flex;align-items:center;height:var(--stepper-h);padding:0 24px}
+  .s-step{flex:1;display:flex;align-items:center;min-width:0;height:100%}
+  .s-node{display:flex;align-items:center;gap:10px;cursor:pointer;background:none;border:0;font-family:inherit;text-align:left;padding:0;min-width:0;height:100%}
+  .s-node:disabled{cursor:default}
+  .s-dot{width:30px;height:30px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:'Space Grotesk';
+    font-weight:600;font-size:13px;border:2px solid var(--line);background:var(--card);color:var(--muted);transition:.2s}
+  .s-text{display:flex;flex-direction:column;min-width:0}
+  .s-text .t{font-family:'Space Grotesk';font-weight:600;font-size:13.5px;color:var(--muted);line-height:1.2;transition:.2s;white-space:nowrap}
+  .s-text .sub{font-size:10.5px;color:var(--muted);opacity:.8;white-space:nowrap}
+  .s-line{flex:1;height:2px;background:var(--line);margin:0 12px;border-radius:2px;align-self:center;transition:.3s;min-width:20px}
+  .s-step.active .s-dot{border-color:var(--teal-deep);color:var(--teal-deep);box-shadow:0 0 0 4px var(--teal-soft)}
+  .s-step.active .s-text .t{color:var(--ink)}
+  .s-step.done .s-dot{background:var(--teal);border-color:var(--teal);color:#062019}
+  .s-step.done .s-text .t{color:var(--ink)}
+  .s-step.done .s-line{background:var(--teal)}
+  .progress-rail{height:3px;background:var(--line-soft);position:relative;overflow:hidden}
+  .progress-fill{position:absolute;inset:0 auto 0 0;width:0%;background:linear-gradient(90deg,var(--teal),var(--orange));transition:width .15s linear}
+  @media(max-width:760px){.side-steps .s-text{display:flex}}
+
+  /* ===== Vertical step rail: clean timeline, blends into the page's left column ===== */
+  .side-steps{position:fixed;left:0;top:var(--hdr-h);bottom:0;width:var(--side-w);padding:30px 20px;overflow-y:auto;display:none;z-index:34}
+  .side-steps .stepper{flex-direction:column;align-items:stretch;height:auto;max-width:none;margin:0;padding:0;gap:7px;position:relative}
+  /* one continuous connector line running behind the dots */
+  .side-steps .stepper::before{content:'';position:absolute;left:14px;top:22px;bottom:22px;width:2px;background:var(--line);border-radius:2px}
+  .side-steps .s-step{flex:none;flex-direction:column;align-items:stretch;height:auto}
+  .side-steps .s-node{width:100%;height:auto;padding:6px 0;gap:13px;align-items:center;position:relative;z-index:1}
+  .side-steps .s-line{display:none}
+  .side-steps .s-text{display:flex}
+  .side-steps .s-dot{width:30px;height:30px;background:var(--paper)}
+  @media(min-width:1000px){
+    .side-steps.show{display:block}
+    .stepper-wrap.show{margin-left:var(--side-w)}
+    .shell.show{margin-left:var(--side-w)}
+    #pagefoot.show{margin-left:var(--side-w)}
+  }
+
+  /* top construct map — selected modules appear in place, then fuse (bidirectional) */
+  .grow-strip{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:7px 24px 9px;border-top:1px dashed var(--line-soft)}
+  .grow-strip .gs-label{font-family:'JetBrains Mono';font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+    color:var(--teal-deep);background:var(--teal-soft);padding:3px 8px;border-radius:6px;flex:none}
+  .gs-map{display:flex;align-items:stretch;flex:1;min-width:0;height:30px;overflow-x:auto;scrollbar-width:none}
+  .gs-map::-webkit-scrollbar{display:none}
+  .gs-arm{display:flex;align-items:stretch;flex:1;min-width:0}
+  .gs-arm.left{justify-content:flex-end}
+  .gs-seg{position:relative;display:flex;align-items:center;justify-content:center;padding:0 12px;font-family:'Space Grotesk';
+    font-weight:600;font-size:10.5px;white-space:nowrap;color:#fff;min-width:0;transition:background .3s,color .3s}
+  .gs-seg span{overflow:hidden;text-overflow:ellipsis}
+  .gs-arm.right .gs-seg{clip-path:polygon(0 0,calc(100% - 6px) 0,100% 50%,calc(100% - 6px) 100%,0 100%);margin-right:-3px}
+  .gs-arm.right .gs-seg:first-child{border-radius:6px 0 0 6px}
+  .gs-arm.left .gs-seg{clip-path:polygon(6px 0,100% 0,100% 100%,6px 100%,0 50%);margin-left:-3px}
+  .gs-arm.left .gs-seg:last-child{border-radius:0 6px 6px 0}
+  .gs-seg.empty{clip-path:none!important;margin:0 3px!important;border:1px dashed var(--line);border-radius:6px!important;
+    background:transparent!important;color:var(--muted);opacity:.75}
+  .gs-hub{flex:none;display:flex;align-items:center;gap:5px;padding:0 11px;margin:0 5px;border-radius:6px;
+    font-family:'Space Grotesk';font-weight:700;font-size:10.5px;color:#fff;white-space:nowrap;z-index:2}
+  .gs-hub.empty{background:transparent;color:var(--muted);border:1px dashed var(--line)}
+  .gs-hub .gs-ar{font-size:11px;opacity:.9}
+  .gs-map.fused .gs-hub{box-shadow:0 0 0 2px var(--card),0 1px 6px rgba(0,0,0,.16)}
+  .gs-count{font-family:'JetBrains Mono';font-size:10px;color:var(--muted);flex:none}
+  @media(max-width:760px){.grow-strip .gs-label,.gs-count{display:none}.grow-strip{padding:6px 14px 8px}}
+
+  .shell{max-width:1080px;margin:0 auto;padding:28px 24px 100px;flex-direction:column;gap:26px;display:none}
+  .shell.show{display:flex}
+  .section{scroll-margin-top:calc(var(--hdr-h) + var(--stepper-h) + 18px)}
+
+  /* ============ CARD ============ */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .card-head{padding:18px 22px;border-bottom:1px solid var(--line-soft);display:flex;align-items:flex-start;gap:14px}
+  .card-head .num-badge{flex:none;width:34px;height:34px;border-radius:9px;background:var(--forest);color:#fff;
+    display:grid;place-items:center;font-family:'Space Grotesk';font-weight:700;font-size:14px;margin-top:1px}
+  [data-theme="dark"] .card-head .num-badge{background:var(--teal);color:#062019}
+  .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--teal-deep);font-weight:600}
+  .card-head h2{font-size:19px;margin:3px 0 0;display:flex;align-items:center}
+  .card-head p{margin:6px 0 0;color:var(--muted);font-size:13.5px}
+  .card-body{padding:22px}
+  .card.locked{opacity:.5}
+  .lockhint{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px;padding:6px 0}
+
+  /* ============ FORM ============ */
+  .field{display:block;margin-bottom:18px}
+  .field:last-child{margin-bottom:0}
+  .field > .lab{display:flex;align-items:center;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--ink)}
+  .field .hint{font-weight:400;color:var(--muted);font-size:11.5px;margin-left:auto}
+  textarea,select,input[type=text]{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;
+    font-family:inherit;font-size:14px;color:var(--ink);background:var(--card);outline:none;transition:.15s}
+  textarea{font-family:'JetBrains Mono';font-size:12.5px;line-height:1.6;min-height:120px;resize:vertical;letter-spacing:.02em;word-break:break-all}
+  textarea:focus,select:focus,input:focus{border-color:var(--teal-deep);box-shadow:0 0 0 3px rgba(15,107,90,.16)}
+  select{appearance:none;cursor:pointer;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%230072B2' stroke-width='2'%3E%3Cpath d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+  .seqmeta{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px;font-size:11.5px;color:var(--muted)}
+  .seqmeta b{font-family:'JetBrains Mono';color:var(--teal-deep);font-weight:700}
+  .seqmeta .err{color:#9a4100;font-weight:600}
+
+  /* Preset chips (casual) */
+  .preset-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}
+  .preset-row .plabel{font-size:12px;color:var(--muted)}
+  .preset-chip{border:1px solid var(--line);background:var(--card);color:var(--ink);font-family:inherit;font-size:12px;
+    font-weight:500;padding:6px 12px;border-radius:999px;cursor:pointer;transition:.12s;display:flex;align-items:center;gap:6px}
+  .preset-chip:hover{border-color:var(--teal-deep);background:var(--teal-soft)}
+  .preset-chip.on{background:var(--teal);color:#fff;border-color:var(--teal);font-weight:600}
+  .preset-chip .pc-dot{width:7px;height:7px;border-radius:50%;background:var(--t3)}
+
+  .nc-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .nc-tag{font-size:11.5px;background:var(--card-2);border:1px solid var(--line);border-radius:8px;padding:7px 11px;color:var(--ink-soft)}
+  .nc-tag b{color:var(--ink);font-weight:600}
+  .nc-tag .sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:middle}
+
+  .seg-full{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .seg-full button{flex:1;border:0;background:var(--card);padding:13px 10px;font-family:inherit;font-size:14px;font-weight:600;
+    color:var(--muted);cursor:pointer;transition:.12s;display:flex;flex-direction:column;gap:2px}
+  .seg-full button small{font-weight:400;font-size:11px;opacity:.85}
+  .seg-full button.on{background:var(--forest);color:#fff}
+  [data-theme="dark"] .seg-full button.on{background:var(--teal);color:#062019}
+  .seg-full button:not(.on):hover{background:var(--line-soft)}
+
+  /* group sub-headings inside a step */
+  .grouplab{font-family:'Space Grotesk';font-weight:700;font-size:13.5px;color:var(--ink);margin:24px 0 12px;padding-top:18px;border-top:1px solid var(--line-soft);display:flex;align-items:center;gap:8px}
+  .grouplab:first-child{margin-top:0;padding-top:0;border-top:0}
+  .grouplab > span{font-weight:400;font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+
+  .helplink{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--teal-deep);margin-top:10px}
+  .helplink a{color:var(--teal-deep);font-weight:600}
+
+  .stopwarn,.stopok{display:flex;gap:9px;align-items:flex-start;border-radius:10px;padding:11px 13px;font-size:12.5px;margin-top:12px}
+  .stopwarn{background:rgba(213,94,0,.12);border:1px solid rgba(213,94,0,.5);color:#9a4100}
+  [data-theme="dark"] .stopwarn,[data-theme="dark"] .tmflag.warn,[data-theme="dark"] .seqmeta .err{color:#f0a883}
+  .stopok{background:var(--teal-soft);border:1px solid var(--teal-deep);color:var(--teal-deep)}
+  .stopwarn svg,.stopok svg{flex:none;margin-top:1px}
+
+  .nav{display:flex;justify-content:flex-end;align-items:center;margin-top:22px;gap:12px}
+  .btn{border:0;border-radius:11px;padding:12px 22px;font-family:'Space Grotesk';font-weight:600;font-size:14.5px;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:8px}
+  .btn-primary{background:var(--orange);color:var(--orange-ink);box-shadow:0 6px 16px rgba(230,159,0,.28);font-weight:700}
+  .btn-primary:hover{filter:brightness(1.04);transform:translateY(-1px)}
+  .btn-primary:disabled{background:var(--line);color:var(--muted);box-shadow:none;cursor:not-allowed;transform:none}
+  .btn-ghost{background:var(--card);border:1px solid var(--line);color:var(--ink)}
+  .btn-ghost:hover{background:var(--line-soft)}
+
+  /* ============ LEVEL VISUALISIERUNG ============ */
+  .sectitle{display:flex;align-items:center;gap:9px;margin:0 0 2px}
+  .sectitle h3{font-size:17px;margin:0;font-family:'Space Grotesk';font-weight:600;display:flex;align-items:center}
+  .sectitle .num{font-family:'JetBrains Mono';font-size:12px;color:var(--teal-deep);font-weight:700}
+  .secsub{color:var(--muted);font-size:13px;margin:0 0 14px}
+  .block{margin-bottom:34px}
+  .block:last-child{margin-bottom:0}
+
+  .levelblock{margin-bottom:20px}
+  .levellabel{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .levellabel .lvltag{font-family:'JetBrains Mono';font-size:11px;font-weight:700;color:#fff;background:var(--forest);padding:3px 9px;border-radius:6px;letter-spacing:.04em}
+  [data-theme="dark"] .levellabel .lvltag{background:var(--teal);color:#062019}
+  .levellabel h4{font-size:14px;margin:0}
+  .levellabel .lvlsub{font-size:12px;color:var(--muted);margin-left:auto}
+  .enzyme-tag{font-family:'JetBrains Mono';font-size:10px;color:var(--muted);background:var(--card-2);border:1px solid var(--line);padding:2px 7px;border-radius:5px}
+
+  /* DNA-Strang-Darstellung mit 5'->3' */
+  .strandwrap{overflow-x:auto;padding:4px 0 2px}
+  .strand{display:inline-flex;flex-direction:column;gap:3px;min-width:100%}
+  .strand-dir{display:flex;justify-content:space-between;font-family:'JetBrains Mono';font-size:10px;color:var(--muted);padding:0 2px}
+  .partsrow{display:flex;align-items:stretch;min-width:max-content}
+  .part{position:relative;color:#fff;padding:12px 16px;font-size:12.5px;font-weight:600;display:flex;flex-direction:column;gap:2px;min-width:88px;justify-content:center;
+    clip-path:polygon(0 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 0 100%);margin-right:-4px}
+  .part:first-child{border-radius:8px 0 0 8px}
+  /* Level 0: discrete, unconnected parts (each is its own Golden Gate part) */
+  .partsrow.sep{gap:10px;flex-wrap:wrap}
+  .partsrow.sep .part{clip-path:none!important;margin:0!important;border-radius:8px!important;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
+  /* Level 0: single cargo part with its Type 3 overhangs */
+  .l0row{display:flex;align-items:center;gap:8px}
+  .l0row .part{clip-path:none!important;margin:0!important;border-radius:8px!important}
+  .l0oh{font-family:'JetBrains Mono';font-size:11px;font-weight:700;color:var(--muted);background:var(--card-2);border:1px solid var(--line);border-radius:6px;padding:5px 8px}
+  /* NCS spacers are coloured by their Type position (like the scheme figure), set inline */
+  /* stop-codon carrier: a simple `*` on the part at the 3' end of an ORF (explained in the legend) */
+  .stopstar{font-weight:800;font-size:15px;margin-left:1px}
+  .part small{font-weight:400;opacity:.9;font-size:10px}
+  .part .ptype{font-family:'JetBrains Mono';font-size:9px;opacity:.85;letter-spacing:.02em}
+  .ohlabel{align-self:center;font-family:'JetBrains Mono';font-size:9px;font-weight:700;color:var(--muted);padding:0 3px;z-index:3}
+
+  /* Level 2 bidirektional */
+  .l2-row{display:flex;align-items:flex-end;gap:4px;flex-wrap:nowrap;min-width:max-content}
+  .l2-side{display:flex;flex-direction:column;gap:5px}
+  .l2-dir{display:flex;justify-content:space-between;align-items:center;gap:10px;font-family:'JetBrains Mono';font-size:10px;color:var(--muted);white-space:nowrap}
+  .l2-strandtag{font-size:9px;font-weight:700;padding:1px 7px;border-radius:20px;letter-spacing:.02em;white-space:nowrap}
+  .l2-strandtag.sense{background:rgba(0,158,115,.16);color:var(--shell)}
+  .l2-strandtag.anti{background:rgba(230,159,0,.18);color:var(--orange-deep)}
+  .l2-hub{display:flex;flex-direction:column;align-items:center;gap:5px;margin:0 4px}
+  .l2-hub .l2-arrows{display:flex;gap:14px;font-size:13px;color:var(--promo);font-weight:700}
+  .l2-hub .part{margin-right:0;clip-path:none!important;border-radius:8px;min-width:92px;align-items:center;text-align:center}
+  /* left side: mirror arrow direction to the left */
+  .l2-left-row .part{clip-path:polygon(8px 0, 100% 0, 100% 100%, 8px 100%, 0 50%)!important;margin-right:0;margin-left:-4px}
+  .l2-left-row .part:last-child{border-radius:0 8px 8px 0}
+  .l2-left-row .part:first-child{border-radius:0}
+
+  .legend{display:flex;flex-wrap:wrap;gap:10px 16px;margin-top:14px;font-size:11.5px;color:var(--muted)}
+  .legend span{display:flex;align-items:center;gap:6px}
+  .legend i{width:11px;height:11px;border-radius:3px;display:inline-block;flex:none}
+
+  .note{display:flex;gap:9px;align-items:flex-start;background:var(--card-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--ink-soft);margin-top:10px}
+  .note svg{flex:none;margin-top:1px;color:var(--teal-deep)}
+
+  /* ============ 96-WELL PLATE ============ */
+  .plate-wrap{background:var(--card-2);border:1px solid var(--line);border-radius:14px;padding:18px;overflow-x:auto}
+  .plate{display:grid;grid-template-columns:auto repeat(12,1fr);gap:5px;min-width:560px}
+  .plate .corner{}
+  .plate .colhead,.plate .rowhead{font-family:'JetBrains Mono';font-size:10px;color:var(--muted);display:grid;place-items:center}
+  .well{aspect-ratio:1;border-radius:50%;border:1.5px solid var(--line);background:var(--card);position:relative;
+    display:grid;place-items:center;transition:.15s}
+  .well.filled{border-color:transparent;box-shadow:inset 0 0 0 2px rgba(255,255,255,.25)}
+  .well.filled::after{content:'';position:absolute;inset:3px;border-radius:50%;background:rgba(255,255,255,.0)}
+  .well .wtip{font-family:'JetBrains Mono';font-size:8px;font-weight:700;color:#fff;
+    text-shadow:0 0 2px rgba(0,0,0,.9),0 1px 1px rgba(0,0,0,.75)}
+  .plate-legend{display:flex;flex-wrap:wrap;gap:9px 16px;margin-top:16px;font-size:12px}
+  .plate-legend span{display:flex;align-items:center;gap:7px;color:var(--ink-soft)}
+  .plate-legend i{width:13px;height:13px;border-radius:50%;flex:none;border:1.5px solid rgba(0,0,0,.08)}
+  .pickcount{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin-left:auto}
+
+  /* ============ ORDER / TO ORDER ============ */
+  .orderlist{display:flex;flex-direction:column;gap:9px}
+  .orderitem{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:11px;padding:12px 14px;background:var(--card)}
+  .orderitem .oi-sw{width:11px;height:32px;border-radius:4px;flex:none}
+  .orderitem .oi-main{min-width:0;flex:1}
+  .orderitem .oi-name{font-weight:600;font-size:13.5px}
+  .orderitem .oi-sub{font-size:11.5px;color:var(--muted)}
+  .orderitem .oi-badge{font-family:'JetBrains Mono';font-size:10.5px;font-weight:700;padding:4px 9px;border-radius:6px;white-space:nowrap}
+  .oi-badge.fixed{background:var(--card-2);color:var(--muted);border:1px solid var(--line)}
+  .oi-badge.synth{background:rgba(230,159,0,.16);color:var(--orange-deep)}
+
+  .cdsbox{background:var(--forest-deep);border-radius:10px;padding:14px 16px;margin-top:12px}
+  .cdsbox .cdsname{color:#9fc0da;font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:6px;display:flex;align-items:center}
+  .cdsbox .cdsseq{font-family:'JetBrains Mono';font-size:11.5px;color:#E9F2EE;word-break:break-all;line-height:1.7}
+  .cdsbox .cdsseq .oh{background:var(--orange);color:var(--orange-ink);border-radius:3px;padding:0 3px;font-weight:700}
+  .cdsbox .cds5,.cdsbox .cds3{color:#7FA99B;font-size:10px}
+
+  /* ============ PRIMER ============ */
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  thead th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--teal-deep);font-weight:600;padding:0 12px 9px;border-bottom:1px solid var(--line)}
+  tbody td{padding:11px 12px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+  tbody tr:last-child td{border-bottom:0}
+  .pname{font-weight:600;white-space:nowrap}
+  .pname small{display:block;font-weight:400;color:var(--muted);font-size:11px}
+  .pseq{font-family:'JetBrains Mono';font-size:11.5px;word-break:break-all;line-height:1.5}
+  .pseq .bsa{background:rgba(230,159,0,.2);color:var(--orange-deep);border-radius:3px;padding:0 1px;font-weight:700}
+  .pseq .oh{background:var(--orange);color:var(--orange-ink);border-radius:3px;padding:0 2px;font-weight:700}
+  .num-cell{font-family:'JetBrains Mono';white-space:nowrap}
+  .tmcell{display:flex;align-items:center;gap:6px}
+  .tmflag{font-size:10px;padding:1px 6px;border-radius:5px;font-weight:700;font-family:'JetBrains Mono'}
+  .tmflag.ok{background:var(--teal-soft);color:var(--teal-deep)}
+  .tmflag.warn{background:rgba(213,94,0,.16);color:#9a4100}
+
+  .backendnote{display:flex;gap:10px;align-items:flex-start;background:var(--teal-soft);border:1px dashed var(--teal-deep);border-radius:10px;padding:11px 13px;font-size:12px;color:var(--ink-soft);margin-top:16px}
+  .backendnote svg{flex:none;margin-top:1px;color:var(--teal-deep)}
+  .backendnote code{font-family:'JetBrains Mono';background:var(--card);border-radius:4px;padding:1px 5px;color:var(--teal-deep)}
+
+  /* ============ PLASMID ============ */
+  .platrow{display:grid;grid-template-columns:360px 1fr;gap:24px;align-items:center}
+  @media(max-width:760px){.platrow{grid-template-columns:1fr}}
+  #plasmid{width:100%;height:auto;display:block}
+  .platext h4{font-size:14px;margin:0 0 6px;color:var(--teal-deep);font-family:'Space Grotesk'}
+  .platext p{font-size:13px;color:var(--ink-soft);margin:0 0 12px}
+  .featlist{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:7px}
+  .featlist li{display:flex;align-items:center;gap:9px;font-size:12.5px}
+  .featlist i{width:10px;height:10px;border-radius:3px;flex:none}
+  .featlist .bp{margin-left:auto;font-family:'JetBrains Mono';font-size:11px;color:var(--muted)}
+
+  .copybar{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;flex-wrap:wrap}
+  .chip{background:var(--card);border:1px solid var(--line);color:var(--ink);font-family:inherit;font-weight:600;font-size:12.5px;padding:8px 14px;border-radius:9px;cursor:pointer;transition:.12s}
+  .chip:hover{background:var(--line-soft)}
+  .chip.primary-chip{background:var(--forest);color:#fff;border-color:var(--forest)}
+  [data-theme="dark"] .chip.primary-chip{background:var(--teal);color:#062019;border-color:var(--teal)}
+
+  footer{max-width:1080px;margin:0 auto;padding:0 24px 40px;color:var(--muted);font-size:11.5px;display:none}
+  footer.show{display:block}
+</style>
+
+<header>
+  <div class="brand">
+    
+    <svg class="brand-wordmark" viewBox="0 0 95.647057 18.346445" xmlns="http://www.w3.org/2000/svg"><g id="g1" style="display:inline" transform="translate(-2.2073634,-20.674398)"><g id="g6" transform="matrix(0,-0.26547667,0.2831383,0,-3.1845086,43.067589)" style="display:inline"><g id="g5"><path style="display:inline;fill:#43a290;fill-opacity:1;stroke-width:0.637389" d="m 38.407292,47.481723 c -0.10159,0.220732 -1.625513,1.636466 -3.194162,2.822138 -0.190739,0.144164 -0.392565,-0.123132 -0.433885,-0.219952 -1.200078,-2.810789 -1.239013,-2.797324 -1.925003,-4.527256 -0.02907,-0.07307 -0.0015,-0.304156 0.07725,-0.336296 1.975689,-0.805465 2.869763,-1.256283 4.912005,-2.07 0.128836,-0.05135 0.371464,0.124251 0.373263,0.231354 0.0235,1.411659 0.290123,3.883619 0.190518,4.099981 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0-7-3-3-9-9-4" /><path style="display:inline;fill:#43a290;fill-opacity:1;stroke-width:0.637389" d="m 38.200792,56.709225 c 0.0875,0.226687 0.04076,2.30622 -0.202145,4.257496 -0.02954,0.237259 -0.361889,0.195717 -0.460121,0.157875 -2.852122,-1.098236 -2.869599,-1.060929 -4.588304,-1.774582 -0.07266,-0.03008 -0.219173,-0.210895 -0.18734,-0.289769 0.799242,-1.978215 1.099028,-2.933586 1.938733,-4.96528 0.05296,-0.128182 0.347986,-0.179805 0.426049,-0.106454 1.028756,0.966952 2.987347,2.498485 3.073096,2.720702 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0-7-3-3-9-9-4-0" /><path style="display:inline;fill:#43a290;fill-opacity:1;stroke-width:0.637389" d="m 44.796077,62.946996 c 0.224345,0.09334 1.695584,1.563749 2.938572,3.087382 0.151135,0.185264 -0.108499,0.396858 -0.203722,0.441739 -2.764384,1.303418 -2.749484,1.341828 -4.452807,2.091456 -0.07195,0.03176 -0.303891,0.01277 -0.338927,-0.06474 -0.878129,-1.944482 -1.361771,-2.821235 -2.250613,-4.831918 -0.0561,-0.126842 0.1104,-0.375814 0.217362,-0.381581 1.409819,-0.0758 3.8702,-0.433843 4.090104,-0.342328 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0-7-3-3-9-9-4-0-1" /><path style="display:inline;fill:#43a290;fill-opacity:1;stroke-width:0.637389" d="m 54.647801,63.016498 c 0.233529,-0.06714 2.300809,0.163073 4.223004,0.577374 0.233724,0.05038 0.162994,0.377759 0.116624,0.472266 -1.345829,2.743986 -1.31021,2.764691 -2.172863,4.413655 -0.03638,0.06972 -0.229426,0.19969 -0.305184,0.161012 -1.899901,-0.970824 -2.825064,-1.353813 -4.774661,-2.369664 -0.12301,-0.06407 -0.14837,-0.362507 -0.06841,-0.433786 1.054028,-0.939342 2.752552,-2.755019 2.981471,-2.82081 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0-7-3-3-9-9-4-0-1-8" /><path style="display:inline;fill:#43a290;fill-opacity:1;stroke-width:0.637389" d="m 61.454053,56.73854 c 0.104616,-0.219315 1.647877,-1.613944 3.232706,-2.777901 0.192706,-0.141525 0.390834,0.128521 0.430819,0.225902 1.161284,2.827036 1.200403,2.814107 1.862521,4.553317 0.02806,0.07347 -0.0027,0.304147 -0.08187,0.3352 -1.986586,0.778202 -2.88678,1.216674 -4.940025,2.002211 -0.129531,0.04958 -0.36972,-0.129352 -0.370043,-0.236469 -0.0041,-1.411851 -0.23665,-3.887245 -0.134081,-4.102215 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0-7-3-3-9-9-4-0-1-8-0" /><path style="display:inline;fill:#43a290;fill-opacity:1;stroke-width:0.637389" d="m 61.674715,47.729249 c -0.08122,-0.229014 0.02288,-2.306467 0.319541,-4.250296 0.03608,-0.236354 0.36715,-0.18566 0.464302,-0.145122 2.820737,1.176501 2.839238,1.139689 4.537601,1.900487 0.07181,0.03207 0.21326,0.21687 0.179274,0.294826 -0.853511,1.955413 -1.17954,2.902151 -2.074975,4.909906 -0.05647,0.126678 -0.352815,0.170136 -0.428823,0.09466 -1.00171,-0.994946 -2.917282,-2.579951 -2.99687,-2.804446 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0-7-3-3-9-9-4-0-1-8-0-1" /><path style="display:inline;fill:#43a290;fill-opacity:1;stroke-width:0.637389" d="m 54.828862,41.345079 c -0.222234,-0.09827 -1.660629,-1.60082 -2.869646,-3.151548 -0.147001,-0.188562 0.117238,-0.394365 0.21343,-0.437132 2.792499,-1.242039 2.778451,-1.28077 4.497917,-1.992591 0.07263,-0.03016 0.304098,-0.006 0.337414,0.0722 0.834965,1.963404 1.299123,2.850627 2.143336,4.880452 0.05328,0.128051 -0.118675,0.373284 -0.225737,0.376686 -1.411151,0.04467 -3.878841,0.348252 -4.096669,0.251903 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0-7-3-3-9-9-4-0-1-8-0-1-7" /><path style="display:inline;fill:#43a290;fill-opacity:1;stroke-width:0.637389" d="m 44.958694,41.264637 c -0.232514,0.07059 -2.302967,-0.129054 -4.231075,-0.514906 -0.234442,-0.04693 -0.168558,-0.375309 -0.12359,-0.470492 1.30513,-2.763575 1.269209,-2.783751 2.107399,-4.445284 0.03534,-0.07025 0.226486,-0.203016 0.302766,-0.165511 1.914039,0.942641 2.844762,1.311915 4.809159,2.298844 0.123941,0.06225 0.153711,0.360275 0.07481,0.432727 -1.040012,0.954838 -2.711537,2.795397 -2.939459,2.864565 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0-7-3-3-9-9-4-0-1-8-0-1-7-6" /></g><g id="g4"><path style="display:inline;fill:#398174;fill-opacity:1;stroke-width:0.780607" d="m 38.076644,40.883235 c -0.221297,0.19327 -2.621557,0.984877 -4.960593,1.497615 -0.284408,0.06234 -0.381784,-0.338631 -0.38133,-0.467523 0.01319,-3.742615 -0.03713,-3.747644 0.03015,-6.024049 0.0028,-0.0962 0.145784,-0.33904 0.249959,-0.334303 2.612458,0.119251 3.836546,0.07723 6.527856,0.221458 0.169794,0.0091 0.357556,0.328991 0.307616,0.449065 -0.658025,1.582067 -1.556716,4.468273 -1.773641,4.657726 z" id="path1-2-4-62-3-5-6-9-2-9-0-4" /><path style="display:inline;fill:#398174;fill-opacity:1;stroke-width:0.780607" d="m 50.210634,36.410138 c -0.293445,-0.01469 -2.569989,-1.11252 -4.608779,-2.368435 -0.247898,-0.152713 -0.03942,-0.508799 0.05044,-0.601205 2.609217,-2.683155 2.576512,-2.721726 4.206168,-4.312565 0.06883,-0.06726 0.34038,-0.142629 0.412029,-0.06686 1.796484,1.900474 2.706243,2.720533 4.542101,4.693747 0.115823,0.124491 0.0287,0.485034 -0.09065,0.536723 -1.572312,0.681005 -4.223643,2.132993 -4.511293,2.118596 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8" /><path style="display:inline;fill:#398174;fill-opacity:1;stroke-width:0.780607" d="m 62.031048,41.093439 c -0.202434,-0.212947 -1.094613,-2.577666 -1.705584,-4.892986 -0.07429,-0.281525 0.32222,-0.395731 0.451018,-0.400716 3.739838,-0.144737 3.74274,-0.195219 6.019956,-0.224049 0.09623,-0.0013 0.34489,0.131349 0.344553,0.235629 -0.0089,2.615163 0.08472,3.836388 0.05417,6.531387 -0.0019,0.170027 -0.313602,0.371127 -0.435691,0.326286 -1.608421,-0.590687 -4.529975,-1.366798 -4.728412,-1.575538 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0" /><path style="display:inline;fill:#398174;fill-opacity:1;stroke-width:0.780607" d="m 66.691063,52.371468 c 0.0133,-0.293513 1.100287,-2.575249 2.346496,-4.619988 0.15153,-0.248624 0.508605,-0.04184 0.601438,0.04758 2.695532,2.596429 2.733944,2.563545 4.332514,4.185617 0.06761,0.06848 0.144246,0.339699 0.06882,0.411707 -1.891901,1.805511 -2.707633,2.71915 -4.672101,4.564366 -0.123918,0.116433 -0.484892,0.031 -0.537148,-0.0881 -0.688472,-1.569055 -2.153049,-4.213453 -2.14002,-4.501168 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0-7" /><path style="display:inline;fill:#398174;fill-opacity:1;stroke-width:0.780607" d="m 61.559271,63.411322 c 0.218116,-0.196856 2.605111,-1.027588 4.935456,-1.578481 0.283352,-0.06698 0.387268,0.332345 0.38892,0.46123 0.04798,3.74233 0.09837,3.746536 0.0683,6.023736 -0.0012,0.09623 -0.140224,0.341379 -0.24446,0.338346 -2.614059,-0.07653 -3.837296,-0.01452 -6.530604,-0.11475 -0.16992,-0.0063 -0.362889,-0.323099 -0.314909,-0.443985 0.632083,-1.592607 1.483487,-4.493114 1.697288,-4.686087 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0-7-3" /><path style="display:inline;fill:#398174;fill-opacity:1;stroke-width:0.780607" d="m 49.559533,68.001186 c 0.293752,0.006 2.601676,1.036255 4.676612,2.231507 0.252293,0.145339 0.05441,0.507416 -0.0327,0.602432 -2.52896,2.75893 -2.495135,2.796517 -4.077173,4.434717 -0.06681,0.06927 -0.336027,0.152603 -0.409879,0.07899 -1.85175,-1.846668 -2.785288,-2.63955 -4.678529,-4.557775 -0.11946,-0.121004 -0.04293,-0.483981 0.07479,-0.539165 1.551546,-0.727069 4.158911,-2.256605 4.446859,-2.250697 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0-7-3-3" /><path style="display:inline;fill:#398174;fill-opacity:1;stroke-width:0.780607" d="m 37.785429,63.082254 c 0.197268,0.217742 1.032201,2.603287 1.587222,4.932651 0.06748,0.283234 -0.331658,0.387859 -0.460548,0.389729 -3.742239,0.05461 -3.746356,0.105008 -6.023606,0.07897 -0.09623,-0.001 -0.341625,-0.13962 -0.338784,-0.243855 0.0719,-2.61419 0.0077,-3.837316 0.10318,-6.530796 0.006,-0.169932 0.322495,-0.363425 0.443429,-0.315694 1.593724,0.629261 4.495735,1.475526 4.689086,1.688983 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0-7-3-3-9" /><path style="display:inline;fill:#398174;fill-opacity:1;stroke-width:0.780607" d="m 33.202121,52.03983 c -0.01793,0.293265 -1.141131,2.557413 -2.419719,4.58206 -0.155473,0.246178 -0.50921,0.03374 -0.600605,-0.05716 -2.653875,-2.638993 -2.692806,-2.606724 -4.265357,-4.254032 -0.06653,-0.06954 -0.138826,-0.34195 -0.0623,-0.412745 1.920398,-1.775172 2.750547,-2.675733 4.744143,-4.489437 0.12576,-0.114442 0.485327,-0.02322 0.53568,0.09664 0.663415,1.579812 2.085724,4.247182 2.06812,4.534653 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0-7-3-3-9-9" /></g><g id="g3"><path style="display:inline;fill:#2e6356;fill-opacity:1" d="m 41.639417,33.191386 c -0.359059,0.151202 -3.572789,0.0096 -6.579384,-0.271874 -0.365579,-0.03422 -0.334069,-0.403541 -0.261308,-0.559616 2.041249,-4.378709 1.93465,-4.602811 3.18676,-7.373088 0.05295,-0.117058 0.345559,-0.359785 0.465348,-0.313289 3.001453,1.164389 4.165292,1.715906 7.246324,2.941697 0.194382,0.07734 0.322193,0.497718 0.201758,0.625767 -1.586833,1.687143 -3.907502,4.802179 -4.259468,4.950392 z" id="path1-2-4-62" /><path style="display:inline;fill:#2e6356;fill-opacity:1" d="m 58.692774,33.139541 c -0.358769,-0.151889 -2.498499,-2.553902 -4.39353,-4.905008 -0.230425,-0.285873 0.05624,-0.52085 0.218841,-0.577547 4.561736,-1.590706 4.648008,-1.82339 7.506656,-2.857966 0.120821,-0.04369 0.498844,-0.0032 0.54906,0.115027 1.258665,2.963155 1.675043,4.181893 2.945199,7.244902 0.08013,0.193248 -0.132019,0.578016 -0.30778,0.581001 -2.315803,0.03932 -6.166737,0.548495 -6.518418,0.399606 z" id="path1-2-4-62-3" /><path style="display:inline;fill:#2e6356;fill-opacity:1" d="m 69.94238,44.286564 c -0.136306,-0.364975 0.13736,-3.570161 0.542261,-6.562634 0.04923,-0.363863 0.41694,-0.317189 0.56989,-0.238069 4.291044,2.219621 4.519341,2.122331 7.235773,3.487326 0.114784,0.05772 0.345231,0.360099 0.293884,0.477839 -1.286857,2.951021 -1.885777,4.091191 -3.237256,7.119198 -0.08527,0.191035 -0.51055,0.301448 -0.633536,0.175849 -1.620449,-1.654883 -4.637395,-4.101715 -4.771008,-4.459479 z" id="path1-2-4-62-3-5" /><path style="display:inline;fill:#2e6356;fill-opacity:1" d="m 70.113056,59.972949 c 0.155099,-0.357393 2.576197,-2.475506 4.944195,-4.349384 0.28793,-0.227852 0.520326,0.06091 0.575562,0.224009 1.54975,4.575811 1.781652,4.664167 2.790561,7.531973 0.0426,0.121211 -0.0013,0.498853 -0.119944,0.548007 -2.974319,1.232052 -4.19674,1.637489 -7.271012,2.880137 -0.193958,0.07839 -0.57681,-0.137195 -0.578219,-0.312975 -0.01856,-2.316064 -0.493193,-6.171407 -0.341158,-6.52174 z" id="path1-2-4-62-3-5-6" /><path style="display:inline;fill:#2e6356;fill-opacity:1" d="m 58.012479,71.194393 c 0.360859,-0.146856 3.572646,0.03354 6.575622,0.351294 0.36514,0.03863 0.329171,0.407549 0.254532,0.56273 -2.093968,4.353743 -1.990084,4.579116 -3.275552,7.334072 -0.05436,0.116412 -0.349933,0.355532 -0.469095,0.307649 -2.987176,-1.200545 -4.144271,-1.766073 -7.210278,-3.028976 -0.19343,-0.07968 -0.31616,-0.501572 -0.194189,-0.628157 1.607087,-1.667863 3.965201,-4.754649 4.318931,-4.898604 z" id="path1-2-4-62-3-5-6-9" /><path style="display:inline;fill:#2e6356;fill-opacity:1" d="m 41.43854,71.106776 c 0.356114,0.158014 2.454375,2.596337 4.308846,4.979565 0.225495,0.289778 -0.06516,0.519811 -0.228704,0.573712 -4.58832,1.512315 -4.678567,1.743486 -7.554521,2.728932 -0.121554,0.04161 -0.498826,-0.0054 -0.547009,-0.124417 -1.207711,-2.984286 -1.603147,-4.209978 -2.820636,-7.2943 -0.07681,-0.194589 0.141902,-0.575669 0.317688,-0.575643 2.316138,3.63e-4 6.175231,-0.442756 6.52431,-0.287864 z" id="path1-2-4-62-3-5-6-9-2" /><path style="display:inline;fill:#2e6356;fill-opacity:1" d="m 29.8519,59.947555 c 0.150821,0.359221 0.0058,3.5728 -0.278867,6.579093 -0.03461,0.365543 -0.4039,0.333638 -0.559893,0.260712 -4.376536,-2.0459 -4.600751,-1.939541 -7.369695,-3.194596 -0.117004,-0.05307 -0.359347,-0.346014 -0.312796,-0.465679 1.167579,-3.000215 1.720332,-4.163466 2.949398,-7.243193 0.07754,-0.194299 0.49806,-0.321664 0.625981,-0.201095 1.685457,1.588625 4.798022,3.912607 4.945864,4.26473 z" id="path1-2-4-62-3-5-6-9-2-9" /><path style="display:inline;fill:#2e6356;fill-opacity:1" d="m 29.732841,44.192046 c -0.15789,0.35617 -2.595483,2.455279 -4.978063,4.310582 -0.289702,0.225593 -0.519834,-0.06498 -0.573792,-0.228505 -1.513914,-4.587792 -1.745116,-4.677958 -2.731564,-7.553569 -0.04166,-0.121536 0.0052,-0.498827 0.124226,-0.547052 2.983864,-1.208752 4.209418,-1.604615 7.293316,-2.823178 0.194561,-0.07688 0.575718,0.141701 0.575754,0.317487 4.44e-4,2.316138 0.444908,6.175076 0.290138,6.52421 z" id="path1-2-4-62-3-5-6-9-2-9-0" /></g><g id="g2-8-7-0-3" transform="rotate(-178.48117,39.699725,56.927381)"><path style="fill:#213931;fill-opacity:1" d="m 28.949595,28.771922 c 0.389393,-0.01259 3.206265,1.626787 5.912646,2.966322 0.329076,0.162876 0.348654,0.345485 0.224829,0.465152 -3.473948,3.3573 -3.502915,3.399338 -5.664059,5.537483 -0.09137,0.09032 -0.290217,0.08261 -0.385411,-0.0037 -2.385402,-2.162032 -3.739047,-3.368055 -6.176738,-5.61594 -0.153797,-0.141818 -0.138436,-0.434673 0.01987,-0.5111 2.085781,-1.006979 5.687165,-2.825908 6.068866,-2.838248 z" id="path1-2-4-6-9" /><path style="display:inline;fill:#213931;fill-opacity:1" d="m 22.203262,28.592342 c 0.264141,-0.286382 3.247701,-1.489078 6.100714,-2.478607 0.346904,-0.12032 0.471245,0.228858 0.46969,0.401054 -0.04355,4.83093 0.146315,4.990724 0.15455,8.030812 2.93e-4,0.128476 -0.165431,0.470627 -0.293719,0.477943 -3.214144,0.183852 -4.501894,0.164117 -7.813907,0.325024 -0.208956,0.01015 -0.499456,-0.319491 -0.4429,-0.485932 0.745181,-2.192988 1.566624,-5.989589 1.825548,-6.270313 z" id="path1-2-4-2" transform="rotate(-134.61007,40.091286,60.167955)" /><path style="display:inline;fill:#213931;fill-opacity:1" d="m 28.949595,28.771922 c 0.389393,-0.01259 3.339279,1.270484 6.04566,2.610019 0.329076,0.162876 0.167399,0.496413 0.04357,0.61608 -3.473948,3.3573 -3.454674,3.604713 -5.615818,5.742858 -0.09137,0.09032 -0.451485,0.212174 -0.546679,0.125864 -2.385402,-2.162032 -3.274544,-3.093759 -5.712235,-5.341644 -0.153797,-0.141818 -0.122584,-0.58009 0.03572,-0.656517 2.085781,-1.006979 5.368078,-3.084351 5.749779,-3.096691 z" id="path1-2-4" transform="rotate(-134.61007,29.267331,62.197216)" /><path style="display:inline;fill:#213931;fill-opacity:1" d="m 28.949595,28.771922 c 0.389393,-0.01259 3.206265,1.626787 5.912646,2.966322 0.329076,0.162876 0.348654,0.345485 0.224829,0.465152 -3.473948,3.3573 -3.502915,3.399338 -5.664059,5.537483 -0.09137,0.09032 -0.290217,0.08261 -0.385411,-0.0037 -2.385402,-2.162032 -3.739047,-3.368055 -6.176738,-5.61594 -0.153797,-0.141818 -0.138436,-0.434673 0.01987,-0.5111 2.085781,-1.006979 5.687165,-2.825908 6.068866,-2.838248 z" id="path1-2-4-6" transform="rotate(-92.311914,28.499955,62.08729)" /><path style="display:inline;fill:#213931;fill-opacity:1" d="m 28.949595,28.771922 c 0.389393,-0.01259 3.206265,1.626787 5.912646,2.966322 0.329076,0.162876 0.348654,0.345485 0.224829,0.465152 -3.473948,3.3573 -3.502915,3.399338 -5.664059,5.537483 -0.09137,0.09032 -0.290217,0.08261 -0.385411,-0.0037 -2.385402,-2.162032 -3.739047,-3.368055 -6.176738,-5.61594 -0.153797,-0.141818 -0.138436,-0.434673 0.01987,-0.5111 2.085781,-1.006979 5.687165,-2.825908 6.068866,-2.838248 z" id="path1-2-4-6-7" transform="rotate(-43.77976,29.605843,63.87008)" /><path style="display:inline;fill:#213931;fill-opacity:1" d="m 28.949595,28.771922 c 0.389393,-0.01259 3.206265,1.626787 5.912646,2.966322 0.329076,0.162876 0.348654,0.345485 0.224829,0.465152 -3.473948,3.3573 -3.502915,3.399338 -5.664059,5.537483 -0.09137,0.09032 -0.290217,0.08261 -0.385411,-0.0037 -2.385402,-2.162032 -3.739047,-3.368055 -6.176738,-5.61594 -0.153797,-0.141818 -0.138436,-0.434673 0.01987,-0.5111 2.085781,-1.006979 5.687165,-2.825908 6.068866,-2.838248 z" id="path1-2-4-6-6" transform="rotate(87.811689,29.820759,63.284726)" /><path style="display:inline;fill:#213931;fill-opacity:1" d="m 25.632058,28.657475 c 0.270318,-0.280559 3.432496,-1.069834 6.306391,-1.99697 0.349443,-0.112733 0.490815,0.0045 0.485511,0.176618 -0.148796,4.828834 -0.140243,4.879164 -0.198243,7.918711 -0.0025,0.128454 -0.150406,0.261588 -0.278802,0.266129 -3.217387,0.113783 -5.028608,0.193307 -8.343341,0.282018 -0.209128,0.0056 -0.402335,-0.215016 -0.342166,-0.380184 0.792782,-2.176232 2.105672,-5.991306 2.37065,-6.266322 z" id="path1" transform="rotate(178.48117,39.699725,56.927381)" /><path style="display:inline;fill:#213931;fill-opacity:1" d="m 28.949595,28.771922 c 0.389393,-0.01259 3.206265,1.626787 5.912646,2.966322 0.329076,0.162876 0.348654,0.345485 0.224829,0.465152 -3.473948,3.3573 -3.502915,3.399338 -5.664059,5.537483 -0.09137,0.09032 -0.290217,0.08261 -0.385411,-0.0037 -2.385402,-2.162032 -3.739047,-3.368055 -6.176738,-5.61594 -0.153797,-0.141818 -0.138436,-0.434673 0.01987,-0.5111 2.085781,-1.006979 5.687165,-2.825908 6.068866,-2.838248 z" id="path1-2-4-6-7-3" transform="rotate(46.10434,30.562361,62.56752)" /></g></g></g><g id="layer3" style="display:inline" transform="translate(-2.2073634,-20.674398)"><path style="display:inline;fill:currentColor;fill-opacity:1;stroke:none;stroke-width:0.935105;stroke-opacity:1" d="m 74.149433,33.57882 h 3.446173 l 0.02933,-2.361266 2.148362,0.0076 2.265667,2.361266 h 4.318719 c 0,0 -1.307703,-1.235644 -2.646952,-2.451795 1.664465,-0.06495 2.366153,-1.202821 2.374745,-2.287739 0.0083,-1.06078 -1.289818,-2.22807 -2.587555,-2.210967 -3.107768,0.04096 -9.324023,0.03108 -9.324023,0.03108 l 3.443646,1.844054 c 0,0 2.819598,0.0089 4.19883,0.04144 0.178091,0.0042 0.383783,0.1899 0.392698,0.372956 0.0099,0.202785 -0.195386,0.452216 -0.392698,0.455833 -1.415251,0.02594 -4.148485,0.03108 -4.148485,0.03108 L 77.64776,28.490335 74.168846,26.65479 Z" id="path16" /><path style="fill:currentColor;fill-opacity:1;stroke-width:0.935105" d="m 23.836697,26.618511 -0.04478,6.975633 10.783852,0.02632 0.009,-1.875142 -7.40895,0.0085 0.01656,-0.732477 6.390736,0.01704 0.04139,-1.899329 -6.382459,0.08518 0.02484,-0.740993 7.392394,-0.01703 -0.04139,-1.80564 z" id="path6" /><path style="fill:currentColor;fill-opacity:1;stroke-width:0.935105" d="m 35.25047,26.745911 3.510812,-0.01337 5.331232,3.66569 v -3.652313 l 3.419792,0.01337 0.03901,6.876514 -3.58883,0.01338 -5.253215,-3.652313 0.05201,3.58542 -3.471802,0.06689 z" id="path7" /><path style="fill:currentColor;fill-opacity:1;stroke-width:0.935105" d="m 48.292486,32.231068 c -0.04897,-1.8636 -0.09117,-2.838113 0,-4.160692 0.05334,-0.773767 1.184049,-1.389228 1.716397,-1.418113 2.553818,-0.138576 5.556544,-0.05927 8.334928,-0.06689 1.170069,-0.0032 1.578816,0.669578 1.952277,1.149682 0.286159,0.367871 0.184255,1.591509 0.184255,1.591509 -1.731965,0.01791 -1.720678,0.01737 -3.417929,-0.01514 -0.13828,-0.700787 -0.283635,-0.68023 -0.644615,-0.820112 -1.321873,-0.06285 -1.951406,-0.02247 -3.937977,0.02127 -0.267985,0.0059 -0.739559,0.306528 -0.741172,0.468245 -0.0112,1.122863 -0.0051,1.122583 0.02322,1.953092 0.05746,0.442336 0.289606,0.562608 0.612144,0.69275 1.879142,0.08118 1.867097,0.0881 3.771329,0.04793 0.711656,-0.01502 0.908024,-0.903323 0.949289,-0.90245 1.597889,0.03385 1.597848,0.02684 3.21845,0.0274 0.21792,7.5e-5 0.150165,0.05737 0.0852,1.110409 -0.03697,0.599236 -0.93308,1.574768 -1.659479,1.608745 -2.730506,0.127718 -5.506784,0.04953 -8.313828,0.07693 -1.208318,0.0118 -2.109501,-0.489805 -2.13249,-1.364593 z" id="path8" /><path style="display:inline;fill:currentColor;fill-opacity:1;stroke-width:0.935105" d="m 87.000384,26.59891 10.838742,0.04732 0.0153,1.798146 -7.374024,0.07887 v 0.662475 h 6.346872 l 0.0307,1.829693 -6.438849,0.04732 -0.0307,0.646703 7.420008,0.04732 V 33.63377 L 86.9697,33.58645 Z" id="path13" /><path style="display:inline;fill:currentColor;fill-opacity:1;stroke:none;stroke-width:0.935105;stroke-opacity:1" d="m 61.143358,28.536445 c 0.185343,-0.892973 0.69178,-1.48281 1.899608,-1.70516 2.706553,-0.06458 5.428716,-0.08029 8.121792,-0.02992 1.221591,0.02285 2.237751,0.09177 2.296974,1.595472 0.08118,2.061249 0.106833,2.201266 0.03877,3.569869 -0.06999,1.407329 -1.249788,1.693338 -2.112829,1.695189 -2.73263,0.0059 -5.465394,0.03842 -8.1979,0.01103 -1.207308,-0.175611 -2.015049,-0.811975 -2.104564,-1.91563 -0.213018,-1.406039 2.83576,0.04654 4.148122,0.09972 1.297722,0.05258 2.612821,0.02566 3.896135,0.01995 0.526034,-0.153757 0.55652,-0.198067 0.843193,-0.658132 0.02025,-0.692276 0.06644,-1.045715 0.06784,-2.014283 -0.154517,-0.33795 -0.371995,-0.477858 -0.707506,-0.608274 -1.255649,1.74e-4 -2.712094,-0.01671 -3.915519,0.01 -0.289357,0.0065 -0.689825,0.193284 -0.72689,0.488613 -0.07565,0.602767 -0.07434,1.291221 -0.05815,2.203746 0.0048,0.267936 0.317418,0.492927 0.562128,0.558415 1.341262,0.358939 -4.072304,0.721055 -4.080279,-0.09972 -0.02373,-2.442289 0.006,-2.487016 0.02908,-3.220856 z" id="path15" /></g></svg>
+    <span class="brand-sub">Golden Gate tool<b>KIT</b></span>
+  </div>
+  <div class="spacer"></div>
+  <button class="hbtn" id="themeToggle" title="Toggle light / dark mode">
+    <svg id="themeIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/></svg>
+    <span id="themeLabel">Light</span>
+  </button>
+</header>
+
+<!-- ============ INTRO ============ -->
+<div class="intro" id="intro">
+  <span class="kicker">ENCORE&nbsp;<b>Builder</b></span>
+  <h1>From coding sequence to an assembly-ready <em>nanocompartment&ndash;cargo</em> construct.</h1>
+  <p class="lead">
+    The ENCORE Builder turns your gene of interest into a complete encapsulin cargo construct:
+    choose a nanocompartment, enter your cargo CDS, and set the fusion — the builder returns the
+    standardized Golden Gate modules, cargo primers, and the final Level&nbsp;2 plasmid.
+  </p>
+  <div class="flowrow">
+    <div class="flowstep"><span class="dot" style="background:var(--t1)"></span>Nanocompartment</div>
+    <span class="flowarrow">→</span>
+    <div class="flowstep"><span class="dot" style="background:var(--t3)"></span>Cargo</div>
+    <span class="flowarrow">→</span>
+    <div class="flowstep"><span class="dot" style="background:var(--t4)"></span>Fusion (C/N)</div>
+    <span class="flowarrow">→</span>
+    <div class="flowstep"><span class="dot" style="background:var(--teal)"></span>Modules &amp; primers</div>
+  </div>
+  <div class="prereq">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+    <div>
+      <b>Before you start:</b> know which nanocompartment fits your use case.
+      If you want, use the separate nanocompartment filter first —
+      <!-- TODO: insert real filter URL in href -->
+      <a href="#" onclick="return false" class="prereq-link">open the filter&nbsp;→</a>
+    </div>
+  </div>
+  <button class="start-cta" id="startBtn">
+    Start builder
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+  </button>
+  <div class="intro-foot">Three steps · ~5 minutes · results exportable as FASTA</div>
+</div>
+
+<!-- ============ STEPPER (vertical side rail) ============ -->
+<aside class="side-steps" id="sideSteps">
+  <nav class="stepper" id="stepper">
+    <div class="s-step" data-target="sec-0"><button class="s-node"><span class="s-dot">1</span><span class="s-text"><span class="t">Nanocompartment</span><span class="sub">Selection</span></span></button><span class="s-line"></span></div>
+    <div class="s-step" data-target="sec-1"><button class="s-node"><span class="s-dot">2</span><span class="s-text"><span class="t">Cargo</span><span class="sub">Gene of interest</span></span></button><span class="s-line"></span></div>
+    <div class="s-step" data-target="sec-2"><button class="s-node"><span class="s-dot">3</span><span class="s-text"><span class="t">Configure</span><span class="sub">Fusion · promoter · surface</span></span></button><span class="s-line"></span></div>
+    <div class="s-step" data-target="sec-3"><button class="s-node"><span class="s-dot">4</span><span class="s-text"><span class="t">Result</span><span class="sub">Modules &amp; primers</span></span></button></div>
+  </nav>
+</aside>
+<!-- ============ TOP BAR: progress + live construct map ============ -->
+<div class="stepper-wrap" id="stepperWrap">
+  <div class="progress-rail"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="grow-strip" id="growStrip">
+    <span class="gs-label" id="gsLevel">Level 0</span>
+    <div class="gs-map" id="gsMap"></div>
+    <span class="gs-count" id="gsCount">0 / 6</span>
+  </div>
+</div>
+
+<div class="shell" id="shell">
+
+  <!-- ===== STEP 1: NANOCOMPARTMENT ===== -->
+  <section class="section" id="sec-0">
+    <div class="card">
+      <div class="card-head">
+        <span class="num-badge">1</span>
+        <div class="htext">
+          <div class="eyebrow">Step 1</div>
+          <h2>Select nanocompartment<button class="info" data-info="nc">i</button></h2>
+          <p>Automatically determines the matching targeting peptide for the cargo fusion.</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <label class="field">
+          <span class="lab">Nanocompartment <span class="hint">choose from library</span></span>
+          <select id="ncSelect">
+            <option value="" disabled selected>— please select —</option>
+          </select>
+        </label>
+        <div class="nc-meta" id="ncMeta"></div>
+        <div class="helplink">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          Not sure which fits? Use the separate nanocompartment filter first to find the best match for your use case.
+        </div>
+        <div class="nav">
+          <button class="btn btn-primary" id="next0" disabled>Continue to cargo
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12l7 7 7-7"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== STEP 2: CARGO ===== -->
+  <section class="section" id="sec-1">
+    <div class="card" id="card-1">
+      <div class="card-head">
+        <span class="num-badge">2</span>
+        <div class="htext">
+          <div class="eyebrow">Step 2</div>
+          <h2>Enter cargo<button class="info" data-info="cargo">i</button></h2>
+          <p>Your gene-of-interest CDS — without a stop codon at the end.</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <div id="lock1" class="lockhint" style="display:none">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+          Complete step 1 first to enter the cargo.
+        </div>
+        <div id="body1">
+          <label class="field">
+            <span class="lab">Cargo sequence (CDS)
+              <button class="info" data-info="stop">i</button>
+              <span class="hint" id="cargoLen">0 bp</span></span>
+            <textarea id="cargoSeq" placeholder="Paste your own cargo CDS (A/T/G/C) — without a stop codon at the end …"></textarea>
+            <div class="seqmeta" id="cargoMeta"></div>
+          </label>
+          <div id="cargoStopArea"></div>
+          <div class="preset-row">
+            <span class="plabel">Or load an example:</span>
+            <div id="presetChips" style="display:flex;gap:8px;flex-wrap:wrap"></div>
+          </div>
+          <div class="nav">
+            <button class="btn btn-ghost" id="back1">Back</button>
+            <button class="btn btn-primary" id="next1" disabled>Continue to fusion
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12l7 7 7-7"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== STEP 3: FUSION ===== -->
+  <section class="section" id="sec-2">
+    <div class="card" id="card-2">
+      <div class="card-head">
+        <span class="num-badge">3</span>
+        <div class="htext">
+          <div class="eyebrow">Step 3</div>
+          <h2>Configure the construct</h2>
+          <p>Cargo fusion direction, promoter, and optional surface display.</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <div id="lock2" class="lockhint" style="display:none">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+          Complete step 2 first.
+        </div>
+        <div id="body2">
+          <div class="grouplab">Cargo fusion<button class="info" data-info="fusion">i</button></div>
+          <div class="seg-full" id="fusionSeg">
+            <button data-v="C" class="on">C-terminal<small>Default recommendation</small></button>
+            <button data-v="N">N-terminal<small>Alternative</small></button>
+          </div>
+          <div class="helplink">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            Which side folds better depends on the protein — if in doubt, test both or
+            <a href="#" onclick="return false">use the decision guide (external)</a>.
+          </div>
+          <label class="field" style="margin-top:18px">
+            <span class="lab">Linker<button class="info" data-info="linker">i</button></span>
+            <select id="linker"></select>
+          </label>
+          <div class="grouplab">Promoter</div>
+          <label class="field">
+            <span class="lab">Promoter<button class="info" data-info="promoter">i</button></span>
+            <select id="promoter">
+              <option value="GAL110" selected>GAL1-10 — bidirectional, inducible</option>
+            </select>
+          </label>
+          <div class="grouplab">Surface display <span>optional</span><button class="info" data-info="marker">i</button></div>
+          <label class="field">
+            <span class="lab">Surface marker <span class="hint">displayed on the cage exterior</span></span>
+            <select id="markerSel">
+              <option value="" selected>None — NCS spacer only</option>
+            </select>
+          </label>
+          <div class="seg-full" id="markerTermSeg" style="display:none">
+            <button data-v="N" class="on">N-terminal display<small>Shell N-terminus · Type 1</small></button>
+            <button data-v="C">C-terminal display<small>Shell C-terminus · Type 5</small></button>
+          </div>
+          <div class="nav">
+            <button class="btn btn-ghost" id="back2">Back</button>
+            <button class="btn btn-primary" id="next2">Calculate construct
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12l7 7 7-7"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== STEP 4: RESULT ===== -->
+  <section class="section" id="sec-3">
+    <div class="card" id="card-3">
+      <div class="card-head">
+        <span class="num-badge">4</span>
+        <div class="htext">
+          <div class="eyebrow">Step 4</div>
+          <h2>Modules &amp; primers</h2>
+          <p>Golden Gate assembly Level 0 → 1 → 2, cargo primers and order export.</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <div id="lock3" class="lockhint" style="display:none">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+          Complete step 3 first.
+        </div>
+        <div id="body3" style="display:none">
+
+          <!-- 4.1 Level 0/1/2 -->
+          <div class="block">
+            <div class="sectitle"><span class="num">4.1</span><h3>Golden Gate assembly<button class="info" data-info="levels">i</button></h3></div>
+            <p class="secsub">Level 0 (individual parts) → Level 1 (modules) → Level 2 (finished construct). All strands 5′→3′.</p>
+
+            <div class="levelblock">
+              <div class="levellabel"><span class="lvltag">Level 0</span><h4>Your cargo part</h4><span class="enzyme-tag">BbsI domestication</span></div>
+              <div class="strandwrap"><div class="strand" id="lvl0strand"></div></div>
+            </div>
+
+            <div class="levelblock">
+              <div class="levellabel"><span class="lvltag">Level 1</span><h4>Cargo module</h4><span class="enzyme-tag" id="cargoModTag"></span></div>
+              <div class="strandwrap"><div class="strand" id="lvl1cargo"></div></div>
+            </div>
+
+            <div class="levelblock">
+              <div class="levellabel"><span class="lvltag">Level 1</span><h4>Nanocompartment module</h4><span class="enzyme-tag">BsaI</span></div>
+              <div class="strandwrap"><div class="strand" id="lvl1nc"></div></div>
+            </div>
+
+            <div class="levelblock">
+              <div class="levellabel"><span class="lvltag">Level 2</span><h4>Finished construct</h4><span class="enzyme-tag">Cargo ← Promoter → NC</span></div>
+              <div class="strandwrap"><div class="strand" id="lvl2strand"></div></div>
+            </div>
+
+            <div class="legend" id="legend"></div>
+            <div class="note">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+              Both transcripts <b>start (5′) at the central promoter</b> and run outward (3′): the NC module on the <b>sense (+) strand</b> (right), the cargo module on the <b>antisense (−) strand</b> (left). The NCS slots flanking the shell are open <b>surface slots</b> — e.g. <b>SpyCatcher</b> — displayed on the encapsulin exterior. A <b style="color:#e53935">*</b> marks the part carrying the <b>stop codon</b> (each ORF's 3′ end); its position follows the C/N fusion and the display terminus.
+            </div>
+          </div>
+
+          <!-- 4.2 Primer -->
+          <div class="block">
+            <div class="sectitle"><span class="num">4.2</span><h3>Primers for your cargo<button class="info" data-info="primer">i</button></h3></div>
+            <p class="secsub">Only your cargo is newly amplified. Tm via the Wallace rule, target ±5 °C between forward/reverse.</p>
+            <table>
+              <thead><tr><th>Primer</th><th>Sequence (5′→3′)</th><th>Length</th><th>Tm</th></tr></thead>
+              <tbody id="primers"></tbody>
+            </table>
+            <div class="backendnote">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>
+              <div>Preview using a simplified Wallace Tm. In the finished tool, your biology code replaces these values via <code>POST /api/primer</code> (nearest-neighbor Tm, BsaI site check, iterative length adjustment).</div>
+            </div>
+          </div>
+
+          <!-- 4.4 Plasmid -->
+          <div class="block">
+            <div class="sectitle"><span class="num">4.3</span><h3>Level 2 plasmid<button class="info" data-info="plasmid">i</button></h3></div>
+            <p class="secsub">pESC shuttle vector with transcription direction and replication origin.</p>
+            <div class="platrow">
+              <svg id="plasmid" viewBox="0 0 380 380"></svg>
+              <div class="platext">
+                <h4 id="platitle"></h4>
+                <p id="paraExplain"></p>
+                <ul class="featlist" id="feats"></ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4.5 Order -->
+          <div class="block">
+            <div class="sectitle"><span class="num">4.4</span><h3>To order<button class="info" data-info="order">i</button></h3></div>
+            <p class="secsub">Standard modules are fixed and only need to be sourced once. Your cargo is the only new part for this construct.</p>
+            <div class="orderlist" id="orderList"></div>
+            <div id="orderCdsBox"></div>
+            <div class="copybar">
+              <button class="chip" id="copyPrimers">Primers as FASTA</button>
+              <button class="chip" id="copyCds">Cargo + overhangs</button>
+              <button class="chip primary-chip" id="dlFasta">Construct as FASTA</button>
+            </div>
+          </div>
+
+          <div class="nav">
+            <button class="btn btn-ghost" id="back3">Back</button>
+            <button class="btn btn-primary" id="restart">New construct</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer id="pagefoot">ENCORE Builder · Frontend prototype v6 · iGEM KIT — draft, not final.</footer>
+
+<!-- Info popover (positioned/populated via JS) -->
+<div class="popover" id="popover">
+  <div class="pop-img" id="popImg"><span class="ph-tag">Graphic placeholder</span><span id="popImgText">Custom graphic to be added here later</span></div>
+  <button class="pop-close" id="popClose"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+  <div class="pop-body"><h5 id="popTitle"></h5><div id="popText"></div></div>
+</div>
+
+<script>
+/* ===================== ENCORE Builder v5 — Logik ===================== */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+
+/* ---------- Sequenz-Helfer ---------- */
+const clean = s => (s||'').toUpperCase().replace(/[^ATGC]/g,'');
+const gc = s => s.length ? Math.round((s.replace(/[^GC]/g,'').length/s.length)*100) : 0;
+const rc = s => s.split('').reverse().map(c => ({A:'T',T:'A',G:'C',C:'G'}[c]||'N')).join('');
+const wallaceTm = s => { const at=(s.match(/[AT]/g)||[]).length, g=(s.match(/[GC]/g)||[]).length; return 2*at+4*g; };
+const STOP_CODONS = ['TAA','TAG','TGA'];
+const findInternalStops = seq => { const h=[]; for(let i=0;i+3<=seq.length;i+=3){const c=seq.slice(i,i+3); if(STOP_CODONS.includes(c)) h.push({pos:i,codon:c});} return h; };
+const endsWithStop = seq => seq.length>=3 && STOP_CODONS.includes(seq.slice(-3)) ? seq.slice(-3) : null;
+
+/* ---------- Golden-Gate-Konstanten (aus dem Type-Diagramm) ---------- */
+const T_OH = { 1:['ACAT','ATAC'], 2:['TATG','AAGA'], 3:['TTCT','TAGG'], 4:['ATCC','ACCG'], 5:['TGGC','AACA'] };
+const CARGO_L1_FLANK = ['CCAA','GCAA'];   // BsaI-Flanken Cargo-Modul (Level1)
+const NC_L1_FLANK    = ['TGAT','TTAC'];   // BsaI-Flanken NC-Modul (Level1)
+const PROMO_FLANK    = ['CGTT','ACTA'];   // Promoter-Flanken
+
+/* ---------- Libraries (expandable — hence dropdown) ---------- */
+const NANOCOMPARTMENTS = [
+  { id:'tmari', label:'Thermotoga maritima',          T:1, dia:'24 nm', tp:'TP-Tm', shell:'E-Tm', shellBp:516 },
+  { id:'mxan',  label:'Myxococcus xanthus',           T:3, dia:'32 nm', tp:'TP-Mx', shell:'E-Mx', shellBp:579 },
+  { id:'qther', label:'Quasibacillus thermotolerans', T:4, dia:'42 nm', tp:'TP-Qt', shell:'E-Qt', shellBp:621 },
+  // more entries can be added here -> dropdown scales automatically
+];
+const CARGO_PRESETS = [
+  { id:'gfp',  label:'GFP',        seq:'ATGAGCAAAGGCGAAGAACTGTTTACCGGCGTTGTTCCGATTCTGGTTGAACTGGATGGCGATGTTAACGGCCATAAATTTAGCGTTAGCGGCGAAGGCGAAGGCGATGCGACCTATGGCAAACTGACCCTGAAATTTATTTGCACCACCGGCAAACTGCCGGTTCCGTGGCCGACCCTGGTTACCACCCTGAGC' },
+  { id:'pabp', label:'PABP (Pab1p)', seq:'ATGGCAGATATTACCGAAAAACTGCTGGAACAGCTGAACAGCCTGACCCTGGAAGAAAGCAGCAAAGAAGTTAGCGGCGAACTGAGCGGCAAACTGGAAGCAAGCAGCAGCGAAAGCAGCGGC' },
+];
+const LINKERS = [
+  { id:'GSSS2', label:'2×(GSSS)', aa:8,  bp:24, desc:'short · flexible',      repeat:'GSSS', n:2, type:'flexible' },
+  { id:'GSSS3', label:'3×(GSSS)', aa:12, bp:36, desc:'medium · flexible',     repeat:'GSSS', n:3, type:'flexible' },
+  { id:'GGS2',  label:'2×(GGS)',  aa:6,  bp:18, desc:'short · very flexible', repeat:'GGS', n:2, type:'flexible' },
+];
+/* Optional surface-display markers — fused into a shell-flanking slot (Type 1),
+   so the protein ends up presented on the OUTSIDE of the encapsulin cage. */
+const SURFACE_MARKERS = [
+  { id:'spycatcher', label:'SpyCatcher', aa:113, bp:339, desc:'covalent SpyTag capture (isopeptide bond)' },
+  { id:'spytag',     label:'SpyTag',     aa:13,  bp:39,  desc:'13-aa peptide, binds SpyCatcher' },
+];
+
+/* ---------- Info bubble content (placeholder graphic + theory) ---------- */
+const INFO = {
+  nc: { title:'What is a nanocompartment?', img:'Diagram: encapsulin shell with cargo',
+    body:`<p>Encapsulins are hollow protein cages that self-assemble and encapsulate cargo proteins inside.</p>
+          <p>The variant you choose determines the matching <b>targeting peptide (TP)</b>, which directs your cargo into the compartment.</p>
+          <p>The NCS slots flanking the shell are open <b>surface positions</b>: a display marker such as <b>SpyCatcher</b> placed here is presented on the <i>outside</i> of the cage — handy for attaching binders, tags or a second protein.</p>` },
+  cargo: { title:'Cargo / gene of interest', img:'Diagram: cargo CDS in reading frame',
+    body:`<p>The cargo is the protein that should end up inside the compartment — e.g. an enzyme or a reporter like GFP.</p>
+          <p>You provide the coding sequence (CDS). It is directed into the compartment via the targeting peptide.</p>` },
+  stop: { title:'Why no stop codon?', img:'Diagram: TP–linker–cargo reading frame',
+    body:`<p>The cargo is fused with the linker and targeting peptide into <b>one continuous protein</b>.</p>
+          <p>A stop codon (TAA, TAG, or TGA) at the end would terminate translation early — the TP would no longer be attached and the cargo would not be encapsulated.</p>` },
+  fusion: { title:'C- vs. N-terminal fusion', img:'Diagram: TP at the N- or C-terminus',
+    body:`<p>The targeting peptide can sit at the start (N-terminus) or end (C-terminus) of the cargo.</p>
+          <p>Which side works better depends on protein folding: if an important active site or folding signal is near a terminus, the TP will interfere there. If in doubt, test both variants.</p>` },
+  linker: { title:'Comparing the linkers', img:'Diagram: GS linker between TP and cargo',
+    body:`<p>Linkers are short, flexible amino acid chains between the targeting peptide and the cargo. They consist of glycine (G) and serine (S) — small and uncharged, so they barely interfere with folding.</p>
+          <p><b>2×(GSSS)</b> — 8 aa, short: keeps TP and cargo close together.<br>
+             <b>3×(GSSS)</b> — 12 aa, medium: more distance, more freedom of movement between the domains.<br>
+             <b>2×(GGS)</b> — 6 aa, very short &amp; especially flexible (high glycine content).</p>
+          <p>Rule of thumb: more length = more room if TP and cargo otherwise interfere with each other — but also somewhat more prone to degradation. <i>Your team will add the precise recommendation for your system.</i></p>` },
+  marker: { title:'Surface-display marker', img:'Diagram: SpyCatcher shown on the shell exterior',
+    body:`<p>Optional. A marker fused into a slot flanking the shell is presented on the <b>outside</b> of the assembled encapsulin — unlike your cargo, which is packaged <i>inside</i>.</p>
+          <p><b>SpyCatcher</b> forms a covalent isopeptide bond with any <b>SpyTag</b>-carrying protein, so you can click a binder, enzyme or fluorophore onto the cage surface after assembly. <b>SpyTag</b> is the small partner peptide.</p>
+          <p>Choose which terminus of the shell it is fused to: <b>N-terminal</b> (Type 1 slot, default) or <b>C-terminal</b> (Type 5 slot). A short <b>L1 linker</b> always sits between the shell and the marker so the displayed protein has room to fold. For <i>M. xanthus</i> the C-terminus and an external loop are the documented display sites. Leave it on <i>None</i> and the slots stay inert NCS spacers.</p>` },
+  promoter: { title:'Bidirectional promoter', img:'Diagram: GAL1-10 transcribing both ways',
+    body:`<p><b>GAL1-10</b> is a bidirectional yeast promoter: it drives <b>two genes at once</b> in opposite directions. Both transcripts <b>start (5′) at the promoter</b> and run outward.</p>
+          <p>The nanocompartment module is read off the <b>sense (+) strand</b> (to the right), the cargo module off the <b>antisense (−) strand</b> (to the left) — that is why they point away from each other. Inducible via galactose.</p>` },
+  levels: { title:'Level 0 → 1 → 2', img:'Diagram: hierarchical Golden Gate assembly',
+    body:`<p><b>Domestication (BbsI):</b> external sequences are cloned into standardized Level 0 parts using BbsI — internal sites are removed and the fixed 4 nt fusion overhangs are added.</p>
+          <p><b>Level 0 → 1 (BsaI):</b> several Level 0 parts are assembled via BsaI into one module (cargo module, NC module).</p>
+          <p><b>Level 1 → 2 (BsaI):</b> the modules plus the promoter form the finished construct in the target vector.</p>` },
+  plate: { title:'Pipetting plan (96-well)', img:'Diagram: occupied wells on a plate',
+    body:`<p>The highlighted wells show which standard modules you take from the stock plate and pipette into the assembly reaction for this construct.</p>
+          <p>The colors match the building blocks in the assembly above.</p>` },
+  primer: { title:'Primers &amp; melting temperature', img:'Diagram: primer with BsaI site + overhang',
+    body:`<p>For your cargo's PCR you need two primers (forward + reverse). Each carries the BsaI recognition site plus the 4 nt Golden Gate overhang at the front.</p>
+          <p>The <b>melting temperature (Tm)</b> of both primers should differ by no more than ±5 °C, or the PCR will run unevenly. Wallace rule: 2 °C per A/T, 4 °C per G/C.</p>` },
+  plasmid: { title:'Level 2 plasmid map', img:'Diagram: pESC with origin &amp; markers',
+    body:`<p>The finished construct in the pESC shuttle vector. Arrows show the transcription direction (5′→3′) of both modules, starting from the promoter.</p>
+          <p>The origin and markers allow propagation and selection in yeast and <i>E. coli</i>.</p>` },
+  order: { title:'What needs to be ordered?', img:'Diagram: standard parts vs. cargo',
+    body:`<p>The standard modules (TP, linker, shell, promoter) are <b>fixed</b> — once sourced, they are never changed.</p>
+          <p>The NCS positions on the NC module are optional <b>surface slots</b>: leave them as inert spacers, or source a display marker (e.g. <b>SpyCatcher</b>) once and reuse it.</p>
+          <p>For every new construct, only your <b>cargo</b> is added: as a synthesis or PCR product with the matching Golden Gate overhangs.</p>` },
+};
+
+/* ---------- Color key (CSS variables, so theme/CB take effect) ---------- */
+const KIND_VAR = { t1:'--t1', t2:'--t2', t3:'--t3', t4:'--t4', t5:'--t5', ncs:'--ncs', promo:'--promo', shell:'--shell', mark:'--mark' };
+const KIND_INK = { t1:'--t1-ink', t2:'--t2-ink', t3:'--t3-ink', t4:'--t4-ink', t5:'--t5-ink', ncs:'--ncs-ink', promo:'--promo-ink', shell:'--shell-ink', mark:'--mark-ink' };
+const cvar = k => `var(${KIND_VAR[k]})`;
+const cink = k => `var(${KIND_INK[k]})`;
+
+/* ===================== State ===================== */
+const state = {
+  nc:null, cargoSeq:'', cargoLabel:'Custom cargo', cargoFromPreset:null, cargoValid:false,
+  fusion:'C', linker:'GSSS3', promoter:'GAL110', marker:null, markerTerm:'N',
+  unlocked:[true,false,false,false],
+};
+let lastResult=null;
+
+/* ===================== Theme toggle (light/dark) ===================== */
+$('#themeToggle').addEventListener('click', ()=>{
+  const dark = document.documentElement.getAttribute('data-theme')==='dark';
+  document.documentElement.setAttribute('data-theme', dark?'light':'dark');
+  $('#themeLabel').textContent = dark?'Light':'Dark';
+  $('#themeIcon').innerHTML = dark
+    ? '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/>'
+    : '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';
+  if(lastResult) renderPlasmid(lastResult); // redraw SVG colors
+});
+
+/* ===================== Info popover ===================== */
+const pop = $('#popover');
+function openPopover(key, anchor){
+  const data = INFO[key]; if(!data) return;
+  $('#popTitle').textContent = data.title;
+  $('#popText').innerHTML = data.body;
+  $('#popImgText').textContent = data.img;
+  pop.classList.add('show');
+  const r = anchor.getBoundingClientRect();
+  const pw = 340, ph = pop.offsetHeight;
+  let left = r.left + r.width/2 - pw/2;
+  left = Math.max(12, Math.min(left, window.innerWidth - pw - 12));
+  let top = r.bottom + 8;
+  if(top + ph > window.innerHeight - 12) top = r.top - ph - 8;
+  pop.style.left = left+'px'; pop.style.top = Math.max(12,top)+'px';
+}
+document.addEventListener('click', e=>{
+  const btn = e.target.closest('.info');
+  if(btn){ e.stopPropagation(); openPopover(btn.dataset.info, btn); return; }
+  if(!e.target.closest('#popover')) pop.classList.remove('show');
+});
+$('#popClose').addEventListener('click', ()=>pop.classList.remove('show'));
+window.addEventListener('scroll', ()=>pop.classList.remove('show'), {passive:true});
+
+/* ===================== Intro -> builder ===================== */
+$('#startBtn').addEventListener('click', ()=>{
+  $('#intro').style.display='none';
+  $('#sideSteps').classList.add('show');
+  $('#stepperWrap').classList.add('show');
+  $('#shell').classList.add('show');
+  $('#pagefoot').classList.add('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+  setActive(0);
+});
+
+/* ===================== Step 1: nanocompartment dropdown ===================== */
+function initNcDropdown(){
+  const sel=$('#ncSelect');
+  NANOCOMPARTMENTS.forEach(nc=>{
+    const o=document.createElement('option');
+    o.value=nc.id; o.textContent=`${nc.label} — T=${nc.T}, ⌀ ${nc.dia}`;
+    sel.appendChild(o);
+  });
+  sel.addEventListener('change', ()=>{
+    state.nc = NANOCOMPARTMENTS.find(n=>n.id===sel.value);
+    renderNcMeta();
+    $('#next0').disabled=false;
+    updateConstructStrip();
+  });
+}
+function renderNcMeta(){
+  const n=state.nc; if(!n){ $('#ncMeta').innerHTML=''; return; }
+  $('#ncMeta').innerHTML=`
+    <div class="nc-tag"><span class="sw" style="background:${cvar('t1')}"></span>Targeting peptide <b>${n.tp}</b></div>
+    <div class="nc-tag"><span class="sw" style="background:${cvar('shell')}"></span>Shell CDS <b>${n.shell}</b> · ${n.shellBp} bp</div>
+    <div class="nc-tag">Triangulation number <b>T=${n.T}</b></div>
+    <div class="nc-tag">Diameter <b>${n.dia}</b></div>`;
+}
+
+/* ===================== Step 2: cargo ===================== */
+function initPresetChips(){
+  const wrap=$('#presetChips');
+  CARGO_PRESETS.forEach(p=>{
+    const b=document.createElement('button');
+    b.className='preset-chip'; b.dataset.id=p.id;
+    b.innerHTML=`<span class="pc-dot"></span>${p.label}`;
+    b.addEventListener('click', ()=>{
+      $('#cargoSeq').value=p.seq;
+      state.cargoFromPreset=p.id; state.cargoLabel=p.label;
+      $$('#presetChips .preset-chip').forEach(c=>c.classList.toggle('on', c.dataset.id===p.id));
+      handleCargoInput();
+    });
+    wrap.appendChild(b);
+  });
+}
+function handleCargoInput(){
+  const raw=$('#cargoSeq').value, s=clean(raw);
+  state.cargoSeq=s;
+  if(!state.cargoFromPreset) state.cargoLabel='Custom cargo';
+  $('#cargoLen').textContent=s.length+' bp';
+
+  let meta='';
+  if(s.length){
+    const aa=Math.floor(s.length/3);
+    meta=`Length <b>${s.length} bp</b> · ~<b>${aa} aa</b> · GC <b>${gc(s)}%</b>`;
+    const bad=raw.toUpperCase().replace(/[ATGC\s]/g,'').length;
+    if(bad>0) meta+=` · <span class="err">${bad} invalid characters ignored</span>`;
+    if(s.length%3!==0) meta+=` · <span class="err">not a multiple of 3</span>`;
+  }
+  $('#cargoMeta').innerHTML=meta;
+
+  const area=$('#cargoStopArea'); area.innerHTML='';
+  if(s.length>=3){
+    const trailing=endsWithStop(s);
+    const internal=findInternalStops(s.slice(0,s.length-3));
+    if(trailing){
+      area.innerHTML=`<div class="stopwarn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        <div><b>Stop codon at the end (${trailing}).</b> Please remove it — otherwise the targeting peptide won't be attached and the cargo won't be encapsulated.</div></div>`;
+    } else if(internal.length){
+      area.innerHTML=`<div class="stopwarn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        <div><b>Possible stop codon in the reading frame</b> (position ${internal[0].pos+1}: ${internal[0].codon}). Check the reading frame.</div></div>`;
+    } else {
+      area.innerHTML=`<div class="stopok"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>
+        <div>No stop codon found — sequence is ready for fusion.</div></div>`;
+    }
+  }
+  const ok = s.length>=30 && s.length%3===0 && !endsWithStop(s);
+  state.cargoValid=ok;
+  $('#next1').disabled=!ok;
+  updateConstructStrip();
+}
+$('#cargoSeq').addEventListener('input', ()=>{ state.cargoFromPreset=null; $$('#presetChips .preset-chip').forEach(c=>c.classList.remove('on')); handleCargoInput(); });
+
+/* ===================== Step 3: fusion + linker ===================== */
+function initLinkerDropdown(){
+  const sel=$('#linker');
+  LINKERS.forEach(l=>{ const o=document.createElement('option'); o.value=l.id; o.textContent=`${l.label} — ${l.aa} aa, ${l.desc}`; if(l.id===state.linker)o.selected=true; sel.appendChild(o); });
+}
+function initMarkerDropdown(){
+  const sel=$('#markerSel');
+  SURFACE_MARKERS.forEach(mk=>{ const o=document.createElement('option'); o.value=mk.id; o.textContent=`${mk.label} — ${mk.aa} aa · ${mk.desc}`; sel.appendChild(o); });
+  sel.addEventListener('change', ()=>{
+    state.marker = sel.value || null;
+    $('#markerTermSeg').style.display = state.marker ? 'flex' : 'none';
+    updateConstructStrip();
+  });
+  $$('#markerTermSeg button').forEach(b=>b.addEventListener('click', ()=>{
+    $$('#markerTermSeg button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+    state.markerTerm=b.dataset.v; updateConstructStrip();
+  }));
+}
+$$('#fusionSeg button').forEach(b=>b.addEventListener('click', ()=>{
+  $$('#fusionSeg button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); state.fusion=b.dataset.v;
+}));
+
+/* ===================== Lock / navigation ===================== */
+function applyLocks(){
+  [1,2,3].forEach(i=>{
+    $('#lock'+i).style.display = state.unlocked[i]?'none':'flex';
+    $('#body'+i).style.display = state.unlocked[i]?'block':'none';
+    $('#card-'+i).classList.toggle('locked', !state.unlocked[i]);
+  });
+  updateConstructStrip();
+}
+
+/* Top construct map — selected modules appear in their place and fuse (bidirectional).
+   Empty slots are dashed; chosen modules fill in and interlock; when computed → "fused". */
+function updateConstructStrip(){
+  const host=$('#gsMap'); if(!host) return;
+  const n=state.nc, link=LINKERS.find(l=>l.id===state.linker);
+  const tp    = { kind:'t1',    label:n? n.tp : 'TP',            filled: !!n };
+  const lk    = { kind:'t2',    label:link? link.label : 'Linker', filled: !!state.unlocked[2] };
+  const cargo = { kind:'t3',    label: state.cargoValid ? (state.cargoLabel!=='Custom cargo' ? state.cargoLabel : state.cargoSeq.length+' bp') : 'Cargo', filled: !!state.cargoValid };
+  const shell = { kind:'shell', label:n? n.shell : 'Shell',      filled: !!n };
+  const ncs   = { kind:'ncs',   label:'NCS',                     filled: !!n };
+  const mk    = SURFACE_MARKERS.find(x=>x.id===state.marker) || null;
+  const marker= { kind:'mark',  label:mk? mk.label : 'Marker',  filled: !!mk };
+  const promoFilled = !!n;
+  const seg = (p, side) => p.filled
+    ? `<div class="gs-seg ${side}" style="background:${cvar(p.kind)};color:${cink(p.kind)}"><span>${p.label}</span></div>`
+    : `<div class="gs-seg empty ${side}"><span>${p.label}</span></div>`;
+  // Mirror the actual modules (incl. the NCS / surface slots), matching the Level diagrams.
+  // Colour every slot by its Type position (Type 1..5), like the scheme figure.
+  const byPos = arr => arr.map((p,i)=> p.kind==='mark' ? p : {...p, kind:'t'+(i+1)});
+  const nclink = { kind:'t2', label:'L1', filled: !!(n && mk) };
+  const leftArr  = state.fusion==='C' ? [tp, lk, cargo, ncs, ncs] : [ncs, ncs, cargo, lk, tp];
+  const rightArr = (mk && state.markerTerm==='C') ? [ncs, ncs, shell, nclink, marker]
+                 : (mk && state.markerTerm==='N') ? [marker, nclink, shell, ncs, ncs]
+                 : [ncs, ncs, shell, ncs, ncs];
+  const left  = byPos(leftArr).map(p=>seg(p,'left')).join('');
+  const right = byPos(rightArr).map(p=>seg(p,'right')).join('');
+  const hub = promoFilled
+    ? `<div class="gs-hub" style="background:${cvar('promo')};color:${cink('promo')}"><span class="gs-ar">◄</span>GAL1-10<span class="gs-ar">►</span></div>`
+    : `<div class="gs-hub empty"><span class="gs-ar">◄</span>Promoter<span class="gs-ar">►</span></div>`;
+  const fused = !!state.unlocked[3];
+  host.className = 'gs-map' + (fused ? ' fused' : '');
+  host.innerHTML = `<div class="gs-arm left">${left}</div>${hub}<div class="gs-arm right">${right}</div>`;
+  const filled = [tp.filled, lk.filled, cargo.filled, shell.filled, ncs.filled, promoFilled].filter(Boolean).length;
+  $('#gsCount').textContent = fused ? 'fused' : filled+' / 6';
+  $('#gsLevel').textContent = fused ? 'Level 2' : (filled ? 'Level 0/1' : 'Level 0');
+}
+const scrollToSection = id => document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'});
+$('#next0').addEventListener('click', ()=>{ state.unlocked[1]=true; applyLocks(); updateStepperLocks(); scrollToSection('sec-1'); });
+$('#back1').addEventListener('click', ()=>scrollToSection('sec-0'));
+$('#next1').addEventListener('click', ()=>{ state.unlocked[2]=true; applyLocks(); updateStepperLocks(); scrollToSection('sec-2'); });
+$('#back2').addEventListener('click', ()=>scrollToSection('sec-1'));
+$('#next2').addEventListener('click', ()=>{
+  state.linker=$('#linker').value; state.promoter=$('#promoter').value;
+  compute(); state.unlocked[3]=true; applyLocks(); updateStepperLocks(); scrollToSection('sec-3');
+});
+$('#back3').addEventListener('click', ()=>scrollToSection('sec-2'));
+/* "New construct": wipe every input and every derived result, then start over at step 1. */
+function resetBuilder(){
+  // state back to its initial shape
+  state.nc=null; state.cargoSeq=''; state.cargoLabel='Custom cargo';
+  state.cargoFromPreset=null; state.cargoValid=false;
+  state.fusion='C'; state.linker='GSSS3'; state.promoter='GAL110';
+  state.marker=null; state.markerTerm='N';
+  state.unlocked=[true,false,false,false];
+  lastResult=null;
+
+  // form controls
+  $('#ncSelect').selectedIndex=0;
+  $('#cargoSeq').value='';
+  $('#linker').value=state.linker;
+  $('#promoter').value=state.promoter;
+  $('#markerSel').value='';
+  $('#markerTermSeg').style.display='none';
+  $$('#presetChips .preset-chip').forEach(c=>c.classList.remove('on'));
+  $$('#fusionSeg button').forEach(b=>b.classList.toggle('on', b.dataset.v==='C'));
+  $$('#markerTermSeg button').forEach(b=>b.classList.toggle('on', b.dataset.v==='N'));
+
+  // derived output
+  $('#cargoLen').textContent='0 bp';
+  $('#cargoModTag').textContent='';
+  $('#platitle').textContent='';
+  ['#ncMeta','#cargoMeta','#cargoStopArea','#lvl0strand','#lvl1cargo','#lvl1nc','#lvl2strand',
+   '#legend','#primers','#orderList','#orderCdsBox','#feats','#plasmid','#paraExplain']
+    .forEach(sel=>{ const el=$(sel); if(el) el.innerHTML=''; });
+  $('#next0').disabled=true; $('#next1').disabled=true;
+
+  applyLocks(); updateStepperLocks(); setActive(0); updateProgress();
+  scrollToSection('sec-0');
+}
+$('#restart').addEventListener('click', resetBuilder);
+
+/* ===================== Strand rendering (5'->3') ===================== */
+function partEl(p){
+  const star = p.stop ? '<span class="stopstar">*</span>' : '';
+  const k = p.kind || 'ncs';
+  return `<div class="part${p.dummy?' dummy':''}" style="background:${cvar(k)};color:${cink(k)}"><span class="ptype">${p.type||''}</span><span class="plab">${p.label}${star}</span><small>${p.note||(p.dummy?'Spacer':'')}</small></div>`;
+}
+function renderStrand(elId, parts, opts={}){
+  const el=$(elId);
+  const partsHtml = parts.map(partEl).join('');
+  if(opts.separate){
+    // Level 0 = individual parts: show them as discrete pieces, not an assembled strand
+    el.innerHTML = `<div class="partsrow sep">${partsHtml}</div>`;
+    return;
+  }
+  // The cargo module's ORF runs Type 5->1 (antisense, 3'/stop on the left), so its
+  // 5'/3' labels are flipped relative to the sense-strand NC module.
+  const d5 = opts.antisense ? '3′' : '5′';
+  const d3 = opts.antisense ? '5′' : '3′';
+  el.innerHTML = `<div class="strand-dir"><span>${d5}</span><span>${d3}</span></div><div class="partsrow">${partsHtml}</div>`;
+}
+
+/* Level 0: your cargo is the only new part — show just the CDS with its Type 3 overhangs. */
+function renderLevel0(elId, m){
+  const cg = m.l0.find(p=>p.mapnote && /bp$/.test(p.mapnote)) || m.l0[2];
+  const [ohL, ohR] = T_OH[3];
+  $(elId).innerHTML = `<div class="l0row">
+    <span class="l0oh">${ohL}</span>
+    <div class="part" style="background:${cvar('t3')};color:${cink('t3')}"><span class="ptype">Type 3</span>${cg.label}<small>${cg.note||''}</small></div>
+    <span class="l0oh">${ohR}</span>
+  </div>`;
+}
+
+/* Level 2: bidirectional promoter as the pivot point — cargo module transcribes to the left,
+   NC module to the right. The cargo side is shown mirrored (5'->3' away from the promoter). */
+function renderLevel2(elId, m){
+  const el=$(elId);
+  // Natural Type 1->5 order (as in the scheme): the cargo's C-terminus/stop (Type 1) points
+  // OUTWARD (far left, 3'), the 5' end sits next to the promoter. The leftward arrow/clip-path
+  // already conveys that the cargo is read on the antisense strand.
+  const cargoHtml = m.l1cargo.map(partEl).join('');
+  const ncHtml = m.l1nc.map(partEl).join('');
+  const promoHtml = `<div class="part promo-hub" style="background:${cvar('promo')};color:${cink('promo')}">
+      <span class="ptype">Promoter</span>${m.promo.label}<small>bidirectional</small></div>`;
+  el.innerHTML = `
+    <div class="l2-row">
+      <div class="l2-side l2-left">
+        <div class="l2-dir"><span>3′ ◄ Cargo module <span class="l2-strandtag anti">antisense (−)</span></span><span>5′</span></div>
+        <div class="partsrow l2-left-row">${cargoHtml}</div>
+      </div>
+      <div class="l2-hub">
+        <div class="l2-arrows"><span>◄</span><span>►</span></div>
+        ${promoHtml}
+      </div>
+      <div class="l2-side l2-right">
+        <div class="l2-dir"><span>5′</span><span>NC module <span class="l2-strandtag sense">sense (+)</span> ► 3′</span></div>
+        <div class="partsrow">${ncHtml}</div>
+      </div>
+    </div>`;
+}
+
+/* ===================== Calculation ===================== */
+/* nominal lengths for the schematic construct map (real bp come from the model where known) */
+const TP_BP=54, PROMO_BP=680, NCS_BP=15;
+function buildModel(){
+  const n=state.nc;
+  const link=LINKERS.find(l=>l.id===state.linker);
+  const cargoBp = state.cargoSeq.length;
+  const cargoLabel = state.cargoLabel;
+
+  const tp   = { label:n.tp, kind:'t1', note:'Targeting peptide', bp:TP_BP, mapnote:'TP' };
+  const lk   = { label:link.label, kind:'t2', note:link.aa+' aa', bp:link.bp, mapnote:'Linker' };
+  const cg   = { label:cargoLabel, kind:'t3', note:cargoBp+' bp', bp:cargoBp, mapnote:cargoBp+' bp' };
+  const ncs  = () => ({ label:'NCS', dummy:true, note:'Spacer', bp:NCS_BP });
+  // NC-module flanking slots are NCS spacers by default, but they are open toolkit
+  // positions for a surface-display marker (e.g. SpyCatcher) that ends up presented
+  // on the outside of the encapsulin shell.
+  const surf = () => ({ label:'NCS', dummy:true, surface:true, note:'open · e.g. SpyCatcher', bp:NCS_BP });
+
+  // Level 0: 5 slots, TP/linker sit left or right of the cargo depending on fusion direction.
+  // The ORF ends (stop codon) at the C-terminus of the fusion protein — that part gets `*`.
+  let l0;
+  if(state.fusion==='C'){
+    // ORF reads Type5->Type1: NCS NCS CDS L1 TP* — TP is the C-terminus, carries the stop
+    l0 = [ {...tp, stop:true}, {...lk}, {...cg}, ncs(), ncs() ];
+  } else {
+    // ORF reads Type5->Type1: TP L1 CDS NCS* NCS — stop sits in the NCS right after the cargo
+    l0 = [ ncs(), {...ncs(), stop:true}, {...cg}, {...lk}, {...tp} ];
+  }
+  // Fusion-site type = the slot position in the module's own 5'->3'. One unambiguous
+  // number per slot; the part colour also follows its Type (as in the scheme figure).
+  l0.forEach((p,i)=>{ p.type = 'Type '+(i+1); p.kind = 't'+(i+1); });
+
+  // Level 1 cargo module = the same 5 parts, assembled (BsaI), with flanks
+  const l1cargo = l0.map(p=>({...p}));
+
+  // Level 1 NC module: Shell (Type 3) flanked by surface / NCS slots. An optional
+  // surface-display marker (SpyTag/SpyCatcher) is fused to the shell exterior — at its
+  // N-terminus (Type 2) or C-terminus (Type 4). The shell ORF stop sits right after the
+  // shell's C-terminus (Type 4), unless a C-terminal marker takes that slot and carries it.
+  const mk = SURFACE_MARKERS.find(x=>x.id===state.marker) || null;
+  const shellPart = { label:n.shell, kind:'shell', note:n.shellBp+' bp', bp:n.shellBp, mapnote:'Shell' };
+  const markPart = (term) => ({ label:mk.label, kind:'mark', note:mk.aa+' aa · '+term+'-term surface', bp:mk.bp });
+  const ncLink   = () => ({ label:'L1', kind:'t2', note:'linker', bp:18 });
+  let l1nc;
+  if(mk && state.markerTerm==='C'){
+    // shell — linker — marker (C-terminus); stop sits after the marker
+    l1nc = [ surf(), surf(), shellPart, ncLink(), {...markPart('C'), stop:true} ];
+  } else if(mk && state.markerTerm==='N'){
+    // marker (N-terminus) — linker — shell; stop sits after the shell
+    l1nc = [ {...markPart('N')}, ncLink(), shellPart, {...surf(), stop:true}, surf() ];
+  } else {
+    l1nc = [ surf(), surf(), shellPart, {...surf(), stop:true}, surf() ];
+  }
+  l1nc.forEach((p,i)=>{ p.type = 'Type '+(i+1); if(p.kind!=='shell' && p.kind!=='mark') p.kind = 't'+(i+1); });
+
+  // Level 2: cargo module  <-promoter->  NC module
+  const promo = { label:state.promoter==='GAL110'?'GAL1-10':state.promoter, kind:'promo', note:'bidirectional', bp:PROMO_BP };
+
+  return { n, link, cargoBp, cargoLabel, l0, l1cargo, l1nc, promo, marker:mk };
+}
+
+function makePrimerPair(seq, ohF, ohR){
+  let lenF=22, lenR=22;
+  for(let i=0;i<12;i++){
+    const tmF=wallaceTm(seq.slice(0,lenF)), tmR=wallaceTm(rc(seq.slice(-lenR)));
+    if(Math.abs(tmF-tmR)<=5) break;
+    if(tmF>tmR && lenF>16) lenF--; else if(tmR>tmF && lenR>16) lenR--; else break;
+  }
+  const af=seq.slice(0,lenF), ar=rc(seq.slice(-lenR));
+  return [
+    { name:'Cargo_F', role:'forward', oh:ohF, anneal:af, full:'GGTCTCN'+ohF+af, len:('GGTCTCN'+ohF+af).length, tm:wallaceTm(af) },
+    { name:'Cargo_R', role:'reverse', oh:ohR, anneal:ar, full:'GGTCTCN'+ohR+ar, len:('GGTCTCN'+ohR+ar).length, tm:wallaceTm(ar) },
+  ];
+}
+
+function compute(){
+  const m=buildModel();
+  const primers = makePrimerPair(state.cargoSeq, CARGO_L1_FLANK[0], CARGO_L1_FLANK[1]);
+  lastResult = { model:m, primers };
+  renderAll(lastResult);
+}
+
+function renderAll(res){
+  const m=res.model;
+
+  /* --- Level 0: only the cargo is new — show it with its Type 3 overhangs --- */
+  renderLevel0('#lvl0strand', m);
+  /* --- Level 1 cargo --- */
+  renderStrand('#lvl1cargo', m.l1cargo, {antisense:true});
+  $('#cargoModTag').textContent = `${state.fusion}-terminal · BsaI`;
+  /* --- Level 1 NC --- */
+  renderStrand('#lvl1nc', m.l1nc);
+  /* --- Level 2: cargo module ← [promoter] → NC module (bidirectional) --- */
+  renderLevel2('#lvl2strand', m);
+
+  /* --- Legend --- */
+  $('#legend').innerHTML = [
+    ['Type 1','t1'],['Type 2','t2'],['Type 3 · cargo / shell','t3'],['Type 4','t4'],['Type 5','t5'],
+  ].map(([n,k])=>`<span><i style="background:${cvar(k)}"></i>${n}</span>`).join('')
+   + `<span><i style="background:var(--promo)"></i>Promoter</span>`
+   + (m.marker ? `<span><i style="background:var(--mark)"></i>Surface marker (${m.marker.label})</span>` : '')
+   + `<span style="gap:5px"><b style="font-size:15px">*</b> = stop codon (ORF 3′ end)</span>`;
+
+  /* --- Primers --- */
+  renderPrimers(res.primers);
+
+  /* --- Plasmid --- */
+  renderPlasmid(res);
+
+  /* --- Order list --- */
+  renderOrder(m);
+}
+
+/* ---------- 96-well plate (pick plan) ---------- */
+function renderPlate(m){
+  // Assignment: place this construct's modules onto defined wells
+  const picks = [
+    { well:'A1', kind:'t1', name:m.n.tp,    label:m.n.tp },
+    { well:'A2', kind:'t2', name:m.link.label, label:'L' },
+    { well:'A3', kind:'t3', name:m.cargoLabel, label:'C' },
+    { well:'B1', kind:'shell', name:m.n.shell, label:'Sh' },
+    { well:'B2', kind:'promo', name:'GAL1-10', label:'P' },
+    { well:'C1', kind:'ncs', name:'NCS', label:'N' },
+    { well:'C2', kind:'ncs', name:'NCS', label:'N' },
+  ];
+  if(m.marker) picks.push({ well:'C3', kind:'mark', name:m.marker.label, label:'M' });
+  const pickMap = {}; picks.forEach(p=>pickMap[p.well]=p);
+
+  const cols=12, rows=['A','B','C','D','E','F','G','H'];
+  let html=`<div class="corner"></div>`;
+  for(let c=1;c<=cols;c++) html+=`<div class="colhead">${c}</div>`;
+  rows.forEach(r=>{
+    html+=`<div class="rowhead">${r}</div>`;
+    for(let c=1;c<=cols;c++){
+      const id=r+c, p=pickMap[id];
+      if(p){
+        html+=`<div class="well filled" style="background:${cvar(p.kind)}" title="${id}: ${p.name}"><span class="wtip">${p.label}</span></div>`;
+      } else {
+        html+=`<div class="well" title="${id}: empty"></div>`;
+      }
+    }
+  });
+  $('#plate').innerHTML=html;
+
+  $('#plateLegend').innerHTML = picks.map(p=>
+    `<span><i style="background:${cvar(p.kind)}"></i><b style="color:var(--ink);font-weight:600">${p.well}</b>&nbsp;${p.name}</span>`
+  ).join('') + `<span class="pickcount">${picks.length} wells for this construct</span>`;
+}
+
+/* ---------- Primer table ---------- */
+function renderPrimers(primers){
+  const tb=$('#primers'); tb.innerHTML='';
+  primers.forEach(p=>{
+    const flag = Math.abs(p.tm-primers[0].tm)<=5 ? 'ok':'warn';
+    tb.insertAdjacentHTML('beforeend', `<tr>
+      <td class="pname">${p.name}<small>${p.role}</small></td>
+      <td class="pseq"><span class="bsa">GGTCTCN</span><span class="oh">${p.oh}</span>${p.anneal}</td>
+      <td class="num-cell">${p.len} nt</td>
+      <td class="num-cell"><span class="tmcell">${p.tm} °C <span class="tmflag ${flag}">${flag==='ok'?'Δ≤5°C':'Δ>5°C'}</span></span></td>
+    </tr>`);
+  });
+}
+
+/* ---------- Plasmid map with 5'->3' direction ---------- */
+function polar(cx,cy,r,deg){ const a=(deg-90)*Math.PI/180; return [cx+r*Math.cos(a), cy+r*Math.sin(a)]; }
+function arc(cx,cy,r,a0,a1){ const [x0,y0]=polar(cx,cy,r,a0),[x1,y1]=polar(cx,cy,r,a1); const big=(a1-a0)%360>180?1:0; return `M${x0} ${y0} A${r} ${r} 0 ${big} 1 ${x1} ${y1}`; }
+function renderPlasmid(res){
+  const m=res.model, svg=$('#plasmid'), cx=190, cy=190, r=128;
+  const cargoModBp = m.cargoBp + m.link.bp + 60;
+  const ncModBp = m.n.shellBp + 200;
+  // Segments; "dir" = +1 (clockwise, 5'->3') / -1 (counter-clockwise) for the transcription arrow.
+  // Promoter sits centred at the top (12 o'clock); NC module runs clockwise, cargo module
+  // counter-clockwise (they diverge), backbone fills the bottom.
+  const segs=[
+    { name:'GAL1-10', bp:500, kind:'promo', dir:0 },
+    { name:'NC module', bp:ncModBp, kind:'shell', dir:1, txn:true },
+    { name:'CYC1 term.', bp:250, kind:'ncs', dir:0 },
+    { name:'2µ ori', bp:1100, kind:'_ori', dir:0 },
+    { name:'AmpR', bp:850, kind:'_amp', dir:0 },
+    { name:'URA3', bp:800, kind:'_ura', dir:0 },
+    { name:'Cargo module', bp:Math.max(cargoModBp,700), kind:'t3', dir:-1, txn:true },
+  ];
+  // Backbone features (not Golden-Gate parts): grey · orange · sky, same Okabe-Ito set.
+  const palette = { _ori:'#9AA6A0', _amp:'#E69F00', _ura:'#56B4E9' };
+  const colOf = k => palette[k] || cvar(k);
+  const sum=segs.reduce((s,p)=>s+p.bp,0);
+  // start so the promoter segment is centred at 12 o'clock (deg 0 = top)
+  let ang=-((segs[0].bp/sum)*360)/2, paths='';
+  segs.forEach(p=>{
+    const span=(p.bp/sum)*360, a0=ang+1.0, a1=ang+span-1.0, mid=(a0+a1)/2;
+    paths+=`<path d="${arc(cx,cy,r,a0,a1)}" stroke="${colOf(p.kind)}" stroke-width="16" fill="none"/>`;
+    // Transcription arrow (small marker at the segment end, in reading direction)
+    if(p.txn){
+      const tipAng = p.dir>0 ? a1 : a0;
+      const baseAng = p.dir>0 ? a1-7 : a0+7;
+      const [tx,ty]=polar(cx,cy,r,tipAng);
+      const [bx,by]=polar(cx,cy,r+6,baseAng);
+      const [bx2,by2]=polar(cx,cy,r-6,baseAng);
+      paths+=`<polygon points="${tx},${ty} ${bx},${by} ${bx2},${by2}" fill="${colOf(p.kind)}"/>`;
+    }
+    const [lx,ly]=polar(cx,cy,r+28,mid), [t1x,t1y]=polar(cx,cy,r+10,mid), [t2x,t2y]=polar(cx,cy,r+24,mid);
+    paths+=`<line x1="${t1x}" y1="${t1y}" x2="${t2x}" y2="${t2y}" stroke="var(--line)" stroke-width="1"/>`;
+    paths+=`<text x="${lx}" y="${ly}" font-size="9.5" font-family="JetBrains Mono" fill="var(--ink)" text-anchor="${mid>180?'end':'start'}" dominant-baseline="middle">${p.name}</text>`;
+    ang+=span;
+  });
+  // Center arrows for bidirectional transcription
+  svg.innerHTML=`
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--line-soft)" stroke-width="16"/>
+    ${paths}
+    <text x="${cx}" y="${cy-10}" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="15" fill="var(--ink)">pESC-ENCORE</text>
+    <text x="${cx}" y="${cy+8}" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--muted)">${sum.toLocaleString('en-US')} bp</text>
+    <text x="${cx}" y="${cy+26}" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="var(--muted)">◄ bidirectional ►</text>`;
+
+  $('#platitle').textContent=`pESC-ENCORE-${m.n.id} · ~${sum.toLocaleString('en-US')} bp`;
+  $('#paraExplain').innerHTML=`Generic pESC shuttle. The bidirectional <b>GAL1-10</b> promoter transcribes the <b>cargo module</b> (counter-clockwise) and the <b>NC module</b> (clockwise) in opposite 5′→3′ directions. Origin and marker sizes are placeholders until the final pESC variant is set.`;
+  $('#feats').innerHTML=segs.map(p=>`<li><i style="background:${colOf(p.kind)}"></i><b>${p.name}</b><span class="bp">${p.bp} bp</span></li>`).join('');
+}
+
+/* ---------- Order list ---------- */
+function renderOrder(m){
+  const tpType   = (m.l0.find(p=>p.kind==='t1')||{}).type || 'Type 1';
+  const linkType = (m.l0.find(p=>p.kind==='t2')||{}).type || 'Type 2';
+  const fixed=[
+    { name:`Targeting peptide ${m.n.tp}`, sub:`${tpType} · standard module`, kind:'t1' },
+    { name:`Linker ${m.link.label}`, sub:`${linkType} · standard module`, kind:'t2' },
+    { name:`Shell CDS ${m.n.shell}`, sub:'Nanocompartment · standard module', kind:'shell' },
+    { name:'Promoter GAL1-10', sub:'bidirectional · standard module', kind:'promo' },
+    { name:'NCS / surface slot', sub:'Spacer or display marker (e.g. SpyCatcher)', kind:'ncs' },
+  ];
+  if(m.marker){ const t=state.markerTerm, slot=(t==='C'?'Type 5':'Type 1');
+    fixed.push({ name:`Surface marker ${m.marker.label}`, sub:`${slot} · shell ${t}-terminal display, via L1 linker · source once`, kind:'mark' }); }
+  const list=$('#orderList'); list.innerHTML='';
+  fixed.forEach(it=>{
+    list.insertAdjacentHTML('beforeend', `<div class="orderitem">
+      <span class="oi-sw" style="background:${cvar(it.kind)}"></span>
+      <div class="oi-main"><div class="oi-name">${it.name}</div><div class="oi-sub">${it.sub}</div></div>
+      <span class="oi-badge fixed">fixed</span></div>`);
+  });
+  list.insertAdjacentHTML('beforeend', `<div class="orderitem" style="border-color:var(--orange-deep)">
+    <span class="oi-sw" style="background:${cvar('t3')}"></span>
+    <div class="oi-main"><div class="oi-name">${m.cargoLabel} (${m.cargoBp} bp)</div><div class="oi-sub">Type 3 · your new cargo — as synthesis/PCR with overhangs</div></div>
+    <span class="oi-badge synth">order new</span></div>`);
+
+  const withOh = CARGO_L1_FLANK[0] + state.cargoSeq + CARGO_L1_FLANK[1];
+  $('#orderCdsBox').innerHTML=`<div class="cdsbox">
+    <div class="cdsname">Cargo CDS with Golden Gate overhangs<button class="info" data-info="primer">i</button></div>
+    <div class="cdsseq"><span class="cds5">5′ </span><span class="oh">${CARGO_L1_FLANK[0]}</span>${state.cargoSeq}<span class="oh">${CARGO_L1_FLANK[1]}</span><span class="cds3"> 3′</span></div>
+  </div>`;
+}
+
+/* ===================== Copy / export ===================== */
+function flash(sel,msg){ const b=$(sel),t=b.textContent; b.textContent=msg; setTimeout(()=>b.textContent=t,1400); }
+$('#copyPrimers').addEventListener('click', ()=>{
+  if(!lastResult) return;
+  navigator.clipboard?.writeText(lastResult.primers.map(p=>`>${p.name}\n${p.full}`).join('\n'));
+  flash('#copyPrimers','Copied ✓');
+});
+$('#copyCds').addEventListener('click', ()=>{
+  navigator.clipboard?.writeText(CARGO_L1_FLANK[0]+state.cargoSeq+CARGO_L1_FLANK[1]);
+  flash('#copyCds','Copied ✓');
+});
+/* ===================== FASTA export ===================== */
+/* Deterministic placeholder sequence of fixed length (for the mockup; the backend will later supply real sequences) */
+function placeholderSeq(seed, len){
+  const bases='ATGC'; let s='', x=0;
+  for(const c of seed) x=(x*31+c.charCodeAt(0))>>>0;
+  for(let i=0;i<len;i++){ x=(x*1103515245+12345)>>>0; s+=bases[(x>>>16)%4]; }
+  return s;
+}
+function fastaWrap(seq, width=70){
+  const lines=[]; for(let i=0;i<seq.length;i+=width) lines.push(seq.slice(i,i+width)); return lines.join('\n');
+}
+function buildFasta(res){
+  const m=res.model, out=[];
+  const add=(header, seq)=>out.push(`>${header}\n${fastaWrap(seq)}`);
+
+  // Individual modules (placeholders for standard parts, real sequence for the cargo)
+  const tpLen = 36, linkLen = m.link.bp, shellLen = m.n.shellBp, promoLen = 600, ncsLen = 30, termLen = 250;
+  const tpSeq   = placeholderSeq('TP'+m.n.tp, tpLen);
+  const linkSeq = placeholderSeq('LINK'+m.link.id, linkLen);
+  const shellSeq= placeholderSeq('SHELL'+m.n.shell, shellLen);
+  const promoSeq= placeholderSeq('PROMO'+state.promoter, promoLen);
+  const ncsSeq  = placeholderSeq('NCS', ncsLen);
+  const cargoSeq= state.cargoSeq;
+  const markSeq = m.marker ? placeholderSeq('MARK'+m.marker.id, m.marker.bp) : '';
+  const tpTag   = ((m.l0.find(p=>p.kind==='t1')||{}).type || 'Type 1').replace(' ','');
+  const lkTag   = ((m.l0.find(p=>p.kind==='t2')||{}).type || 'Type 2').replace(' ','');
+
+  add(`Targeting-Peptide_${m.n.tp} [${tpTag}] [PLACEHOLDER ${tpLen}bp]`, tpSeq);
+  add(`Linker_${m.link.id} [${lkTag}] [PLACEHOLDER ${linkLen}bp]`, linkSeq);
+  add(`Cargo_${m.cargoLabel.replace(/\s+/g,'-')} [Type3] [REAL INPUT ${cargoSeq.length}bp]`, cargoSeq);
+  add(`Nanocompartment-Shell_${m.n.shell} [PLACEHOLDER ${shellLen}bp]`, shellSeq);
+  add(`Promoter_${state.promoter==='GAL110'?'GAL1-10':state.promoter} [bidirectional] [PLACEHOLDER ${promoLen}bp]`, promoSeq);
+  add(`NCS-Spacer [PLACEHOLDER ${ncsLen}bp]`, ncsSeq);
+  if(m.marker) add(`Surface-Marker_${m.marker.label} [${state.markerTerm==='C'?'Type5':'Type1'}] [shell ${state.markerTerm}-terminal · via L1 linker] [PLACEHOLDER ${m.marker.bp}bp]`, markSeq);
+
+  // Cargo with Golden Gate overhangs (orderable)
+  add(`Cargo_${m.cargoLabel.replace(/\s+/g,'-')}_with-overhangs [${CARGO_L1_FLANK[0]}...${CARGO_L1_FLANK[1]}]`,
+      CARGO_L1_FLANK[0]+cargoSeq+CARGO_L1_FLANK[1]);
+
+  // Level 1 modules (assembled order, overhangs between parts omitted = final-construct view)
+  const cargoModuleSeq = state.fusion==='C'
+    ? tpSeq+linkSeq+cargoSeq+ncsSeq+ncsSeq
+    : ncsSeq+ncsSeq+cargoSeq+linkSeq+tpSeq;
+  const ncModuleSeq = (m.marker && state.markerTerm==='C') ? ncsSeq+ncsSeq+shellSeq+linkSeq+markSeq
+                    : (m.marker && state.markerTerm==='N') ? markSeq+linkSeq+shellSeq+ncsSeq+ncsSeq
+                    : ncsSeq+ncsSeq+shellSeq+ncsSeq+ncsSeq;
+  add(`Level1_Cargo-Module_${state.fusion}-terminal [${m.cargoLabel}]`, cargoModuleSeq);
+  add(`Level1_Nanocompartment-Module [${m.n.shell}]`, ncModuleSeq);
+
+  // Level 2 full construct: cargo module (revcomp, since bidirectional to the left) + promoter + NC module
+  const rcSeq = s => s.split('').reverse().map(c=>({A:'T',T:'A',G:'C',C:'G'}[c]||'N')).join('');
+  const level2 = rcSeq(cargoModuleSeq) + promoSeq + ncModuleSeq;
+  add(`Level2_pESC-ENCORE-${m.n.id}_COMPLETE [~${level2.length}bp] [Cargo(rev)<-GAL1-10->NC]`, level2);
+
+  const banner = '; ENCORE Builder — FASTA export (prototype)\n'
+    + '; Standard modules are PLACEHOLDER sequences; only the cargo is real input.\n'
+    + '; Import into e.g. Geneious / SnapGene / Benchling.\n';
+  return banner + out.join('\n');
+}
+function downloadFasta(){
+  if(!lastResult) return;
+  const blob=new Blob([buildFasta(lastResult)],{type:'text/plain'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='encore-construct.fasta'; a.click();
+}
+$('#dlFasta').addEventListener('click', downloadFasta);
+
+/* ===================== Stepper scroll-spy ===================== */
+const stepEls=$$('.s-step');
+stepEls.forEach((el,i)=>el.querySelector('.s-node').addEventListener('click', ()=>{ if(i===0||state.unlocked[i]) scrollToSection(el.dataset.target); }));
+function updateStepperLocks(){ stepEls.forEach((el,i)=>el.querySelector('.s-node').disabled=!(i===0||state.unlocked[i])); }
+const secEls=['sec-0','sec-1','sec-2','sec-3'].map(id=>document.getElementById(id));
+const io=new IntersectionObserver(es=>{ let best=null,br=-1; es.forEach(e=>{if(e.intersectionRatio>br){br=e.intersectionRatio;best=e.target;}}); if(best){const i=secEls.indexOf(best); if(i>-1)setActive(i);} },{rootMargin:'-134px 0px -55% 0px',threshold:[0,.1,.25,.5,.75,1]});
+secEls.forEach(s=>io.observe(s));
+function setActive(idx){
+  stepEls.forEach((el,i)=>{ const done=i<idx||(i<3&&state.unlocked[i+1]); el.classList.toggle('active',i===idx); el.classList.toggle('done',done); el.querySelector('.s-dot').innerHTML=done?'✓':(i+1); });
+}
+function updateProgress(){ const d=document.documentElement,tot=d.scrollHeight-window.innerHeight; $('#progressFill').style.width=(tot>0?Math.min(100,Math.max(0,window.scrollY/tot*100)):0)+'%'; }
+window.addEventListener('scroll',updateProgress,{passive:true}); window.addEventListener('resize',updateProgress);
+
+/* ===================== Init ===================== */
+initNcDropdown(); initPresetChips(); initLinkerDropdown(); initMarkerDropdown(); applyLocks(); updateStepperLocks(); updateProgress();
+
+</script>
