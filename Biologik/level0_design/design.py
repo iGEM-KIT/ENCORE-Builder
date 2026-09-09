@@ -60,14 +60,17 @@ def build_modules(nc: dict, link: dict, cargo_label: str, cargo_bp: int, fusion:
     return cargo_module, nc_module
 
 
-def make_primer_pair(sequence: str, oh_f: str, oh_r: str):
-    # Funktionen können Schleifen verwenden, um einen Wert schrittweise zu verbessern.
+def _wallace_primer_pair(sequence: str, oh_f: str, oh_r: str):
+    """Grobe Abschaetzung ueber die Wallace-Regel (2 °C je A/T, 4 °C je G/C).
+
+    Fallback, wenn primer3 nicht installiert ist oder kein Paar findet. Reicht
+    fuer die Vorschau, nicht fuer die Bestellung.
+    """
     # len_f und len_r sind die Annealing-Längen der Primer. Sie werden angepasst, damit die Tm-Werte passend sind.
     len_f = 22
     len_r = 22
     balanced = False
     for _ in range(12):
-        # Eine for-Schleife wiederholt denselben Schritt mehrfach, bis sie die gewünschte Anzahl erreicht hat.
         tm_f = wallace_tm(sequence[:len_f])
         tm_r = wallace_tm(reverse_complement(sequence[-len_r:]))
         if abs(tm_f - tm_r) <= 5:
@@ -84,9 +87,6 @@ def make_primer_pair(sequence: str, oh_f: str, oh_r: str):
     anneal_f = sequence[:len_f]
     anneal_r = reverse_complement(sequence[-len_r:])
 
-    def build(overhang: str, anneal: str) -> str:
-        return f"{BSAI_PRIMER_PREFIX}{overhang}{anneal}"
-
     hint = None
     if not balanced:
         hint = (
@@ -94,17 +94,91 @@ def make_primer_pair(sequence: str, oh_f: str, oh_r: str):
             "weniger als 5°C Differenz bringen. Überprüfe die Primer manuell oder passe die Sequenz/Annealing-Längen an."
         )
 
-    primers = [
-        {"name": "Cargo_F", "role": "forward", "overhang": oh_f, "anneal": anneal_f, "full": build(oh_f, anneal_f), "length": len(build(oh_f, anneal_f)), "tm": wallace_tm(anneal_f)},
-        {"name": "Cargo_R", "role": "reverse", "overhang": oh_r, "anneal": anneal_r, "full": build(oh_r, anneal_r), "length": len(build(oh_r, anneal_r)), "tm": wallace_tm(anneal_r)},
-    ]
-
-    if hint:
-        # Ergänze ein Hinweisfeld in beiden Primer-Einträgen, damit der UI-Nutzer informiert wird.
-        for p in primers:
-            p["note"] = hint
+    primers = _assemble_primers(anneal_f, anneal_r, oh_f, oh_r, wallace_tm(anneal_f), wallace_tm(anneal_r))
+    for primer in primers:
+        primer["tmMethod"] = "wallace"
+        if hint:
+            primer["note"] = hint
 
     return primers
+
+
+def _primer3_primer_pair(sequence: str, oh_f: str, oh_r: str):
+    """Echte Nearest-Neighbor-Thermodynamik aus ``Biologik.primer_design``.
+
+    Der Import ist bewusst lokal: ``level0_design`` soll ohne primer3 nutzbar
+    bleiben, deshalb wird die Abhaengigkeit erst beim Aufruf gezogen.
+
+    Die Dimer-/Hairpin-Bewertung laeuft nur auf dem ANNEALING-Bereich, nicht
+    auf dem fertigen Oligo. Grund: ``BSAI_PRIMER_PREFIX`` endet auf einem
+    literalen "N", und primer3 lehnt Nicht-ACGT-Basen ab
+    ("Sequence contains non-ACGT base 'N'"). Sobald der Spacer auf eine
+    konkrete Base festgelegt ist, sollte hier der volle Primer geprueft werden
+    (ueber ``ext_fw`` / ``ext_rv`` in ``design_primers``) — der Ueberhang
+    veraendert die Sekundaerstruktur messbar.
+    """
+    from ..primer_design import design_primers
+
+    result = design_primers(sequence=sequence)
+
+    primers = _assemble_primers(
+        result["annealFw"],
+        result["annealRv"],
+        oh_f,
+        oh_r,
+        round(result["tmFw"], 1),
+        round(result["tmRv"], 1),
+    )
+    for primer in primers:
+        primer["tmMethod"] = "primer3-nn"
+        primer["q5AnnealingTemp"] = round(result["q5AnnealingTemp"], 1)
+        primer["valid"] = result["valid"]
+        primer["issues"] = list(result["issues"])
+
+    return primers
+
+
+def _assemble_primers(anneal_f: str, anneal_r: str, oh_f: str, oh_r: str, tm_f, tm_r):
+    """Baut die beiden Primer-Eintraege aus Annealing-Teil + BsaI-Praefix + Overhang.
+
+    Die Overhangs kommen unveraendert von der aufrufenden Stelle (aktuell
+    CARGO_L1_FLANK). Sie sind NICHT identisch mit den Extensions in
+    ``primer_design/add_extensions.py`` (type0.3 haengt TTCT an, also den
+    Type-3-Overhang aus TYPE_OVERHANGS). Welche Variante die reale Toolbox
+    beschreibt, ist offen — siehe PROJECT_TODO.txt Abschnitt 1. Hier wird
+    bewusst nichts entschieden: die Thermodynamik wurde ausgetauscht, die
+    Biologie nicht.
+    """
+    def build(overhang: str, anneal: str) -> str:
+        return f"{BSAI_PRIMER_PREFIX}{overhang}{anneal}"
+
+    return [
+        {
+            "name": "Cargo_F", "role": "forward", "overhang": oh_f, "anneal": anneal_f,
+            "full": build(oh_f, anneal_f), "length": len(build(oh_f, anneal_f)), "tm": tm_f,
+        },
+        {
+            "name": "Cargo_R", "role": "reverse", "overhang": oh_r, "anneal": anneal_r,
+            "full": build(oh_r, anneal_r), "length": len(build(oh_r, anneal_r)), "tm": tm_r,
+        },
+    ]
+
+
+def make_primer_pair(sequence: str, oh_f: str, oh_r: str, use_primer3: bool = True):
+    """Primerpaar fuer das Cargo. Nutzt primer3, faellt sonst auf Wallace zurueck.
+
+    ``use_primer3=False`` erzwingt den Fallback (fuer Tests und fuer eine reine
+    Vorschau ohne installiertes primer3).
+    """
+    if use_primer3:
+        try:
+            return _primer3_primer_pair(sequence, oh_f, oh_r)
+        except ImportError:
+            pass          # primer3-py nicht installiert -> Wallace
+        except ValueError:
+            pass          # kein gueltiges Paar gefunden -> Wallace
+
+    return _wallace_primer_pair(sequence, oh_f, oh_r)
 
 
 def build_plate_plan(nc: dict, link: dict, cargo_label: str):
@@ -169,6 +243,16 @@ def design_construct(decisions: dict = None):
     cargo_module, nc_module = build_modules(nc, link, cargo_label, cargo_bp, fusion)
     primers = make_primer_pair(cargo["clean"], CARGO_L1_FLANK[0], CARGO_L1_FLANK[1])
 
+    # Die Cargo-Validierung liefert eigene Warnungen; die Primer-Methode kommt dazu,
+    # damit im UI erkennbar ist, ob echte Thermodynamik oder nur eine Schaetzung dahintersteht.
+    design_warnings = list(cargo["warnings"])
+    if primers and primers[0].get("tmMethod") == "wallace":
+        design_warnings.append(
+            "primer3 is not available — Tm values are rough Wallace estimates (preview only). "
+            "Install primer3-py (see Biologik/requirements.txt) for nearest-neighbor Tm, "
+            "dimer/hairpin checks and the Q5 annealing temperature."
+        )
+
     return {
         "input": {"nanocompartment": nc["id"], "fusion": fusion, "linker": link["id"], "promoter": promoter_entry["id"], "cargoLabel": cargo_label},
         "nanocompartment": {"id": nc["id"], "label": nc["label"], "T": nc["T"], "dia": nc["dia"], "shell": nc["shell"], "shellBp": nc["shellBp"]},
@@ -182,7 +266,7 @@ def design_construct(decisions: dict = None):
         "primers": primers,
         "platePlan": build_plate_plan(nc, link, cargo_label),
         "orderList": build_order_list(nc, link, cargo_module, cargo_label, cargo_bp, cargo["clean"]),
-        "warnings": cargo["warnings"],
+        "warnings": design_warnings,
     }
 
 
