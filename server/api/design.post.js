@@ -7,6 +7,8 @@
  *   cargoLabel?: string,
  *   linker?: string,           // linker id (default: first in library)
  *   promoter?: string,         // promoter id (default: GAL1-10)
+ *   marker?: string,           // optional surface-display marker id
+ *   markerTerm?: 'N' | 'C',    // which shell terminus displays it (default N)
  *   fasta?: boolean            // also return a FASTA export string
  * }
  *
@@ -33,6 +35,8 @@ export default defineEventHandler(async (event) => {
       fusion: body.fusion,
       linker: body.linker,
       promoter: body.promoter,
+      marker: body.marker,
+      markerTerm: body.markerTerm,
       fasta: Boolean(body.fasta),
     })
     return design

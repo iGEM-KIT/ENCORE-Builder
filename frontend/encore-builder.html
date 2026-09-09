@@ -650,7 +650,7 @@
             </table>
             <div class="backendnote">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>
-              <div>Preview using a simplified Wallace Tm. In the finished tool, your biology code replaces these values via <code>POST /api/primer</code> (nearest-neighbor Tm, BsaI site check, iterative length adjustment).</div>
+              <div id="primerNote">Preview using a simplified Wallace Tm — the backend is not connected.</div>
             </div>
           </div>
 
@@ -742,6 +742,39 @@ const SURFACE_MARKERS = [
   { id:'spycatcher', label:'SpyCatcher', aa:113, bp:339, desc:'covalent SpyTag capture (isopeptide bond)' },
   { id:'spytag',     label:'SpyTag',     aa:13,  bp:39,  desc:'13-aa peptide, binds SpyCatcher' },
 ];
+
+/* ---------- Active libraries ----------------------------------------------
+   The constants above are only the FALLBACK for opening this file straight
+   from disk. When the page is served by the Nuxt server, loadLibraries()
+   replaces them with GET /api/libraries, i.e. with Biologik/level0_design/
+   data.py — the same source the design itself is computed from. Adding a
+   nanocompartment is then a backend-only change.                            */
+const LIB = {
+  source: 'inline',
+  nanocompartments: NANOCOMPARTMENTS,
+  cargoPresets: CARGO_PRESETS,
+  linkers: LINKERS,
+  promoters: [{ id:'GAL110', label:'GAL1-10', desc:'bidirectional, inducible' }],
+  surfaceMarkers: SURFACE_MARKERS,
+};
+
+async function loadLibraries(){
+  const api = window.ENCORE_API;
+  if(!api) return;
+  try{
+    await api.ready;                       // health check abwarten
+    if(!api.available) return;
+    const l = await api.libraries();
+    LIB.nanocompartments = l.nanocompartments || LIB.nanocompartments;
+    LIB.cargoPresets     = l.cargoPresets     || LIB.cargoPresets;
+    LIB.linkers          = l.linkers          || LIB.linkers;
+    LIB.promoters        = l.promoters        || LIB.promoters;
+    LIB.surfaceMarkers   = l.surfaceMarkers   || LIB.surfaceMarkers;
+    LIB.source = 'api';
+  }catch(err){
+    console.warn('[ENCORE] /api/libraries failed — using the inline fallback', err);
+  }
+}
 
 /* ---------- Info bubble content (placeholder graphic + theory) ---------- */
 const INFO = {
@@ -853,13 +886,13 @@ $('#startBtn').addEventListener('click', ()=>{
 /* ===================== Step 1: nanocompartment dropdown ===================== */
 function initNcDropdown(){
   const sel=$('#ncSelect');
-  NANOCOMPARTMENTS.forEach(nc=>{
+  LIB.nanocompartments.forEach(nc=>{
     const o=document.createElement('option');
     o.value=nc.id; o.textContent=`${nc.label} — T=${nc.T}, ⌀ ${nc.dia}`;
     sel.appendChild(o);
   });
   sel.addEventListener('change', ()=>{
-    state.nc = NANOCOMPARTMENTS.find(n=>n.id===sel.value);
+    state.nc = LIB.nanocompartments.find(n=>n.id===sel.value);
     renderNcMeta();
     $('#next0').disabled=false;
     updateConstructStrip();
@@ -877,7 +910,7 @@ function renderNcMeta(){
 /* ===================== Step 2: cargo ===================== */
 function initPresetChips(){
   const wrap=$('#presetChips');
-  CARGO_PRESETS.forEach(p=>{
+  LIB.cargoPresets.forEach(p=>{
     const b=document.createElement('button');
     b.className='preset-chip'; b.dataset.id=p.id;
     b.innerHTML=`<span class="pc-dot"></span>${p.label}`;
@@ -896,46 +929,95 @@ function handleCargoInput(){
   if(!state.cargoFromPreset) state.cargoLabel='Custom cargo';
   $('#cargoLen').textContent=s.length+' bp';
 
-  let meta='';
-  if(s.length){
-    const aa=Math.floor(s.length/3);
-    meta=`Length <b>${s.length} bp</b> · ~<b>${aa} aa</b> · GC <b>${gc(s)}%</b>`;
-    const bad=raw.toUpperCase().replace(/[ATGC\s]/g,'').length;
-    if(bad>0) meta+=` · <span class="err">${bad} invalid characters ignored</span>`;
-    if(s.length%3!==0) meta+=` · <span class="err">not a multiple of 3</span>`;
-  }
-  $('#cargoMeta').innerHTML=meta;
+  renderCargoValidation(validateCargoLocal(raw));
+  scheduleServerCargoCheck(s);
+}
 
-  const area=$('#cargoStopArea'); area.innerHTML='';
-  if(s.length>=3){
-    const trailing=endsWithStop(s);
-    const internal=findInternalStops(s.slice(0,s.length-3));
-    if(trailing){
-      area.innerHTML=`<div class="stopwarn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-        <div><b>Stop codon at the end (${trailing}).</b> Please remove it — otherwise the targeting peptide won't be attached and the cargo won't be encapsulated.</div></div>`;
-    } else if(internal.length){
-      area.innerHTML=`<div class="stopwarn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-        <div><b>Possible stop codon in the reading frame</b> (position ${internal[0].pos+1}: ${internal[0].codon}). Check the reading frame.</div></div>`;
-    } else {
-      area.innerHTML=`<div class="stopok"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>
-        <div>No stop codon found — sequence is ready for fusion.</div></div>`;
-    }
+/* Same rules and the same object shape as validate_cargo() in
+   Biologik/level0_design/sequence.py, so the local preview and the server
+   answer can be rendered by one function. The server stays the authority —
+   scheduleServerCargoCheck() overwrites this result as soon as it arrives. */
+function validateCargoLocal(raw){
+  const seq=clean(raw), length=seq.length;
+  const invalidChars=(raw||'').toUpperCase().replace(/[ATGC\s]/g,'').length;
+  const notMultipleOfThree = length%3!==0;
+  const trailingStop = endsWithStop(seq);
+  const internalStops = length>=3 ? findInternalStops(seq.slice(0,length-3)) : [];
+  const errors=[], warnings=[];
+  if(length===0){ errors.push('No valid A/T/G/C sequence provided.'); }
+  else{
+    if(length<30) errors.push(`Sequence too short (${length} bp, need at least 30 bp).`);
+    if(trailingStop) errors.push(`Stop codon at the end (${trailingStop}). Remove it — otherwise the targeting peptide is not attached and the cargo is not encapsulated.`);
+    if(notMultipleOfThree) warnings.push('Length is not a multiple of 3 — check the reading frame.');
+    if(internalStops.length) warnings.push(`Possible in-frame stop codon at position ${internalStops[0].pos+1} (${internalStops[0].codon}).`);
+    if(invalidChars>0) warnings.push(`${invalidChars} invalid character(s) were ignored.`);
   }
-  const ok = s.length>=30 && s.length%3===0 && !endsWithStop(s);
-  state.cargoValid=ok;
-  $('#next1').disabled=!ok;
+  return { clean:seq, length, aa:Math.floor(length/3), gc:gc(seq), invalidChars,
+           notMultipleOfThree, trailingStop, internalStops, ok:errors.length===0, errors, warnings };
+}
+
+const ICON_WARN = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>';
+const ICON_OK   = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>';
+
+function renderCargoValidation(v){
+  $('#cargoMeta').innerHTML = v.length
+    ? `Length <b>${v.length} bp</b> · ~<b>${v.aa} aa</b> · GC <b>${v.gc}%</b>`
+      + (v.invalidChars ? ` · <span class="err">${v.invalidChars} invalid characters ignored</span>` : '')
+      + (v.notMultipleOfThree ? ` · <span class="err">not a multiple of 3</span>` : '')
+    : '';
+
+  const area=$('#cargoStopArea');
+  const notes = v.errors.concat(v.warnings);
+  if(!v.length){ area.innerHTML=''; }
+  else if(notes.length){
+    area.innerHTML = notes.map(t=>`<div class="stopwarn">${ICON_WARN}<div>${t}</div></div>`).join('');
+  }else{
+    area.innerHTML = `<div class="stopok">${ICON_OK}<div>No stop codon found — sequence is ready for fusion.</div></div>`;
+  }
+
+  state.cargoValid = v.ok;
+  $('#next1').disabled = !v.ok;
   updateConstructStrip();
+}
+
+/* Debounced second opinion from the server. One call per keystroke would mean
+   one Python process per keystroke, and a stale answer must never overwrite a
+   newer one — hence the token. */
+let cargoCheckTimer=null, cargoCheckToken=0;
+function scheduleServerCargoCheck(seq){
+  const api=window.ENCORE_API;
+  if(!api || !api.available || !seq) return;
+  clearTimeout(cargoCheckTimer);
+  const token=++cargoCheckToken;
+  cargoCheckTimer=setTimeout(async ()=>{
+    try{
+      const v=await api.validateCargo(seq);
+      if(token!==cargoCheckToken || seq!==state.cargoSeq) return;   // veraltet
+      renderCargoValidation(v);
+    }catch(err){
+      console.warn('[ENCORE] /api/cargo/validate failed — keeping the local check', err);
+    }
+  }, 400);
 }
 $('#cargoSeq').addEventListener('input', ()=>{ state.cargoFromPreset=null; $$('#presetChips .preset-chip').forEach(c=>c.classList.remove('on')); handleCargoInput(); });
 
 /* ===================== Step 3: fusion + linker ===================== */
+function initPromoterDropdown(){
+  const sel=$('#promoter'); sel.innerHTML='';
+  LIB.promoters.forEach(p=>{
+    const o=document.createElement('option');
+    o.value=p.id; o.textContent=`${p.label} — ${p.desc}`;
+    if(p.id===state.promoter) o.selected=true;
+    sel.appendChild(o);
+  });
+}
 function initLinkerDropdown(){
   const sel=$('#linker');
-  LINKERS.forEach(l=>{ const o=document.createElement('option'); o.value=l.id; o.textContent=`${l.label} — ${l.aa} aa, ${l.desc}`; if(l.id===state.linker)o.selected=true; sel.appendChild(o); });
+  LIB.linkers.forEach(l=>{ const o=document.createElement('option'); o.value=l.id; o.textContent=`${l.label} — ${l.aa} aa, ${l.desc}`; if(l.id===state.linker)o.selected=true; sel.appendChild(o); });
 }
 function initMarkerDropdown(){
   const sel=$('#markerSel');
-  SURFACE_MARKERS.forEach(mk=>{ const o=document.createElement('option'); o.value=mk.id; o.textContent=`${mk.label} — ${mk.aa} aa · ${mk.desc}`; sel.appendChild(o); });
+  LIB.surfaceMarkers.forEach(mk=>{ const o=document.createElement('option'); o.value=mk.id; o.textContent=`${mk.label} — ${mk.aa} aa · ${mk.desc}`; sel.appendChild(o); });
   sel.addEventListener('change', ()=>{
     state.marker = sel.value || null;
     $('#markerTermSeg').style.display = state.marker ? 'flex' : 'none';
@@ -964,13 +1046,13 @@ function applyLocks(){
    Empty slots are dashed; chosen modules fill in and interlock; when computed → "fused". */
 function updateConstructStrip(){
   const host=$('#gsMap'); if(!host) return;
-  const n=state.nc, link=LINKERS.find(l=>l.id===state.linker);
+  const n=state.nc, link=LIB.linkers.find(l=>l.id===state.linker);
   const tp    = { kind:'t1',    label:n? n.tp : 'TP',            filled: !!n };
   const lk    = { kind:'t2',    label:link? link.label : 'Linker', filled: !!state.unlocked[2] };
   const cargo = { kind:'t3',    label: state.cargoValid ? (state.cargoLabel!=='Custom cargo' ? state.cargoLabel : state.cargoSeq.length+' bp') : 'Cargo', filled: !!state.cargoValid };
   const shell = { kind:'shell', label:n? n.shell : 'Shell',      filled: !!n };
   const ncs   = { kind:'ncs',   label:'NCS',                     filled: !!n };
-  const mk    = SURFACE_MARKERS.find(x=>x.id===state.marker) || null;
+  const mk    = LIB.surfaceMarkers.find(x=>x.id===state.marker) || null;
   const marker= { kind:'mark',  label:mk? mk.label : 'Marker',  filled: !!mk };
   const promoFilled = !!n;
   const seg = (p, side) => p.filled
@@ -1001,9 +1083,11 @@ $('#next0').addEventListener('click', ()=>{ state.unlocked[1]=true; applyLocks()
 $('#back1').addEventListener('click', ()=>scrollToSection('sec-0'));
 $('#next1').addEventListener('click', ()=>{ state.unlocked[2]=true; applyLocks(); updateStepperLocks(); scrollToSection('sec-2'); });
 $('#back2').addEventListener('click', ()=>scrollToSection('sec-1'));
-$('#next2').addEventListener('click', ()=>{
+$('#next2').addEventListener('click', async ()=>{
+  const btn=$('#next2'); btn.disabled=true;
   state.linker=$('#linker').value; state.promoter=$('#promoter').value;
-  compute(); state.unlocked[3]=true; applyLocks(); updateStepperLocks(); scrollToSection('sec-3');
+  try{ await compute(); } finally { btn.disabled=false; }
+  state.unlocked[3]=true; applyLocks(); updateStepperLocks(); scrollToSection('sec-3');
 });
 $('#back3').addEventListener('click', ()=>scrollToSection('sec-2'));
 /* "New construct": wipe every input and every derived result, then start over at step 1. */
@@ -1106,7 +1190,7 @@ function renderLevel2(elId, m){
 const TP_BP=54, PROMO_BP=680, NCS_BP=15;
 function buildModel(){
   const n=state.nc;
-  const link=LINKERS.find(l=>l.id===state.linker);
+  const link=LIB.linkers.find(l=>l.id===state.linker);
   const cargoBp = state.cargoSeq.length;
   const cargoLabel = state.cargoLabel;
 
@@ -1140,7 +1224,7 @@ function buildModel(){
   // surface-display marker (SpyTag/SpyCatcher) is fused to the shell exterior — at its
   // N-terminus (Type 2) or C-terminus (Type 4). The shell ORF stop sits right after the
   // shell's C-terminus (Type 4), unless a C-terminal marker takes that slot and carries it.
-  const mk = SURFACE_MARKERS.find(x=>x.id===state.marker) || null;
+  const mk = LIB.surfaceMarkers.find(x=>x.id===state.marker) || null;
   const shellPart = { label:n.shell, kind:'shell', note:n.shellBp+' bp', bp:n.shellBp, mapnote:'Shell' };
   const markPart = (term) => ({ label:mk.label, kind:'mark', note:mk.aa+' aa · '+term+'-term surface', bp:mk.bp });
   const ncLink   = () => ({ label:'L1', kind:'t2', note:'linker', bp:18 });
@@ -1176,10 +1260,66 @@ function makePrimerPair(seq, ohF, ohR){
   ];
 }
 
-function compute(){
+/* ---------- API response -> the shape the renderers expect ----------------
+   The engine returns semantic kinds (t1/t2/t3/ncs/shell/mark); the diagram
+   colours every slot by its Type POSITION, exactly as buildModel() does, so
+   shell and marker keep their own colour and everything else follows Type
+   1..5.                                                                     */
+function partFromApi(p){
+  return {
+    label: p.label,
+    kind: (p.kind==='shell' || p.kind==='mark') ? p.kind : 't'+p.slot,
+    note: p.note,
+    bp: p.bp,
+    type: p.type,
+    stop: !!p.stop,
+    dummy: p.role==='ncs' || p.role==='surface',
+    surface: !!p.surface,
+    mapnote: p.isCargo ? (p.bp+' bp') : undefined,
+  };
+}
+
+function modelFromApi(d){
+  const l0 = d.level0.cargoModule.map(partFromApi);
+  return {
+    n: { id:d.nanocompartment.id, label:d.nanocompartment.label, T:d.nanocompartment.T,
+         dia:d.nanocompartment.dia, tp:d.targetingPeptide,
+         shell:d.nanocompartment.shell, shellBp:d.nanocompartment.shellBp },
+    link: d.linker,
+    cargoBp: d.cargo.bp,
+    cargoLabel: d.cargo.label,
+    l0,
+    l1cargo: l0.map(p=>({...p})),
+    l1nc: d.level0.ncModule.map(partFromApi),
+    promo: { label:d.level2.promoter.label, kind:'promo', note:'bidirectional', bp:d.level2.promoter.bp },
+    marker: d.marker || null,
+  };
+}
+
+function primersFromApi(primers){
+  // Feldnamen angleichen (overhang -> oh, length -> len) und die neuen
+  // primer3-Angaben mitnehmen.
+  return primers.map(p=>({
+    name:p.name, role:p.role, oh:p.overhang, anneal:p.anneal, full:p.full,
+    len:p.length, tm:p.tm, tmMethod:p.tmMethod || 'wallace',
+    q5:p.q5AnnealingTemp, valid:p.valid, issues:p.issues || [],
+  }));
+}
+
+async function compute(){
+  const api=window.ENCORE_API;
+  if(api && api.available){
+    try{
+      const d=await api.designFromState(state);
+      lastResult={ model:modelFromApi(d), primers:primersFromApi(d.primers), api:d };
+      renderAll(lastResult);
+      return;
+    }catch(err){
+      console.warn('[ENCORE] /api/design failed — falling back to the inline model', err);
+    }
+  }
   const m=buildModel();
-  const primers = makePrimerPair(state.cargoSeq, CARGO_L1_FLANK[0], CARGO_L1_FLANK[1]);
-  lastResult = { model:m, primers };
+  lastResult={ model:m, primers:makePrimerPair(state.cargoSeq, CARGO_L1_FLANK[0], CARGO_L1_FLANK[1]), api:null };
   renderAll(lastResult);
 }
 
@@ -1206,12 +1346,35 @@ function renderAll(res){
 
   /* --- Primers --- */
   renderPrimers(res.primers);
+  renderSource(res);
 
   /* --- Plasmid --- */
   renderPlasmid(res);
 
   /* --- Order list --- */
   renderOrder(m);
+}
+
+/* Sagt dem Nutzer, woher die Zahlen stammen — Messung oder Schaetzung. */
+function renderSource(res){
+  const note=$('#primerNote'); if(!note) return;
+  if(!res.api){
+    note.innerHTML='Preview using a simplified Wallace Tm — the backend is not '
+      + 'connected, so this page is computing inline with placeholder values.';
+    return;
+  }
+  const p=res.primers[0]||{};
+  if(p.tmMethod==='primer3-nn'){
+    const issues=res.primers.reduce((n,x)=>n+(x.issues?x.issues.length:0),0);
+    note.innerHTML=`Nearest-neighbor Tm from <code>primer3</code> via <code>POST /api/design</code>`
+      + (p.q5!=null ? ` · Q5 annealing temperature <b>${p.q5} °C</b>` : '')
+      + ` · dimer and hairpin check ${issues ? `<b>${issues} issue(s)</b>` : 'passed'}.`
+      + ' The check covers the annealing region only, because the BsaI prefix still ends in a literal N.';
+  }else{
+    note.innerHTML='Backend connected, but <code>primer3</code> is not installed there — '
+      + 'these are rough Wallace estimates. See <code>Biologik/requirements.txt</code>.';
+  }
+  (res.api.warnings||[]).forEach(w=>{ note.innerHTML += `<br><b>Note:</b> ${w}`; });
 }
 
 /* ---------- 96-well plate (pick plan) ---------- */
@@ -1259,7 +1422,11 @@ function renderPrimers(primers){
       <td class="pname">${p.name}<small>${p.role}</small></td>
       <td class="pseq"><span class="bsa">GGTCTCN</span><span class="oh">${p.oh}</span>${p.anneal}</td>
       <td class="num-cell">${p.len} nt</td>
-      <td class="num-cell"><span class="tmcell">${p.tm} °C <span class="tmflag ${flag}">${flag==='ok'?'Δ≤5°C':'Δ>5°C'}</span></span></td>
+      <td class="num-cell"><span class="tmcell">${p.tm} °C <span class="tmflag ${flag}">${flag==='ok'?'Δ≤5°C':'Δ>5°C'}</span>${
+        p.tmMethod==='primer3-nn'
+          ? '<span class="tmflag ok" title="nearest-neighbor Tm via primer3">NN</span>'
+          : '<span class="tmflag warn" title="Wallace rule — rough estimate">Wallace</span>'
+      }</span></td>
     </tr>`);
   });
 }
@@ -1423,7 +1590,10 @@ function buildFasta(res){
 }
 function downloadFasta(){
   if(!lastResult) return;
-  const blob=new Blob([buildFasta(lastResult)],{type:'text/plain'});
+  // Wenn der Server geantwortet hat, ist SEIN Export massgeblich — er kennt die
+  // echten Sequenzen, sobald sie hinterlegt sind.
+  const text = (lastResult.api && lastResult.api.fasta) || buildFasta(lastResult);
+  const blob=new Blob([text],{type:'text/plain'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='encore-construct.fasta'; a.click();
 }
 $('#dlFasta').addEventListener('click', downloadFasta);
@@ -1442,7 +1612,19 @@ function updateProgress(){ const d=document.documentElement,tot=d.scrollHeight-w
 window.addEventListener('scroll',updateProgress,{passive:true}); window.addEventListener('resize',updateProgress);
 
 /* ===================== Init ===================== */
-initNcDropdown(); initPresetChips(); initLinkerDropdown(); initMarkerDropdown(); applyLocks(); updateStepperLocks(); updateProgress();
+async function boot(){
+  await loadLibraries();          // API, sonst die Inline-Konstanten
+  initNcDropdown(); initPresetChips(); initPromoterDropdown();
+  initLinkerDropdown(); initMarkerDropdown();
+  applyLocks(); updateStepperLocks(); updateProgress();
+  console.info(`[ENCORE] libraries loaded from: ${LIB.source}`);
+}
+// window.ENCORE_API wird in einem SPAETEREN <script>-Block definiert. Wuerde
+// boot() sofort laufen, saehe loadLibraries() die API noch nicht und fiele
+// unnoetig auf die Inline-Konstanten zurueck. DOMContentLoaded feuert erst,
+// wenn alle synchronen Skripte durch sind.
+if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+else boot();
 
 </script>
 
@@ -1471,11 +1653,13 @@ window.ENCORE_API = (function(){
     // Convenience: translate the prototype's `state` object into a design request.
     designFromState: (s) => post('/design', {
       nanocompartment: s.nc && s.nc.id, cargoSeq: s.cargoSeq, cargoLabel: s.cargoLabel,
-      fusion: s.fusion, linker: s.linker, promoter: s.promoter, fasta: true,
+      fusion: s.fusion, linker: s.linker, promoter: s.promoter,
+      marker: s.marker, markerTerm: s.markerTerm, fasta: true,
     }),
   };
-  // Passive health check — never alters the prototype's behaviour.
-  api.libraries()
+  // Passive health check. `ready` resolves either way, so the app can await it
+  // once and then look at `available` instead of racing the check.
+  api.ready = api.libraries()
     .then(()=>{ api.available = true; console.info('[ENCORE] backend connected — window.ENCORE_API ready'); })
     .catch(()=>{ console.info('[ENCORE] backend not reachable — prototype running standalone (inline logic)'); });
   return api;
