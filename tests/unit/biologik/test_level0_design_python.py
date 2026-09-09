@@ -107,8 +107,10 @@ def test_json_cli_serves_libraries():
     assert response['ok'] is True
     libraries = response['libraries']
     assert sorted(libraries) == [
-        'cargoPresets', 'linkers', 'nanocompartments', 'promoters', 'typeOverhangs'
+        'cargoPresets', 'linkers', 'nanocompartments', 'promoters', 'surfaceMarkers',
+        'typeOverhangs',
     ]
+    assert [m['id'] for m in libraries['surfaceMarkers']] == ['spycatcher', 'spytag']
     assert [nc['id'] for nc in libraries['nanocompartments']] == ['tmari', 'mxan', 'qther']
 
 
@@ -134,3 +136,54 @@ def test_json_cli_reports_the_real_error_on_stdout():
     assert response['ok'] is False
     assert 'gibtsnicht' in response['error']
     assert result.stderr.strip() == ''
+
+
+CARGO = 'ATGAAATTTGAAATGAAATTTGAAATGAAATTTGAA'
+
+
+def _design(**overrides):
+    return design_construct(dict(
+        {'nanocompartment': 'tmari', 'cargoSeq': CARGO, 'cargoLabel': 'GFP', 'fusion': 'C'},
+        **overrides,
+    ))
+
+
+def test_stop_codon_follows_the_fusion_direction():
+    # Der ORF endet am C-Terminus des Fusionsproteins. Bei C-terminaler Fusion
+    # ist das das Targeting-Peptid (Type 1), bei N-terminaler der NCS dahinter.
+    c_module = _design(fusion='C')['level0']['cargoModule']
+    n_module = _design(fusion='N')['level0']['cargoModule']
+
+    assert [p['stop'] for p in c_module] == [True, False, False, False, False]
+    assert [p['stop'] for p in n_module] == [False, True, False, False, False]
+    assert c_module[0]['role'] == 'targeting-peptide'
+    assert n_module[1]['role'] == 'ncs'
+
+
+def test_surface_marker_sits_at_the_chosen_terminus():
+    n_term = _design(marker='spycatcher', markerTerm='N')['level0']['ncModule']
+    c_term = _design(marker='spycatcher', markerTerm='C')['level0']['ncModule']
+
+    assert n_term[0]['kind'] == 'mark' and n_term[1]['role'] == 'marker-linker'
+    assert c_term[4]['kind'] == 'mark' and c_term[3]['role'] == 'marker-linker'
+
+    # Das Stopcodon wandert an das neue 3'-Ende des ORFs mit.
+    assert n_term[3]['stop'] is True
+    assert c_term[4]['stop'] is True
+
+
+def test_without_a_marker_the_slots_stay_inert_spacers():
+    nc_module = _design()['level0']['ncModule']
+
+    assert _design()['marker'] is None
+    assert [p['role'] for p in nc_module] == ['surface', 'surface', 'shell', 'surface', 'surface']
+    assert [p['stop'] for p in nc_module] == [False, False, False, True, False]
+
+
+def test_unknown_surface_marker_is_rejected():
+    try:
+        _design(marker='gibtsnicht')
+    except ValueError as error:
+        assert 'gibtsnicht' in str(error)
+    else:
+        raise AssertionError('unknown marker should raise')

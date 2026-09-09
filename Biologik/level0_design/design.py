@@ -6,6 +6,7 @@ from typing import List
 
 from .data import (
     BSAI_PRIMER_PREFIX,
+    MARKER_LINKER,
     CARGO_L1_FLANK,
     LINKERS,
     NC_L1_FLANK,
@@ -15,6 +16,7 @@ from .data import (
     find_linker,
     find_nanocompartment,
     find_promoter,
+    find_surface_marker,
 )
 from .sequence import reverse_complement, validate_cargo, wallace_tm
 
@@ -35,10 +37,15 @@ def level0_part(slot: int, spec: dict) -> dict:
         "overhang3": overhang3,
         "surface": spec.get("surface", False),
         "isCargo": spec.get("isCargo", False),
+        # Traegt dieser Slot das Stopcodon? Es sitzt immer am 3'-Ende des ORFs,
+        # also am C-Terminus des Fusionsproteins. Welcher Slot das ist, haengt
+        # an der Fusionsrichtung bzw. am Display-Terminus.
+        "stop": spec.get("stop", False),
     }
 
 
-def build_modules(nc: dict, link: dict, cargo_label: str, cargo_bp: int, fusion: str):
+def build_modules(nc: dict, link: dict, cargo_label: str, cargo_bp: int, fusion: str,
+                  marker: dict = None, marker_term: str = "N"):
     # Ein Modul besteht aus mehreren Level-0-Teilen. Hier werden die Bausteine für Cargo- und NC-Modul aufgebaut.
     tp = {"role": "targeting-peptide", "label": nc["tp"], "kind": "t1", "note": "Targeting peptide", "bp": NOMINAL_BP["TP"]}
     lk = {"role": "linker", "label": link["label"], "kind": "t2", "note": f"{link['aa']} aa", "bp": link["bp"]}
@@ -51,11 +58,37 @@ def build_modules(nc: dict, link: dict, cargo_label: str, cargo_bp: int, fusion:
     def surf(label: str = "NCS"):
         return {"role": "surface", "label": label, "kind": "ncs", "note": "open · e.g. SpyCatcher", "bp": NOMINAL_BP["NCS"], "surface": True}
 
-    cargo_layout = [tp, lk, cg, ncs(), ncs()] if fusion == "C" else [ncs(), ncs(), cg, lk, tp]
+    # Der ORF laeuft von Type 5 nach Type 1. Bei C-terminaler Fusion ist das
+    # Targeting-Peptid der C-Terminus und traegt das Stopcodon; bei
+    # N-terminaler Fusion sitzt es im NCS direkt hinter dem Cargo.
+    if fusion == "C":
+        cargo_layout = [{**tp, "stop": True}, lk, cg, ncs(), ncs()]
+    else:
+        cargo_layout = [ncs(), {**ncs(), "stop": True}, cg, lk, tp]
+
     # Eine List-Comprehension baut aus einer Liste schnell eine Liste mit verarbeiteten Elementen.
     cargo_module = [level0_part(index + 1, spec) for index, spec in enumerate(cargo_layout)]
 
-    nc_layout = [surf(), surf(), {"role": "shell", "label": nc["shell"], "kind": "shell", "note": f"{nc['shellBp']} bp", "bp": nc["shellBp"]}, surf("NCS*"), surf()]
+    shell = {"role": "shell", "label": nc["shell"], "kind": "shell", "note": f"{nc['shellBp']} bp", "bp": nc["shellBp"]}
+
+    def mark(term: str):
+        return {"role": "surface-marker", "label": marker["label"], "kind": "mark",
+                "note": f"{marker['aa']} aa · {term}-term surface", "bp": marker["bp"], "surface": True}
+
+    def mark_link():
+        return {"role": "marker-linker", "label": MARKER_LINKER["label"], "kind": "t2",
+                "note": "linker", "bp": MARKER_LINKER["bp"]}
+
+    # Ohne Marker bleiben die vier Slots neben der Shell inerte NCS-Spacer und
+    # das Stopcodon sitzt direkt hinter der Shell (Type 4). Mit Marker rueckt es
+    # an das neue 3'-Ende des ORFs.
+    if marker and marker_term == "C":
+        nc_layout = [surf(), surf(), shell, mark_link(), {**mark("C"), "stop": True}]
+    elif marker and marker_term == "N":
+        nc_layout = [mark("N"), mark_link(), shell, {**surf(), "stop": True}, surf()]
+    else:
+        nc_layout = [surf(), surf(), shell, {**surf(), "stop": True}, surf()]
+
     nc_module = [level0_part(index + 1, spec) for index, spec in enumerate(nc_layout)]
     return cargo_module, nc_module
 
@@ -198,7 +231,8 @@ def build_plate_plan(nc: dict, link: dict, cargo_label: str):
     ]
 
 
-def build_order_list(nc: dict, link: dict, cargo_module: List[dict], cargo_label: str, cargo_bp: int, cargo_seq: str):
+def build_order_list(nc: dict, link: dict, cargo_module: List[dict], cargo_label: str, cargo_bp: int, cargo_seq: str,
+                     marker: dict = None, marker_term: str = "N"):
     # Eine innere Funktion hilft, die Auswahl eines bestimmten Bausteins aus dem Modul zu kapseln.
     def role_type(role: str):
         match = next((part for part in cargo_module if part["role"] == role), None)
@@ -211,7 +245,11 @@ def build_order_list(nc: dict, link: dict, cargo_module: List[dict], cargo_label
             {"name": f"Shell CDS {nc['shell']}", "sub": "Nanocompartment · standard module", "kind": "shell"},
             {"name": "Promoter GAL1-10", "sub": "bidirectional · standard module", "kind": "promo"},
             {"name": "NCS / surface slot", "sub": "Spacer or display marker (e.g. SpyCatcher)", "kind": "ncs"},
-        ],
+        ] + ([
+            {"name": f"Surface marker {marker['label']}",
+             "sub": f"{'Type 5' if marker_term == 'C' else 'Type 1'} · shell {marker_term}-terminal display, via L1 linker · source once",
+             "kind": "mark"},
+        ] if marker else []),
         "new": {
             "name": f"{cargo_label} ({cargo_bp} bp)",
             "sub": "Type 3 · your new cargo — synthesis/PCR with overhangs",
@@ -240,7 +278,15 @@ def design_construct(decisions: dict = None):
     cargo_label = (decisions.get("cargoLabel") or "").strip() or "Custom cargo"
     cargo_bp = cargo["length"]
 
-    cargo_module, nc_module = build_modules(nc, link, cargo_label, cargo_bp, fusion)
+    # Optionaler Oberflaechen-Marker. Eine leere Angabe ist gueltig (= kein
+    # Marker), eine unbekannte ID dagegen ein Eingabefehler.
+    marker_id = decisions.get("marker") or None
+    marker = find_surface_marker(marker_id) if marker_id else None
+    if marker_id and not marker:
+        raise ValueError(f"Unknown surface marker \"{marker_id}\".")
+    marker_term = "C" if decisions.get("markerTerm") == "C" else "N"
+
+    cargo_module, nc_module = build_modules(nc, link, cargo_label, cargo_bp, fusion, marker, marker_term)
     primers = make_primer_pair(cargo["clean"], CARGO_L1_FLANK[0], CARGO_L1_FLANK[1])
 
     # Die Cargo-Validierung liefert eigene Warnungen; die Primer-Methode kommt dazu,
@@ -254,7 +300,8 @@ def design_construct(decisions: dict = None):
         )
 
     return {
-        "input": {"nanocompartment": nc["id"], "fusion": fusion, "linker": link["id"], "promoter": promoter_entry["id"], "cargoLabel": cargo_label},
+        "input": {"nanocompartment": nc["id"], "fusion": fusion, "linker": link["id"], "promoter": promoter_entry["id"], "cargoLabel": cargo_label,
+                  "marker": marker["id"] if marker else None, "markerTerm": marker_term if marker else None},
         "nanocompartment": {"id": nc["id"], "label": nc["label"], "T": nc["T"], "dia": nc["dia"], "shell": nc["shell"], "shellBp": nc["shellBp"]},
         "targetingPeptide": nc["tp"],
         "linker": {"id": link["id"], "label": link["label"], "aa": link["aa"], "bp": link["bp"]},
@@ -263,9 +310,10 @@ def design_construct(decisions: dict = None):
         "level0": {"total": len(cargo_module) + len(nc_module), "cargoModule": cargo_module, "ncModule": nc_module},
         "level1": {"cargoModule": {"role": f"{fusion}-terminal cargo module", "enzyme": "BsaI", "flanks": {"left": CARGO_L1_FLANK[0], "right": CARGO_L1_FLANK[1]}, "parts": cargo_module}, "ncModule": nc_module},
         "level2": {"promoter": {"id": promoter_entry["id"], "label": promoter_entry["label"], "kind": "promo", "bp": NOMINAL_BP["PROMO"], "flanks": {"left": PROMO_FLANK[0], "right": PROMO_FLANK[1]}}},
+        "marker": ({**marker, "term": marker_term} if marker else None),
         "primers": primers,
         "platePlan": build_plate_plan(nc, link, cargo_label),
-        "orderList": build_order_list(nc, link, cargo_module, cargo_label, cargo_bp, cargo["clean"]),
+        "orderList": build_order_list(nc, link, cargo_module, cargo_label, cargo_bp, cargo["clean"], marker, marker_term),
         "warnings": design_warnings,
     }
 
@@ -304,6 +352,9 @@ def build_fasta(design: dict) -> str:
     shell_seq = placeholder_seq("SHELL" + nc["shell"], nc["shellBp"])
     promo_seq = placeholder_seq("PROMO" + design["level2"]["promoter"]["id"], 600)
     ncs_seq = placeholder_seq("NCS", 30)
+    marker = design.get("marker")
+    marker_seq = placeholder_seq("MARK" + marker["id"], marker["bp"]) if marker else ""
+    marker_link_seq = placeholder_seq("MARKLINK", MARKER_LINKER["bp"]) if marker else ""
 
     add(f"Targeting-Peptide_{design['targetingPeptide']} [Type1/5] [PLACEHOLDER]", tp_seq)
     add(f"Linker_{link['id']} [Type2/4] [PLACEHOLDER]", link_seq)
@@ -311,10 +362,24 @@ def build_fasta(design: dict) -> str:
     add(f"Nanocompartment-Shell_{nc['shell']} [PLACEHOLDER]", shell_seq)
     add(f"Promoter_{design['level2']['promoter']['label']} [bidirectional] [PLACEHOLDER]", promo_seq)
     add("NCS-Spacer [PLACEHOLDER]", ncs_seq)
+    if marker:
+        add(
+            f"Surface-Marker_{marker['label']} "
+            f"[{'Type5' if marker['term'] == 'C' else 'Type1'}] "
+            f"[shell {marker['term']}-terminal · via L1 linker] [PLACEHOLDER {marker['bp']}bp]",
+            marker_seq,
+        )
     add(f"Cargo_{cargo_name}_with-overhangs", f"{CARGO_L1_FLANK[0]}{cargo_seq}{CARGO_L1_FLANK[1]}")
 
     cargo_module_seq = tp_seq + link_seq + cargo_seq + ncs_seq + ncs_seq if design["fusion"] == "C" else ncs_seq + ncs_seq + cargo_seq + link_seq + tp_seq
-    nc_module_seq = ncs_seq + ncs_seq + shell_seq + ncs_seq + ncs_seq
+    # Reihenfolge im NC-Modul wie im Level-0-Layout: Marker + L1-Linker sitzen
+    # je nach Display-Terminus vor oder hinter der Shell.
+    if marker and marker["term"] == "C":
+        nc_module_seq = ncs_seq + ncs_seq + shell_seq + marker_link_seq + marker_seq
+    elif marker:
+        nc_module_seq = marker_seq + marker_link_seq + shell_seq + ncs_seq + ncs_seq
+    else:
+        nc_module_seq = ncs_seq + ncs_seq + shell_seq + ncs_seq + ncs_seq
     add(f"Level1_Cargo-Module_{design['fusion']}-terminal [{design['cargo']['label']}]", cargo_module_seq)
     add("Level1_Nanocompartment-Module [" + nc["shell"] + "]", nc_module_seq)
 

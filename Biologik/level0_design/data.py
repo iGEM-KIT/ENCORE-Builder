@@ -76,6 +76,18 @@ LINKERS = [
 # Bibliothek für Promotoren
 PROMOTERS = [{"id": "GAL110", "label": "GAL1-10", "desc": "bidirectional, inducible"}]
 
+# Optionale Oberflaechen-Marker. Sie werden in einen der NCS-Slots neben der
+# Shell fusioniert und sitzen dadurch AUSSEN auf dem Encapsulin — im Gegensatz
+# zum Cargo, das innen verpackt wird. Zwischen Shell und Marker liegt immer der
+# kurze L1-Linker, damit das dargestellte Protein Platz zum Falten hat.
+SURFACE_MARKERS = [
+    {"id": "spycatcher", "label": "SpyCatcher", "aa": 113, "bp": 339, "desc": "covalent SpyTag capture (isopeptide bond)"},
+    {"id": "spytag", "label": "SpyTag", "aa": 13, "bp": 39, "desc": "13-aa peptide, binds SpyCatcher"},
+]
+
+# Linker zwischen Shell und Oberflaechen-Marker.
+MARKER_LINKER = {"label": "L1", "aa": 6, "bp": 18}
+
 
 # Alles, was das Frontend für seine Dropdowns braucht — an EINER Stelle.
 # Bewusst eine Funktion und keine Konstante, damit sie später aus der Datenbank
@@ -87,6 +99,7 @@ def get_libraries() -> dict:
         "cargoPresets": CARGO_PRESETS,
         "linkers": LINKERS,
         "promoters": PROMOTERS,
+        "surfaceMarkers": SURFACE_MARKERS,
         "typeOverhangs": TYPE_OVERHANGS,
     }
 
@@ -108,3 +121,7 @@ def find_linker(identifier: str):
 
 def find_promoter(identifier: str):
     return next((item for item in PROMOTERS if item["id"] == identifier), None)
+
+
+def find_surface_marker(identifier: str):
+    return next((item for item in SURFACE_MARKERS if item["id"] == identifier), None)
