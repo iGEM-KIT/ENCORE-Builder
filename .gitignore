@@ -13,3 +13,10 @@ dist/
 # OS junk
 .DS_Store
 ._*
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
