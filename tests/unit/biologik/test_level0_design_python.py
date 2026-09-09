@@ -6,10 +6,35 @@ from Biologik.level0_design.design import build_fasta, design_construct, make_pr
 from Biologik.level0_design.sequence import validate_cargo
 
 
-def test_validate_cargo_rejects_stop_codon_and_short_sequences():
-    cargo = validate_cargo('ATGAAATAG', min_bp=30)
+def test_validate_cargo_rejects_a_trailing_stop_codon():
+    # Lang genug und im Raster — die einzige Regel, die hier greifen darf, ist
+    # das Stopcodon am Ende. Deshalb ist errors[0] eindeutig.
+    cargo = validate_cargo('ATGAAATTTGAAATGAAATTTGAAATGAAATTTTAG', min_bp=30)
+
     assert cargo['ok'] is False
+    assert cargo['trailingStop'] == 'TAG'
+    assert len(cargo['errors']) == 1
     assert 'Stop codon at the end' in cargo['errors'][0]
+
+
+def test_validate_cargo_rejects_a_too_short_sequence():
+    # Endet auf GAA, nicht auf einem Stopcodon — hier darf nur die
+    # Laengenpruefung anschlagen.
+    cargo = validate_cargo('ATGAAATTTGAA', min_bp=30)
+
+    assert cargo['ok'] is False
+    assert cargo['trailingStop'] is None
+    assert len(cargo['errors']) == 1
+    assert 'Sequence too short' in cargo['errors'][0]
+
+
+def test_validate_cargo_accepts_a_fusion_ready_sequence():
+    cargo = validate_cargo('ATGAAATTTGAAATGAAATTTGAAATGAAATTTGAA', min_bp=30)
+
+    assert cargo['ok'] is True
+    assert cargo['errors'] == []
+    assert cargo['length'] == 36
+    assert cargo['aa'] == 12
 
 
 def test_design_construct_builds_level0_modules():
