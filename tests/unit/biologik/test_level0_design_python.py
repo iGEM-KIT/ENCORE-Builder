@@ -1,4 +1,6 @@
-import pytest
+import json
+import subprocess
+import sys
 
 from Biologik.level0_design.design import build_fasta, design_construct, make_primer_pair
 from Biologik.level0_design.sequence import validate_cargo
@@ -40,3 +42,24 @@ def test_make_primer_pair_and_fasta_export():
         }
     )
     assert 'Level1_Cargo-Module_C-terminal' in fasta
+
+
+def test_json_cli_connects_backend_request_to_biologik():
+    request = {
+        'nanocompartment': 'tmari',
+        'cargoSeq': 'ATGAAATTTGAAATGAAATTTGAAATGAAATTTGAA',
+        'cargoLabel': 'CliCargo',
+        'fusion': 'C',
+    }
+    result = subprocess.run(
+        [sys.executable, '-m', 'Biologik.level0_design.cli'],
+        input=json.dumps(request),
+        text=True,
+        capture_output=True,
+        check=True,
+    )
+
+    response = json.loads(result.stdout)
+    assert response['ok'] is True
+    assert response['design']['cargo']['label'] == 'CliCargo'
+    assert response['design']['level0']['total'] == 10
