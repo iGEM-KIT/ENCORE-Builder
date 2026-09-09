@@ -8,78 +8,44 @@
 <style>
   /* ============ THEME TOKENS ============ */
   :root{
-    --ink:#0E211B; --ink-soft:#38463f;
-    --forest:#1d332c; --forest-deep:#142620;
-    --teal:#2BBFA6; --teal-deep:#0f6b5a; --teal-soft:#e0f6f1;
-    --orange:#FFA726; --orange-ink:#3a2200; --orange-deep:#A34E00;
+    /* The ENTIRE palette is colour-blind-safe by default — there is no separate CB
+       mode to switch on. Chrome (header, accents, links, buttons) uses dark blue
+       instead of forest green, CB blue instead of turquoise, and CB orange. */
+    --ink:#0d1b26; --ink-soft:#37454f;
+    --forest:#12283a; --forest-deep:#0c1c29;
+    --teal:#0072B2; --teal-deep:#005f93; --teal-soft:#dbe9f3;
+    --orange:#E69F00; --orange-ink:#3a2200; --orange-deep:#8a5a00;
     --paper:#F3F6F3; --card:#FFFFFF; --card-2:#FAFCFA;
     --line:#D7E1DB; --line-soft:#E9EFEB; --muted:#5C6B62;
     --shadow:0 1px 2px rgba(20,38,32,.06), 0 10px 30px rgba(20,38,32,.07);
-    --radius:14px; --hdr-h:64px; --stepper-h:74px;
-    /* Module type colors — inclusive ENCORE palette. Each visual role gets its
-       OWN color (no duplicate assignment) so building blocks in the diagram
-       stay clearly distinguishable — e.g. targeting peptide ≠ shell. */
-    --c-teal:#2BBFA6; --c-orange:#FFA726; --c-lime:#BCD94F;
-    --c-blue:#4FC3F7; --c-purple:#C98FE0; --c-yellow:#FFE14D;
-    --t1:var(--c-teal); --t2:var(--c-lime); --t3:var(--c-yellow);
-    --t4:var(--c-blue); --t5:var(--c-purple); --shell:var(--c-purple);
-    --promo:var(--c-blue); --ncs:#C9D4CC;
-    --t1-ink:#08312a; --t2-ink:#33390f; --t3-ink:#4a3f00; --t4-ink:#06344a;
-    --t5-ink:#3a1f4a; --shell-ink:#3a1f4a; --promo-ink:#06344a;
-    --ncs-ink:#42504a;
+    --radius:14px; --hdr-h:64px; --stepper-h:74px; --side-w:214px;
+    /* Module type colours — Okabe-Ito. Each visual role gets a maximally distinct
+       hue AND a spread in lightness, so the palette holds up for every CVD type
+       incl. monochromacy. Colour stays a REDUNDANT cue: every block, legend row
+       and well carries its text label as well. Each ink clears WCAG AA on its
+       own fill.
+         Type 1 = sky · Type 2 = yellow · Type 3 = vermillion · Type 4 = purple
+         Type 5 = orange · shell = green · promoter = blue · NCS = grey */
+    --t1:#56B4E9; --t2:#F0E442; --t3:#D55E00; --t4:#CC79A7; --t5:#E69F00;
+    --shell:#009E73; --promo:#0072B2; --ncs:#9AA6A0;
+    --t1-ink:#06202b; --t2-ink:#2a2600; --t3-ink:#2a1200; --t4-ink:#2e0f22;
+    --t5-ink:#241a00; --shell-ink:#04120d; --promo-ink:#ffffff; --ncs-ink:#1f2b26;
+    /* Surface-display marker (e.g. SpyCatcher) — Okabe-Ito's 8th colour (black),
+       so it never collides with the Type 4 purple inside the same module row.
+       Inverted under [data-theme="dark"] to stay distinct on a dark card. */
+    --mark:#000000; --mark-ink:#ffffff;
   }
   /* Darkmode */
   [data-theme="dark"]{
-    --ink:#E7EFE9; --ink-soft:#B7C5BC;
-    --forest:#0c1d16; --forest-deep:#081410;
-    --teal:#3fd4bb; --teal-deep:#6fe0cd; --teal-soft:#123029;
-    --orange:#FFB84D; --orange-deep:#FFB84D;
+    --ink:#E7EEF4; --ink-soft:#B7C2CC;
+    --forest:#0c1a29; --forest-deep:#08131f;
+    --teal:#3fa9d8; --teal-deep:#7fc4ea; --teal-soft:#0e2a3d;
+    --orange:#F0A93A; --orange-deep:#F0A93A;
     --paper:#0d1814; --card:#13211c; --card-2:#172821;
     --line:#26362f; --line-soft:#1d2c25; --muted:#8da095;
     --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 32px rgba(0,0,0,.35);
+    --mark:#EDEDED; --mark-ink:#111111;
   }
-
-  /* Colour-blind-safe palette (Okabe-Ito) — an ORTHOGONAL toggle that stacks on
-     top of light OR dark. Each module role gets a maximally distinct hue AND a
-     spread in lightness (works for every CVD type incl. monochromacy), plus a
-     text ink that clears WCAG AA contrast on its own fill. Colour stays a
-     redundant cue: every block, legend row and well already carries its text label.
-       TP=sky · Linker=yellow · Cargo=vermillion · Shell=green · Promoter=blue · NCS=grey */
-  [data-cb="on"]{
-    --t1:#56B4E9; --t2:#F0E442; --t3:#D55E00; --t4:#CC79A7; --t5:#E69F00;
-    --shell:#009E73; --promo:#0072B2; --ncs:#9AA6A0;
-    --t1-ink:#06202b; --t2-ink:#2a2600; --t3-ink:#2a1200; --t4-ink:#2e0f22; --t5-ink:#241a00;
-    --shell-ink:#04120d; --promo-ink:#ffffff; --ncs-ink:#1f2b26;
-    /* accent + semantic UI colours become CB-safe too, so the WHOLE interface
-       (eyebrows, links, success/info boxes, chips, focus rings, top map) is
-       colour-blind-safe — not just the module blocks */
-    --teal:#0072B2; --teal-deep:#005f93; --teal-soft:#dbe9f3;
-    /* replace the remaining brand hues so NOTHING off-palette is left in CB mode:
-       amber CTA → CB orange; forest chrome (header, num-badges, dark boxes) → dark CB blue */
-    --orange:#E69F00; --orange-deep:#8a5a00; --forest:#12283a; --forest-deep:#0c1c29;
-  }
-  [data-theme="dark"][data-cb="on"]{
-    --teal:#3fa9d8; --teal-deep:#7fc4ea; --teal-soft:#0e2a3d;
-  }
-  /* keep tiny plate-well letters legible on any of the CB fills */
-  [data-cb="on"] .well .wtip{text-shadow:0 0 2px rgba(0,0,0,.9),0 1px 1px rgba(0,0,0,.75)}
-  /* selected preset chip: white text on the CB accent for AA contrast */
-  [data-cb="on"] .preset-chip.on{color:#fff}
-  /* hardcoded (non-token) brand + warning colours remapped so CB mode is CB-only everywhere */
-  [data-cb="on"] .brand-sub{color:#aebfd2}
-  [data-cb="on"] .brand-sub b{color:#E69F00}
-  [data-cb="on"] .hbtn.on{color:#fff}
-  [data-cb="on"] .pseq .oh{background:var(--orange)!important;color:var(--orange-ink)!important}
-  [data-cb="on"] .oi-badge.synth{background:rgba(230,159,0,.16)}
-  [data-cb="on"] .stopwarn{background:rgba(213,94,0,.12);border-color:rgba(213,94,0,.5);color:#9a4100}
-  [data-cb="on"] .tmflag.warn{background:rgba(213,94,0,.16);color:#9a4100}
-  [data-cb="on"] .seqmeta .err{color:#9a4100}
-  [data-theme="dark"][data-cb="on"] .stopwarn,[data-theme="dark"][data-cb="on"] .tmflag.warn,[data-theme="dark"][data-cb="on"] .seqmeta .err{color:#f0a883}
-  [data-cb="on"] .cdsbox .cdsname{color:#9fc0da}
-  [data-cb="on"] .pseq .bsa{background:rgba(230,159,0,.2)}
-  [data-cb="on"] .start-cta{box-shadow:0 8px 22px rgba(230,159,0,.32)}
-  [data-cb="on"] .btn-primary{box-shadow:0 6px 16px rgba(230,159,0,.28)}
-  [data-cb="on"] select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%230072B2' stroke-width='2'%3E%3Cpath d='M2 4l4 4 4-4'/%3E%3C/svg%3E")}
 
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
@@ -96,16 +62,16 @@
   .brand{display:flex;align-items:center;gap:11px;min-width:0}
   .brand-symbol{height:34px;width:auto;flex:none;display:block}
   .brand-wordmark{height:30px;width:auto;flex:none;display:block;color:#fff}
-  .brand-sub{font-size:12.5px;color:#9FC4BA;letter-spacing:.01em;
+  .brand-sub{font-size:12.5px;color:#aebfd2;letter-spacing:.01em;
     padding-left:11px;margin-left:3px;border-left:1px solid rgba(255,255,255,.2);line-height:1.2;font-weight:500}
-  .brand-sub b{color:#D08A4E;font-weight:700}
+  .brand-sub b{color:#E69F00;font-weight:700}
   @media(max-width:600px){.brand-sub{display:none}}
   header .spacer{flex:1}
   .hbtn{border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.06);color:#E9F2EE;
     font-family:inherit;font-size:11.5px;font-weight:600;padding:7px 11px;border-radius:9px;cursor:pointer;
     transition:.15s;display:flex;align-items:center;gap:6px}
   .hbtn:hover{background:rgba(255,255,255,.14)}
-  .hbtn.on{background:var(--teal);border-color:var(--teal);color:#062019}
+  .hbtn.on{background:var(--teal);border-color:var(--teal);color:#fff}
 
   /* ============ INFO-BUBBLE ============ */
   .info{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;
@@ -129,8 +95,9 @@
 
   /* ============ INTRO ============ */
   .intro{max-width:860px;margin:0 auto;padding:60px 24px 52px}
-  .intro .kicker{display:inline-flex;align-items:center;gap:8px;font-size:11.5px;text-transform:uppercase;
-    letter-spacing:.14em;color:var(--teal-deep);font-weight:700;background:var(--teal-soft);padding:6px 13px;border-radius:999px;margin-bottom:22px}
+  .intro .kicker{display:inline-flex;align-items:center;gap:8px;font-family:'Space Grotesk';font-size:16px;
+    letter-spacing:.01em;color:var(--teal-deep);font-weight:800;background:var(--teal-soft);padding:7px 16px;border-radius:999px;margin-bottom:22px}
+  .intro .kicker b{color:var(--ink)}
   .intro h1{font-size:clamp(30px,5vw,44px);line-height:1.09;margin:0 0 18px}
   .intro h1 em{font-style:normal;color:var(--teal-deep)}
   .intro p.lead{font-size:17px;color:var(--ink-soft);max-width:640px;margin:0 0 34px;line-height:1.6}
@@ -143,9 +110,10 @@
     border-radius:12px;padding:15px 17px;margin-bottom:36px;font-size:13px;color:var(--ink-soft)}
   .prereq svg{flex:none;margin-top:2px;color:var(--teal-deep)}
   .prereq b{color:var(--ink)}
+  .prereq-link{color:var(--teal-deep);font-weight:700;white-space:nowrap;text-decoration:underline}
   .start-cta{display:inline-flex;align-items:center;gap:10px;background:var(--orange);color:var(--orange-ink);border:0;
     font-family:'Space Grotesk';font-weight:600;font-size:15.5px;padding:14px 26px;border-radius:12px;
-    cursor:pointer;box-shadow:0 8px 22px rgba(244,124,32,.3);transition:.15s}
+    cursor:pointer;box-shadow:0 8px 22px rgba(230,159,0,.32);transition:.15s}
   .start-cta:hover{transform:translateY(-1px);filter:brightness(1.03)}
   .intro-foot{margin-top:14px;font-size:12px;color:var(--muted)}
 
@@ -170,7 +138,24 @@
   .s-step.done .s-line{background:var(--teal)}
   .progress-rail{height:3px;background:var(--line-soft);position:relative;overflow:hidden}
   .progress-fill{position:absolute;inset:0 auto 0 0;width:0%;background:linear-gradient(90deg,var(--teal),var(--orange));transition:width .15s linear}
-  @media(max-width:760px){.s-text{display:none}.s-line{margin:0 6px}}
+  @media(max-width:760px){.side-steps .s-text{display:flex}}
+
+  /* ===== Vertical step rail: clean timeline, blends into the page's left column ===== */
+  .side-steps{position:fixed;left:0;top:var(--hdr-h);bottom:0;width:var(--side-w);padding:30px 20px;overflow-y:auto;display:none;z-index:34}
+  .side-steps .stepper{flex-direction:column;align-items:stretch;height:auto;max-width:none;margin:0;padding:0;gap:7px;position:relative}
+  /* one continuous connector line running behind the dots */
+  .side-steps .stepper::before{content:'';position:absolute;left:14px;top:22px;bottom:22px;width:2px;background:var(--line);border-radius:2px}
+  .side-steps .s-step{flex:none;flex-direction:column;align-items:stretch;height:auto}
+  .side-steps .s-node{width:100%;height:auto;padding:6px 0;gap:13px;align-items:center;position:relative;z-index:1}
+  .side-steps .s-line{display:none}
+  .side-steps .s-text{display:flex}
+  .side-steps .s-dot{width:30px;height:30px;background:var(--paper)}
+  @media(min-width:1000px){
+    .side-steps.show{display:block}
+    .stepper-wrap.show{margin-left:var(--side-w)}
+    .shell.show{margin-left:var(--side-w)}
+    #pagefoot.show{margin-left:var(--side-w)}
+  }
 
   /* top construct map — selected modules appear in place, then fuse (bidirectional) */
   .grow-strip{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:12px;padding:7px 24px 9px;border-top:1px dashed var(--line-soft)}
@@ -224,11 +209,11 @@
   textarea{font-family:'JetBrains Mono';font-size:12.5px;line-height:1.6;min-height:120px;resize:vertical;letter-spacing:.02em;word-break:break-all}
   textarea:focus,select:focus,input:focus{border-color:var(--teal-deep);box-shadow:0 0 0 3px rgba(15,107,90,.16)}
   select{appearance:none;cursor:pointer;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%2342a291' stroke-width='2'%3E%3Cpath d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%230072B2' stroke-width='2'%3E%3Cpath d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
     background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
   .seqmeta{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px;font-size:11.5px;color:var(--muted)}
   .seqmeta b{font-family:'JetBrains Mono';color:var(--teal-deep);font-weight:700}
-  .seqmeta .err{color:#E0654F;font-weight:600}
+  .seqmeta .err{color:#9a4100;font-weight:600}
 
   /* Preset chips (casual) */
   .preset-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}
@@ -236,7 +221,7 @@
   .preset-chip{border:1px solid var(--line);background:var(--card);color:var(--ink);font-family:inherit;font-size:12px;
     font-weight:500;padding:6px 12px;border-radius:999px;cursor:pointer;transition:.12s;display:flex;align-items:center;gap:6px}
   .preset-chip:hover{border-color:var(--teal-deep);background:var(--teal-soft)}
-  .preset-chip.on{background:var(--teal);color:#062019;border-color:var(--teal);font-weight:600}
+  .preset-chip.on{background:var(--teal);color:#fff;border-color:var(--teal);font-weight:600}
   .preset-chip .pc-dot{width:7px;height:7px;border-radius:50%;background:var(--t3)}
 
   .nc-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
@@ -252,18 +237,23 @@
   [data-theme="dark"] .seg-full button.on{background:var(--teal);color:#062019}
   .seg-full button:not(.on):hover{background:var(--line-soft)}
 
+  /* group sub-headings inside a step */
+  .grouplab{font-family:'Space Grotesk';font-weight:700;font-size:13.5px;color:var(--ink);margin:24px 0 12px;padding-top:18px;border-top:1px solid var(--line-soft);display:flex;align-items:center;gap:8px}
+  .grouplab:first-child{margin-top:0;padding-top:0;border-top:0}
+  .grouplab > span{font-weight:400;font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+
   .helplink{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--teal-deep);margin-top:10px}
   .helplink a{color:var(--teal-deep);font-weight:600}
 
   .stopwarn,.stopok{display:flex;gap:9px;align-items:flex-start;border-radius:10px;padding:11px 13px;font-size:12.5px;margin-top:12px}
-  .stopwarn{background:rgba(216,75,58,.1);border:1px solid rgba(216,75,58,.4);color:#c9442f}
-  [data-theme="dark"] .stopwarn{color:#f1a08f}
+  .stopwarn{background:rgba(213,94,0,.12);border:1px solid rgba(213,94,0,.5);color:#9a4100}
+  [data-theme="dark"] .stopwarn,[data-theme="dark"] .tmflag.warn,[data-theme="dark"] .seqmeta .err{color:#f0a883}
   .stopok{background:var(--teal-soft);border:1px solid var(--teal-deep);color:var(--teal-deep)}
   .stopwarn svg,.stopok svg{flex:none;margin-top:1px}
 
   .nav{display:flex;justify-content:flex-end;align-items:center;margin-top:22px;gap:12px}
   .btn{border:0;border-radius:11px;padding:12px 22px;font-family:'Space Grotesk';font-weight:600;font-size:14.5px;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:8px}
-  .btn-primary{background:var(--orange);color:var(--orange-ink);box-shadow:0 6px 16px rgba(244,124,32,.26);font-weight:700}
+  .btn-primary{background:var(--orange);color:var(--orange-ink);box-shadow:0 6px 16px rgba(230,159,0,.28);font-weight:700}
   .btn-primary:hover{filter:brightness(1.04);transform:translateY(-1px)}
   .btn-primary:disabled{background:var(--line);color:var(--muted);box-shadow:none;cursor:not-allowed;transform:none}
   .btn-ghost{background:var(--card);border:1px solid var(--line);color:var(--ink)}
@@ -296,9 +286,13 @@
   /* Level 0: discrete, unconnected parts (each is its own Golden Gate part) */
   .partsrow.sep{gap:10px;flex-wrap:wrap}
   .partsrow.sep .part{clip-path:none!important;margin:0!important;border-radius:8px!important;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
-  .part.dummy{background:var(--ncs)!important;color:var(--ncs-ink)}
-  /* open toolkit slot (surface-display marker can go here, e.g. SpyCatcher) */
-  .part.dummy.surface{background:repeating-linear-gradient(135deg,var(--ncs) 0 7px,var(--card-2) 7px 14px)!important;color:var(--ink-soft);box-shadow:inset 0 0 0 1.5px var(--ncs)}
+  /* Level 0: single cargo part with its Type 3 overhangs */
+  .l0row{display:flex;align-items:center;gap:8px}
+  .l0row .part{clip-path:none!important;margin:0!important;border-radius:8px!important}
+  .l0oh{font-family:'JetBrains Mono';font-size:11px;font-weight:700;color:var(--muted);background:var(--card-2);border:1px solid var(--line);border-radius:6px;padding:5px 8px}
+  /* NCS spacers are coloured by their Type position (like the scheme figure), set inline */
+  /* stop-codon carrier: a simple `*` on the part at the 3' end of an ORF (explained in the legend) */
+  .stopstar{font-weight:800;font-size:15px;margin-left:1px}
   .part small{font-weight:400;opacity:.9;font-size:10px}
   .part .ptype{font-family:'JetBrains Mono';font-size:9px;opacity:.85;letter-spacing:.02em}
   .ohlabel{align-self:center;font-family:'JetBrains Mono';font-size:9px;font-weight:700;color:var(--muted);padding:0 3px;z-index:3}
@@ -334,7 +328,8 @@
     display:grid;place-items:center;transition:.15s}
   .well.filled{border-color:transparent;box-shadow:inset 0 0 0 2px rgba(255,255,255,.25)}
   .well.filled::after{content:'';position:absolute;inset:3px;border-radius:50%;background:rgba(255,255,255,.0)}
-  .well .wtip{font-family:'JetBrains Mono';font-size:8px;font-weight:700;color:#fff;text-shadow:0 1px 1px rgba(0,0,0,.3)}
+  .well .wtip{font-family:'JetBrains Mono';font-size:8px;font-weight:700;color:#fff;
+    text-shadow:0 0 2px rgba(0,0,0,.9),0 1px 1px rgba(0,0,0,.75)}
   .plate-legend{display:flex;flex-wrap:wrap;gap:9px 16px;margin-top:16px;font-size:12px}
   .plate-legend span{display:flex;align-items:center;gap:7px;color:var(--ink-soft)}
   .plate-legend i{width:13px;height:13px;border-radius:50%;flex:none;border:1.5px solid rgba(0,0,0,.08)}
@@ -349,10 +344,10 @@
   .orderitem .oi-sub{font-size:11.5px;color:var(--muted)}
   .orderitem .oi-badge{font-family:'JetBrains Mono';font-size:10.5px;font-weight:700;padding:4px 9px;border-radius:6px;white-space:nowrap}
   .oi-badge.fixed{background:var(--card-2);color:var(--muted);border:1px solid var(--line)}
-  .oi-badge.synth{background:rgba(244,124,32,.14);color:var(--orange-deep)}
+  .oi-badge.synth{background:rgba(230,159,0,.16);color:var(--orange-deep)}
 
   .cdsbox{background:var(--forest-deep);border-radius:10px;padding:14px 16px;margin-top:12px}
-  .cdsbox .cdsname{color:#9FC4BA;font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:6px;display:flex;align-items:center}
+  .cdsbox .cdsname{color:#9fc0da;font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:6px;display:flex;align-items:center}
   .cdsbox .cdsseq{font-family:'JetBrains Mono';font-size:11.5px;color:#E9F2EE;word-break:break-all;line-height:1.7}
   .cdsbox .cdsseq .oh{background:var(--orange);color:var(--orange-ink);border-radius:3px;padding:0 3px;font-weight:700}
   .cdsbox .cds5,.cdsbox .cds3{color:#7FA99B;font-size:10px}
@@ -365,13 +360,13 @@
   .pname{font-weight:600;white-space:nowrap}
   .pname small{display:block;font-weight:400;color:var(--muted);font-size:11px}
   .pseq{font-family:'JetBrains Mono';font-size:11.5px;word-break:break-all;line-height:1.5}
-  .pseq .bsa{background:rgba(244,124,32,.18);color:var(--orange-deep);border-radius:3px;padding:0 1px;font-weight:700}
-  .pseq .oh{border-radius:3px;padding:0 2px;font-weight:700;color:#fff}
+  .pseq .bsa{background:rgba(230,159,0,.2);color:var(--orange-deep);border-radius:3px;padding:0 1px;font-weight:700}
+  .pseq .oh{background:var(--orange);color:var(--orange-ink);border-radius:3px;padding:0 2px;font-weight:700}
   .num-cell{font-family:'JetBrains Mono';white-space:nowrap}
   .tmcell{display:flex;align-items:center;gap:6px}
   .tmflag{font-size:10px;padding:1px 6px;border-radius:5px;font-weight:700;font-family:'JetBrains Mono'}
   .tmflag.ok{background:var(--teal-soft);color:var(--teal-deep)}
-  .tmflag.warn{background:rgba(216,75,58,.14);color:#c9442f}
+  .tmflag.warn{background:rgba(213,94,0,.16);color:#9a4100}
 
   .backendnote{display:flex;gap:10px;align-items:flex-start;background:var(--teal-soft);border:1px dashed var(--teal-deep);border-radius:10px;padding:11px 13px;font-size:12px;color:var(--ink-soft);margin-top:16px}
   .backendnote svg{flex:none;margin-top:1px;color:var(--teal-deep)}
@@ -405,10 +400,6 @@
     <span class="brand-sub">Golden Gate tool<b>KIT</b></span>
   </div>
   <div class="spacer"></div>
-  <button class="hbtn" id="cbToggle" title="Colour-blind-safe palette" aria-pressed="false">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
-    <span>CB</span>
-  </button>
   <button class="hbtn" id="themeToggle" title="Toggle light / dark mode">
     <svg id="themeIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/></svg>
     <span id="themeLabel">Light</span>
@@ -417,12 +408,12 @@
 
 <!-- ============ INTRO ============ -->
 <div class="intro" id="intro">
-  <span class="kicker">ENCORE toolKIT · in-silico design</span>
-  <h1>From nanocompartment to an orderable <em>Level&nbsp;2</em> construct.</h1>
+  <span class="kicker">ENCORE&nbsp;<b>Builder</b></span>
+  <h1>From coding sequence to an assembly-ready <em>nanocompartment&ndash;cargo</em> construct.</h1>
   <p class="lead">
-    The ENCORE Builder walks you through three decisions — nanocompartment, cargo, fusion direction —
-    and automatically assembles the Golden Gate modules, a pipetting plan, primers for your cargo,
-    and the final plasmid map.
+    The ENCORE Builder turns your gene of interest into a complete encapsulin cargo construct:
+    choose a nanocompartment, enter your cargo CDS, and set the fusion — the builder returns the
+    standardized Golden Gate modules, cargo primers, and the final Level&nbsp;2 plasmid.
   </p>
   <div class="flowrow">
     <div class="flowstep"><span class="dot" style="background:var(--t1)"></span>Nanocompartment</div>
@@ -431,14 +422,15 @@
     <span class="flowarrow">→</span>
     <div class="flowstep"><span class="dot" style="background:var(--t4)"></span>Fusion (C/N)</div>
     <span class="flowarrow">→</span>
-    <div class="flowstep"><span class="dot" style="background:var(--teal)"></span>Modules, plate &amp; primers</div>
+    <div class="flowstep"><span class="dot" style="background:var(--teal)"></span>Modules &amp; primers</div>
   </div>
   <div class="prereq">
     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
     <div>
-      <b>Before you start:</b> figure out which nanocompartment best fits your cargo using the
-      separate nanocompartment filter — it isn't part of this builder. Come back with the result
-      and select it in the first step.
+      <b>Before you start:</b> know which nanocompartment fits your use case.
+      If you want, use the separate nanocompartment filter first —
+      <!-- TODO: insert real filter URL in href -->
+      <a href="#" onclick="return false" class="prereq-link">open the filter&nbsp;→</a>
     </div>
   </div>
   <button class="start-cta" id="startBtn">
@@ -448,14 +440,17 @@
   <div class="intro-foot">Three steps · ~5 minutes · results exportable as FASTA</div>
 </div>
 
-<!-- ============ STEPPER ============ -->
-<div class="stepper-wrap" id="stepperWrap">
+<!-- ============ STEPPER (vertical side rail) ============ -->
+<aside class="side-steps" id="sideSteps">
   <nav class="stepper" id="stepper">
     <div class="s-step" data-target="sec-0"><button class="s-node"><span class="s-dot">1</span><span class="s-text"><span class="t">Nanocompartment</span><span class="sub">Selection</span></span></button><span class="s-line"></span></div>
     <div class="s-step" data-target="sec-1"><button class="s-node"><span class="s-dot">2</span><span class="s-text"><span class="t">Cargo</span><span class="sub">Gene of interest</span></span></button><span class="s-line"></span></div>
-    <div class="s-step" data-target="sec-2"><button class="s-node"><span class="s-dot">3</span><span class="s-text"><span class="t">Fusion</span><span class="sub">C- / N-terminal</span></span></button><span class="s-line"></span></div>
+    <div class="s-step" data-target="sec-2"><button class="s-node"><span class="s-dot">3</span><span class="s-text"><span class="t">Configure</span><span class="sub">Fusion · promoter · surface</span></span></button><span class="s-line"></span></div>
     <div class="s-step" data-target="sec-3"><button class="s-node"><span class="s-dot">4</span><span class="s-text"><span class="t">Result</span><span class="sub">Modules &amp; primers</span></span></button></div>
   </nav>
+</aside>
+<!-- ============ TOP BAR: progress + live construct map ============ -->
+<div class="stepper-wrap" id="stepperWrap">
   <div class="progress-rail"><div class="progress-fill" id="progressFill"></div></div>
   <div class="grow-strip" id="growStrip">
     <span class="gs-label" id="gsLevel">Level 0</span>
@@ -487,7 +482,7 @@
         <div class="nc-meta" id="ncMeta"></div>
         <div class="helplink">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-          Not sure which fits? Use the separate nanocompartment filter first to find the best match for your cargo.
+          Not sure which fits? Use the separate nanocompartment filter first to find the best match for your use case.
         </div>
         <div class="nav">
           <button class="btn btn-primary" id="next0" disabled>Continue to cargo
@@ -543,8 +538,8 @@
         <span class="num-badge">3</span>
         <div class="htext">
           <div class="eyebrow">Step 3</div>
-          <h2>C- or N-terminal fusion<button class="info" data-info="fusion">i</button></h2>
-          <p>Determines which side the targeting peptide and linker are fused to the cargo.</p>
+          <h2>Configure the construct</h2>
+          <p>Cargo fusion direction, promoter, and optional surface display.</p>
         </div>
       </div>
       <div class="card-body">
@@ -553,6 +548,7 @@
           Complete step 2 first.
         </div>
         <div id="body2">
+          <div class="grouplab">Cargo fusion<button class="info" data-info="fusion">i</button></div>
           <div class="seg-full" id="fusionSeg">
             <button data-v="C" class="on">C-terminal<small>Default recommendation</small></button>
             <button data-v="N">N-terminal<small>Alternative</small></button>
@@ -566,12 +562,24 @@
             <span class="lab">Linker<button class="info" data-info="linker">i</button></span>
             <select id="linker"></select>
           </label>
+          <div class="grouplab">Promoter</div>
           <label class="field">
             <span class="lab">Promoter<button class="info" data-info="promoter">i</button></span>
             <select id="promoter">
               <option value="GAL110" selected>GAL1-10 — bidirectional, inducible</option>
             </select>
           </label>
+          <div class="grouplab">Surface display <span>optional</span><button class="info" data-info="marker">i</button></div>
+          <label class="field">
+            <span class="lab">Surface marker <span class="hint">displayed on the cage exterior</span></span>
+            <select id="markerSel">
+              <option value="" selected>None — NCS spacer only</option>
+            </select>
+          </label>
+          <div class="seg-full" id="markerTermSeg" style="display:none">
+            <button data-v="N" class="on">N-terminal display<small>Shell N-terminus · Type 1</small></button>
+            <button data-v="C">C-terminal display<small>Shell C-terminus · Type 5</small></button>
+          </div>
           <div class="nav">
             <button class="btn btn-ghost" id="back2">Back</button>
             <button class="btn btn-primary" id="next2">Calculate construct
@@ -589,8 +597,8 @@
         <span class="num-badge">4</span>
         <div class="htext">
           <div class="eyebrow">Step 4</div>
-          <h2>Modules, plate &amp; primers</h2>
-          <p>Golden Gate assembly Level 0 → 1 → 2, pipetting plan and order export.</p>
+          <h2>Modules &amp; primers</h2>
+          <p>Golden Gate assembly Level 0 → 1 → 2, cargo primers and order export.</p>
         </div>
       </div>
       <div class="card-body">
@@ -606,7 +614,7 @@
             <p class="secsub">Level 0 (individual parts) → Level 1 (modules) → Level 2 (finished construct). All strands 5′→3′.</p>
 
             <div class="levelblock">
-              <div class="levellabel"><span class="lvltag">Level 0</span><h4>Individual parts</h4><span class="enzyme-tag">BbsI domestication → BsaI assembly</span></div>
+              <div class="levellabel"><span class="lvltag">Level 0</span><h4>Your cargo part</h4><span class="enzyme-tag">BbsI domestication</span></div>
               <div class="strandwrap"><div class="strand" id="lvl0strand"></div></div>
             </div>
 
@@ -628,23 +636,13 @@
             <div class="legend" id="legend"></div>
             <div class="note">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-              Both transcripts <b>start (5′) at the central promoter</b> and run outward (3′): the NC module on the <b>sense (+) strand</b> (right), the cargo module on the <b>antisense (−) strand</b> (left). The NCS slots flanking the shell are open <b>surface slots</b> — e.g. <b>SpyCatcher</b> — displayed on the encapsulin exterior.
+              Both transcripts <b>start (5′) at the central promoter</b> and run outward (3′): the NC module on the <b>sense (+) strand</b> (right), the cargo module on the <b>antisense (−) strand</b> (left). The NCS slots flanking the shell are open <b>surface slots</b> — e.g. <b>SpyCatcher</b> — displayed on the encapsulin exterior. A <b style="color:#e53935">*</b> marks the part carrying the <b>stop codon</b> (each ORF's 3′ end); its position follows the C/N fusion and the display terminus.
             </div>
           </div>
 
-          <!-- 4.2 Pick-Plan Well-Plate -->
+          <!-- 4.2 Primer -->
           <div class="block">
-            <div class="sectitle"><span class="num">4.2</span><h3>Pipetting plan<button class="info" data-info="plate">i</button></h3></div>
-            <p class="secsub">Which module wells you combine for this construct. Colors match the assembly above.</p>
-            <div class="plate-wrap">
-              <div class="plate" id="plate"></div>
-              <div class="plate-legend" id="plateLegend"></div>
-            </div>
-          </div>
-
-          <!-- 4.3 Primer -->
-          <div class="block">
-            <div class="sectitle"><span class="num">4.3</span><h3>Primers for your cargo<button class="info" data-info="primer">i</button></h3></div>
+            <div class="sectitle"><span class="num">4.2</span><h3>Primers for your cargo<button class="info" data-info="primer">i</button></h3></div>
             <p class="secsub">Only your cargo is newly amplified. Tm via the Wallace rule, target ±5 °C between forward/reverse.</p>
             <table>
               <thead><tr><th>Primer</th><th>Sequence (5′→3′)</th><th>Length</th><th>Tm</th></tr></thead>
@@ -658,7 +656,7 @@
 
           <!-- 4.4 Plasmid -->
           <div class="block">
-            <div class="sectitle"><span class="num">4.4</span><h3>Level 2 plasmid<button class="info" data-info="plasmid">i</button></h3></div>
+            <div class="sectitle"><span class="num">4.3</span><h3>Level 2 plasmid<button class="info" data-info="plasmid">i</button></h3></div>
             <p class="secsub">pESC shuttle vector with transcription direction and replication origin.</p>
             <div class="platrow">
               <svg id="plasmid" viewBox="0 0 380 380"></svg>
@@ -672,7 +670,7 @@
 
           <!-- 4.5 Order -->
           <div class="block">
-            <div class="sectitle"><span class="num">4.5</span><h3>To order<button class="info" data-info="order">i</button></h3></div>
+            <div class="sectitle"><span class="num">4.4</span><h3>To order<button class="info" data-info="order">i</button></h3></div>
             <p class="secsub">Standard modules are fixed and only need to be sourced once. Your cargo is the only new part for this construct.</p>
             <div class="orderlist" id="orderList"></div>
             <div id="orderCdsBox"></div>
@@ -738,6 +736,12 @@ const LINKERS = [
   { id:'GSSS3', label:'3×(GSSS)', aa:12, bp:36, desc:'medium · flexible',     repeat:'GSSS', n:3, type:'flexible' },
   { id:'GGS2',  label:'2×(GGS)',  aa:6,  bp:18, desc:'short · very flexible', repeat:'GGS', n:2, type:'flexible' },
 ];
+/* Optional surface-display markers — fused into a shell-flanking slot (Type 1),
+   so the protein ends up presented on the OUTSIDE of the encapsulin cage. */
+const SURFACE_MARKERS = [
+  { id:'spycatcher', label:'SpyCatcher', aa:113, bp:339, desc:'covalent SpyTag capture (isopeptide bond)' },
+  { id:'spytag',     label:'SpyTag',     aa:13,  bp:39,  desc:'13-aa peptide, binds SpyCatcher' },
+];
 
 /* ---------- Info bubble content (placeholder graphic + theory) ---------- */
 const INFO = {
@@ -760,6 +764,10 @@ const INFO = {
              <b>3×(GSSS)</b> — 12 aa, medium: more distance, more freedom of movement between the domains.<br>
              <b>2×(GGS)</b> — 6 aa, very short &amp; especially flexible (high glycine content).</p>
           <p>Rule of thumb: more length = more room if TP and cargo otherwise interfere with each other — but also somewhat more prone to degradation. <i>Your team will add the precise recommendation for your system.</i></p>` },
+  marker: { title:'Surface-display marker', img:'Diagram: SpyCatcher shown on the shell exterior',
+    body:`<p>Optional. A marker fused into a slot flanking the shell is presented on the <b>outside</b> of the assembled encapsulin — unlike your cargo, which is packaged <i>inside</i>.</p>
+          <p><b>SpyCatcher</b> forms a covalent isopeptide bond with any <b>SpyTag</b>-carrying protein, so you can click a binder, enzyme or fluorophore onto the cage surface after assembly. <b>SpyTag</b> is the small partner peptide.</p>
+          <p>Choose which terminus of the shell it is fused to: <b>N-terminal</b> (Type 1 slot, default) or <b>C-terminal</b> (Type 5 slot). A short <b>L1 linker</b> always sits between the shell and the marker so the displayed protein has room to fold. For <i>M. xanthus</i> the C-terminus and an external loop are the documented display sites. Leave it on <i>None</i> and the slots stay inert NCS spacers.</p>` },
   promoter: { title:'Bidirectional promoter', img:'Diagram: GAL1-10 transcribing both ways',
     body:`<p><b>GAL1-10</b> is a bidirectional yeast promoter: it drives <b>two genes at once</b> in opposite directions. Both transcripts <b>start (5′) at the promoter</b> and run outward.</p>
           <p>The nanocompartment module is read off the <b>sense (+) strand</b> (to the right), the cargo module off the <b>antisense (−) strand</b> (to the left) — that is why they point away from each other. Inducible via galactose.</p>` },
@@ -783,15 +791,15 @@ const INFO = {
 };
 
 /* ---------- Color key (CSS variables, so theme/CB take effect) ---------- */
-const KIND_VAR = { t1:'--t1', t2:'--t2', t3:'--t3', t4:'--t4', t5:'--t5', ncs:'--ncs', promo:'--promo', shell:'--shell' };
-const KIND_INK = { t1:'--t1-ink', t2:'--t2-ink', t3:'--t3-ink', t4:'--t4-ink', t5:'--t5-ink', ncs:'--ncs-ink', promo:'--promo-ink', shell:'--shell-ink' };
+const KIND_VAR = { t1:'--t1', t2:'--t2', t3:'--t3', t4:'--t4', t5:'--t5', ncs:'--ncs', promo:'--promo', shell:'--shell', mark:'--mark' };
+const KIND_INK = { t1:'--t1-ink', t2:'--t2-ink', t3:'--t3-ink', t4:'--t4-ink', t5:'--t5-ink', ncs:'--ncs-ink', promo:'--promo-ink', shell:'--shell-ink', mark:'--mark-ink' };
 const cvar = k => `var(${KIND_VAR[k]})`;
 const cink = k => `var(${KIND_INK[k]})`;
 
 /* ===================== State ===================== */
 const state = {
   nc:null, cargoSeq:'', cargoLabel:'Custom cargo', cargoFromPreset:null, cargoValid:false,
-  fusion:'C', linker:'GSSS3', promoter:'GAL110',
+  fusion:'C', linker:'GSSS3', promoter:'GAL110', marker:null, markerTerm:'N',
   unlocked:[true,false,false,false],
 };
 let lastResult=null;
@@ -806,15 +814,6 @@ $('#themeToggle').addEventListener('click', ()=>{
     : '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';
   if(lastResult) renderPlasmid(lastResult); // redraw SVG colors
 });
-
-/* ===================== Colour-blind-safe palette toggle ===================== */
-$('#cbToggle').addEventListener('click', ()=>{
-  const on = document.documentElement.getAttribute('data-cb')==='on';
-  document.documentElement.setAttribute('data-cb', on?'off':'on');
-  const b=$('#cbToggle'); b.classList.toggle('on', !on); b.setAttribute('aria-pressed', String(!on));
-  if(lastResult) renderPlasmid(lastResult); // SVG uses the same role vars
-});
-
 
 /* ===================== Info popover ===================== */
 const pop = $('#popover');
@@ -843,6 +842,7 @@ window.addEventListener('scroll', ()=>pop.classList.remove('show'), {passive:tru
 /* ===================== Intro -> builder ===================== */
 $('#startBtn').addEventListener('click', ()=>{
   $('#intro').style.display='none';
+  $('#sideSteps').classList.add('show');
   $('#stepperWrap').classList.add('show');
   $('#shell').classList.add('show');
   $('#pagefoot').classList.add('show');
@@ -933,6 +933,19 @@ function initLinkerDropdown(){
   const sel=$('#linker');
   LINKERS.forEach(l=>{ const o=document.createElement('option'); o.value=l.id; o.textContent=`${l.label} — ${l.aa} aa, ${l.desc}`; if(l.id===state.linker)o.selected=true; sel.appendChild(o); });
 }
+function initMarkerDropdown(){
+  const sel=$('#markerSel');
+  SURFACE_MARKERS.forEach(mk=>{ const o=document.createElement('option'); o.value=mk.id; o.textContent=`${mk.label} — ${mk.aa} aa · ${mk.desc}`; sel.appendChild(o); });
+  sel.addEventListener('change', ()=>{
+    state.marker = sel.value || null;
+    $('#markerTermSeg').style.display = state.marker ? 'flex' : 'none';
+    updateConstructStrip();
+  });
+  $$('#markerTermSeg button').forEach(b=>b.addEventListener('click', ()=>{
+    $$('#markerTermSeg button').forEach(x=>x.classList.remove('on')); b.classList.add('on');
+    state.markerTerm=b.dataset.v; updateConstructStrip();
+  }));
+}
 $$('#fusionSeg button').forEach(b=>b.addEventListener('click', ()=>{
   $$('#fusionSeg button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); state.fusion=b.dataset.v;
 }));
@@ -957,13 +970,22 @@ function updateConstructStrip(){
   const cargo = { kind:'t3',    label: state.cargoValid ? (state.cargoLabel!=='Custom cargo' ? state.cargoLabel : state.cargoSeq.length+' bp') : 'Cargo', filled: !!state.cargoValid };
   const shell = { kind:'shell', label:n? n.shell : 'Shell',      filled: !!n };
   const ncs   = { kind:'ncs',   label:'NCS',                     filled: !!n };
+  const mk    = SURFACE_MARKERS.find(x=>x.id===state.marker) || null;
+  const marker= { kind:'mark',  label:mk? mk.label : 'Marker',  filled: !!mk };
   const promoFilled = !!n;
   const seg = (p, side) => p.filled
     ? `<div class="gs-seg ${side}" style="background:${cvar(p.kind)};color:${cink(p.kind)}"><span>${p.label}</span></div>`
     : `<div class="gs-seg empty ${side}"><span>${p.label}</span></div>`;
-  // Mirror the actual modules (incl. the NCS / surface slots), matching the Level diagrams
-  const left  = (state.fusion==='C' ? [ncs, ncs, cargo, lk, tp] : [tp, lk, cargo, ncs, ncs]).map(p=>seg(p,'left')).join('');
-  const right = [ncs, ncs, shell, ncs, ncs].map(p=>seg(p,'right')).join('');
+  // Mirror the actual modules (incl. the NCS / surface slots), matching the Level diagrams.
+  // Colour every slot by its Type position (Type 1..5), like the scheme figure.
+  const byPos = arr => arr.map((p,i)=> p.kind==='mark' ? p : {...p, kind:'t'+(i+1)});
+  const nclink = { kind:'t2', label:'L1', filled: !!(n && mk) };
+  const leftArr  = state.fusion==='C' ? [tp, lk, cargo, ncs, ncs] : [ncs, ncs, cargo, lk, tp];
+  const rightArr = (mk && state.markerTerm==='C') ? [ncs, ncs, shell, nclink, marker]
+                 : (mk && state.markerTerm==='N') ? [marker, nclink, shell, ncs, ncs]
+                 : [ncs, ncs, shell, ncs, ncs];
+  const left  = byPos(leftArr).map(p=>seg(p,'left')).join('');
+  const right = byPos(rightArr).map(p=>seg(p,'right')).join('');
   const hub = promoFilled
     ? `<div class="gs-hub" style="background:${cvar('promo')};color:${cink('promo')}"><span class="gs-ar">◄</span>GAL1-10<span class="gs-ar">►</span></div>`
     : `<div class="gs-hub empty"><span class="gs-ar">◄</span>Promoter<span class="gs-ar">►</span></div>`;
@@ -984,12 +1006,46 @@ $('#next2').addEventListener('click', ()=>{
   compute(); state.unlocked[3]=true; applyLocks(); updateStepperLocks(); scrollToSection('sec-3');
 });
 $('#back3').addEventListener('click', ()=>scrollToSection('sec-2'));
-$('#restart').addEventListener('click', ()=>scrollToSection('sec-0'));
+/* "New construct": wipe every input and every derived result, then start over at step 1. */
+function resetBuilder(){
+  // state back to its initial shape
+  state.nc=null; state.cargoSeq=''; state.cargoLabel='Custom cargo';
+  state.cargoFromPreset=null; state.cargoValid=false;
+  state.fusion='C'; state.linker='GSSS3'; state.promoter='GAL110';
+  state.marker=null; state.markerTerm='N';
+  state.unlocked=[true,false,false,false];
+  lastResult=null;
+
+  // form controls
+  $('#ncSelect').selectedIndex=0;
+  $('#cargoSeq').value='';
+  $('#linker').value=state.linker;
+  $('#promoter').value=state.promoter;
+  $('#markerSel').value='';
+  $('#markerTermSeg').style.display='none';
+  $$('#presetChips .preset-chip').forEach(c=>c.classList.remove('on'));
+  $$('#fusionSeg button').forEach(b=>b.classList.toggle('on', b.dataset.v==='C'));
+  $$('#markerTermSeg button').forEach(b=>b.classList.toggle('on', b.dataset.v==='N'));
+
+  // derived output
+  $('#cargoLen').textContent='0 bp';
+  $('#cargoModTag').textContent='';
+  $('#platitle').textContent='';
+  ['#ncMeta','#cargoMeta','#cargoStopArea','#lvl0strand','#lvl1cargo','#lvl1nc','#lvl2strand',
+   '#legend','#primers','#orderList','#orderCdsBox','#feats','#plasmid','#paraExplain']
+    .forEach(sel=>{ const el=$(sel); if(el) el.innerHTML=''; });
+  $('#next0').disabled=true; $('#next1').disabled=true;
+
+  applyLocks(); updateStepperLocks(); setActive(0); updateProgress();
+  scrollToSection('sec-0');
+}
+$('#restart').addEventListener('click', resetBuilder);
 
 /* ===================== Strand rendering (5'->3') ===================== */
 function partEl(p){
-  if(p.dummy) return `<div class="part dummy${p.surface?' surface':''}"><span class="ptype">${p.type||''}</span>${p.label}<small>${p.note||'Spacer'}</small></div>`;
-  return `<div class="part" style="background:${cvar(p.kind)};color:${cink(p.kind)}"><span class="ptype">${p.type||''}</span>${p.label}<small>${p.note||''}</small></div>`;
+  const star = p.stop ? '<span class="stopstar">*</span>' : '';
+  const k = p.kind || 'ncs';
+  return `<div class="part${p.dummy?' dummy':''}" style="background:${cvar(k)};color:${cink(k)}"><span class="ptype">${p.type||''}</span><span class="plab">${p.label}${star}</span><small>${p.note||(p.dummy?'Spacer':'')}</small></div>`;
 }
 function renderStrand(elId, parts, opts={}){
   const el=$(elId);
@@ -999,15 +1055,32 @@ function renderStrand(elId, parts, opts={}){
     el.innerHTML = `<div class="partsrow sep">${partsHtml}</div>`;
     return;
   }
-  el.innerHTML = `<div class="strand-dir"><span>5′</span><span>3′</span></div><div class="partsrow">${partsHtml}</div>`;
+  // The cargo module's ORF runs Type 5->1 (antisense, 3'/stop on the left), so its
+  // 5'/3' labels are flipped relative to the sense-strand NC module.
+  const d5 = opts.antisense ? '3′' : '5′';
+  const d3 = opts.antisense ? '5′' : '3′';
+  el.innerHTML = `<div class="strand-dir"><span>${d5}</span><span>${d3}</span></div><div class="partsrow">${partsHtml}</div>`;
+}
+
+/* Level 0: your cargo is the only new part — show just the CDS with its Type 3 overhangs. */
+function renderLevel0(elId, m){
+  const cg = m.l0.find(p=>p.mapnote && /bp$/.test(p.mapnote)) || m.l0[2];
+  const [ohL, ohR] = T_OH[3];
+  $(elId).innerHTML = `<div class="l0row">
+    <span class="l0oh">${ohL}</span>
+    <div class="part" style="background:${cvar('t3')};color:${cink('t3')}"><span class="ptype">Type 3</span>${cg.label}<small>${cg.note||''}</small></div>
+    <span class="l0oh">${ohR}</span>
+  </div>`;
 }
 
 /* Level 2: bidirectional promoter as the pivot point — cargo module transcribes to the left,
    NC module to the right. The cargo side is shown mirrored (5'->3' away from the promoter). */
 function renderLevel2(elId, m){
   const el=$(elId);
-  const cargoRev = [...m.l1cargo].reverse();
-  const cargoHtml = cargoRev.map(partEl).join('');
+  // Natural Type 1->5 order (as in the scheme): the cargo's C-terminus/stop (Type 1) points
+  // OUTWARD (far left, 3'), the 5' end sits next to the promoter. The leftward arrow/clip-path
+  // already conveys that the cargo is read on the antisense strand.
+  const cargoHtml = m.l1cargo.map(partEl).join('');
   const ncHtml = m.l1nc.map(partEl).join('');
   const promoHtml = `<div class="part promo-hub" style="background:${cvar('promo')};color:${cink('promo')}">
       <span class="ptype">Promoter</span>${m.promo.label}<small>bidirectional</small></div>`;
@@ -1046,28 +1119,47 @@ function buildModel(){
   // on the outside of the encapsulin shell.
   const surf = () => ({ label:'NCS', dummy:true, surface:true, note:'open · e.g. SpyCatcher', bp:NCS_BP });
 
-  // Level 0: 5 slots, TP/linker sit left or right of the cargo depending on fusion direction
+  // Level 0: 5 slots, TP/linker sit left or right of the cargo depending on fusion direction.
+  // The ORF ends (stop codon) at the C-terminus of the fusion protein — that part gets `*`.
   let l0;
   if(state.fusion==='C'){
-    l0 = [ {...tp}, {...lk}, {...cg}, ncs(), ncs() ];
+    // ORF reads Type5->Type1: NCS NCS CDS L1 TP* — TP is the C-terminus, carries the stop
+    l0 = [ {...tp, stop:true}, {...lk}, {...cg}, ncs(), ncs() ];
   } else {
-    l0 = [ ncs(), ncs(), {...cg}, {...lk}, {...tp} ];
+    // ORF reads Type5->Type1: TP L1 CDS NCS* NCS — stop sits in the NCS right after the cargo
+    l0 = [ ncs(), {...ncs(), stop:true}, {...cg}, {...lk}, {...tp} ];
   }
   // Fusion-site type = the slot position in the module's own 5'->3'. One unambiguous
-  // number per slot, so the 1/5 · 2/4 dual notation is no longer needed.
-  l0.forEach((p,i)=>{ p.type = 'Type '+(i+1); });
+  // number per slot; the part colour also follows its Type (as in the scheme figure).
+  l0.forEach((p,i)=>{ p.type = 'Type '+(i+1); p.kind = 't'+(i+1); });
 
   // Level 1 cargo module = the same 5 parts, assembled (BsaI), with flanks
   const l1cargo = l0.map(p=>({...p}));
 
-  // Level 1 NC module: Shell (slot 3) flanked by four surface / NCS slots
-  const l1nc = [ surf(), surf(), { label:n.shell, kind:'shell', note:n.shellBp+' bp', bp:n.shellBp, mapnote:'Shell' }, {...surf(), label:'NCS*'}, surf() ];
-  l1nc.forEach((p,i)=>{ p.type = 'Type '+(i+1); });
+  // Level 1 NC module: Shell (Type 3) flanked by surface / NCS slots. An optional
+  // surface-display marker (SpyTag/SpyCatcher) is fused to the shell exterior — at its
+  // N-terminus (Type 2) or C-terminus (Type 4). The shell ORF stop sits right after the
+  // shell's C-terminus (Type 4), unless a C-terminal marker takes that slot and carries it.
+  const mk = SURFACE_MARKERS.find(x=>x.id===state.marker) || null;
+  const shellPart = { label:n.shell, kind:'shell', note:n.shellBp+' bp', bp:n.shellBp, mapnote:'Shell' };
+  const markPart = (term) => ({ label:mk.label, kind:'mark', note:mk.aa+' aa · '+term+'-term surface', bp:mk.bp });
+  const ncLink   = () => ({ label:'L1', kind:'t2', note:'linker', bp:18 });
+  let l1nc;
+  if(mk && state.markerTerm==='C'){
+    // shell — linker — marker (C-terminus); stop sits after the marker
+    l1nc = [ surf(), surf(), shellPart, ncLink(), {...markPart('C'), stop:true} ];
+  } else if(mk && state.markerTerm==='N'){
+    // marker (N-terminus) — linker — shell; stop sits after the shell
+    l1nc = [ {...markPart('N')}, ncLink(), shellPart, {...surf(), stop:true}, surf() ];
+  } else {
+    l1nc = [ surf(), surf(), shellPart, {...surf(), stop:true}, surf() ];
+  }
+  l1nc.forEach((p,i)=>{ p.type = 'Type '+(i+1); if(p.kind!=='shell' && p.kind!=='mark') p.kind = 't'+(i+1); });
 
   // Level 2: cargo module  <-promoter->  NC module
   const promo = { label:state.promoter==='GAL110'?'GAL1-10':state.promoter, kind:'promo', note:'bidirectional', bp:PROMO_BP };
 
-  return { n, link, cargoBp, cargoLabel, l0, l1cargo, l1nc, promo };
+  return { n, link, cargoBp, cargoLabel, l0, l1cargo, l1nc, promo, marker:mk };
 }
 
 function makePrimerPair(seq, ohF, ohR){
@@ -1094,10 +1186,10 @@ function compute(){
 function renderAll(res){
   const m=res.model;
 
-  /* --- Level 0: individual parts (not yet assembled) --- */
-  renderStrand('#lvl0strand', m.l0, {separate:true});
+  /* --- Level 0: only the cargo is new — show it with its Type 3 overhangs --- */
+  renderLevel0('#lvl0strand', m);
   /* --- Level 1 cargo --- */
-  renderStrand('#lvl1cargo', m.l1cargo);
+  renderStrand('#lvl1cargo', m.l1cargo, {antisense:true});
   $('#cargoModTag').textContent = `${state.fusion}-terminal · BsaI`;
   /* --- Level 1 NC --- */
   renderStrand('#lvl1nc', m.l1nc);
@@ -1106,13 +1198,11 @@ function renderAll(res){
 
   /* --- Legend --- */
   $('#legend').innerHTML = [
-    ['Targeting peptide','t1'],['Linker','t2'],['Cargo','t3'],
-    ['Nanocompartment shell','shell'],['Promoter','promo'],
+    ['Type 1','t1'],['Type 2','t2'],['Type 3 · cargo / shell','t3'],['Type 4','t4'],['Type 5','t5'],
   ].map(([n,k])=>`<span><i style="background:${cvar(k)}"></i>${n}</span>`).join('')
-   + `<span><i style="background:var(--ncs)"></i>NCS spacer / surface slot (e.g. SpyCatcher)</span>`;
-
-  /* --- Well plate pick plan --- */
-  renderPlate(m);
+   + `<span><i style="background:var(--promo)"></i>Promoter</span>`
+   + (m.marker ? `<span><i style="background:var(--mark)"></i>Surface marker (${m.marker.label})</span>` : '')
+   + `<span style="gap:5px"><b style="font-size:15px">*</b> = stop codon (ORF 3′ end)</span>`;
 
   /* --- Primers --- */
   renderPrimers(res.primers);
@@ -1136,6 +1226,7 @@ function renderPlate(m){
     { well:'C1', kind:'ncs', name:'NCS', label:'N' },
     { well:'C2', kind:'ncs', name:'NCS', label:'N' },
   ];
+  if(m.marker) picks.push({ well:'C3', kind:'mark', name:m.marker.label, label:'M' });
   const pickMap = {}; picks.forEach(p=>pickMap[p.well]=p);
 
   const cols=12, rows=['A','B','C','D','E','F','G','H'];
@@ -1160,14 +1251,13 @@ function renderPlate(m){
 }
 
 /* ---------- Primer table ---------- */
-function ohColor(oh){ const pal=['#2f7869','#F47C20','#1f8a5c','#9C7B2E','#0E5C4A']; let h=0; for(const c of oh)h=(h*31+c.charCodeAt(0))%pal.length; return pal[h]; }
 function renderPrimers(primers){
   const tb=$('#primers'); tb.innerHTML='';
   primers.forEach(p=>{
     const flag = Math.abs(p.tm-primers[0].tm)<=5 ? 'ok':'warn';
     tb.insertAdjacentHTML('beforeend', `<tr>
       <td class="pname">${p.name}<small>${p.role}</small></td>
-      <td class="pseq"><span class="bsa">GGTCTCN</span><span class="oh" style="background:${ohColor(p.oh)}">${p.oh}</span>${p.anneal}</td>
+      <td class="pseq"><span class="bsa">GGTCTCN</span><span class="oh">${p.oh}</span>${p.anneal}</td>
       <td class="num-cell">${p.len} nt</td>
       <td class="num-cell"><span class="tmcell">${p.tm} °C <span class="tmflag ${flag}">${flag==='ok'?'Δ≤5°C':'Δ>5°C'}</span></span></td>
     </tr>`);
@@ -1181,23 +1271,24 @@ function renderPlasmid(res){
   const m=res.model, svg=$('#plasmid'), cx=190, cy=190, r=128;
   const cargoModBp = m.cargoBp + m.link.bp + 60;
   const ncModBp = m.n.shellBp + 200;
-  // Segments; "dir" = +1 (clockwise, 5'->3') / -1 (counter-clockwise) for the transcription arrow
+  // Segments; "dir" = +1 (clockwise, 5'->3') / -1 (counter-clockwise) for the transcription arrow.
+  // Promoter sits centred at the top (12 o'clock); NC module runs clockwise, cargo module
+  // counter-clockwise (they diverge), backbone fills the bottom.
   const segs=[
-    { name:'Cargo module', bp:Math.max(cargoModBp,700), kind:'t3', dir:-1, txn:true },
     { name:'GAL1-10', bp:500, kind:'promo', dir:0 },
     { name:'NC module', bp:ncModBp, kind:'shell', dir:1, txn:true },
     { name:'CYC1 term.', bp:250, kind:'ncs', dir:0 },
     { name:'2µ ori', bp:1100, kind:'_ori', dir:0 },
     { name:'AmpR', bp:850, kind:'_amp', dir:0 },
     { name:'URA3', bp:800, kind:'_ura', dir:0 },
+    { name:'Cargo module', bp:Math.max(cargoModBp,700), kind:'t3', dir:-1, txn:true },
   ];
-  const cb=document.documentElement.getAttribute('data-cb')==='on';
-  const palette = cb
-    ? { _ori:'#9AA6A0', _amp:'#E69F00', _ura:'#56B4E9' }   // CB: grey · orange · sky
-    : { _ori:'#9AA8A0', _amp:'#E0A52E', _ura:'#7FB5A2' };
+  // Backbone features (not Golden-Gate parts): grey · orange · sky, same Okabe-Ito set.
+  const palette = { _ori:'#9AA6A0', _amp:'#E69F00', _ura:'#56B4E9' };
   const colOf = k => palette[k] || cvar(k);
   const sum=segs.reduce((s,p)=>s+p.bp,0);
-  let ang=0, paths='';
+  // start so the promoter segment is centred at 12 o'clock (deg 0 = top)
+  let ang=-((segs[0].bp/sum)*360)/2, paths='';
   segs.forEach(p=>{
     const span=(p.bp/sum)*360, a0=ang+1.0, a1=ang+span-1.0, mid=(a0+a1)/2;
     paths+=`<path d="${arc(cx,cy,r,a0,a1)}" stroke="${colOf(p.kind)}" stroke-width="16" fill="none"/>`;
@@ -1239,6 +1330,8 @@ function renderOrder(m){
     { name:'Promoter GAL1-10', sub:'bidirectional · standard module', kind:'promo' },
     { name:'NCS / surface slot', sub:'Spacer or display marker (e.g. SpyCatcher)', kind:'ncs' },
   ];
+  if(m.marker){ const t=state.markerTerm, slot=(t==='C'?'Type 5':'Type 1');
+    fixed.push({ name:`Surface marker ${m.marker.label}`, sub:`${slot} · shell ${t}-terminal display, via L1 linker · source once`, kind:'mark' }); }
   const list=$('#orderList'); list.innerHTML='';
   fixed.forEach(it=>{
     list.insertAdjacentHTML('beforeend', `<div class="orderitem">
@@ -1292,13 +1385,17 @@ function buildFasta(res){
   const promoSeq= placeholderSeq('PROMO'+state.promoter, promoLen);
   const ncsSeq  = placeholderSeq('NCS', ncsLen);
   const cargoSeq= state.cargoSeq;
+  const markSeq = m.marker ? placeholderSeq('MARK'+m.marker.id, m.marker.bp) : '';
+  const tpTag   = ((m.l0.find(p=>p.kind==='t1')||{}).type || 'Type 1').replace(' ','');
+  const lkTag   = ((m.l0.find(p=>p.kind==='t2')||{}).type || 'Type 2').replace(' ','');
 
-  add(`Targeting-Peptide_${m.n.tp} [Type1/5] [PLACEHOLDER ${tpLen}bp]`, tpSeq);
-  add(`Linker_${m.link.id} [Type2/4] [PLACEHOLDER ${linkLen}bp]`, linkSeq);
+  add(`Targeting-Peptide_${m.n.tp} [${tpTag}] [PLACEHOLDER ${tpLen}bp]`, tpSeq);
+  add(`Linker_${m.link.id} [${lkTag}] [PLACEHOLDER ${linkLen}bp]`, linkSeq);
   add(`Cargo_${m.cargoLabel.replace(/\s+/g,'-')} [Type3] [REAL INPUT ${cargoSeq.length}bp]`, cargoSeq);
   add(`Nanocompartment-Shell_${m.n.shell} [PLACEHOLDER ${shellLen}bp]`, shellSeq);
   add(`Promoter_${state.promoter==='GAL110'?'GAL1-10':state.promoter} [bidirectional] [PLACEHOLDER ${promoLen}bp]`, promoSeq);
   add(`NCS-Spacer [PLACEHOLDER ${ncsLen}bp]`, ncsSeq);
+  if(m.marker) add(`Surface-Marker_${m.marker.label} [${state.markerTerm==='C'?'Type5':'Type1'}] [shell ${state.markerTerm}-terminal · via L1 linker] [PLACEHOLDER ${m.marker.bp}bp]`, markSeq);
 
   // Cargo with Golden Gate overhangs (orderable)
   add(`Cargo_${m.cargoLabel.replace(/\s+/g,'-')}_with-overhangs [${CARGO_L1_FLANK[0]}...${CARGO_L1_FLANK[1]}]`,
@@ -1308,7 +1405,9 @@ function buildFasta(res){
   const cargoModuleSeq = state.fusion==='C'
     ? tpSeq+linkSeq+cargoSeq+ncsSeq+ncsSeq
     : ncsSeq+ncsSeq+cargoSeq+linkSeq+tpSeq;
-  const ncModuleSeq = ncsSeq+ncsSeq+shellSeq+ncsSeq+ncsSeq;
+  const ncModuleSeq = (m.marker && state.markerTerm==='C') ? ncsSeq+ncsSeq+shellSeq+linkSeq+markSeq
+                    : (m.marker && state.markerTerm==='N') ? markSeq+linkSeq+shellSeq+ncsSeq+ncsSeq
+                    : ncsSeq+ncsSeq+shellSeq+ncsSeq+ncsSeq;
   add(`Level1_Cargo-Module_${state.fusion}-terminal [${m.cargoLabel}]`, cargoModuleSeq);
   add(`Level1_Nanocompartment-Module [${m.n.shell}]`, ncModuleSeq);
 
@@ -1343,42 +1442,6 @@ function updateProgress(){ const d=document.documentElement,tot=d.scrollHeight-w
 window.addEventListener('scroll',updateProgress,{passive:true}); window.addEventListener('resize',updateProgress);
 
 /* ===================== Init ===================== */
-initNcDropdown(); initPresetChips(); initLinkerDropdown(); applyLocks(); updateStepperLocks(); updateProgress();
+initNcDropdown(); initPresetChips(); initLinkerDropdown(); initMarkerDropdown(); applyLocks(); updateStepperLocks(); updateProgress();
 
-</script>
-
-<!-- ============================================================= -->
-<!-- OPTIONAL backend connection layer. Additive & non-breaking:   -->
-<!-- the prototype above keeps working standalone (inline logic).  -->
-<!-- When this page is served by the Nuxt server, window.ENCORE_API -->
-<!-- talks to the real Golden Gate engine (server/services/         -->
-<!-- goldenGate). See PROJECT_TODO.txt for how to fully switch the  -->
-<!-- prototype over to backend-driven data.                         -->
-<!-- ============================================================= -->
-<script>
-window.ENCORE_API = (function(){
-  const base = '/api';
-  const json = async (url, opts) => {
-    const r = await fetch(url, opts);
-    if(!r.ok){ const e = await r.json().catch(()=>({})); throw Object.assign(new Error(e.statusMessage||('HTTP '+r.status)), {status:r.status, data:e.data}); }
-    return r.json();
-  };
-  const post = (path, body) => json(base+path, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body||{}) });
-  const api = {
-    available: false,
-    libraries: () => json(base+'/libraries'),
-    validateCargo: (cargoSeq) => post('/cargo/validate', { cargoSeq }),
-    design: (decisions) => post('/design', decisions),
-    // Convenience: translate the prototype's `state` object into a design request.
-    designFromState: (s) => post('/design', {
-      nanocompartment: s.nc && s.nc.id, cargoSeq: s.cargoSeq, cargoLabel: s.cargoLabel,
-      fusion: s.fusion, linker: s.linker, promoter: s.promoter, fasta: true,
-    }),
-  };
-  // Passive health check — never alters the prototype's behaviour.
-  api.libraries()
-    .then(()=>{ api.available = true; console.info('[ENCORE] backend connected — window.ENCORE_API ready'); })
-    .catch(()=>{ console.info('[ENCORE] backend not reachable — prototype running standalone (inline logic)'); });
-  return api;
-})();
 </script>
