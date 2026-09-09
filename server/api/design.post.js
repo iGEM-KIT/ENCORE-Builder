@@ -10,48 +10,23 @@
  *   fasta?: boolean            // also return a FASTA export string
  * }
  *
- * Runs the Golden Gate design and returns the full assembly plan: 10 Level 0
- * parts (with Type overhangs), 2 Level 1 modules, the Level 2 construct,
- * cargo primers, the 96-well pick plan and the order list.
+ * Runs the Golden Gate design in Biologik (Python) and returns the full
+ * assembly plan: 10 Level 0 parts (with Type overhangs), 2 Level 1 modules,
+ * the Level 2 construct, cargo primers, the 96-well pick plan and the order
+ * list.
+ *
+ * The primers carry `tmMethod`: 'primer3-nn' means real nearest-neighbor
+ * thermodynamics (plus q5AnnealingTemp), 'wallace' means primer3 was not
+ * available on the server and the values are rough estimates — `warnings`
+ * then says so.
  */
-import { spawn } from 'node:child_process'
-import { resolve } from 'node:path'
-
-const projectRoot = resolve(process.cwd())
-
-async function designWithBiologik(decisions) {
-  const python = process.env.BIOLOGIK_PYTHON || 'python3'
-  const processResult = await new Promise((resolvePromise, reject) => {
-    const child = spawn(python, ['-m', 'Biologik.level0_design.cli'], { cwd: projectRoot })
-    let stdout = ''
-    let stderr = ''
-    child.stdout.on('data', (chunk) => { stdout += chunk })
-    child.stderr.on('data', (chunk) => { stderr += chunk })
-    child.on('error', reject)
-    child.on('close', (code) => resolvePromise({ code, stdout, stderr }))
-    child.stdin.end(JSON.stringify(decisions))
-  })
-  if (processResult.code !== 0) {
-    const error = new Error(processResult.stderr || 'Biologik konnte das Design nicht erstellen.')
-    error.status = 400
-    throw error
-  }
-  const { stdout } = processResult
-  const response = JSON.parse(stdout)
-  if (!response.ok) {
-    const error = new Error(response.error || 'Biologik konnte das Design nicht erstellen.')
-    error.status = 400
-    throw error
-  }
-  return response.design
-}
+import { runBiologik } from '../utils/biologik.js'
 
 export default defineEventHandler(async (event) => {
   const body = (await readBody(event)) || {}
 
-  let design
   try {
-    design = await designWithBiologik({
+    const { design } = await runBiologik('design', {
       nanocompartment: body.nanocompartment,
       cargoSeq: body.cargoSeq,
       cargoLabel: body.cargoLabel,
@@ -60,13 +35,13 @@ export default defineEventHandler(async (event) => {
       promoter: body.promoter,
       fasta: Boolean(body.fasta),
     })
+    return design
   } catch (err) {
-    // The engine throws a plain Error with .status = 400 for invalid input.
+    // Biologik reports invalid input with .status = 400 and a message that
+    // explains what is wrong — pass it through instead of a generic string.
     if (err?.status === 400) {
-      throw createError({ statusCode: 400, statusMessage: err.message, data: err.data })
+      throw createError({ statusCode: 400, statusMessage: err.message })
     }
-    throw err
+    throw createError({ statusCode: 500, statusMessage: err?.message || 'Biologik failed.' })
   }
-
-  return design
 })

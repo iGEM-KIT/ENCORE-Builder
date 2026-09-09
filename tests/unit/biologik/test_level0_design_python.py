@@ -63,3 +63,49 @@ def test_json_cli_connects_backend_request_to_biologik():
     assert response['ok'] is True
     assert response['design']['cargo']['label'] == 'CliCargo'
     assert response['design']['level0']['total'] == 10
+
+def _run_cli(command, payload):
+    """Ruft cli.py so auf, wie server/utils/biologik.js es tut."""
+    return subprocess.run(
+        [sys.executable, '-m', 'Biologik.level0_design.cli', command],
+        input=json.dumps(payload),
+        text=True,
+        capture_output=True,
+    )
+
+
+def test_json_cli_serves_libraries():
+    result = _run_cli('libraries', {})
+    response = json.loads(result.stdout)
+
+    assert result.returncode == 0
+    assert response['ok'] is True
+    libraries = response['libraries']
+    assert sorted(libraries) == [
+        'cargoPresets', 'linkers', 'nanocompartments', 'promoters', 'typeOverhangs'
+    ]
+    assert [nc['id'] for nc in libraries['nanocompartments']] == ['tmari', 'mxan', 'qther']
+
+
+def test_json_cli_validates_cargo_without_failing():
+    # Eine ungueltige Sequenz ist eine gueltige Antwort mit ok:false,
+    # kein Fehler-Exit — sonst wuerde die API daraus faelschlich HTTP 500 machen.
+    result = _run_cli('validate', {'cargoSeq': 'ATGAAATTTGAAATGAAATTTGAAATGAAATTTTAA'})
+    response = json.loads(result.stdout)
+
+    assert result.returncode == 0
+    assert response['ok'] is True
+    assert response['validation']['ok'] is False
+    assert 'Stop codon at the end' in response['validation']['errors'][0]
+
+
+def test_json_cli_reports_the_real_error_on_stdout():
+    # cli.py beendet sich mit 1, legt die Meldung aber auf stdout ab. Die
+    # Gegenstelle muss stdout auswerten, sonst geht der Grund verloren.
+    result = _run_cli('design', {'nanocompartment': 'gibtsnicht', 'cargoSeq': 'ATG', 'fusion': 'C'})
+    response = json.loads(result.stdout)
+
+    assert result.returncode == 1
+    assert response['ok'] is False
+    assert 'gibtsnicht' in response['error']
+    assert result.stderr.strip() == ''

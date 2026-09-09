@@ -77,6 +77,20 @@ LINKERS = [
 PROMOTERS = [{"id": "GAL110", "label": "GAL1-10", "desc": "bidirectional, inducible"}]
 
 
+# Alles, was das Frontend für seine Dropdowns braucht — an EINER Stelle.
+# Bewusst eine Funktion und keine Konstante, damit sie später aus der Datenbank
+# lesen kann, ohne dass sich die Aufrufer ändern (siehe PROJECT_TODO.txt, 5).
+
+def get_libraries() -> dict:
+    return {
+        "nanocompartments": NANOCOMPARTMENTS,
+        "cargoPresets": CARGO_PRESETS,
+        "linkers": LINKERS,
+        "promoters": PROMOTERS,
+        "typeOverhangs": TYPE_OVERHANGS,
+    }
+
+
 # Suchfunktionen für die Bibliotheken, um ein Element anhand seiner ID zu finden.
 
 def find_nanocompartment(identifier: str):
