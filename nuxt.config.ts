@@ -5,6 +5,12 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
+  // Es gibt keine eigene Vue-Startseite (app/pages/ ist leer) — die Builder-
+  // Intro-Seite IST die Startseite. "/" leitet deshalb direkt weiter.
+  routeRules: {
+    '/': { redirect: '/encore-builder.html' },
+  },
+
   nitro: {
     // Der Builder-Prototyp liegt in frontend/, nicht in public/. Nuxt liefert
     // von sich aus nur public/ statisch aus — die Seite waere sonst gar nicht
@@ -17,6 +23,9 @@ export default defineNuxtConfig({
     // Origin wie die API ausgeliefert.
     publicAssets: [
       { baseURL: '/', dir: fileURLToPath(new URL('./frontend', import.meta.url)) },
+      // Das separate Nanocompartment-Finder-Tool, verlinkt von der Builder-
+      // Intro-Seite aus ("Before you start" -> /selector/selector-alpha.html).
+      { baseURL: '/selector/', dir: fileURLToPath(new URL('./encapsulin_selector', import.meta.url)) },
     ],
   },
 })

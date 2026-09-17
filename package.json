@@ -2,11 +2,16 @@
   "name": "apps",
   "type": "module",
   "private": true,
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "packageManager": "pnpm@9.15.9",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
+    "start": "node .output/server/index.mjs",
     "postinstall": "nuxt prepare"
   },
   "dependencies": {

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "nuxt-dev",
+      "runtimeExecutable": "/Users/felixcuntz/.nvm/versions/node/v22.22.3/bin/node",
+      "runtimeArgs": ["/Users/felixcuntz/.nvm/versions/node/v22.22.3/bin/pnpm", "dev"],
+      "port": 3000
+    }
+  ]
+}
