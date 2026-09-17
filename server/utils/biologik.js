@@ -9,6 +9,12 @@
  *
  *   import { runBiologik } from '../utils/biologik.js'
  *   const { design } = await runBiologik('design', decisions)
+ *
+ * Interpreter-Auswahl, in dieser Reihenfolge:
+ *   1. BIOLOGIK_PYTHON, falls gesetzt (dann ausschliesslich dieser)
+ *   2. ein venv im Projekt (.venv/ oder venv/)
+ *   3. python3 / python / py aus dem PATH
+ * Jeder Kandidat wird geprueft, bevor er genommen wird — siehe probeCandidates().
  */
 import { spawn } from 'node:child_process'
 import { resolve } from 'node:path'
@@ -25,6 +31,14 @@ const MODULE = 'Biologik.level0_design.cli'
  * unter Windows tatsächlich funktioniert.
  */
 const CANDIDATES = ['python3', 'python', 'py']
+
+/**
+ * Ein projekteigenes venv gewinnt vor jedem System-Python. Das ist die uebliche
+ * Python-Konvention und loest den haeufigsten Fall: Auf dem System liegt ein
+ * Python ohne primer3 (oder ohne pip, wie unter Ubuntu mit Python 3.14), und
+ * die Abhaengigkeiten stehen stattdessen im venv neben dem Projekt.
+ */
+const VENV_CANDIDATES = ['.venv/bin/python', '.venv/Scripts/python.exe', 'venv/bin/python']
 
 // Das Promise wird gecacht, nicht erst sein Ergebnis: sonst starten mehrere
 // gleichzeitig eintreffende Anfragen die Suche jeweils neu.
@@ -65,7 +79,9 @@ function projectRoot() {
  */
 async function probeCandidates() {
   const preferred = process.env.BIOLOGIK_PYTHON
-  const candidates = preferred ? [preferred] : CANDIDATES
+  const candidates = preferred
+    ? [preferred]
+    : [...VENV_CANDIDATES.map((rel) => resolve(projectRoot(), rel)), ...CANDIDATES]
 
   for (const candidate of candidates) {
     try {
