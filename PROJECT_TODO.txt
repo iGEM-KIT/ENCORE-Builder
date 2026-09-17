@@ -151,7 +151,7 @@ Der Prototyp frontend/encore-builder.html rechnet noch INLINE. window.ENCORE_API
          corepack enable
          pnpm install
          pnpm dev            # http://localhost:3000
-       UI-Prototyp:          http://localhost:3000/encore-builder.html
+       UI-Prototyp:          http://localhost:3000/
        API-Test:             http://localhost:3000/api/libraries
 [ ] Beispiel-Request:
        POST http://localhost:3000/api/design
