@@ -1,37 +1,52 @@
 from __future__ import annotations
 
-"""Hilfsfunktionen für DNA-Sequenzen und Cargo-Validierung."""
+"""Hilfsfunktionen für Cargo-Validierung."""
+
+# In diesem Ordner wird die vom Benutzer frei eingegebene Cargo-Sequenzen (Gene of Interest) verarbeitet.
+# Es sind kleine, unabhängige Funktionen aufgeführt, auf denen die Validierung der Cargo-Sequenzen aufbaut. 
+# Mit der Validierung der Cargo-Sequenz wird geprüft, ob eine vom User eingegebene Cargo-Sequenz eine gültige
+# und ausreichend lange DNA-Sequenz ist und lang genug ist und kein Stopcodon enthält.
 
 import re
 
 from .data import STOP_CODONS
 
+# Wenn Uracil (mRNA) in Cargo-Sequenz enthalten ist, zu DNA umschreiben und dem USser als Anmerkung/Info anzeigen.
 COMPLEMENT = {"A": "T", "T": "A", "G": "C", "C": "G"}
 
+# Definition von Funktionen mit def
+# DNA-Sequenz "sequence" vom Dateityp str wird als Parameter/ Input übergeben -> Platzhalter für die vom User eingegebene Sequenz.
+# Die Funktionen geben als Output entweder den Dateityp str oder int zurück.
+# str steht für den Dateitp String, also eine Text bzw. eine Zeichenkette, z.B. 'GCT'
+# int steht für den Dateityp Integer, also eine ganze Zahl ohne Nachkommastellen, z.B. '42'
 
+
+ # Prüfen, ob nur gültige Basen (A,T,G,C,) verwendet werden.
 def clean_seq(sequence: str) -> str:
-    # Eine Funktion definiert einen wiederverwendbaren Block aus Anweisungen.
     # re.sub() ersetzt alle Zeichen, die nicht A, T, G oder C sind, durch nichts.
+    # Wenn beim Code kopieren noch zusätzliche Zeichen mitkopiert wurden.
     return re.sub(r"[^ATGC]", "", (sequence or "").upper())
-
+         
 
 def gc_content(sequence: str) -> int:
-    # Eine Funktion kann mit if entscheiden, welchen Pfad sie nimmt.
+    # Zählt GC-Gehalt: die drei Wasserstoffbrücken der G–C-Paarung ist Hauptfaktor für die Stabilität,
+    # relevant für Primer-Schmelztemperaturen, die Wahl der Fusion Sites und die Synthetisierbarkeit einer CDS.
     # Wenn die Sequenz leer ist, wird direkt 0 zurückgegeben.
+    # Ist Auswählung des GC-Gehalts an dieser Stelle redundant? Wird unten nochmal gezählt.
     if not sequence:
         return 0
-    # Eine Schleife mit for geht jede Base der Sequenz durch und zählt die G/C-Basen.
+    # Die Schleife mit for geht jede Base der Sequenz durch und zählt die G/C-Basen
     return round((sum(1 for base in sequence if base in "GC") / len(sequence)) * 100)
 
 
 def reverse_complement(sequence: str) -> str:
-    # Eine Funktion kann den Input verarbeiten und einen neuen Wert zurückgeben.
-    # reversed(...) dreht die Reihenfolge um, und die Komplement-Tabelle ersetzt jede Base.
+    # reversed(...) dreht die Reihenfolge um, und die Komplement-Tabelle ersetzt jede Base
+    # Um Leserichtung bei Bildung des Gegenstrangs beizubehalten, muss Sequenz rückwärts gelesen werden (reverse) 
+    # Komplement-Tabelle ist ein Dictionary, das jede Base auf ihre Basenpaarungspartnerin abbildet:
     return "".join(COMPLEMENT.get(base, "N") for base in reversed(sequence))
 
 
 def wallace_tm(sequence: str) -> int:
-    # Eine Funktion kann mehrere Zwischenschritte ausführen, bevor sie ein Ergebnis liefert.
     # sum(...) zählt A/T- und G/C-Basen. Die Formel berechnet die Schmelztemperatur grob.
     at = sum(1 for base in sequence if base in "AT")
     gc = sum(1 for base in sequence if base in "GC")
@@ -55,8 +70,10 @@ def ends_with_stop(sequence: str):
     return None
 
 
+# Wenn ATG gefunden, alles vor ATG löschen und User mit Anzeige informieren.
+
+
 def validate_cargo(raw: str, min_bp: int = 30) -> dict:
-    # Funktionen können Parameter entgegennehmen, hier z. B. die Sequenz und Mindestlänge.
     # clean_seq() macht die Eingabe für die weitere Analyse brauchbar.
     clean = clean_seq(raw)
     length = len(clean)

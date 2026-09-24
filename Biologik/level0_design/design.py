@@ -18,6 +18,8 @@ from .data import (
     find_promoter,
     find_surface_marker,
 )
+# Sequence-py enthält Funktionen für die Verarbeitung von DNA-Sequenzen
+# Z.B. zum Bilden von Komplementären DNA-Sequenzen, zur Berechnung der Schmelztemperatur
 from .sequence import reverse_complement, validate_cargo, wallace_tm
 
 
@@ -51,6 +53,7 @@ def build_modules(nc: dict, link: dict, cargo_label: str, cargo_bp: int, fusion:
     lk = {"role": "linker", "label": link["label"], "kind": "t2", "note": f"{link['aa']} aa", "bp": link["bp"]}
     cg = {"role": "cargo", "label": cargo_label, "kind": "t3", "note": f"{cargo_bp} bp", "bp": cargo_bp, "isCargo": True}
 
+# NCS steht für Spacer Baustein: Kurzes Verbindungsstück, das zwischen die anderen Bausteine gesetzt wird
     def ncs():
         # Eine verschachtelte Funktion ist eine kleine Hilfe-Funktion innerhalb einer anderen Funktion.
         return {"role": "ncs", "label": "NCS", "kind": "ncs", "note": "Spacer", "bp": NOMINAL_BP["NCS"]}
@@ -99,6 +102,7 @@ def _wallace_primer_pair(sequence: str, oh_f: str, oh_r: str):
     Fallback, wenn primer3 nicht installiert ist oder kein Paar findet. Reicht
     fuer die Vorschau, nicht fuer die Bestellung.
     """
+    # Funktionen können Schleifen verwenden, um einen Wert schrittweise zu verbessern
     # len_f und len_r sind die Annealing-Längen der Primer. Sie werden angepasst, damit die Tm-Werte passend sind.
     len_f = 22
     len_r = 22

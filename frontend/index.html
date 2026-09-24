@@ -19,21 +19,40 @@
     --line:#D7E1DB; --line-soft:#E9EFEB; --muted:#5C6B62;
     --shadow:0 1px 2px rgba(20,38,32,.06), 0 10px 30px rgba(20,38,32,.07);
     --radius:14px; --hdr-h:64px; --stepper-h:74px; --side-w:214px;
-    /* Module type colours — Okabe-Ito. Each visual role gets a maximally distinct
-       hue AND a spread in lightness, so the palette holds up for every CVD type
-       incl. monochromacy. Colour stays a REDUNDANT cue: every block, legend row
-       and well carries its text label as well. Each ink clears WCAG AA on its
-       own fill.
-         Type 1 = sky · Type 2 = yellow · Type 3 = vermillion · Type 4 = purple
-         Type 5 = orange · shell = green · promoter = blue · NCS = grey */
-    --t1:#56B4E9; --t2:#F0E442; --t3:#D55E00; --t4:#CC79A7; --t5:#E69F00;
-    --shell:#009E73; --promo:#0072B2; --ncs:#9AA6A0;
-    --t1-ink:#06202b; --t2-ink:#2a2600; --t3-ink:#2a1200; --t4-ink:#2e0f22;
-    --t5-ink:#241a00; --shell-ink:#04120d; --promo-ink:#ffffff; --ncs-ink:#1f2b26;
-    /* Surface-display marker (e.g. SpyCatcher) — Okabe-Ito's 8th colour (black),
-       so it never collides with the Type 4 purple inside the same module row.
-       Inverted under [data-theme="dark"] to stay distinct on a dark card. */
-    --mark:#000000; --mark-ink:#ffffff;
+    /* ---- ENCORE brand palette (taken from the toolKIT artwork) ----
+       Deep-teal outline · mint shell spheres · pale-mint panel · olive and
+       orange connector squiggles · yellow and purple accents. These drive the
+       assembled module output (Level 0 → 1 → 2), the live construct strip and the
+       plasmid map — i.e. everything the user gets back after filling in their
+       inputs. The page chrome (header, stepper, CTA) is deliberately untouched. */
+    --brand-teal-deep:#17806F; --brand-teal:#2FBFA6; --brand-mint:#BFE5DC;
+    --brand-olive:#9CB63C; --brand-yellow:#FBDD52;
+    --brand-orange:#FF9C21; --brand-purple:#C98EDE; --brand-slate:#8FA39D;
+    /* Two shades pulled deeper than the artwork values, purely so neighbouring
+       slots keep a lightness gap (see the note below): the mint used as a part
+       fill, and the olive that sits directly beside the teal shell. */
+    --brand-mint-mid:#9BD9C7; --brand-olive-deep:#7E9A25;
+    /* Module type colours — the brand hues mapped onto the slot positions.
+       Seven fills out of a seven-colour brand palette cannot all be separated by
+       lightness alone, so the shades are tuned where it actually matters: slots
+       that sit NEXT TO each other in a module row keep a luminance gap of ≥1.4×
+       (t1/t2 2.4× · t2/t3 1.5× · t2/shell 1.4× · t4/t5 1.6×). The pairs that are
+       left on hue alone — orange/purple, teal/purple, yellow/mint — sit on
+       opposite hue axes and survive deutan, protan and tritan vision. Colour
+       therefore stays a REDUNDANT cue: every block, legend row and well carries
+       its text label as well. Each ink clears WCAG AA on its own fill.
+         Type 1 = yellow · Type 2 = olive · Type 3 = orange (your cargo)
+         Type 4 = purple · Type 5 = mint · shell = brand teal
+         promoter = deep teal · NCS = slate · surface marker = darkest teal */
+    --t1:var(--brand-yellow); --t2:var(--brand-olive-deep); --t3:var(--brand-orange);
+    --t4:var(--brand-purple); --t5:var(--brand-mint-mid);
+    --shell:var(--brand-teal); --promo:var(--brand-teal-deep); --ncs:var(--brand-slate);
+    --t1-ink:#3a3100; --t2-ink:#101803; --t3-ink:#3a1f00; --t4-ink:#37124a;
+    --t5-ink:#0c3b34; --shell-ink:#05322a; --promo-ink:#ffffff; --ncs-ink:#152420;
+    /* Surface-display marker (e.g. SpyCatcher) — the artwork's outline teal taken
+       to its darkest, so it never collides with the Type 4 purple or the shell
+       teal inside the same module row. Inverted under [data-theme="dark"]. */
+    --mark:#0B3A33; --mark-ink:#ffffff;
   }
   /* Darkmode */
   [data-theme="dark"]{
@@ -44,7 +63,11 @@
     --paper:#0d1814; --card:#13211c; --card-2:#172821;
     --line:#26362f; --line-soft:#1d2c25; --muted:#8da095;
     --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 32px rgba(0,0,0,.35);
-    --mark:#EDEDED; --mark-ink:#111111;
+    /* Part fills stay at their brand values on a dark card (they are opaque chips
+       carrying their own ink). Only the pale-mint panel field and the near-black
+       surface marker have to flip. */
+    --brand-mint:#102A25;
+    --mark:#DFF3EE; --mark-ink:#0B2A24;
   }
 
   *{box-sizing:border-box}
@@ -227,7 +250,8 @@
   .nc-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
   .nc-tag{font-size:11.5px;background:var(--card-2);border:1px solid var(--line);border-radius:8px;padding:7px 11px;color:var(--ink-soft)}
   .nc-tag b{color:var(--ink);font-weight:600}
-  .nc-tag .sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:middle}
+  .nc-tag .sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:middle;
+    box-shadow:inset 0 0 0 1px rgba(11,58,51,.3)}
 
   .seg-full{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
   .seg-full button{flex:1;border:0;background:var(--card);padding:13px 10px;font-family:inherit;font-size:14px;font-weight:600;
@@ -242,8 +266,9 @@
   .grouplab:first-child{margin-top:0;padding-top:0;border-top:0}
   .grouplab > span{font-weight:400;font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
 
-  .helplink{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--teal-deep);margin-top:10px}
-  .helplink a{color:var(--teal-deep);font-weight:600}
+  .helplink{display:flex;align-items:flex-start;gap:8px;font-size:12.5px;color:var(--teal-deep);margin-top:10px;line-height:1.45}
+  .helplink svg{flex:none;margin-top:2px}
+  .helplink a{color:var(--teal-deep);font-weight:600;white-space:nowrap}
 
   .stopwarn,.stopok{display:flex;gap:9px;align-items:flex-start;border-radius:10px;padding:11px 13px;font-size:12.5px;margin-top:12px}
   .stopwarn{background:rgba(213,94,0,.12);border:1px solid rgba(213,94,0,.5);color:#9a4100}
@@ -267,6 +292,38 @@
   .block{margin-bottom:34px}
   .block:last-child{margin-bottom:0}
 
+  /* ---- Assembled-module output panel ----
+     The frame from the brand artwork: a deep-teal border around a pale-mint
+     field, so the construct the user gets back reads as one ENCORE object
+     rather than as loose rows on the card. Everything inside it re-tints to
+     brand teal (labels, overhang chips, direction markers, footnote). */
+  .assembly{background:var(--brand-mint);border:3px solid var(--brand-teal-deep);
+    border-radius:16px;padding:20px 22px 22px;margin-top:2px}
+  .assembly .levelblock:last-of-type{margin-bottom:4px}
+  .assembly .levellabel .lvltag{background:var(--brand-teal-deep);color:#fff}
+  .assembly .l0oh,.assembly .enzyme-tag{background:rgba(255,255,255,.72);
+    border-color:rgba(23,128,111,.34);color:#14544A}
+  .assembly .strand-dir,.assembly .l2-dir,.assembly .ohlabel,.assembly .legend,
+  .assembly .levellabel .lvlsub{color:#2C6A60}
+  .assembly .note{background:rgba(255,255,255,.7);border-color:rgba(23,128,111,.28);color:#153B35}
+  .assembly .note svg{color:var(--brand-teal-deep)}
+  /* Outline every part the way the artwork outlines its shapes. The inset shadow
+     follows the arrow clip-path, so the chevrons keep their silhouette. */
+  .assembly .part{box-shadow:inset 0 0 0 1.5px rgba(11,58,51,.5)}
+  .assembly .l2-hub .l2-arrows{color:var(--brand-teal-deep)}
+  [data-theme="dark"] .assembly{border-color:var(--brand-teal)}
+  [data-theme="dark"] .assembly .levellabel .lvltag{background:var(--brand-teal);color:#062019}
+  [data-theme="dark"] .assembly .l0oh,[data-theme="dark"] .assembly .enzyme-tag{
+    background:rgba(255,255,255,.07);border-color:rgba(47,191,166,.34);color:#9FD9CD}
+  [data-theme="dark"] .assembly .strand-dir,[data-theme="dark"] .assembly .l2-dir,
+  [data-theme="dark"] .assembly .ohlabel,[data-theme="dark"] .assembly .legend,
+  [data-theme="dark"] .assembly .levellabel .lvlsub{color:#9FD9CD}
+  [data-theme="dark"] .assembly .note{background:rgba(255,255,255,.05);
+    border-color:rgba(47,191,166,.28);color:#D7ECE7}
+  [data-theme="dark"] .assembly .l2-hub .l2-arrows{color:var(--brand-teal)}
+  [data-theme="dark"] .assembly .part{box-shadow:inset 0 0 0 1.5px rgba(0,0,0,.35)}
+  @media(max-width:600px){.assembly{padding:14px 13px 16px;border-width:2px}}
+
   .levelblock{margin-bottom:20px}
   .levellabel{display:flex;align-items:center;gap:10px;margin-bottom:10px}
   .levellabel .lvltag{font-family:'JetBrains Mono';font-size:11px;font-weight:700;color:#fff;background:var(--forest);padding:3px 9px;border-radius:6px;letter-spacing:.04em}
@@ -286,9 +343,29 @@
   /* Level 0: discrete, unconnected parts (each is its own Golden Gate part) */
   .partsrow.sep{gap:10px;flex-wrap:wrap}
   .partsrow.sep .part{clip-path:none!important;margin:0!important;border-radius:8px!important;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
-  /* Level 0: single cargo part with its Type 3 overhangs */
-  .l0row{display:flex;align-items:center;gap:8px}
-  .l0row .part{clip-path:none!important;margin:0!important;border-radius:8px!important}
+  /* ---- Level 0 row: the five individual parts ----
+     Level 0 is the stage BEFORE assembly: each part is cloned on its own
+     plasmid. Hence discrete boxes with gaps and deliberately NO 5'→3' axis —
+     nothing here is adjacent yet, the Type number alone fixes where each part
+     lands once BsaI builds the Level 1 module. Four parts come off the toolkit
+     stock plate and are long domesticated, so they are desaturated; the cargo is
+     the only part the user has to make and keeps full colour, its Type 3 fusion
+     sites and the BbsI tag. */
+  .partsrow.sep.l0grid{min-width:0;align-items:flex-end;gap:14px 10px}
+  .l0part{display:flex;flex-direction:column;gap:5px;align-items:flex-start}
+  .l0badge{font-family:'JetBrains Mono';font-size:8.5px;font-weight:700;text-transform:uppercase;
+    letter-spacing:.06em;padding:2px 6px;border-radius:5px;white-space:nowrap;line-height:1.5}
+  .l0badge.stock{background:rgba(23,128,111,.1);color:#2C6A60;border:1px solid rgba(23,128,111,.22)}
+  .l0badge.new{background:var(--brand-orange);color:#3a1f00;border:1px solid rgba(11,58,51,.4)}
+  .l0ohrow{display:flex;align-items:center;gap:8px}
+  .partsrow.sep .l0stock .part{filter:saturate(.28);opacity:.7;box-shadow:inset 0 0 0 1px rgba(11,58,51,.3)}
+  .partsrow.sep .l0new .part{box-shadow:inset 0 0 0 2px rgba(11,58,51,.75),0 2px 10px rgba(11,58,51,.18)}
+  .l0cap{font-size:11.5px;line-height:1.5;color:var(--muted);margin:11px 0 0;max-width:72ch}
+  [data-theme="dark"] .l0badge.stock{background:rgba(47,191,166,.12);color:#9FD9CD;border-color:rgba(47,191,166,.28)}
+  [data-theme="dark"] .partsrow.sep .l0stock .part{opacity:.62;box-shadow:inset 0 0 0 1px rgba(0,0,0,.35)}
+  [data-theme="dark"] .partsrow.sep .l0new .part{box-shadow:inset 0 0 0 2px rgba(0,0,0,.55),0 2px 10px rgba(0,0,0,.35)}
+  .assembly .l0cap{color:#2C6A60}
+  [data-theme="dark"] .assembly .l0cap{color:#9FD9CD}
   .l0oh{font-family:'JetBrains Mono';font-size:11px;font-weight:700;color:var(--muted);background:var(--card-2);border:1px solid var(--line);border-radius:6px;padding:5px 8px}
   /* NCS spacers are coloured by their Type position (like the scheme figure), set inline */
   /* stop-codon carrier: a simple `*` on the part at the 3' end of an ORF (explained in the legend) */
@@ -302,8 +379,10 @@
   .l2-side{display:flex;flex-direction:column;gap:5px}
   .l2-dir{display:flex;justify-content:space-between;align-items:center;gap:10px;font-family:'JetBrains Mono';font-size:10px;color:var(--muted);white-space:nowrap}
   .l2-strandtag{font-size:9px;font-weight:700;padding:1px 7px;border-radius:20px;letter-spacing:.02em;white-space:nowrap}
-  .l2-strandtag.sense{background:rgba(0,158,115,.16);color:var(--shell)}
-  .l2-strandtag.anti{background:rgba(230,159,0,.18);color:var(--orange-deep)}
+  .l2-strandtag.sense{background:rgba(47,191,166,.22);color:var(--brand-teal-deep)}
+  .l2-strandtag.anti{background:rgba(255,156,33,.26);color:#A35C00}
+  [data-theme="dark"] .l2-strandtag.sense{color:#6FD8C3}
+  [data-theme="dark"] .l2-strandtag.anti{color:#FFB85C}
   .l2-hub{display:flex;flex-direction:column;align-items:center;gap:5px;margin:0 4px}
   .l2-hub .l2-arrows{display:flex;gap:14px;font-size:13px;color:var(--promo);font-weight:700}
   .l2-hub .part{margin-right:0;clip-path:none!important;border-radius:8px;min-width:92px;align-items:center;text-align:center}
@@ -314,7 +393,10 @@
 
   .legend{display:flex;flex-wrap:wrap;gap:10px 16px;margin-top:14px;font-size:11.5px;color:var(--muted)}
   .legend span{display:flex;align-items:center;gap:6px}
-  .legend i{width:11px;height:11px;border-radius:3px;display:inline-block;flex:none}
+  /* The lighter brand fills (yellow, mint) would vanish on a white card, so every
+     swatch carries the artwork's dark outline. */
+  .legend i{width:11px;height:11px;border-radius:3px;display:inline-block;flex:none;
+    box-shadow:inset 0 0 0 1px rgba(11,58,51,.3)}
 
   .note{display:flex;gap:9px;align-items:flex-start;background:var(--card-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--ink-soft);margin-top:10px}
   .note svg{flex:none;margin-top:1px;color:var(--teal-deep)}
@@ -338,7 +420,8 @@
   /* ============ ORDER / TO ORDER ============ */
   .orderlist{display:flex;flex-direction:column;gap:9px}
   .orderitem{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:11px;padding:12px 14px;background:var(--card)}
-  .orderitem .oi-sw{width:11px;height:32px;border-radius:4px;flex:none}
+  .orderitem .oi-sw{width:11px;height:32px;border-radius:4px;flex:none;
+    box-shadow:inset 0 0 0 1px rgba(11,58,51,.3)}
   .orderitem .oi-main{min-width:0;flex:1}
   .orderitem .oi-name{font-weight:600;font-size:13.5px}
   .orderitem .oi-sub{font-size:11.5px;color:var(--muted)}
@@ -612,9 +695,11 @@
             <div class="sectitle"><span class="num">4.1</span><h3>Golden Gate assembly<button class="info" data-info="levels">i</button></h3></div>
             <p class="secsub">Level 0 (individual parts) → Level 1 (modules) → Level 2 (finished construct). All strands 5′→3′.</p>
 
+            <div class="assembly">
             <div class="levelblock">
-              <div class="levellabel"><span class="lvltag">Level 0</span><h4>Your cargo part</h4><span class="enzyme-tag">BbsI domestication</span></div>
+              <div class="levellabel"><span class="lvltag">Level 0</span><h4>The individual parts of your cargo module</h4><span class="lvlsub">4 from toolkit stock · 1 new</span></div>
               <div class="strandwrap"><div class="strand" id="lvl0strand"></div></div>
+              <p class="l0cap">Level 0 parts are cloned <b>separately</b> — one plasmid each. They are not joined yet, and the row above is not a strand: the <b>Type number</b> alone fixes where each part ends up once BsaI assembles them into the Level 1 module. Only your cargo is new and needs BbsI domestication; the other four come off the stock plate.</p>
             </div>
 
             <div class="levelblock">
@@ -635,7 +720,8 @@
             <div class="legend" id="legend"></div>
             <div class="note">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-              Both transcripts <b>start (5′) at the central promoter</b> and run outward (3′): the NC module on the <b>sense (+) strand</b> (right), the cargo module on the <b>antisense (−) strand</b> (left). The NCS slots flanking the shell are open <b>surface slots</b> — e.g. <b>SpyCatcher</b> — displayed on the encapsulin exterior. A <b style="color:#e53935">*</b> marks the part carrying the <b>stop codon</b> (each ORF's 3′ end); its position follows the C/N fusion and the display terminus.
+              Both transcripts <b>start (5′) at the central promoter</b> and run outward (3′): the NC module on the <b>sense (+) strand</b> (right), the cargo module on the <b>antisense (−) strand</b> (left). The NCS slots flanking the shell are open <b>surface slots</b> — e.g. <b>SpyCatcher</b> — displayed on the encapsulin exterior. A <b style="color:#A35C00">*</b> marks the part carrying the <b>stop codon</b> (each ORF's 3′ end); its position follows the C/N fusion and the display terminus.
+            </div>
             </div>
           </div>
 
@@ -1145,15 +1231,31 @@ function renderStrand(elId, parts, opts={}){
   el.innerHTML = `<div class="strand-dir"><span>${d5}</span><span>${d3}</span></div><div class="partsrow">${partsHtml}</div>`;
 }
 
-/* Level 0: your cargo is the only new part — show just the CDS with its Type 3 overhangs. */
+/* Level 0: the five parts that will later form the cargo module, each still on
+   its own plasmid. Drawn as discrete boxes (.partsrow.sep) with no 5'→3' header,
+   because at this stage they are not adjacent — only the Type number is binding.
+   Four are toolkit stock and are dimmed; the cargo is the one the user makes, so
+   it alone keeps full colour, shows its Type 3 fusion sites and carries the BbsI
+   tag (the stock parts were domesticated long ago).
+   NOTE: the overhangs are shown for the cargo only, as before. The Type overhangs
+   (T_OH) and the module flanks used for the primers (CARGO_L1_FLANK) do not yet
+   agree — see PROJECT_TODO section 1 — so this view deliberately does not put
+   five more overhang pairs on screen until that is verified. */
 function renderLevel0(elId, m){
-  const cg = m.l0.find(p=>p.mapnote && /bp$/.test(p.mapnote)) || m.l0[2];
   const [ohL, ohR] = T_OH[3];
-  $(elId).innerHTML = `<div class="l0row">
-    <span class="l0oh">${ohL}</span>
-    <div class="part" style="background:${cvar('t3')};color:${cink('t3')}"><span class="ptype">Type 3</span>${cg.label}<small>${cg.note||''}</small></div>
-    <span class="l0oh">${ohR}</span>
-  </div>`;
+  const box = p => {
+    const k = p.kind || 'ncs';
+    const star = p.stop ? '<span class="stopstar">*</span>' : '';
+    return `<div class="part" style="background:${cvar(k)};color:${cink(k)}">` +
+           `<span class="ptype">${p.type||''}</span><span class="plab">${p.label}${star}</span>` +
+           `<small>${p.note||(p.dummy?'Spacer':'')}</small></div>`;
+  };
+  $(elId).innerHTML = `<div class="partsrow sep l0grid">` + m.l0.map(p=>
+    p.isCargo
+      ? `<div class="l0part l0new"><span class="l0badge new">new · BbsI domestication</span>
+           <div class="l0ohrow"><span class="l0oh">${ohL}</span>${box(p)}<span class="l0oh">${ohR}</span></div></div>`
+      : `<div class="l0part l0stock"><span class="l0badge stock">in stock</span>${box(p)}</div>`
+  ).join('') + `</div>`;
 }
 
 /* Level 2: bidirectional promoter as the pivot point — cargo module transcribes to the left,
@@ -1195,7 +1297,9 @@ function buildModel(){
 
   const tp   = { label:n.tp, kind:'t1', note:'Targeting peptide', bp:TP_BP, mapnote:'TP' };
   const lk   = { label:link.label, kind:'t2', note:link.aa+' aa', bp:link.bp, mapnote:'Linker' };
-  const cg   = { label:cargoLabel, kind:'t3', note:cargoBp+' bp', bp:cargoBp, mapnote:cargoBp+' bp' };
+  // isCargo mirrors the same field in Biologik/level0_design/design.py, so the
+  // renderer never has to guess which of the five parts is the user's own.
+  const cg   = { label:cargoLabel, kind:'t3', note:cargoBp+' bp', bp:cargoBp, mapnote:cargoBp+' bp', isCargo:true };
   const ncs  = () => ({ label:'NCS', dummy:true, note:'Spacer', bp:NCS_BP });
   // NC-module flanking slots are NCS spacers by default, but they are open toolkit
   // positions for a surface-display marker (e.g. SpyCatcher) that ends up presented
@@ -1274,6 +1378,10 @@ function partFromApi(p){
     stop: !!p.stop,
     dummy: p.role==='ncs' || p.role==='surface',
     surface: !!p.surface,
+    // isCargo muss durchgereicht werden: renderLevel0() entscheidet daran, welcher
+    // der fuenf Level-0-Parts als neu (volle Farbe, Fusionsstellen, BbsI-Tag) und
+    // welche als Stock-Teile gezeichnet werden. mapnote bleibt fuer die Strip-Ansicht.
+    isCargo: !!p.isCargo,
     mapnote: p.isCargo ? (p.bp+' bp') : undefined,
   };
 }
@@ -1449,8 +1557,11 @@ function renderPlasmid(res){
     { name:'URA3', bp:800, kind:'_ura', dir:0 },
     { name:'Cargo module', bp:Math.max(cargoModBp,700), kind:'t3', dir:-1, txn:true },
   ];
-  // Backbone features (not Golden-Gate parts): grey · orange · sky, same Okabe-Ito set.
-  const palette = { _ori:'#9AA6A0', _amp:'#E69F00', _ura:'#56B4E9' };
+  // Backbone features (not Golden-Gate parts): olive · deep yellow · purple, i.e.
+  // the brand hues left over once promoter, shell, NCS and cargo have taken theirs,
+  // so all seven ring segments stay distinct. The yellow is darkened from the brand
+  // value so a 16px stroke still reads against the white card.
+  const palette = { _ori:'var(--brand-olive)', _amp:'#E0BC28', _ura:'var(--brand-purple)' };
   const colOf = k => palette[k] || cvar(k);
   const sum=segs.reduce((s,p)=>s+p.bp,0);
   // start so the promoter segment is centred at 12 o'clock (deg 0 = top)
