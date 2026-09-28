@@ -56,7 +56,8 @@ def cmd_libraries(payload: dict) -> dict:
 def cmd_validate(payload: dict) -> dict:
     """Cargo-CDS prüfen. Eine ungültige Sequenz ist KEIN Fehler, sondern
     eine gültige Antwort mit ``ok: false`` im Validierungsobjekt."""
-    return {"validation": validate_cargo(payload.get("cargoSeq", ""))}
+    kind = payload.get("kind") if payload.get("kind") in ("shell", "part") else "cargo"
+    return {"validation": validate_cargo(payload.get("cargoSeq", ""), kind=kind)}
 
 
 COMMANDS = {

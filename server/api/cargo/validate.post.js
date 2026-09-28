@@ -1,6 +1,9 @@
 /**
  * POST /api/cargo/validate
- * Body: { cargoSeq: string }
+ * Body: { cargoSeq: string, kind?: 'cargo' | 'shell' | 'part' }
+ *   kind 'shell' / 'part' check a user-supplied nanocompartment shell CDS or a
+ *   custom part in a slot next to the shell with the same rules; only the
+ *   wording of the stop-codon message differs.
  *
  * Checks a user-supplied cargo CDS (decision 2.2): length, GC, reading frame,
  * and — crucially — that it does not carry a stop codon (TAA/TAG/TGA) at the
@@ -16,9 +19,10 @@ import { runBiologik } from '../../utils/biologik.js'
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const cargoSeq = typeof body?.cargoSeq === 'string' ? body.cargoSeq : ''
+  const kind = ['shell', 'part'].includes(body?.kind) ? body.kind : 'cargo'
 
   try {
-    const { validation } = await runBiologik('validate', { cargoSeq })
+    const { validation } = await runBiologik('validate', { cargoSeq, kind })
     return validation
   } catch (err) {
     throw createError({ statusCode: 500, statusMessage: err?.message || 'Biologik failed.' })

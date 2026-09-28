@@ -76,18 +76,13 @@ LINKERS = [
 # Bibliothek für Promotoren
 PROMOTERS = [{"id": "GAL110", "label": "GAL1-10", "desc": "bidirectional, inducible"}]
 
-# Optionale Oberflaechen-Marker. Sie werden in einen der NCS-Slots neben der
-# Shell fusioniert und sitzen dadurch AUSSEN auf dem Encapsulin — im Gegensatz
-# zum Cargo, das innen verpackt wird. Zwischen Shell und Marker liegt immer der
-# kurze L1-Linker, damit das dargestellte Protein Platz zum Falten hat.
+# Oberflaechen-Marker. Sie lassen sich in einen der Slots neben der Shell legen
+# (Type 1, 2, 4, 5) und sitzen dadurch AUSSEN auf dem Encapsulin — im Gegensatz
+# zum Cargo, das innen verpackt wird.
 SURFACE_MARKERS = [
     {"id": "spycatcher", "label": "SpyCatcher", "aa": 113, "bp": 339, "desc": "covalent SpyTag capture (isopeptide bond)"},
     {"id": "spytag", "label": "SpyTag", "aa": 13, "bp": 39, "desc": "13-aa peptide, binds SpyCatcher"},
 ]
-
-# Linker zwischen Shell und Oberflaechen-Marker.
-MARKER_LINKER = {"label": "L1", "aa": 6, "bp": 18}
-
 
 # Alles, was das Frontend für seine Dropdowns braucht — an EINER Stelle.
 # Bewusst eine Funktion und keine Konstante, damit sie später aus der Datenbank

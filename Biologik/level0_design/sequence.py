@@ -73,7 +73,9 @@ def ends_with_stop(sequence: str):
 # Wenn ATG gefunden, alles vor ATG löschen und User mit Anzeige informieren.
 
 
-def validate_cargo(raw: str, min_bp: int = 30) -> dict:
+def validate_cargo(raw: str, min_bp: int = 30, kind: str = "cargo") -> dict:
+    # ``kind`` waehlt nur den Wortlaut der Stopcodon-Meldung: "cargo" (Standard), "shell" fuer eine
+    # eigene Nanocompartment-Shell oder "part" fuer eine eigene Sequenz in einem Slot. Die Regeln sind identisch.
     # clean_seq() macht die Eingabe für die weitere Analyse brauchbar.
     clean = clean_seq(raw)
     length = len(clean)
@@ -88,12 +90,23 @@ def validate_cargo(raw: str, min_bp: int = 30) -> dict:
     if length == 0:
         errors.append("No valid A/T/G/C sequence provided.")
     else:
-        if length < min_bp:
+        # Die Mindestlaenge gilt nur fuer das Cargo (dafuer werden Primer designt); Shell und
+        # eigene Module werden als Synthese bestellt und duerfen beliebig kurz sein.
+        if kind == "cargo" and length < min_bp:
             errors.append(f"Sequence too short ({length} bp, need at least {min_bp} bp).")
         if trailing_stop:
-            errors.append(
-                f"Stop codon at the end ({trailing_stop}). Remove it — otherwise the targeting peptide is not attached and the cargo is not encapsulated."
-            )
+            if kind == "shell":
+                errors.append(
+                    f"Stop codon at the end ({trailing_stop}). Remove it — the construct adds its own stop codon right after the shell."
+                )
+            elif kind == "part":
+                errors.append(
+                    f"Stop codon at the end ({trailing_stop}). Remove it — the construct places its own stop codon at the end of the nanocompartment site."
+                )
+            else:
+                errors.append(
+                    f"Stop codon at the end ({trailing_stop}). Remove it — otherwise the targeting peptide is not attached and the cargo is not encapsulated."
+                )
         if not_multiple_of_three:
             warnings.append("Length is not a multiple of 3 — check the reading frame.")
         if internal_stops:

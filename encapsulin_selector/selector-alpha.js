@@ -56,19 +56,29 @@
   }
 
   $("datasetBadge").textContent =
-    `${DATA.meta.candidate_count} candidates • ${DATA.meta.assembly_count} curated assemblies • alpha dataset`;
+    `${DATA.meta.candidate_count} candidates • ${DATA.meta.assembly_count} curated assemblies`;
   $("alphaNote").textContent = DATA.meta.status_note;
 
   // Mode switching
+  // Each tab gets its own history entry (#search / #finder) so the browser
+  // back/forward arrows switch between them.
+  function setMode(mode) {
+    document.querySelectorAll(".mode-tab").forEach(x => x.classList.toggle("active", x.dataset.mode === mode));
+    $("searchMode").classList.toggle("hidden", mode !== "search");
+    $("finderMode").classList.toggle("hidden", mode !== "finder");
+  }
+  const modeFromHash = () => {
+    const m = location.hash.slice(1);
+    return document.querySelector(`.mode-tab[data-mode="${m}"]`) ? m : null;
+  };
   document.querySelectorAll(".mode-tab").forEach(btn => {
     btn.addEventListener("click", () => {
-      document.querySelectorAll(".mode-tab").forEach(x => x.classList.remove("active"));
-      btn.classList.add("active");
       const mode = btn.dataset.mode;
-      $("searchMode").classList.toggle("hidden", mode !== "search");
-      $("finderMode").classList.toggle("hidden", mode !== "finder");
+      setMode(mode);
+      if (location.hash !== "#" + mode) history.pushState(null, "", "#" + mode);
     });
   });
+  window.addEventListener("popstate", () => setMode(modeFromHash() || "search"));
 
   const unique = field => [...new Set(assemblies.map(a => a[field]).filter(v => v !== null && v !== ""))]
     .sort((a,b) => String(a).localeCompare(String(b), undefined, {numeric:true}));
@@ -135,7 +145,7 @@
     const linked = assemblySubset ?? (byCandidate.get(c.candidate_id) || []);
     const assemblyHtml = linked.length
       ? linked.map(a => assemblyCard(a, c.reference_assembly_id, stateMap?.get(a.assembly_id) || "")).join("")
-      : `<div class="empty-state">No curated assembly record is available for this candidate in the current alpha dataset.</div>`;
+      : `<div class="empty-state">No curated assembly record is available for this candidate in the current dataset.</div>`;
     const ids = [c.gene, c.locus_tag, c.orf_name].filter(Boolean).join(" • ");
     return `
       <article class="candidate-card">
@@ -317,6 +327,61 @@
 
   runFinder();
 
+  // Keep tab, filters, search text and scroll position across a page refresh.
+  const SESSION_KEY = "encapsulin.selector.v1";
+  const TEXT_IDS = ["globalSearch","diameterMin","diameterMax","tNumber","variantStatus","symmetry","subunitCount","targetDiameter"];
+  const CHECK_IDS = ["structureRequired","includeUnknown","preferStructure"];
+  const activeMode = () => document.querySelector(".mode-tab.active").dataset.mode;
+
+  function saveSession() {
+    try {
+      const s = { mode: activeMode(), scrollY: window.scrollY, text: {}, checks: {} };
+      TEXT_IDS.forEach(id => s.text[id] = $(id).value);
+      CHECK_IDS.forEach(id => s.checks[id] = $(id).checked);
+      sessionStorage.setItem(SESSION_KEY, JSON.stringify(s));
+    } catch (e) {}
+  }
+
+  (function restoreSession() {
+    let s = null;
+    try { s = JSON.parse(sessionStorage.getItem(SESSION_KEY)); } catch (e) {}
+    if (!s) { if (modeFromHash()) setMode(modeFromHash()); return; }
+    TEXT_IDS.forEach(id => { if (s.text && s.text[id] !== undefined) $(id).value = s.text[id]; });
+    CHECK_IDS.forEach(id => { if (s.checks && s.checks[id] !== undefined) $(id).checked = s.checks[id]; });
+    const mode = modeFromHash() || s.mode;
+    if (document.querySelector(`.mode-tab[data-mode="${mode}"]`)) {
+      setMode(mode);
+      history.replaceState(null, "", "#" + mode);
+    }
+    runSearch();
+    runFinder();
+    history.scrollRestoration = "manual";
+    window.scrollTo({ top: s.scrollY || 0, behavior: "instant" });
+  })();
+
+  window.addEventListener("pagehide", saveSession);
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") saveSession(); });
+
   const sanity = assemblies.filter(a => String(a.T_number) === "1" && a._shell_diameter && a._shell_diameter.max >= 0.1 && a._shell_diameter.min <= 40);
   console.info(`Selector sanity check: expected 26 current matches for 0.1–40 nm + T=1; found ${sanity.length}.`);
+})();
+
+
+// Light/dark mode, shared with the builder through localStorage.
+(function initTheme() {
+  const SUN = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/>';
+  const MOON = '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';
+  const root = document.documentElement;
+  function sync() {
+    const dark = root.getAttribute("data-theme") === "dark";
+    document.getElementById("themeLabel").textContent = dark ? "Dark" : "Light";
+    document.getElementById("themeIcon").innerHTML = dark ? MOON : SUN;
+  }
+  document.getElementById("themeToggle").addEventListener("click", () => {
+    const dark = root.getAttribute("data-theme") !== "dark";
+    root.setAttribute("data-theme", dark ? "dark" : "light");
+    try { localStorage.setItem("encore.theme", dark ? "dark" : "light"); } catch (e) {}
+    sync();
+  });
+  sync();
 })();

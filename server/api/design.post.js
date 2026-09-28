@@ -1,14 +1,20 @@
 /**
  * POST /api/design
  * Body: {
- *   nanocompartment: string,   // decision 1 (id from /api/libraries)
+ *   nanocompartment: string,   // decision 1 (id from /api/libraries, or 'custom')
+ *   customNanocompartment?: { label?: string, tp?: string, seq: string },
+ *                              // shell CDS + targeting peptide when nanocompartment is 'custom'
  *   cargoSeq: string,          // decision 2 (raw CDS, no trailing stop codon)
  *   fusion: 'C' | 'N',         // decision 3
  *   cargoLabel?: string,
  *   linker?: string,           // linker id (default: first in library)
  *   promoter?: string,         // promoter id (default: GAL1-10)
- *   marker?: string,           // optional surface-display marker id
- *   markerTerm?: 'N' | 'C',    // which shell terminus displays it (default N)
+ *   ncSlots?: {                // what sits next to the shell (default: NCS spacer everywhere)
+ *     "1" | "2" | "4" | "5": { kind: 'ncs' }
+ *                          | { kind: 'linker', id: string }
+ *                          | { kind: 'marker', id: string }        // spycatcher | spytag
+ *                          | { kind: 'custom', label?: string, seq: string }
+ *   }
  *   fasta?: boolean            // also return a FASTA export string
  * }
  *
@@ -30,13 +36,13 @@ export default defineEventHandler(async (event) => {
   try {
     const { design } = await runBiologik('design', {
       nanocompartment: body.nanocompartment,
+      customNanocompartment: body.customNanocompartment,
       cargoSeq: body.cargoSeq,
       cargoLabel: body.cargoLabel,
       fusion: body.fusion,
       linker: body.linker,
       promoter: body.promoter,
-      marker: body.marker,
-      markerTerm: body.markerTerm,
+      ncSlots: body.ncSlots,
       fasta: Boolean(body.fasta),
     })
     return design
