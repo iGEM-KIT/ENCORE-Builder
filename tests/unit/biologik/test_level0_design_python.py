@@ -37,15 +37,31 @@ def test_validate_cargo_accepts_a_fusion_ready_sequence():
     assert cargo['aa'] == 12
 
 
-def test_design_construct_builds_level0_modules():
-    design = design_construct(
+CARGO = 'ATGAAATTTGAAATGAAATTTGAAATGAAATTTGAA'
+
+# Die zwei Fusionsrichtungen sind seit dem Slot-Umbau kein eigener 'fusion'-Parameter
+# mehr, sondern ergeben sich daraus, in welchem Cargo-Modul-Slot (Type 0.1 oder 0.5)
+# das Targeting-Peptid sitzt. Ein Linker im Nachbarslot ist Pflicht (siehe
+# resolve_slots in design.py) — ohne ihn lehnt design_construct die Eingabe ab.
+CARGO_SLOTS_C_TERM = {'1': {'kind': 'tp'}, '2': {'kind': 'linker', 'id': 'GSSS2'}}
+CARGO_SLOTS_N_TERM = {'5': {'kind': 'tp'}, '4': {'kind': 'linker', 'id': 'GSSS2'}}
+
+
+def _design(cargo_slots=None, nc_slots=None, **overrides):
+    return design_construct(dict(
         {
             'nanocompartment': 'tmari',
-            'cargoSeq': 'ATGAAATTTGAAATGAAATTTGAAATGAAATTTGAA',
-            'cargoLabel': 'TestCargo',
-            'fusion': 'C',
-        }
-    )
+            'cargoSeq': CARGO,
+            'cargoLabel': 'GFP',
+            'cargoSlots': cargo_slots if cargo_slots is not None else CARGO_SLOTS_C_TERM,
+            'ncSlots': nc_slots or {},
+        },
+        **overrides,
+    ))
+
+
+def test_design_construct_builds_level0_modules():
+    design = _design()
 
     assert design['level0']['total'] == 10
     assert len(design['level0']['cargoModule']) == 5
@@ -56,25 +72,22 @@ def test_design_construct_builds_level0_modules():
 def test_make_primer_pair_and_fasta_export():
     primers = make_primer_pair('ATGAAATTTGAA', 'CCAA', 'GCAA')
     assert len(primers) == 2
-    fasta = build_fasta(
-        {
-            'nanocompartment': {'id': 'tmari', 'shell': 'E-Tm', 'shellBp': 516},
-            'linker': {'id': 'GSSS2', 'bp': 24},
-            'cargo': {'label': 'TestCargo', 'sequence': 'ATGAAATTTGAAATGAAATTTGAAATGAAATTTGAA'},
-            'targetingPeptide': 'TP-Tm',
-            'level2': {'promoter': {'id': 'GAL110', 'label': 'GAL1-10'}},
-            'fusion': 'C',
-        }
-    )
-    assert 'Level1_Cargo-Module_C-terminal' in fasta
+
+    # build_fasta erwartet die volle design_construct()-Antwort (cargoSlots, ncSlots,
+    # sequenceAntisense, ...) — ein von Hand gebautes Teil-Dict war hier frueher schon
+    # einmal veraltet, ohne dass es auffiel. Deshalb jetzt gegen ein echtes Ergebnis.
+    design = _design()
+    fasta = build_fasta(design)
+    assert 'Level1_Cargo-Module' in fasta
+    assert '>Cargo_GFP [Type0.3]' in fasta
 
 
 def test_json_cli_connects_backend_request_to_biologik():
     request = {
         'nanocompartment': 'tmari',
-        'cargoSeq': 'ATGAAATTTGAAATGAAATTTGAAATGAAATTTGAA',
+        'cargoSeq': CARGO,
         'cargoLabel': 'CliCargo',
-        'fusion': 'C',
+        'cargoSlots': CARGO_SLOTS_C_TERM,
     }
     result = subprocess.run(
         [sys.executable, '-m', 'Biologik.level0_design.cli'],
@@ -88,6 +101,7 @@ def test_json_cli_connects_backend_request_to_biologik():
     assert response['ok'] is True
     assert response['design']['cargo']['label'] == 'CliCargo'
     assert response['design']['level0']['total'] == 10
+
 
 def _run_cli(command, payload):
     """Ruft cli.py so auf, wie server/utils/biologik.js es tut."""
@@ -129,7 +143,7 @@ def test_json_cli_validates_cargo_without_failing():
 def test_json_cli_reports_the_real_error_on_stdout():
     # cli.py beendet sich mit 1, legt die Meldung aber auf stdout ab. Die
     # Gegenstelle muss stdout auswerten, sonst geht der Grund verloren.
-    result = _run_cli('design', {'nanocompartment': 'gibtsnicht', 'cargoSeq': 'ATG', 'fusion': 'C'})
+    result = _run_cli('design', {'nanocompartment': 'gibtsnicht', 'cargoSeq': CARGO})
     response = json.loads(result.stdout)
 
     assert result.returncode == 1
@@ -138,34 +152,28 @@ def test_json_cli_reports_the_real_error_on_stdout():
     assert result.stderr.strip() == ''
 
 
-CARGO = 'ATGAAATTTGAAATGAAATTTGAAATGAAATTTGAA'
+def test_stop_codon_follows_the_targeting_peptide_slot():
+    # Der ORF endet am C-Terminus des Fusionsproteins. Sitzt das TP in Type 0.1, ist
+    # das der C-Terminus (Cargo liegt "vor" ihm im ORF); sitzt es in Type 0.5, traegt
+    # stattdessen der NCS in Type 0.2 (direkt hinter der Cargo) das Stopcodon.
+    c_term_module = _design(cargo_slots=CARGO_SLOTS_C_TERM)['level0']['cargoModule']
+    n_term_module = _design(cargo_slots=CARGO_SLOTS_N_TERM)['level0']['cargoModule']
 
-
-def _design(**overrides):
-    return design_construct(dict(
-        {'nanocompartment': 'tmari', 'cargoSeq': CARGO, 'cargoLabel': 'GFP', 'fusion': 'C'},
-        **overrides,
-    ))
-
-
-def test_stop_codon_follows_the_fusion_direction():
-    # Der ORF endet am C-Terminus des Fusionsproteins. Bei C-terminaler Fusion
-    # ist das das Targeting-Peptid (Type 1), bei N-terminaler der NCS dahinter.
-    c_module = _design(fusion='C')['level0']['cargoModule']
-    n_module = _design(fusion='N')['level0']['cargoModule']
-
-    assert [p['stop'] for p in c_module] == [True, False, False, False, False]
-    assert [p['stop'] for p in n_module] == [False, True, False, False, False]
-    assert c_module[0]['role'] == 'targeting-peptide'
-    assert n_module[1]['role'] == 'ncs'
+    assert [p['stop'] for p in c_term_module] == [True, False, False, False, False]
+    assert [p['stop'] for p in n_term_module] == [False, True, False, False, False]
+    assert c_term_module[0]['role'] == 'targeting-peptide'
+    assert n_term_module[1]['role'] == 'ncs'
 
 
 def test_surface_marker_sits_at_the_chosen_terminus():
-    n_term = _design(marker='spycatcher', markerTerm='N')['level0']['ncModule']
-    c_term = _design(marker='spycatcher', markerTerm='C')['level0']['ncModule']
+    # Ein Marker (oder jede andere CDS) in Type 0.1/0.5 braucht zwingend einen Linker
+    # im Nachbarslot (0.2/0.4) — anders als frueher gibt es keinen automatischen L1-Linker
+    # mehr, die Wahl liegt beim Nutzer.
+    n_term = _design(nc_slots={'1': {'kind': 'marker', 'id': 'spycatcher'}, '2': {'kind': 'linker', 'id': 'GSSS2'}})['level0']['ncModule']
+    c_term = _design(nc_slots={'4': {'kind': 'linker', 'id': 'GSSS2'}, '5': {'kind': 'marker', 'id': 'spycatcher'}})['level0']['ncModule']
 
-    assert n_term[0]['kind'] == 'mark' and n_term[1]['role'] == 'marker-linker'
-    assert c_term[4]['kind'] == 'mark' and c_term[3]['role'] == 'marker-linker'
+    assert n_term[0]['kind'] == 'mark' and n_term[1]['role'] == 'nc-linker'
+    assert c_term[4]['kind'] == 'mark' and c_term[3]['role'] == 'nc-linker'
 
     # Das Stopcodon wandert an das neue 3'-Ende des ORFs mit.
     assert n_term[3]['stop'] is True
@@ -175,14 +183,13 @@ def test_surface_marker_sits_at_the_chosen_terminus():
 def test_without_a_marker_the_slots_stay_inert_spacers():
     nc_module = _design()['level0']['ncModule']
 
-    assert _design()['marker'] is None
-    assert [p['role'] for p in nc_module] == ['surface', 'surface', 'shell', 'surface', 'surface']
+    assert [p['role'] for p in nc_module] == ['ncs', 'ncs', 'shell', 'ncs', 'ncs']
     assert [p['stop'] for p in nc_module] == [False, False, False, True, False]
 
 
 def test_unknown_surface_marker_is_rejected():
     try:
-        _design(marker='gibtsnicht')
+        _design(nc_slots={'1': {'kind': 'marker', 'id': 'gibtsnicht'}, '2': {'kind': 'linker', 'id': 'GSSS2'}})
     except ValueError as error:
         assert 'gibtsnicht' in str(error)
     else:
