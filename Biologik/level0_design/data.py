@@ -18,6 +18,11 @@ TYPE_OVERHANGS = {
     5: ["TGGC", "AACA"],
 }
 
+# Die sechs Nahtstellen (Top-Strand) zwischen den Typen: Typ n reicht von JUNCTION_OVERHANGS[n-1]
+# bis JUNCTION_OVERHANGS[n]. TYPE_OVERHANGS oben nennt als 3'-Wert das Komplement der naechsten
+# Nahtstelle (so wie es auf dem Gegenstrang steht) — fuer echte Sequenzen zaehlen diese Werte.
+JUNCTION_OVERHANGS = ["ACAT", "TATG", "TTCT", "ATCC", "TGGC", "TTGT"]
+
 # Definition des Anfangsteils eines Primers, der für Assemblierung benötigt wird. 
 # Dieser ist beim Golden Gate Assembly für alle Primer gleich und wird hier als Konstante gespeichert.
 

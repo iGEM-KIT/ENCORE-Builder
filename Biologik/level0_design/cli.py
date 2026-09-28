@@ -23,6 +23,7 @@ import sys
 
 from .data import get_libraries
 from .design import build_fasta, design_construct
+from .mrna_dimer import check_mrna_structure
 from .sequence import validate_cargo
 
 
@@ -54,10 +55,20 @@ def cmd_libraries(payload: dict) -> dict:
 
 
 def cmd_validate(payload: dict) -> dict:
-    """Cargo-CDS prüfen. Eine ungültige Sequenz ist KEIN Fehler, sondern
-    eine gültige Antwort mit ``ok: false`` im Validierungsobjekt."""
+    """Jede vom Nutzer eingegebene CDS pruefen — Cargo, eigene Shell oder eigene
+    Sequenz in einem Modul-Slot. Eine ungueltige Sequenz ist KEIN Fehler, sondern
+    eine gueltige Antwort mit ``ok: false`` im Validierungsobjekt.
+
+    Nur wenn die Sequenz fusionsbereit ist (``ok: True``), kommt zusaetzlich der
+    mRNA-Selbststruktur-Check dazu (braucht ViennaRNA, siehe mrna_dimer.py) —
+    eine nicht fusionsbereite Sequenz aendert sich ohnehin noch, das Falten waere
+    verschwendete Rechenzeit.
+    """
     kind = payload.get("kind") if payload.get("kind") in ("shell", "part") else "cargo"
-    return {"validation": validate_cargo(payload.get("cargoSeq", ""), kind=kind)}
+    validation = validate_cargo(payload.get("cargoSeq", ""), kind=kind)
+    if validation["ok"]:
+        validation = {**validation, "mrnaStructure": check_mrna_structure(validation["clean"])}
+    return {"validation": validation}
 
 
 COMMANDS = {

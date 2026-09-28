@@ -8,9 +8,9 @@ from .data import (
     NANOCOMPARTMENTS,
     BSAI_PRIMER_PREFIX,
     CARGO_L1_FLANK,
-    LINKERS,
     NOMINAL_BP,
     PROMO_FLANK,
+    JUNCTION_OVERHANGS,
     TYPE_OVERHANGS,
     find_linker,
     find_nanocompartment,
@@ -20,6 +20,7 @@ from .data import (
 # Sequence-py enthält Funktionen für die Verarbeitung von DNA-Sequenzen
 # Z.B. zum Bilden von Komplementären DNA-Sequenzen, zur Berechnung der Schmelztemperatur
 from .sequence import reverse_complement, validate_cargo, wallace_tm
+from .mrna_dimer import check_mrna_structure
 
 
 CUSTOM_NC_ID = "custom"
@@ -51,12 +52,15 @@ def build_custom_nanocompartment(custom) -> dict:
 NC_SLOTS = (1, 2, 4, 5)
 
 
-def resolve_nc_slots(raw) -> dict:
-    """Belegung der vier Slots neben der Shell (Type 1, 2, 4, 5).
+def resolve_slots(raw, module: str = "nc") -> dict:
+    """Belegung der vier Slots neben dem Mittelteil (Type 0.1, 0.2, 0.4, 0.5).
 
-    Jeder Slot ist ein NCS-Spacer (Standard), ein Linker, ein Oberflaechen-Marker
-    (SpyCatcher/SpyTag) oder eine eigene Sequenz. Eigene Sequenzen laufen durch
-    dieselbe Pruefung wie das Cargo. Fehlende Slots bleiben NCS.
+    ``module`` ist "nc" (Mittelteil = Shell, ORF von Type 0.1 nach 0.5) oder "cargo"
+    (Mittelteil = Cargo, ORF laeuft von Type 0.5 nach 0.1, weil das Cargo-Modul auf dem
+    Antisense-Strang sitzt). Jeder Slot ist ein NCS-Spacer, ein NCS mit Stopcodon, ein
+    Linker, ein Oberflaechen-Marker, im Cargo-Modul ausserdem das Targeting-Peptid, oder
+    eine eigene Sequenz. Eigene Sequenzen laufen durch dieselbe Pruefung wie das Cargo.
+    Fehlende Slots bleiben NCS.
     """
     raw = raw if isinstance(raw, dict) else {}
     slots = {}
@@ -67,6 +71,12 @@ def resolve_nc_slots(raw) -> dict:
             slots[n] = {"kind": "ncs"}
         elif kind == "ncsstop":
             slots[n] = {"kind": "ncsstop"}
+        elif kind == "tp":
+            if module != "cargo":
+                raise ValueError(f"Type 0.{n}: the targeting peptide belongs to the cargo module.")
+            if n not in (1, 5):
+                raise ValueError(f"Type 0.{n}: the targeting peptide can only sit in Type 0.1 or 0.5.")
+            slots[n] = {"kind": "tp"}
         elif kind == "linker":
             item = find_linker(cfg.get("id"))
             if not item:
@@ -87,24 +97,33 @@ def resolve_nc_slots(raw) -> dict:
         else:
             raise ValueError(f"Type 0.{n}: unknown kind \"{kind}\".")
 
-    # NCS mit Stopcodon: nur hinter der Shell (Type 0.4 oder 0.5), hoechstens einmal, und danach
-    # darf nichts mehr uebersetzt werden.
+    if sum(1 for n in NC_SLOTS if slots[n]["kind"] == "tp") > 1:
+        raise ValueError("Only one targeting peptide can be used.")
+
+    # Slots hinter dem Mittelteil, in ORF-Richtung: Shell -> 4, 5; Cargo (Antisense) -> 2, 1.
+    behind = (4, 5) if module == "nc" else (2, 1)
+    part_name = "shell" if module == "nc" else "cargo"
+
+    # NCS mit Stopcodon: nur hinter dem Mittelteil, hoechstens einmal, und danach darf nichts
+    # mehr uebersetzt werden.
     stops = [n for n in NC_SLOTS if slots[n]["kind"] == "ncsstop"]
     for n in stops:
-        if n not in (4, 5):
-            raise ValueError(f"Type 0.{n}: an NCS with stop codon can only sit behind the shell (Type 0.4 or 0.5).")
+        if n not in behind:
+            raise ValueError(
+                f"Type 0.{n}: an NCS with stop codon can only sit behind the {part_name} (Type 0.{behind[0]} or 0.{behind[1]})."
+            )
     if len(stops) > 1:
         raise ValueError("Only one NCS can carry the stop codon.")
-    if slots[4]["kind"] == "ncsstop" and slots[5]["kind"] != "ncs":
-        raise ValueError("Type 0.5: nothing can follow the stop codon in Type 0.4.")
+    if slots[behind[0]]["kind"] == "ncsstop" and slots[behind[1]]["kind"] != "ncs":
+        raise ValueError(f"Type 0.{behind[1]}: nothing can follow the stop codon in Type 0.{behind[0]}.")
 
-    # Ist der aeussere Slot (Type 1 bzw. 5) belegt, darf der innere (Type 2 bzw. 4) kein NCS-Spacer
-    # sein. Sitzt aussen eine CDS (Marker oder eigene Sequenz), muss innen ein Linker sitzen —
-    # ein zweiter Marker reicht dort nicht.
+    # Ist der aeussere Slot (Type 0.1 bzw. 0.5) belegt, darf der innere (0.2 bzw. 0.4) kein
+    # NCS-Spacer sein. Sitzt aussen eine CDS (Marker, TP oder eigene Sequenz), muss innen ein
+    # Linker sitzen — ein zweiter Marker reicht dort nicht.
     for outer, inner in ((1, 2), (5, 4)):
         if slots[outer]["kind"] not in ("ncs", "ncsstop") and slots[inner]["kind"] == "ncs":
             raise ValueError(f"Type 0.{inner}: cannot be an NCS spacer while Type 0.{outer} is in use.")
-        if slots[outer]["kind"] in ("marker", "custom") and slots[inner]["kind"] == "marker":
+        if slots[outer]["kind"] in ("marker", "tp", "custom") and slots[inner]["kind"] == "marker":
             raise ValueError(
                 f"Type 0.{inner}: a linker is required next to the sequence in Type 0.{outer} "
                 f"(choose a linker or your own linker sequence, not a marker)."
@@ -112,8 +131,10 @@ def resolve_nc_slots(raw) -> dict:
     return slots
 
 
-def _slot_part(n: int, cfg: dict) -> dict:
+def _slot_part(n: int, cfg: dict, tp_label: str = "TP") -> dict:
     kind = cfg["kind"]
+    if kind == "tp":
+        return {"role": "targeting-peptide", "label": tp_label, "kind": f"t{n}", "note": "Targeting peptide", "bp": NOMINAL_BP["TP"]}
     if kind == "linker":
         return {"role": "nc-linker", "label": cfg["label"], "kind": "t2", "note": f"{cfg['aa']} aa", "bp": cfg["bp"]}
     if kind == "marker":
@@ -125,6 +146,20 @@ def _slot_part(n: int, cfg: dict) -> dict:
     if kind == "ncsstop":
         return {"role": "ncs", "label": "NCS", "kind": "ncs", "note": "Spacer · stop codon", "bp": NOMINAL_BP["NCS"], "stop": True}
     return {"role": "ncs", "label": "NCS", "kind": "ncs", "note": "Spacer", "bp": NOMINAL_BP["NCS"]}
+
+
+def _layout_with_stop(slots: dict, middle: dict, behind: tuple, tp_label: str = "TP") -> list:
+    """Die fuenf Teile eines Moduls in Typ-Reihenfolge, das Stopcodon am 3'-Ende des ORFs.
+
+    Ohne ausdruecklichen NCS mit Stopcodon traegt das Stopcodon der letzte belegte Slot hinter
+    dem Mittelteil, sonst der erste NCS direkt dahinter.
+    """
+    parts = {n: _slot_part(n, slots[n], tp_label) for n in NC_SLOTS}
+    if not any(cfg["kind"] == "ncsstop" for cfg in slots.values()):
+        used = any(slots[n]["kind"] != "ncs" for n in behind)
+        stop_slot = behind[1] if used else behind[0]
+        parts[stop_slot] = {**parts[stop_slot], "stop": True}
+    return [parts[1], parts[2], middle, parts[4], parts[5]]
 
 
 def level0_part(slot: int, spec: dict) -> dict:
@@ -152,43 +187,17 @@ def level0_part(slot: int, spec: dict) -> dict:
     }
 
 
-def build_modules(nc: dict, link: dict, cargo_label: str, cargo_bp: int, fusion: str, nc_slots: dict = None):
-    # Ein Modul besteht aus mehreren Level-0-Teilen. Hier werden die Bausteine für Cargo- und NC-Modul aufgebaut.
-    nc_slots = nc_slots or resolve_nc_slots(None)
-    tp = {"role": "targeting-peptide", "label": nc["tp"], "kind": "t1", "note": "Targeting peptide", "bp": NOMINAL_BP["TP"]}
-    lk = {"role": "linker", "label": link["label"], "kind": "t2", "note": f"{link['aa']} aa", "bp": link["bp"]}
+def build_modules(nc: dict, cargo_label: str, cargo_bp: int, cargo_slots: dict, nc_slots: dict):
+    # Ein Modul besteht aus fuenf Level-0-Teilen. Hier werden Cargo- und NC-Modul aufgebaut.
     cg = {"role": "cargo", "label": cargo_label, "kind": "t3", "note": f"{cargo_bp} bp", "bp": cargo_bp, "isCargo": True}
-
-# NCS steht für Spacer Baustein: Kurzes Verbindungsstück, das zwischen die anderen Bausteine gesetzt wird
-    def ncs():
-        # Eine verschachtelte Funktion ist eine kleine Hilfe-Funktion innerhalb einer anderen Funktion.
-        return {"role": "ncs", "label": "NCS", "kind": "ncs", "note": "Spacer", "bp": NOMINAL_BP["NCS"]}
-
-    # Der ORF laeuft von Type 5 nach Type 1. Bei C-terminaler Fusion ist das
-    # Targeting-Peptid der C-Terminus und traegt das Stopcodon; bei
-    # N-terminaler Fusion sitzt es im NCS direkt hinter dem Cargo.
-    if fusion == "C":
-        cargo_layout = [{**tp, "stop": True}, lk, cg, ncs(), ncs()]
-    else:
-        cargo_layout = [ncs(), {**ncs(), "stop": True}, cg, lk, tp]
-
-    # Eine List-Comprehension baut aus einer Liste schnell eine Liste mit verarbeiteten Elementen.
+    # Cargo-Modul (Antisense): der ORF laeuft von Type 0.5 nach 0.1, das Stopcodon sitzt links.
+    cargo_layout = _layout_with_stop(cargo_slots, cg, behind=(2, 1), tp_label=nc["tp"])
     cargo_module = [level0_part(index + 1, spec) for index, spec in enumerate(cargo_layout)]
 
     shell = {"role": "shell", "label": nc["shell"], "kind": "shell", "note": f"{nc['shellBp']} bp", "bp": nc["shellBp"],
              "isNew": bool(nc.get("custom"))}
-
-    # NC-Modul (Sense, ORF von Type 1 nach Type 5): frei belegbare Slots 1, 2, 4, 5 um die Shell.
-    # Das Stopcodon sitzt am 3'-Ende des ORFs: im letzten belegten Slot hinter der Shell,
-    # sonst im ersten NCS direkt hinter der Shell (Type 4). Ist Slot 4 belegt und Slot 5
-    # ein NCS, uebernimmt dieser NCS das Stopcodon.
-    parts = {n: _slot_part(n, nc_slots[n]) for n in NC_SLOTS}
-    if not any(cfg["kind"] == "ncsstop" for cfg in nc_slots.values()):
-        after_shell_used = nc_slots[4]["kind"] != "ncs" or nc_slots[5]["kind"] != "ncs"
-        stop_slot = 5 if after_shell_used else 4
-        parts[stop_slot] = {**parts[stop_slot], "stop": True}
-    nc_layout = [parts[1], parts[2], shell, parts[4], parts[5]]
-
+    # NC-Modul (Sense): der ORF laeuft von Type 0.1 nach 0.5, das Stopcodon sitzt rechts.
+    nc_layout = _layout_with_stop(nc_slots, shell, behind=(4, 5))
     nc_module = [level0_part(index + 1, spec) for index, spec in enumerate(nc_layout)]
     return cargo_module, nc_module
 
@@ -315,88 +324,90 @@ def make_primer_pair(sequence: str, oh_f: str, oh_r: str, use_primer3: bool = Tr
     return _wallace_primer_pair(sequence, oh_f, oh_r)
 
 
-def build_plate_plan(nc: dict, link: dict, cargo_label: str, nc_slots: dict = None):
+def build_plate_plan(nc: dict, cargo_label: str, cargo_slots: dict, nc_slots: dict):
     # Der 96-Well-Plan sagt, welche Bausteine aus dem Stock-Plate für die Assemblierung benötigt werden.
-    nc_slots = nc_slots or resolve_nc_slots(None)
     plan = [
-        {"well": "A1", "kind": "t1", "name": nc["tp"], "tip": nc["tp"]},
-        {"well": "A2", "kind": "t2", "name": link["label"], "tip": "L"},
         {"well": "A3", "kind": "t3", "name": cargo_label, "tip": "C"},
         {"well": "B1", "kind": "shell", "name": nc["shell"], "tip": "Sh"},
         {"well": "B2", "kind": "promo", "name": "GAL1-10", "tip": "P"},
-        {"well": "C1", "kind": "ncs", "name": "NCS", "tip": "N"},
-        {"well": "C2", "kind": "ncs", "name": "NCS", "tip": "N"},
-        {"well": "C3", "kind": "ncs", "name": "NCS", "tip": "N"},
-        {"well": "C4", "kind": "ncs", "name": "NCS", "tip": "N"},
-        {"well": "C5", "kind": "ncs", "name": "NCS", "tip": "N"},
-        {"well": "C6", "kind": "ncs", "name": "NCS", "tip": "N"},
-    ]
+    ] + [{"well": f"C{i}", "kind": "ncs", "name": "NCS", "tip": "N"} for i in range(1, 7)]
     # Eine eigene Shell liegt nicht im Stock-Plate — sie wird neu bestellt.
     plan = [w for w in plan if not (nc.get("custom") and w["kind"] == "shell")]
-    # Linker und Marker aus den Slots neben der Shell kommen aus dem Stock, jeweils einmal.
+    # TP, Linker und Marker aus den Slots beider Module kommen aus dem Stock, jeweils einmal.
     extras = []
-    for n in NC_SLOTS:
-        cfg = nc_slots[n]
-        if cfg["kind"] in ("linker", "marker") and cfg["label"] not in [e["name"] for e in extras]:
-            extras.append({"kind": "t2" if cfg["kind"] == "linker" else "mark", "name": cfg["label"], "tip": "L" if cfg["kind"] == "linker" else "M"})
+    for slots in (cargo_slots, nc_slots):
+        for n in NC_SLOTS:
+            cfg = slots[n]
+            if cfg["kind"] in ("tp", "linker", "marker"):
+                label = nc["tp"] if cfg["kind"] == "tp" else cfg["label"]
+                if label not in [e["name"] for e in extras]:
+                    extras.append({"kind": {"tp": f"t{n}", "linker": "t2", "marker": "mark"}[cfg["kind"]], "name": label,
+                                   "tip": {"tp": "T", "linker": "L", "marker": "M"}[cfg["kind"]]})
     for index, extra in enumerate(extras):
         plan.append({"well": f"D{index + 1}", **extra})
     return plan
 
 
-def build_order_list(nc: dict, link: dict, cargo_module: List[dict], cargo_label: str, cargo_bp: int, cargo_seq: str,
-                     nc_slots: dict = None):
-    nc_slots = nc_slots or resolve_nc_slots(None)
+def build_order_list(nc: dict, cargo_label: str, cargo_bp: int, cargo_seq: str, cargo_slots: dict, nc_slots: dict):
+    fixed = []
+    new_parts = []
 
-    # Eine innere Funktion hilft, die Auswahl eines bestimmten Bausteins aus dem Modul zu kapseln.
-    def role_type(role: str):
-        match = next((part for part in cargo_module if part["role"] == role), None)
-        return match["type"] if match else None
+    def add_slots(slots: dict, module: str):
+        # Cargo-Modul liegt auf dem Antisense-Strang: eigene Teile dort als Reverse Complement bestellen.
+        antisense = module == "cargo"
+        where = "cargo module" if antisense else "nanocompartment site"
+        for n in NC_SLOTS:
+            cfg = slots[n]
+            if cfg["kind"] == "tp":
+                fixed.append({"name": f"Targeting peptide {nc['tp']}", "sub": f"Type 0.{n} · {where} · standard module", "kind": f"t{n}"})
+            elif cfg["kind"] == "linker":
+                fixed.append({"name": f"Linker {cfg['label']}", "sub": f"Type 0.{n} · {where} · standard module", "kind": "t2"})
+            elif cfg["kind"] == "marker":
+                fixed.append({"name": f"Surface marker {cfg['label']}", "sub": f"Type 0.{n} · {where} · standard module · source once", "kind": f"t{n}"})
+            elif cfg["kind"] == "custom":
+                seq = reverse_complement(cfg["seq"]) if antisense else cfg["seq"]
+                left, right = JUNCTION_OVERHANGS[n - 1], JUNCTION_OVERHANGS[n]
+                new_parts.append({
+                    "name": f"{cfg['label']} ({cfg['bp']} bp)", "kind": f"t{n}", "slot": n, "module": module,
+                    "sub": f"Type 0.{n} · your own part{' (sense, reverse complement)' if antisense else ''} — synthesis/PCR with overhangs",
+                    "withOverhangs": f"{left}{seq}{right}", "overhangs": {"left": left, "right": right},
+                })
 
-    fixed = [
-        {"name": f"Targeting peptide {nc['tp']}", "sub": f"{role_type('targeting-peptide') or 'Type 0.1/0.5'} · standard module", "kind": "t1"},
-        {"name": f"Linker {link['label']}", "sub": f"{role_type('linker') or 'Type 0.2/0.4'} · standard module", "kind": "t2"},
-    ]
+    add_slots(cargo_slots, "cargo")
     if not nc.get("custom"):
         fixed.append({"name": f"Shell CDS {nc['shell']}", "sub": "Nanocompartment · standard module", "kind": "shell"})
     fixed += [
         {"name": "Promoter GAL1-10", "sub": "bidirectional · standard module", "kind": "promo"},
         {"name": "NCS spacer", "sub": "standard module", "kind": "ncs"},
     ]
-    # Linker und Marker im Nanocompartment-Site sind Standardmodule; eigene Sequenzen sind neue Teile.
-    new_parts = []
+    add_slots(nc_slots, "nc")
     if nc.get("custom"):
-        left, right = TYPE_OVERHANGS[3]
-        new_parts.append({
-            "name": f"{nc['shell']} ({nc['shellBp']} bp)", "kind": "shell", "slot": 3,
+        left, right = JUNCTION_OVERHANGS[2], JUNCTION_OVERHANGS[3]
+        new_parts.insert(0, {
+            "name": f"{nc['shell']} ({nc['shellBp']} bp)", "kind": "shell", "slot": 3, "module": "nc",
             "sub": "Type 0.3 · your own nanocompartment shell — synthesis/PCR with overhangs",
             "withOverhangs": f"{left}{nc['seq']}{right}", "overhangs": {"left": left, "right": right},
         })
-    for n in NC_SLOTS:
-        cfg = nc_slots[n]
-        if cfg["kind"] == "linker":
-            fixed.append({"name": f"Linker {cfg['label']}", "sub": f"Type 0.{n} · nanocompartment site · standard module", "kind": "t2"})
-        elif cfg["kind"] == "marker":
-            fixed.append({"name": f"Surface marker {cfg['label']}", "sub": f"Type 0.{n} · nanocompartment site · standard module · source once", "kind": f"t{n}"})
-        elif cfg["kind"] == "custom":
-            left, right = TYPE_OVERHANGS[n]
-            new_parts.append({
-                "name": f"{cfg['label']} ({cfg['bp']} bp)", "kind": f"t{n}", "slot": n,
-                "sub": f"Type 0.{n} · your own part — synthesis/PCR with overhangs",
-                "withOverhangs": f"{left}{cfg['seq']}{right}", "overhangs": {"left": left, "right": right},
-            })
 
     return {
         "fixed": fixed,
         "new": {
             "name": f"{cargo_label} ({cargo_bp} bp)",
-            "sub": "Type 0.3 · your new cargo (antisense, reverse complement) — synthesis/PCR with overhangs",
+            "sub": "Type 0.3 · your new cargo (sense, reverse complement) — synthesis/PCR with overhangs",
             "kind": "t3",
             "cargoWithOverhangs": f"{CARGO_L1_FLANK[0]}{cargo_seq}{CARGO_L1_FLANK[1]}",
             "overhangs": {"left": CARGO_L1_FLANK[0], "right": CARGO_L1_FLANK[1]},
         },
         "newParts": new_parts,
     }
+
+
+def _slot_summary(slots: dict) -> list:
+    return [
+        {"slot": n, **{k: v for k, v in slots[n].items() if k not in ("seq", "validation")},
+         **({"sequence": slots[n]["seq"], "isNew": True} if slots[n]["kind"] == "custom" else {})}
+        for n in NC_SLOTS
+    ]
 
 
 def design_construct(decisions: dict = None):
@@ -409,8 +420,6 @@ def design_construct(decisions: dict = None):
     if not nc:
         raise ValueError(f"Unknown nanocompartment \"{decisions.get('nanocompartment')}\".")
 
-    fusion = "N" if decisions.get("fusion") == "N" else "C"
-    link = find_linker(decisions.get("linker")) or LINKERS[0]
     promoter_entry = find_promoter(decisions.get("promoter")) or find_promoter("GAL110")
 
     cargo = validate_cargo(decisions.get("cargoSeq", ""))
@@ -420,26 +429,57 @@ def design_construct(decisions: dict = None):
     cargo_label = (decisions.get("cargoLabel") or "").strip() or "Custom cargo"
     cargo_bp = cargo["length"]
 
-    # Belegung der Slots neben der Shell (NCS, Linker, Marker oder eigene Sequenz).
-    nc_slots = resolve_nc_slots(decisions.get("ncSlots"))
+    # Belegung der Slots neben Cargo und Shell (NCS, Linker, Marker, TP oder eigene Sequenz).
+    cargo_slots = resolve_slots(decisions.get("cargoSlots"), "cargo")
+    for cfg in cargo_slots.values():
+        if cfg["kind"] == "tp":
+            cfg["label"] = nc["tp"]
+            cfg["bp"] = NOMINAL_BP["TP"]
+    nc_slots = resolve_slots(decisions.get("ncSlots"), "nc")
+    # Das Targeting-Peptid in Type 0.1 macht die Fusion C-terminal, in Type 0.5 N-terminal.
+    fusion = "C" if cargo_slots[1]["kind"] == "tp" else "N" if cargo_slots[5]["kind"] == "tp" else None
 
     # Das Cargo sitzt im pESC (MCS1) auf dem Antisense-Strang. Deshalb wird gleich
     # hier das Reverse Complement gebildet und ab da nur noch damit gearbeitet:
     # Primer, Bestellsequenz und FASTA beziehen sich auf den Antisense-Strang.
     # Die eingegebene (Sense-)Sequenz bleibt nur fuer Validierung und Anzeige.
+    # HINWEIS Benennung: intern/im Code heisst dieser Wert "antisense" (Gen-bezogen: er ist das
+    # Reverse Complement der eingegebenen CDS). In der Anzeige (Bestellbox, Bestellliste, FASTA)
+    # heisst er "sense", weil pESC selbst diesen Strang so nennt — die Cargo sitzt ja gerade deshalb
+    # auf dem Antisense-Strang von MCS1. Nur das Wort in der Anzeige dreht sich um, der Wert nicht.
     cargo_antisense = reverse_complement(cargo["clean"])
 
-    cargo_module, nc_module = build_modules(nc, link, cargo_label, cargo_bp, fusion, nc_slots)
+    cargo_module, nc_module = build_modules(nc, cargo_label, cargo_bp, cargo_slots, nc_slots)
     primers = make_primer_pair(cargo_antisense, CARGO_L1_FLANK[0], CARGO_L1_FLANK[1])
+
+    # Faltet sich die mRNA der Cargo auf sich selbst (Haarnadel), oder lagern sich zwei Kopien
+    # aneinander an (Dimer)? Beides kann ein scannendes Ribosom blockieren. Das ist eine Eigenschaft
+    # der mRNA selbst — dafuer zaehlt die Sense-/Kodierrichtung (cargo["clean"]), nicht der
+    # Antisense-Strang, mit dem ab hier fuer Primer/Bestellung/FASTA weitergearbeitet wird.
+    cargo_mrna = check_mrna_structure(cargo["clean"])
 
     # Die Cargo-Validierung liefert eigene Warnungen; die Primer-Methode kommt dazu,
     # damit im UI erkennbar ist, ob echte Thermodynamik oder nur eine Schaetzung dahintersteht.
     design_warnings = list(cargo["warnings"])
     if nc.get("custom"):
         design_warnings += [f"Custom shell: {w}" for w in nc["validation"]["warnings"]]
-    for n in NC_SLOTS:
-        if nc_slots[n]["kind"] == "custom":
-            design_warnings += [f"Type 0.{n}: {w}" for w in nc_slots[n]["validation"]["warnings"]]
+    for label, slots in (("cargo module", cargo_slots), ("nanocompartment site", nc_slots)):
+        for n in NC_SLOTS:
+            if slots[n]["kind"] == "custom":
+                design_warnings += [f"Type 0.{n} ({label}): {w}" for w in slots[n]["validation"]["warnings"]]
+    if fusion is None:
+        design_warnings.append("No targeting peptide selected — the cargo will not be encapsulated.")
+    if cargo_mrna.get("available"):
+        for check_name, label in (("selfFold", "self-fold"), ("selfDimer", "self-dimer")):
+            check = cargo_mrna[check_name]
+            if check["risk"] in ("moderate", "high"):
+                design_warnings.append(
+                    f"Cargo mRNA {label} risk: {check['risk']} (ΔG = {check['deltaG']} kcal/mol, "
+                    f"z = {check['zScore']} vs. {check['shuffles']} shuffled controls) — this may "
+                    "keep the mRNA from being translated. See the mRNA structure note for details."
+                )
+    elif not cargo_mrna.get("reason", "").startswith("Sequence too short"):
+        design_warnings.append(f"mRNA structure check: {cargo_mrna.get('reason')}")
     if primers and primers[0].get("tmMethod") == "wallace":
         design_warnings.append(
             "primer3 is not available — Tm values are rough Wallace estimates (preview only). "
@@ -447,27 +487,27 @@ def design_construct(decisions: dict = None):
             "dimer/hairpin checks and the Q5 annealing temperature."
         )
 
+    def public(slots: dict) -> dict:
+        return {str(n): {k: v for k, v in slots[n].items() if k not in ("seq", "validation")} for n in NC_SLOTS}
+
     return {
-        "input": {"nanocompartment": nc["id"], "fusion": fusion, "linker": link["id"], "promoter": promoter_entry["id"], "cargoLabel": cargo_label,
-                  "ncSlots": {str(n): {k: v for k, v in nc_slots[n].items() if k not in ("seq", "validation")} for n in NC_SLOTS}},
+        "input": {"nanocompartment": nc["id"], "promoter": promoter_entry["id"], "cargoLabel": cargo_label,
+                  "cargoSlots": public(cargo_slots), "ncSlots": public(nc_slots)},
         "nanocompartment": {"id": nc["id"], "label": nc["label"], "T": nc["T"], "dia": nc["dia"], "shell": nc["shell"], "shellBp": nc["shellBp"],
                             "custom": bool(nc.get("custom")),
                             **({"sequence": nc["seq"], "validation": nc["validation"]} if nc.get("custom") else {})},
         "targetingPeptide": nc["tp"],
-        "linker": {"id": link["id"], "label": link["label"], "aa": link["aa"], "bp": link["bp"]},
-        "cargo": {"label": cargo_label, "sequence": cargo["clean"], "sequenceAntisense": cargo_antisense, "bp": cargo_bp, "aa": cargo["aa"], "gc": cargo["gc"], "validation": cargo},
+        "cargo": {"label": cargo_label, "sequence": cargo["clean"], "sequenceAntisense": cargo_antisense, "bp": cargo_bp, "aa": cargo["aa"], "gc": cargo["gc"], "validation": cargo,
+                  "mrnaStructure": cargo_mrna},
         "fusion": fusion,
         "level0": {"total": len(cargo_module) + len(nc_module), "cargoModule": cargo_module, "ncModule": nc_module},
-        "level1": {"cargoModule": {"role": f"{fusion}-terminal cargo module", "enzyme": "BsaI", "flanks": {"left": CARGO_L1_FLANK[0], "right": CARGO_L1_FLANK[1]}, "parts": cargo_module}, "ncModule": nc_module},
+        "level1": {"cargoModule": {"role": "cargo module", "enzyme": "BsaI", "flanks": {"left": CARGO_L1_FLANK[0], "right": CARGO_L1_FLANK[1]}, "parts": cargo_module}, "ncModule": nc_module},
         "level2": {"promoter": {"id": promoter_entry["id"], "label": promoter_entry["label"], "kind": "promo", "bp": NOMINAL_BP["PROMO"], "flanks": {"left": PROMO_FLANK[0], "right": PROMO_FLANK[1]}}},
-        "ncSlots": [
-            {"slot": n, **{k: v for k, v in nc_slots[n].items() if k not in ("seq", "validation")},
-             **({"sequence": nc_slots[n]["seq"], "isNew": True} if nc_slots[n]["kind"] == "custom" else {})}
-            for n in NC_SLOTS
-        ],
+        "cargoSlots": _slot_summary(cargo_slots),
+        "ncSlots": _slot_summary(nc_slots),
         "primers": primers,
-        "platePlan": build_plate_plan(nc, link, cargo_label, nc_slots),
-        "orderList": build_order_list(nc, link, cargo_module, cargo_label, cargo_bp, cargo_antisense, nc_slots),
+        "platePlan": build_plate_plan(nc, cargo_label, cargo_slots, nc_slots),
+        "orderList": build_order_list(nc, cargo_label, cargo_bp, cargo_antisense, cargo_slots, nc_slots),
         "warnings": design_warnings,
     }
 
@@ -497,64 +537,71 @@ def build_fasta(design: dict) -> str:
         output.append(f">{header}\n{fasta_wrap(sequence)}")
 
     nc = design["nanocompartment"]
-    link = design["linker"]
     cargo_sense = design["cargo"]["sequence"]
     cargo_seq = design["cargo"]["sequenceAntisense"]
     cargo_name = design["cargo"]["label"].replace(" ", "-")
 
-    tp_seq = placeholder_seq("TP" + design["targetingPeptide"], 36)
-    link_seq = placeholder_seq("LINK" + link["id"], link["bp"])
     shell_seq = nc["sequence"] if nc.get("custom") else placeholder_seq("SHELL" + nc["shell"], nc["shellBp"])
     promo_seq = placeholder_seq("PROMO" + design["level2"]["promoter"]["id"], 600)
     ncs_seq = placeholder_seq("NCS", 30)
-    slots = {entry["slot"]: entry for entry in design["ncSlots"]}
+    tp_seq = placeholder_seq("TP" + design["targetingPeptide"], 36)
+    cargo_slots = {entry["slot"]: entry for entry in design["cargoSlots"]}
+    nc_slots = {entry["slot"]: entry for entry in design["ncSlots"]}
 
-    def slot_seq(n: int) -> str:
-        entry = slots[n]
+    def slot_seq(entry: dict) -> str:
         if entry["kind"] == "custom":
             return entry["sequence"]
+        if entry["kind"] == "tp":
+            return tp_seq
         if entry["kind"] == "linker":
             return placeholder_seq("LINK" + entry["id"], entry["bp"])
         if entry["kind"] == "marker":
             return placeholder_seq("MARK" + entry["id"], entry["bp"])
         return ncs_seq
 
-    add(f"Targeting-Peptide_{design['targetingPeptide']} [Type0.1/0.5] [PLACEHOLDER]", tp_seq)
-    add(f"Linker_{link['id']} [Type0.2/0.4] [PLACEHOLDER]", link_seq)
-    add(f"Cargo_{cargo_name} [Type0.3] [REAL INPUT {len(cargo_seq)}bp] [ANTISENSE = reverse complement of the input CDS]", cargo_seq)
-    add(f"Cargo_{cargo_name}_input-CDS [sense, reference only] [{len(cargo_sense)}bp]", cargo_sense)
+    def add_slot_records(slots: dict, where: str, antisense: bool):
+        for n in (1, 2, 4, 5):
+            entry = slots[n]
+            tag = f"Type0.{n}"
+            if entry["kind"] == "tp":
+                add(f"Targeting-Peptide_{design['targetingPeptide']} [{tag}] [{where}] [PLACEHOLDER]", slot_seq(entry))
+            elif entry["kind"] == "linker":
+                add(f"Linker_{entry['id']} [{tag}] [{where}] [PLACEHOLDER {entry['bp']}bp]", slot_seq(entry))
+            elif entry["kind"] == "marker":
+                add(f"Surface-Marker_{entry['label']} [{tag}] [{where}] [PLACEHOLDER {entry['bp']}bp]", slot_seq(entry))
+            elif entry["kind"] == "custom":
+                label = entry["label"].replace(" ", "-")
+                seq = reverse_complement(entry["sequence"]) if antisense else entry["sequence"]
+                # pESC-eigene Strangbenennung: die Cargo sitzt auf dem Antisense-Strang von MCS1, daher ist das
+                # Reverse Complement (das hier bestellt wird) der SENSE-Strang von pESC — nicht der Gen-Sense-Strang.
+                note = " [SENSE = reverse complement of the input]" if antisense else ""
+                add(f"Custom-Part_{label} [{tag}] [{where}] [REAL INPUT {entry['bp']}bp]{note}", seq)
+                add(f"Custom-Part_{label}_with-overhangs [{JUNCTION_OVERHANGS[n - 1]}...{JUNCTION_OVERHANGS[n]}]",
+                    f"{JUNCTION_OVERHANGS[n - 1]}{seq}{JUNCTION_OVERHANGS[n]}")
+
+    add(f"Cargo_{cargo_name} [Type0.3] [REAL INPUT {len(cargo_seq)}bp] [SENSE = reverse complement of the input CDS]", cargo_seq)
+    add(f"Cargo_{cargo_name}_input-CDS [reference only] [{len(cargo_sense)}bp]", cargo_sense)
+    add_slot_records(cargo_slots, "cargo module", antisense=True)
     if nc.get("custom"):
-        add(f"Nanocompartment-Shell_{nc['shell'].replace(' ', '-')} [Type0.3] [REAL INPUT {len(shell_seq)}bp]", shell_seq)
-        add(f"Nanocompartment-Shell_{nc['shell'].replace(' ', '-')}_with-overhangs [{TYPE_OVERHANGS[3][0]}...{TYPE_OVERHANGS[3][1]}]",
-            f"{TYPE_OVERHANGS[3][0]}{shell_seq}{TYPE_OVERHANGS[3][1]}")
+        name = nc["shell"].replace(" ", "-")
+        add(f"Nanocompartment-Shell_{name} [Type0.3] [REAL INPUT {len(shell_seq)}bp]", shell_seq)
+        add(f"Nanocompartment-Shell_{name}_with-overhangs [{JUNCTION_OVERHANGS[2]}...{JUNCTION_OVERHANGS[3]}]",
+            f"{JUNCTION_OVERHANGS[2]}{shell_seq}{JUNCTION_OVERHANGS[3]}")
     else:
         add(f"Nanocompartment-Shell_{nc['shell']} [PLACEHOLDER]", shell_seq)
     add(f"Promoter_{design['level2']['promoter']['label']} [bidirectional] [PLACEHOLDER]", promo_seq)
     add("NCS-Spacer [PLACEHOLDER]", ncs_seq)
-    for n in (1, 2, 4, 5):
-        entry = slots[n]
-        if entry["kind"] == "linker":
-            add(f"Linker_{entry['id']} [Type0.{n}] [nanocompartment site] [PLACEHOLDER {entry['bp']}bp]", slot_seq(n))
-        elif entry["kind"] == "marker":
-            add(f"Surface-Marker_{entry['label']} [Type0.{n}] [nanocompartment site] [PLACEHOLDER {entry['bp']}bp]", slot_seq(n))
-        elif entry["kind"] == "custom":
-            label = entry["label"].replace(" ", "-")
-            add(f"Custom-Part_{label} [Type0.{n}] [REAL INPUT {entry['bp']}bp]", slot_seq(n))
-            add(f"Custom-Part_{label}_with-overhangs [{TYPE_OVERHANGS[n][0]}...{TYPE_OVERHANGS[n][1]}]",
-                f"{TYPE_OVERHANGS[n][0]}{slot_seq(n)}{TYPE_OVERHANGS[n][1]}")
-    add(f"Cargo_{cargo_name}_with-overhangs [antisense]", f"{CARGO_L1_FLANK[0]}{cargo_seq}{CARGO_L1_FLANK[1]}")
+    add_slot_records(nc_slots, "nanocompartment site", antisense=False)
+    add(f"Cargo_{cargo_name}_with-overhangs [sense]", f"{CARGO_L1_FLANK[0]}{cargo_seq}{CARGO_L1_FLANK[1]}")
 
     # Das Cargo-Modul liegt im Level-2-Konstrukt auf dem Antisense-Strang: die Top-Strand-Sequenz
     # ist die Typ-Reihenfolge 1..5, jedes Teil als Reverse Complement (das Cargo ist schon
     # Antisense). Es wird danach NICHT noch einmal umgedreht.
-    slot_order = (
-        [tp_seq, link_seq, cargo_sense, ncs_seq, ncs_seq] if design["fusion"] == "C"
-        else [ncs_seq, ncs_seq, cargo_sense, link_seq, tp_seq]
-    )
+    slot_order = [slot_seq(cargo_slots[1]), slot_seq(cargo_slots[2]), cargo_sense, slot_seq(cargo_slots[4]), slot_seq(cargo_slots[5])]
     cargo_module_seq = "".join(reverse_complement(part) for part in slot_order)
     # NC-Modul (Sense): Slots 1, 2, Shell, 4, 5 in Typ-Reihenfolge.
-    nc_module_seq = slot_seq(1) + slot_seq(2) + shell_seq + slot_seq(4) + slot_seq(5)
-    add(f"Level1_Cargo-Module_{design['fusion']}-terminal [{design['cargo']['label']}]", cargo_module_seq)
+    nc_module_seq = slot_seq(nc_slots[1]) + slot_seq(nc_slots[2]) + shell_seq + slot_seq(nc_slots[4]) + slot_seq(nc_slots[5])
+    add(f"Level1_Cargo-Module [{design['cargo']['label']}]", cargo_module_seq)
     add("Level1_Nanocompartment-Module [" + nc["shell"] + "]", nc_module_seq)
 
     level2 = cargo_module_seq + promo_seq + nc_module_seq

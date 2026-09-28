@@ -5,16 +5,15 @@
  *   customNanocompartment?: { label?: string, tp?: string, seq: string },
  *                              // shell CDS + targeting peptide when nanocompartment is 'custom'
  *   cargoSeq: string,          // decision 2 (raw CDS, no trailing stop codon)
- *   fusion: 'C' | 'N',         // decision 3
  *   cargoLabel?: string,
- *   linker?: string,           // linker id (default: first in library)
  *   promoter?: string,         // promoter id (default: GAL1-10)
- *   ncSlots?: {                // what sits next to the shell (default: NCS spacer everywhere)
- *     "1" | "2" | "4" | "5": { kind: 'ncs' }
- *                          | { kind: 'linker', id: string }
- *                          | { kind: 'marker', id: string }        // spycatcher | spytag
- *                          | { kind: 'custom', label?: string, seq: string }
- *   }
+ *   cargoSlots?: Slots,        // what sits around the cargo (Type 0.1/0.2 behind it, 0.4/0.5 in front)
+ *   ncSlots?: Slots,           // what sits around the shell (default: NCS spacer everywhere)
+ *   // Slots = { "1" | "2" | "4" | "5": { kind: 'ncs' } | { kind: 'ncsstop' }
+ *   //                                | { kind: 'tp' }                    // cargo module, Type 0.1 or 0.5 only
+ *   //                                | { kind: 'linker', id: string }
+ *   //                                | { kind: 'marker', id: string }    // spycatcher | spytag
+ *   //                                | { kind: 'custom', label?: string, seq: string } }
  *   fasta?: boolean            // also return a FASTA export string
  * }
  *
@@ -27,6 +26,12 @@
  * thermodynamics (plus q5AnnealingTemp), 'wallace' means primer3 was not
  * available on the server and the values are rough estimates — `warnings`
  * then says so.
+ *
+ * `cargo.mrnaStructure` (needs ViennaRNA, see Biologik/requirements.txt) checks the cargo's own
+ * mRNA for a self-fold (hairpin) and a self-dimer (two copies hybridising) — either can block a
+ * scanning ribosome. `available: false` with a `reason` means it was skipped (no ViennaRNA, or the
+ * sequence was too long/short); otherwise `selfFold`/`selfDimer` each carry a `deltaG` (kcal/mol)
+ * and, for sequences short enough for the shuffled-background z-score, a `risk` grade.
  */
 import { runBiologik } from '../utils/biologik.js'
 
@@ -39,8 +44,7 @@ export default defineEventHandler(async (event) => {
       customNanocompartment: body.customNanocompartment,
       cargoSeq: body.cargoSeq,
       cargoLabel: body.cargoLabel,
-      fusion: body.fusion,
-      linker: body.linker,
+      cargoSlots: body.cargoSlots,
       promoter: body.promoter,
       ncSlots: body.ncSlots,
       fasta: Boolean(body.fasta),
