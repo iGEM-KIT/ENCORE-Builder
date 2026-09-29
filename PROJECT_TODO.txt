@@ -87,21 +87,20 @@ interne Schnittstellen geprueft.
        - modules / level0_parts (typ, rolle, overhang5, overhang3, seq)
        - linkers, promoters, surface_markers
        - saved_designs / constructs (Nutzer-Designs speichern)
-[ ] prisma/, shared/{constants,types,validation}, server/{db,repositories,
-    services,middleware}, app/stores sind reines .gitkeep-Geruest ohne Code.
-    -> Vor dem naechsten grossen Schritt entscheiden: wird das gebraucht
-    (echte DB, gespeicherte Designs, Nutzerkonten), oder weg damit? Aktuell
-    macht es das Repo nur groesser, ohne dass irgendetwas davon genutzt wird.
+[ ] Das leere .gitkeep-Geruest (prisma/, shared/{constants,types,validation},
+    server/{repositories,services,middleware,api/auth,api/user},
+    app/{assets,components,composables,layouts,middleware,pages,plugins,
+    stores,types,utils}) wurde entfernt, da nirgends genutzt. Bei Bedarf
+    (echte DB, gespeicherte Designs, Nutzerkonten, Auth) einfach neu anlegen.
 [ ] Falls DB kommt: get_libraries() (data.py) so umstellen, dass es aus der
     DB liest; data.py wird dann zu Seed-Daten.
 
 
 -------------------------------------------------------------------------------
- 4. AUTH / USER  (leer, nur bei Bedarf)
+ 4. AUTH / USER  (existiert nicht, nur bei Bedarf)
 -------------------------------------------------------------------------------
-[ ] server/api/auth/ und server/api/user/ sind leer. Nur noetig, wenn Nutzer
-    Designs speichern oder neue NCs beitragen koennen sollen. Sonst weglassen
-    (siehe Punkt 3).
+[ ] Es gibt aktuell keine Auth/User-Endpunkte. Nur anlegen, wenn Nutzer
+    Designs speichern oder neue NCs beitragen koennen sollen (siehe Punkt 3).
 
 
 -------------------------------------------------------------------------------
