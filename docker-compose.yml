@@ -4,3 +4,19 @@ services:
     ports:
       - "3000:3000"
     restart: unless-stopped
+    environment:
+      # Optional: point at the commec sidecar below once it's running (either
+      # profile). Unset (default) means biosecurity screening is skipped.
+      - COMMEC_URL=${COMMEC_URL:-}
+
+  # Biosecurity screening sidecar (COMMEC v2 / "Common Mechanism", IBBIS) —
+  # NOT started by `docker compose up` on its own. It needs ~40GB of reference
+  # databases and takes a while to build/download, so it's opt-in via a
+  # profile: `docker compose --profile biosecurity up --build`. See
+  # README.md "Biosecurity screening" before enabling this.
+  commec:
+    build: ./commec-service
+    profiles: ["biosecurity"]
+    ports:
+      - "8787:8787"
+    restart: unless-stopped

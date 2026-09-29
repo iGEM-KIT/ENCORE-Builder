@@ -121,7 +121,29 @@ interne Schnittstellen geprueft.
 
 
 -------------------------------------------------------------------------------
- 6. VISUALISIERUNG / EXPORT (Feinschliff)
+ 6. BIOSECURITY SCREENING (COMMEC) — Pipeline steht, ungetestet
+-------------------------------------------------------------------------------
+Vor Schritt 4 wird jede selbst eingegebene Sequenz automatisch per COMMEC v2
+("Common Mechanism", IBBIS) gescreent (server/utils/commec.js, server/api/
+cargo/screen.post.js, commec-service/). Standardmaessig AUS (kein COMMEC_URL
+gesetzt) — siehe README.md "Biosecurity screening".
+
+[ ] commec-service/app.py wurde anhand der oeffentlichen COMMEC-Doku gebaut
+    (CLI-Flags, JSON-Struktur), konnte aber MANGELS Netzwerkzugriff auf die
+    ~40GB-Referenzdatenbanken nicht gegen einen echten `commec screen`-Lauf
+    getestet werden. Vor produktivem Einsatz mit einer bekannten Testsequenz
+    verifizieren (siehe commec-service/README.md).
+[ ] `_find_status()` in app.py durchsucht das Ergebnis-JSON defensiv nach
+    einem `screen_status`-Feld statt eine feste Verschachtelung anzunehmen —
+    das absichtlich, weil das exakte Schema nicht verifiziert werden konnte.
+    Sobald ein echter Lauf vorliegt: Struktur pruefen und ggf. vereinfachen.
+[ ] Aktuell wird nur der Cargo/eigene-Sequenz-Text gescreent, nicht die
+    fertig zusammengesetzten Level-1/2-Konstrukte (Fusion mit TP/Linker/NCS).
+    Falls gewuenscht: auch die assemblierte Sequenz zusaetzlich screenen.
+
+
+-------------------------------------------------------------------------------
+ 7. VISUALISIERUNG / EXPORT (Feinschliff)
 -------------------------------------------------------------------------------
 [ ] Level-2-Plasmidkarte (index.html, renderPlasmid): Origin- und
     Marker-Groessen sind Platzhalter, bis die finale pESC-Variante feststeht.

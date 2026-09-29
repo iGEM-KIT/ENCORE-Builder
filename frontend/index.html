@@ -513,6 +513,31 @@
   .mrna-inline .mrna-spin{width:11px;height:11px;border-radius:50%;border:2px solid var(--line);border-top-color:var(--teal-deep);flex:none;animation:mrnaspin .7s linear infinite}
   @keyframes mrnaspin{to{transform:rotate(360deg)}}
 
+  /* Biosecurity screening (COMMEC) — same low/moderate/high badge language as
+     the mRNA risk chips, reused here for Pass/Warning/Flag so the two checks
+     read as one visual system. */
+  .biosec-badge{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:12px;padding:3px 9px;border-radius:999px}
+  .biosec-badge.low{background:rgba(0,158,115,.14);color:#0a6b4a}
+  .biosec-badge.moderate{background:rgba(230,159,0,.16);color:#8a5a00}
+  .biosec-badge.high{background:rgba(213,94,0,.16);color:#9a4100}
+  .biosec-badge.na{background:var(--card-2);color:var(--muted)}
+  [data-theme="dark"] .biosec-badge.low{background:rgba(0,158,115,.22);color:#7ee0bd}
+  [data-theme="dark"] .biosec-badge.moderate{background:rgba(230,159,0,.22);color:#f0c060}
+  [data-theme="dark"] .biosec-badge.high{background:rgba(213,94,0,.22);color:#f0a883}
+  #biosecNote{margin-top:10px}
+
+  .modal-backdrop{position:fixed;inset:0;background:rgba(4,10,8,.55);z-index:80;display:none;align-items:center;justify-content:center;padding:20px}
+  .modal-backdrop.show{display:flex}
+  .modal{background:var(--card);border:1px solid var(--line);border-radius:16px;max-width:560px;width:100%;max-height:86vh;overflow-y:auto;padding:22px 24px}
+  .modal h3{margin:0 0 4px;font-size:18px;display:flex;align-items:center;gap:9px}
+  .modal .modal-sub{margin:0 0 16px;color:var(--muted);font-size:13px}
+  .biosec-hit{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-bottom:10px}
+  .biosec-hit h4{margin:0 0 6px;font-size:13px;font-family:'JetBrains Mono'}
+  .biosec-hit .rationale{margin-top:6px;font-size:12.5px;color:var(--ink-soft)}
+  .modal-ack{display:flex;gap:9px;align-items:flex-start;margin:16px 0;font-size:13px;line-height:1.5}
+  .modal-ack input{margin-top:3px}
+  .modal-actions{display:flex;justify-content:flex-end;gap:10px}
+
   /* ============ PLASMID ============ */
   .platrow{display:grid;grid-template-columns:360px 1fr;gap:24px;align-items:center}
   @media(max-width:760px){.platrow{grid-template-columns:1fr}}
@@ -753,6 +778,11 @@
         </div>
         <div id="body3" style="display:none">
 
+          <div class="backendnote" id="biosecNote" style="display:none">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/></svg>
+            <div id="biosecNoteText"></div>
+          </div>
+
           <!-- 4.1 Level 0/1/2 -->
           <div class="block">
             <div class="sectitle"><span class="num">4.1</span><h3>Golden Gate assembly<button class="info" data-info="levels">i</button></h3></div>
@@ -859,10 +889,28 @@
   <div class="pop-body"><h5 id="popTitle"></h5><div id="popText"></div></div>
 </div>
 
+<!-- Biosecurity screening (COMMEC) gate — appears before Step 4 if any user-entered
+     sequence is flagged. Blocks by default; the checkbox is a deliberate extra step,
+     not a silent bypass, because a "Warning" can be a shared benign virulence-factor
+     homolog rather than an actual pathogen sequence (see rationale text per hit). -->
+<div class="modal-backdrop" id="biosecModal">
+  <div class="modal">
+    <h3>⚠ Biosecurity screening flagged a sequence</h3>
+    <p class="modal-sub">Automated screening via <code>COMMEC</code> (Common Mechanism, IBBIS) found a possible match to a regulated pathogen or a known virulence factor. Review each finding below before continuing.</p>
+    <div id="biosecHits"></div>
+    <label class="modal-ack"><input type="checkbox" id="biosecAck"> I have reviewed the finding(s) above and confirm this work does not involve a pathogen or regulated agent.</label>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="biosecCancel">Back to editing</button>
+      <button class="btn btn-primary" id="biosecContinue" disabled>Continue anyway</button>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ===================== ENCORE Builder v5 — Logik ===================== */
 const $ = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
+const esc = v => String(v??'').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
 
 /* ---------- Sequenz-Helfer ---------- */
 const clean = s => (s||'').toUpperCase().replace(/[^ATGC]/g,'');
@@ -1537,11 +1585,99 @@ $('#next0').addEventListener('click', ()=>{ state.unlocked[1]=true; applyLocks()
 $('#back1').addEventListener('click', ()=>scrollToSection('sec-0'));
 $('#next1').addEventListener('click', ()=>{ state.unlocked[2]=true; applyLocks(); updateStepperLocks(); scrollToSection('sec-2'); });
 $('#back2').addEventListener('click', ()=>scrollToSection('sec-1'));
+/* ===================== Biosecurity screening (COMMEC) ===================== */
+/* Every sequence the user actually typed/pasted — cargo, a custom nanocompartment
+   shell, or a custom part in any Type 0.1/0.2/0.4/0.5 slot. Library parts (NCS,
+   linkers, markers, TP) are toolkit stock and are not screened. */
+function collectUserSequences(){
+  const items=[];
+  const cargo=clean(state.cargoSeq);
+  if(cargo) items.push({label: state.cargoLabel || 'Cargo', sequence: cargo});
+  if(state.nc && state.nc.custom){
+    const seq=clean(state.customNc.seqRaw||'');
+    if(seq) items.push({label: state.customNc.label || 'Custom nanocompartment shell', sequence: seq});
+  }
+  MOD_NAMES.forEach(mod=>{
+    const sl=slotsOf(mod);
+    SLOT_NUMBERS.forEach(n=>{
+      const c=sl[n];
+      if(c.kind!=='custom') return;
+      const seq=clean(c.seqRaw||'');
+      if(seq) items.push({label: `${(c.label||'').trim() || ('Custom part '+n)} (${MODS[mod].part} Type 0.${n})`, sequence: seq});
+    });
+  });
+  return items;
+}
+
+const biosecRiskClass = status => {
+  const s=(status||'').toLowerCase();
+  if(s==='pass'||s==='skip') return 'low';
+  if(s==='warning'||s==='mixed') return 'moderate';
+  return 'high'; // flag / error / anything unexpected — treat as the strongest signal
+};
+
+function renderBiosecNote(screening, flaggedCount){
+  const note=$('#biosecNote'), text=$('#biosecNoteText');
+  if(!screening || !screening.available){
+    note.style.display='block';
+    text.innerHTML = 'Biosecurity screening (<code>COMMEC</code>) is not configured for this deployment — sequences were not screened. See <code>COMMEC_URL</code> in the README.';
+    return;
+  }
+  note.style.display='block';
+  text.innerHTML = flaggedCount
+    ? `Biosecurity screening (<code>COMMEC</code>) flagged ${flaggedCount} sequence${flaggedCount===1?'':'s'} — reviewed and continued anyway (see the warning shown before this step).`
+    : `Biosecurity screening (<code>COMMEC</code>) passed for all ${screening.results.length} user-entered sequence${screening.results.length===1?'':'s'}.`;
+}
+
+function showBiosecModal(flagged){
+  return new Promise(resolvePromise=>{
+    $('#biosecHits').innerHTML = flagged.map(f=>`
+      <div class="biosec-hit">
+        <h4>${esc(f.label)}</h4>
+        <span class="biosec-badge ${biosecRiskClass(f.status.screen_status)}">${esc(f.status.screen_status||'Flag')}</span>
+        <div class="rationale">${esc(f.status.rationale||'No further detail was returned by the screen.')}</div>
+      </div>`).join('');
+    const ack=$('#biosecAck'), cont=$('#biosecContinue'), cancel=$('#biosecCancel'), modal=$('#biosecModal');
+    ack.checked=false; cont.disabled=true; modal.classList.add('show');
+    const onAck=()=>{ cont.disabled=!ack.checked; };
+    const cleanup=()=>{ modal.classList.remove('show'); ack.removeEventListener('change',onAck); cont.removeEventListener('click',onContinue); cancel.removeEventListener('click',onCancel); };
+    const onContinue=()=>{ cleanup(); resolvePromise(true); };
+    const onCancel=()=>{ cleanup(); resolvePromise(false); };
+    ack.addEventListener('change',onAck);
+    cont.addEventListener('click',onContinue);
+    cancel.addEventListener('click',onCancel);
+  });
+}
+
 $('#next2').addEventListener('click', async ()=>{
   const btn=$('#next2'); btn.disabled=true;
   state.promoter=$('#promoter').value;
-  try{ await compute(); } finally { refreshNext2(); }
-  state.unlocked[3]=true; applyLocks(); updateStepperLocks(); scrollToSection('sec-3');
+  const api=window.ENCORE_API;
+  const items=collectUserSequences();
+  let screening=null, proceed=true;
+  if(api && api.available && items.length){
+    const btnLabel=btn.innerHTML; btn.innerHTML='Screening for biosecurity concerns…';
+    try{
+      screening = await api.screenSequences(items);
+    }catch(err){
+      console.warn('[ENCORE] /api/cargo/screen failed — skipping biosecurity screen', err);
+      screening = {available:false};
+    }
+    btn.innerHTML=btnLabel;
+  }
+  let flaggedCount=0;
+  if(screening && screening.available){
+    const flagged = items.map((it,i)=>({label:it.label, status:screening.results[i]})).filter(f=>f.status && biosecRiskClass(f.status.screen_status)!=='low');
+    flaggedCount = flagged.length;
+    if(flagged.length) proceed = await showBiosecModal(flagged);
+  }
+  if(proceed){
+    try{ await compute(); } finally { refreshNext2(); }
+    renderBiosecNote(screening, flaggedCount);
+    state.unlocked[3]=true; applyLocks(); updateStepperLocks(); scrollToSection('sec-3');
+  } else {
+    btn.disabled=false;
+  }
 });
 $('#back3').addEventListener('click', ()=>scrollToSection('sec-2'));
 /* "New construct": wipe every input and every derived result, then start over at step 1. */
@@ -1577,9 +1713,10 @@ function resetBuilder(){
   $('#cargoModTag').textContent='';
   $('#platitle').textContent='';
   ['#ncMeta','#shellMeta','#shellStopArea','#shellMrna','#cargoMeta','#cargoStopArea','#cargoMrna','#lvl0strand','#lvl1cargo','#lvl1nc','#lvl2strand',
-   '#legend','#primers','#orderList','#orderCdsBox','#feats','#plasmid','#paraExplain','#mrnaChecks','#mrnaNote']
+   '#legend','#primers','#orderList','#orderCdsBox','#feats','#plasmid','#paraExplain','#mrnaChecks','#mrnaNote','#biosecNoteText']
     .forEach(sel=>{ const el=$(sel); if(el) el.innerHTML=''; });
   $('#mrnaBlock').style.display='none';
+  $('#biosecNote').style.display='none';
   $('#next0').disabled=true; $('#next1').disabled=true;
 
   applyLocks(); updateStepperLocks(); setActive(0); updateProgress();
@@ -2267,6 +2404,11 @@ window.ENCORE_API = (function(){
     available: false,
     libraries: () => json(base+'/libraries'),
     validateCargo: (cargoSeq, kind) => post('/cargo/validate', { cargoSeq, kind }),
+    // Biosecurity screening (COMMEC) of every user-entered sequence before the
+    // final design is computed. `sequences`: [{label, sequence}]. Gracefully
+    // reports {available:false} if no screening service is configured/reachable —
+    // see server/utils/commec.js.
+    screenSequences: (sequences) => post('/cargo/screen', { sequences }),
     design: (decisions) => post('/design', decisions),
     // Convenience: translate the prototype's `state` object into a design request.
     designFromState: (s) => post('/design', {
