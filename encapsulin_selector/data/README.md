@@ -27,8 +27,12 @@ naechsten Build ueberschrieben.
 Ein Eintrag pro Protein/UniProt-Eintrag. Direkt fuer die Suche/Filter im
 Selector genutzt: `candidate_id`, `entry_name`, `protein_name`, `organism`,
 `genus`, `strain`, `gene`, `locus_tag`, `orf_name`, `encapsulin_family`,
-`reference_assembly_id`. Der Rest sind Kuratierungs-Metadaten (Quellen,
-Vertrauenslevel, Notizen) — nuetzlich, aber optional/`null`, falls unbekannt.
+`reference_assembly_id`. `source_uniprot` wird als Link hinter dem
+`candidate_id` in der Kandidaten-Karte angezeigt, falls gesetzt — bei einer
+echten UniProt-Accession als `candidate_id` also einfach
+`https://www.uniprot.org/uniprotkb/<candidate_id>/entry` eintragen. Der Rest
+sind Kuratierungs-Metadaten (Quellen, Vertrauenslevel, Notizen) — nuetzlich,
+aber optional/`null`, falls unbekannt.
 
 `assembly_count` gehoert NICHT in diese Datei — das zaehlt der Build-Schritt
 automatisch aus den passenden Dateien in `assemblies/`.

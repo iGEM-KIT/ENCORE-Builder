@@ -147,11 +147,14 @@
       ? linked.map(a => assemblyCard(a, c.reference_assembly_id, stateMap?.get(a.assembly_id) || "")).join("")
       : `<div class="empty-state">No curated assembly record is available for this candidate in the current dataset.</div>`;
     const ids = [c.gene, c.locus_tag, c.orf_name].filter(Boolean).join(" • ");
+    const idDisplay = c.source_uniprot
+      ? `<a class="uniprot-link" href="${esc(c.source_uniprot)}" target="_blank" rel="noopener">${esc(c.candidate_id)}</a>`
+      : esc(c.candidate_id);
     return `
       <article class="candidate-card">
         <div class="candidate-head">
           <div>
-            <h2 class="candidate-title"><i>${esc(c.organism)}</i> — ${esc(c.candidate_id)}</h2>
+            <h2 class="candidate-title"><i>${esc(c.organism)}</i> — ${idDisplay}</h2>
             <p class="candidate-sub">${esc(c.protein_name)}</p>
             <div class="chips">
               ${c.strain ? `<span class="chip">${esc(c.strain)}</span>` : ""}
