@@ -104,6 +104,18 @@
     return `<div class="prop"><span class="k">${esc(label)}</span><span class="v">${esc(display(value))}</span></div>`;
   }
 
+  // structure_id can hold several semicolon-separated PDB codes (e.g. "4PT2; 7S20") —
+  // link each to its RCSB PDB entry. Assemblies have no UniProt entry of their own
+  // (UniProt indexes protein sequences, not individual experimental structures or
+  // engineered variants), so the PDB structure is the correct per-variant reference.
+  function propertyPdb(label, value) {
+    if (!value) return property(label, value);
+    const links = String(value).split(";").map(s => s.trim()).filter(Boolean)
+      .map(id => `<a class="ext-link" href="https://www.rcsb.org/structure/${esc(id)}" target="_blank" rel="noopener">${esc(id)}</a>`)
+      .join(", ");
+    return `<div class="prop"><span class="k">${esc(label)}</span><span class="v">${links}</span></div>`;
+  }
+
   function assemblyCard(a, refId, matchState="") {
     const variantChip = a.variant_status === "wild_type"
       ? `<span class="chip wt">WT</span>`
@@ -129,7 +141,7 @@
           ${property("Wall thickness", a.wall_thickness_nm === null ? null : `${a.wall_thickness_nm} nm`)}
           ${property("Inner volume", a.inner_volume_A3 === null ? null : `${a.inner_volume_A3} Å³`)}
           ${property("Tm", a.thermostability_tm_c === null ? null : `${a.thermostability_tm_c} °C`)}
-          ${property("Structure ID", a.structure_id)}
+          ${propertyPdb("Structure ID", a.structure_id)}
           ${property("Method", a.method)}
           ${property("Condition", a.condition)}
           ${property("Source", a.source)}
@@ -148,7 +160,7 @@
       : `<div class="empty-state">No curated assembly record is available for this candidate in the current dataset.</div>`;
     const ids = [c.gene, c.locus_tag, c.orf_name].filter(Boolean).join(" • ");
     const idDisplay = c.source_uniprot
-      ? `<a class="uniprot-link" href="${esc(c.source_uniprot)}" target="_blank" rel="noopener">${esc(c.candidate_id)}</a>`
+      ? `<a class="ext-link" href="${esc(c.source_uniprot)}" target="_blank" rel="noopener">${esc(c.candidate_id)}</a>`
       : esc(c.candidate_id);
     return `
       <article class="candidate-card">

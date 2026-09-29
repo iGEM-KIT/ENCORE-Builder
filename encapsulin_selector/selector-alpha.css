@@ -122,8 +122,8 @@ input:focus, select:focus { outline:3px solid var(--focus); border-color:var(--a
 .candidate-head { padding:18px 20px; display:flex; justify-content:space-between; gap:16px; align-items:flex-start; }
 .candidate-title { margin:0 0 5px; font-size:1.25rem; }
 .candidate-sub { color:var(--muted); margin:0; }
-.uniprot-link { color:var(--accent); text-decoration:none; border-bottom:1px dotted currentColor; }
-.uniprot-link:hover { text-decoration:none; border-bottom-style:solid; }
+.ext-link { color:var(--accent); text-decoration:none; border-bottom:1px dotted currentColor; }
+.ext-link:hover { text-decoration:none; border-bottom-style:solid; }
 .chips { display:flex; gap:6px; flex-wrap:wrap; margin-top:10px; }
 .chip { display:inline-flex; align-items:center; padding:4px 8px; border-radius:999px; background:var(--chip-bg); color:var(--chip-ink); font-size:.75rem; font-weight:700; }
 .chip.wt { background:var(--accent-soft); color:var(--accent); }

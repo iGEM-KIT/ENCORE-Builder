@@ -46,6 +46,12 @@ Assemblies haben (z.B. T=1 und T=3). `shell_diameter_nm` darf eine Zahl
 Build-Schritt wandelt das automatisch in die intern genutzte Min/Max/Mitte-Form
 um, dafuer muss hier nichts weiter ausgefuellt werden.
 
+Eine Assembly hat KEINEN eigenen UniProt-Eintrag (UniProt indiziert
+Proteinsequenzen, nicht einzelne experimentelle Strukturen oder Mutanten) —
+stattdessen wird `structure_id` als Link zur jeweiligen RCSB-PDB-Seite
+angezeigt, falls gesetzt. Mehrere PDB-Codes durch Semikolon trennen
+(`"4PT2; 7S20"`), jeder wird einzeln verlinkt.
+
 ## meta.json
 
 Allgemeine Beschreibung der Datenbank (Titel, Quelle, Hinweistexte). Die
