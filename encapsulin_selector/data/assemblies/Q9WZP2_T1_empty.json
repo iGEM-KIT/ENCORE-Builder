@@ -1,0 +1,20 @@
+{
+  "assembly_id": "Q9WZP2_T1_empty",
+  "candidate_id": "Q9WZP2",
+  "construct": "Enc",
+  "variant_status": "wild_type",
+  "assembly_symmetry": "icosahedral",
+  "T_number": 1,
+  "T_number_basis": "inferred_from_subunit_count",
+  "shell_subunit_count": 60,
+  "shell_diameter_nm": null,
+  "inner_diameter_nm": null,
+  "wall_thickness_nm": null,
+  "inner_volume_A3": null,
+  "thermostability_tm_c": null,
+  "condition": "recombinant cargo-free WT shell expressed in \nE. coli",
+  "method": "cryo-EM",
+  "structure_id": "7KQ5;9Y8P",
+  "source": "Wiryaman & Toor 2021; Torres et al., PDB 9Y8P, to \nbe published",
+  "notes": "Recombinant WT cargo-free shell. 7KQ5 is the high-resolution flavin-bound WT shell. 9Y8P is a later WT shell reconstruction and does not represent a distinct geometry, so both PDBs are grouped in this assembly. Nakamura et al. 2026 further showed that recombinant TmEnc can undergo acid-induced disassembly followed by reassembly upon return to neutral pH, supporting the reversible assembly behavior of the T=1 scaffold; this study used a C-terminally His-tagged construct rather than the exact WT constructs represented by 7KQ5/9Y8P."
+}

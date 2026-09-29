@@ -1,0 +1,20 @@
+{
+  "assembly_id": "Q1D6H4_T1",
+  "candidate_id": "Q1D6H4",
+  "construct": "EncA",
+  "variant_status": "wild_type",
+  "assembly_symmetry": "icosahedral",
+  "T_number": 1,
+  "T_number_basis": "directly_reported",
+  "shell_subunit_count": 60,
+  "shell_diameter_nm": 18,
+  "inner_diameter_nm": null,
+  "wall_thickness_nm": null,
+  "inner_volume_A3": "8.71 × 105",
+  "thermostability_tm_c": null,
+  "condition": "recombinant empty shell expressed in E. coli",
+  "method": "cryo-EM/structural study",
+  "structure_id": "7S21",
+  "source": "McHugh et al. 2014;Eren et al. 2022; Yadav & Beck \n2026",
+  "notes": "Shell diameter (~18 nm) and inner volume (8.71 × 10^5 Å³) from Eren et al. 2022 / 7S21. T=1 represented ~6% of EncA particles purified from M. xanthus. Among recombinant empty EncA shells expressed in E. coli, T=1 represented ~20% in McHugh et al. 2014 and ~36% in Eren et al. 2022. Recombinant T=1 shells were observed only in the absence of co-expressed cargo in Eren et al. 2022. No inner diameter or wall thickness was directly reported for the T=1 shell. Assuming a spherical cavity, a spherical-equivalent inner diameter of ~11.9 nm can be estimated from the reported inner volume (8.71 × 10^5 Å³), corresponding to an approximate wall thickness of ~3.1 nm using the ~18 nm outer diameter. Yadav & Beck 2026 demonstrated that WT EncA T=1 formation during reassembly is strongly promoted by phosphate buffer and by conditions that disfavor the competing T=3 pathway. Once formed, T=1 shells are kinetically trapped and do not interconvert with T=3 upon buffer exchange."
+}

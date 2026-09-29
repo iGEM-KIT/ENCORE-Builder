@@ -1,0 +1,20 @@
+{
+  "assembly_id": "Q9WZP2_ref",
+  "candidate_id": "Q9WZP2",
+  "construct": "Enc",
+  "variant_status": "wild_type",
+  "assembly_symmetry": "icosahedral",
+  "T_number": 1,
+  "T_number_basis": "directly_reported",
+  "shell_subunit_count": 60,
+  "shell_diameter_nm": 24,
+  "inner_diameter_nm": null,
+  "wall_thickness_nm": "2-2.5",
+  "inner_volume_A3": null,
+  "thermostability_tm_c": null,
+  "condition": "native shell purified from T. maritima with native FLP C-terminal targeting peptide bound (3DKT); recombinant WT shell coexpressed with native FLP cargo in E. coli (7MU1)",
+  "method": "X-ray crystallography / structural \nstudy",
+  "structure_id": "3DKT; 7MU1",
+  "source": "Sutter et al. 2008; LaFrance et al. 2021",
+  "notes": "Canonical WT T=1 assembly. Sutter et al. 2008 directly reported 60 shell subunits, T=1 icosahedral symmetry, a 23-24 nm \nshell diameter, and a 2-2.5 nm shell thickness. PDB 3DKT contains the native 8-residue C-terminal targeting peptide of FLP (Q9WZP3) bound to the shell; full FLP cargo was not resolved in that structure. LaFrance et al. 2021 later used cryo-EM to characterize recombinant FLP-loaded TmEnc and demonstrated symmetry-matched association of FLP decamers with shell fivefold axes; PDB 7MU1 represents the corresponding WT shell structure."
+}

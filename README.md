@@ -29,5 +29,12 @@ pnpm dev
 
 `pnpm dev` legt beim ersten Start automatisch ein `.venv` mit primer3-py an ([scripts/setup-python.mjs](scripts/setup-python.mjs)) — auch hier ist kein manuelles `pip install` nötig. Ist kein Python 3 im PATH oder schlägt die Installation fehl (z. B. fehlender C-Compiler), läuft Biologik trotzdem weiter, nur mit der Wallace-Tm-Schätzung statt primer3. Einen bestimmten Interpreter erzwingen geht über `BIOLOGIK_PYTHON=/pfad/zu/python`.
 
+## Encapsulin-Datenbank erweitern
+
+Der Encapsulin-Filter (`/selector/`) liest seine Daten aus einzelnen JSON-Dateien
+unter [encapsulin_selector/data/](encapsulin_selector/data/) — ein neues
+Encapsulin hinzuzufügen heißt: Vorlage kopieren, Felder ausfüllen, `pnpm dev`
+starten. Siehe [encapsulin_selector/data/README.md](encapsulin_selector/data/README.md).
+
 # Permission
 Some might encounter troubles while pushing it to the max. How weird.

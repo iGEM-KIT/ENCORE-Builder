@@ -1,0 +1,20 @@
+{
+  "assembly_id": "D0LZ74_T1_empty",
+  "candidate_id": "D0LZ74",
+  "construct": "Enc",
+  "variant_status": "wild_type",
+  "assembly_symmetry": "icosahedral",
+  "T_number": 1,
+  "T_number_basis": "other_supported_inference",
+  "shell_subunit_count": 60,
+  "shell_diameter_nm": 21,
+  "inner_diameter_nm": null,
+  "wall_thickness_nm": null,
+  "inner_volume_A3": null,
+  "thermostability_tm_c": null,
+  "condition": "recombinant cargo-free WT shell expressed in E. coli",
+  "method": "negative-stain TEM",
+  "structure_id": null,
+  "source": "Ross et al. 2022",
+  "notes": "Recombinant cargo-free WT Empty-Enc formed homogeneous regular nanocompartments with an average diameter of approximately 21 nm, indistinguishable in overall size from the EncFtn-loaded particles. No separate high-resolution cryo-EM/PDB structure was reported for the empty sample. The T=1, 60-subunit icosahedral assignment is inherited from the structurally resolved WT Loaded-Enc shell and the matching shell morphology; it was not independently established by subunit counting in the Empty-Enc TEM sample."
+}

@@ -1,0 +1,20 @@
+{
+  "assembly_id": "Q2RVS0_ref",
+  "candidate_id": "Q2RVS0",
+  "construct": "R. rubrum encapsulin",
+  "variant_status": "wild_type",
+  "assembly_symmetry": "icosahedral",
+  "T_number": 1,
+  "T_number_basis": "inferred_from_subunit_count",
+  "shell_subunit_count": 60,
+  "shell_diameter_nm": 24.6,
+  "inner_diameter_nm": null,
+  "wall_thickness_nm": null,
+  "inner_volume_A3": null,
+  "thermostability_tm_c": null,
+  "condition": "recombinant cargo-free WT R. rubrum \nencapsulin expressed in E. coli; empty/apo shell",
+  "method": "negative-stain TEM; cryo-EM",
+  "structure_id": "9RY4",
+  "source": "He et al. 2016; McIver et al. 2026",
+  "notes": "Canonical recombinant cargo-free WT T=1 R. rubrum encapsulin assembly. He et al. 2016 measured empty recombinant \nparticles at 24.6 ± 2.0 nm by negative-stain TEM. McIver et al. 2026 resolved the empty shell by cryo-EM as an icosahedral homo-60-mer at 2.0 Å (PDB 9RY4 / EMD-54372); T=1 is assigned from the experimentally established 60-subunit icosahedral architecture. PDB 9RY7 / EMD-54373 is a focused closed five-fold pentamer derived from the same empty cage and is treated as a local pore structure rather than a separate assembly."
+}

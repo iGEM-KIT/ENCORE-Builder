@@ -1,0 +1,20 @@
+{
+  "assembly_id": "A0A0F5HPP7_T4GALA_T4",
+  "candidate_id": "A0A0F5HPP7",
+  "construct": "T4GALA E-loop insertion variant",
+  "variant_status": "engineered",
+  "assembly_symmetry": "icosahedral",
+  "T_number": 4,
+  "T_number_basis": "directly_reported",
+  "shell_subunit_count": 240,
+  "shell_diameter_nm": 42,
+  "inner_diameter_nm": null,
+  "wall_thickness_nm": null,
+  "inner_volume_A3": null,
+  "thermostability_tm_c": null,
+  "condition": "recombinant cargo-free T4GALA engineered shell expressed in E. coli; trigger-responsive disassembly/reassembly",
+  "method": "cryo-EM; TEM; DLS",
+  "structure_id": "7MH2",
+  "source": "Jones et al. 2021",
+  "notes": "Engineered E-loop insertion variant designed for triggered reversible disassembly. T4GALA retains the global T=4 240-mer architecture and is approximately 42 nm in diameter, nearly identical to WT QtEnc, but cryo-EM shows substantial loss of ordered density around the engineered E-loop/GALA insertion site, consistent with increased local structural dynamics. PDB 7MH2 / EMD-23834."
+}

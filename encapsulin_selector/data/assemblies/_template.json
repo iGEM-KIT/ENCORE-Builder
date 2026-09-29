@@ -1,0 +1,20 @@
+{
+  "assembly_id": "P12345_T1",
+  "candidate_id": "P12345",
+  "construct": "EncX",
+  "variant_status": "wild_type",
+  "assembly_symmetry": "icosahedral",
+  "T_number": 1,
+  "T_number_basis": "directly_reported",
+  "shell_subunit_count": 60,
+  "shell_diameter_nm": 24,
+  "inner_diameter_nm": null,
+  "wall_thickness_nm": null,
+  "inner_volume_A3": null,
+  "thermostability_tm_c": null,
+  "condition": null,
+  "method": null,
+  "structure_id": null,
+  "source": "Author et al. Year",
+  "notes": null
+}

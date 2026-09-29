@@ -1,0 +1,20 @@
+{
+  "assembly_id": "D0LZ74_ref",
+  "candidate_id": "D0LZ74",
+  "construct": "Enc",
+  "variant_status": "wild_type",
+  "assembly_symmetry": "icosahedral",
+  "T_number": 1,
+  "T_number_basis": "inferred_from_subunit_count",
+  "shell_subunit_count": 60,
+  "shell_diameter_nm": 21,
+  "inner_diameter_nm": null,
+  "wall_thickness_nm": null,
+  "inner_volume_A3": null,
+  "thermostability_tm_c": null,
+  "condition": "recombinant WT shell coexpressed with native EncFtn cargo in E. coli; EncFtn-loaded",
+  "method": "cryo-EM; negative-stain TEM",
+  "structure_id": "7ODW",
+  "source": "Ross et al. 2022",
+  "notes": "Canonical WT native-cargo-loaded T=1 assembly. Loaded-Enc formed regular nanocompartments approximately 21 nm in diameter. Cryo-EM directly resolved a T=1 icosahedral shell composed of 60 Enc subunits. Asymmetric reconstruction revealed four EncFtn decamers arranged tetrahedrally inside the shell, producing a symmetry mismatch with the icosahedral cage. PDB 7OE2 and 7OEU represent closed and open fivefold-pore pentamer conformations derived from symmetry expansion of this same Loaded-Enc assembly and are therefore handled in pore_records rather than as separate assemblies."
+}

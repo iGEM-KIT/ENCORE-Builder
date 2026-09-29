@@ -1,0 +1,20 @@
+{
+  "assembly_id": "Q1Q6L7_delta_cyt",
+  "candidate_id": "Q1Q6L7",
+  "construct": "cEnc ΔCyt lacking the N-terminal diheme cytochrome domain",
+  "variant_status": "engineered",
+  "assembly_symmetry": "icosahedral",
+  "T_number": 3,
+  "T_number_basis": "inferred_from_subunit_count",
+  "shell_subunit_count": 180,
+  "shell_diameter_nm": 29,
+  "inner_diameter_nm": null,
+  "wall_thickness_nm": null,
+  "inner_volume_A3": null,
+  "thermostability_tm_c": null,
+  "condition": "recombinant engineered cEnc ΔCyt expressed anaerobically in E. coli BL21(DE3) Sta\nr; predicted signal peptide and N-terminal diheme cytochrome domain removed; cargo-free shell characterization",
+  "method": "negative-stain TEM; SDS-PAGE",
+  "structure_id": null,
+  "source": "Giessen & Silver 2017",
+  "notes": "Structurally distinct engineered ΔCyt assembly. Removal of the N-terminal diheme cytochrome domain produced stable \n~29 nm capsids compared with 33 nm WT cEnc, showing that the native fusion domain influences global shell size. The study reports ~15 co-purifying NIR copies per 180-mer ΔCyt capsid when the isolated NIR cargo domain was coexpressed; 180 shell subunits are therefore recorded and T=3 is inferred from the 180-mer icosahedral architecture. The isolated NIR-loaded condition is not treated as a separate assembly because full-length NIR-HAO was insoluble and no distinct cage architecture was demonstrated."
+}

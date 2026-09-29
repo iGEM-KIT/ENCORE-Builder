@@ -1,0 +1,20 @@
+{
+  "assembly_id": "A0A0F5HPP7_Letter11_T3",
+  "candidate_id": "A0A0F5HPP7",
+  "construct": "Letter11 (11-residue deletion)",
+  "variant_status": "engineered",
+  "assembly_symmetry": "icosahedral",
+  "T_number": 3,
+  "T_number_basis": "directly_reported",
+  "shell_subunit_count": 180,
+  "shell_diameter_nm": null,
+  "inner_diameter_nm": null,
+  "wall_thickness_nm": null,
+  "inner_volume_A3": null,
+  "thermostability_tm_c": null,
+  "condition": "recombinant homomeric Letter11 pore-deletion variant expressed and purified from E. coli; T=3 fraction of dimorphic population",
+  "method": "cryo-EM; SEC",
+  "structure_id": "9ZW4",
+  "source": "Siddiquee et al. 2026 (bioRxiv preprint)",
+  "notes": "Directed-evolution-derived 11-residue deletion variant. Letter11 forms a dimorphic homomeric population containing approximately 70% T=4 particles and approximately 30% T=3 particles. This row represents the 180-subunit T=3 fraction and constitutes the first reported access to a latent T=3 architecture for QtEnc. PDB 9ZW4 / EMD-74905 was determined at 2.42 Å."
+}

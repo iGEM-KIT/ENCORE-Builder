@@ -7,9 +7,10 @@
   },
   "packageManager": "pnpm@9.15.9",
   "scripts": {
-    "build": "nuxt build",
-    "dev": "node scripts/setup-python.mjs && nuxt dev",
-    "generate": "nuxt generate",
+    "build": "node scripts/build-selector-data.mjs && nuxt build",
+    "build:selector-data": "node scripts/build-selector-data.mjs",
+    "dev": "node scripts/setup-python.mjs && node scripts/build-selector-data.mjs && nuxt dev",
+    "generate": "node scripts/build-selector-data.mjs && nuxt generate",
     "preview": "nuxt preview",
     "start": "node .output/server/index.mjs",
     "postinstall": "nuxt prepare"

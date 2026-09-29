@@ -1,0 +1,20 @@
+{
+  "assembly_id": "Q9WZP2_S7D_T1",
+  "candidate_id": "Q9WZP2",
+  "construct": "S7D pore variant",
+  "variant_status": "engineered",
+  "assembly_symmetry": "icosahedral",
+  "T_number": 1,
+  "T_number_basis": "inferred_from_subunit_count",
+  "shell_subunit_count": 60,
+  "shell_diameter_nm": 24,
+  "inner_diameter_nm": null,
+  "wall_thickness_nm": null,
+  "inner_volume_A3": null,
+  "thermostability_tm_c": null,
+  "condition": "recombinant cargo-free pore-engineered shell expressed in E. coli",
+  "method": "cryo-EM; negative-stain TEM; biophysical characterization",
+  "structure_id": "7LII",
+  "source": "Adamson et al. 2022",
+  "notes": "Engineered pore-loop deletion variant. Intact T=1 shell retained. Fivefold pore diameter ~10.1 Å was calculated from the cryo-EM structure, not directly measured. Shell diameter of 24 nm observed by negative-stain TEM."
+}

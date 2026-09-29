@@ -1,0 +1,20 @@
+{
+  "assembly_id": "Q1D6H4_3xHis_Tet",
+  "candidate_id": "Q1D6H4",
+  "construct": "3×His-MxEnc (K199H/T200H/G201H)",
+  "variant_status": "engineered",
+  "assembly_symmetry": "tetrahedral",
+  "T_number": null,
+  "T_number_basis": "not_applicable",
+  "shell_subunit_count": 36,
+  "shell_diameter_nm": null,
+  "inner_diameter_nm": null,
+  "wall_thickness_nm": null,
+  "inner_volume_A3": "3.0004 × 105",
+  "thermostability_tm_c": null,
+  "condition": "recombinant cargo-free mutant shell expressed in \nE. coli",
+  "method": "cryo-EM / structural study",
+  "structure_id": "8V4Q",
+  "source": "Szyszka et al. 2024",
+  "notes": "36-mer assembly with tetrahedral symmetry rather than icosahedral symmetry; therefore T-number is not applicable. \nCoexists with the T=1 60-mer 3×His assembly."
+}

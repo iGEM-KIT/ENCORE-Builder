@@ -1,0 +1,20 @@
+{
+  "assembly_id": "Q55032_T1_empty",
+  "candidate_id": "Q55032",
+  "construct": "SrpI shell",
+  "variant_status": "wild_type",
+  "assembly_symmetry": "icosahedral",
+  "T_number": 1,
+  "T_number_basis": "inferred_from_subunit_count",
+  "shell_subunit_count": 60,
+  "shell_diameter_nm": null,
+  "inner_diameter_nm": null,
+  "wall_thickness_nm": null,
+  "inner_volume_A3": null,
+  "thermostability_tm_c": null,
+  "condition": "recombinant cargo-free WT SrpI shell expressed in E. coli; denatured in 6 M GuHCl and refolded in vitro in the absence of CyD; apo/empty",
+  "method": "cryo-EM; negative-stain TEM",
+  "structure_id": "6X8T",
+  "source": "Nichols/LaFrance et al. 2021",
+  "notes": "Experimentally prepared cargo-free apo-SrpI assembly. PDB 6X8T / EMD-22095 represents the cargo-free apo-SrpI shell and is an icosahedral homo-60-mer. T=1 is inferred from the experimentally established 60-subunit icosahedral architecture; the paper directly reports T=1 for SrpI but does not separately state the apo-state T-number. Negative-stain TEM showed no internal cargo density, and the apo shell density was reported to be indistinguishable from the holo shell. No separate apo shell diameter was explicitly reported, so shell_diameter_nm is left blank rather than inheriting the 24.5 nm value from the holo structure. The C-terminal expression tag present in the structural construct is not treated as a separate assembly."
+}

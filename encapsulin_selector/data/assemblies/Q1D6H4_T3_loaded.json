@@ -1,0 +1,20 @@
+{
+  "assembly_id": "Q1D6H4_T3_loaded",
+  "candidate_id": "Q1D6H4",
+  "construct": "EncA",
+  "variant_status": "wild_type",
+  "assembly_symmetry": "icosahedral",
+  "T_number": 3,
+  "T_number_basis": "directly_reported",
+  "shell_subunit_count": 180,
+  "shell_diameter_nm": 32,
+  "inner_diameter_nm": null,
+  "wall_thickness_nm": null,
+  "inner_volume_A3": null,
+  "thermostability_tm_c": null,
+  "condition": "recombinant SNAP-tag-TP-loaded shell expressed\n in E. coli",
+  "method": "cryo-EM/structural study",
+  "structure_id": "8TK7",
+  "source": "Kwon et al. 2023",
+  "notes": "Highly cargo-loaded WT T=3 shell. SNAP-tag-TP occupancy was ~95%, corresponding to >170 occupied TP-binding sites\n out of 180. High cargo loading was also associated with distorted, expanded and fused shell particles."
+}

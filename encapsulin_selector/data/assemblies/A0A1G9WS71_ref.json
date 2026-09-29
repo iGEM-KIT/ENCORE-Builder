@@ -1,0 +1,20 @@
+{
+  "assembly_id": "A0A1G9WS71_ref",
+  "candidate_id": "A0A1G9WS71",
+  "construct": "DendroEnc shell",
+  "variant_status": "wild_type",
+  "assembly_symmetry": "icosahedral",
+  "T_number": 4,
+  "T_number_basis": "directly_reported",
+  "shell_subunit_count": 240,
+  "shell_diameter_nm": 40,
+  "inner_diameter_nm": null,
+  "wall_thickness_nm": null,
+  "inner_volume_A3": null,
+  "thermostability_tm_c": null,
+  "condition": "recombinant cargo-free WT DendroEnc expressed in E. coli; purified assembled shell",
+  "method": "cryo-EM",
+  "structure_id": "9I8E",
+  "source": "Pecanac et al. 2025",
+  "notes": "Canonical WT cargo-free T=4 DendroEnc assembly. Pecanac et al. 2025 directly reported a ~40 nm icosahedral shell composed of 240 subunits, resolved at 3.4 Å (PDB 9I8E / EMD-52715). The WT shell has an open 5-fold pore of ~10 Å, a nearly closed 6-fold pore, and an additional triangular pore. Heterologous CyanoPOX- and PTDH-mFMO-loaded WT preparations are not treated as separate assemblies because no distinct global shell architecture was demonstrated."
+}

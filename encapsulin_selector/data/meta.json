@@ -1,0 +1,6 @@
+{
+  "title": "Open Encapsulin Selector — Alpha",
+  "source_file": "open_encapsulin_databank_08_09.xlsx",
+  "status_note": "This selector is based on a continuously curated experimental encapsulin dataset. Some properties, particularly pore and evidence annotations, are still being expanded.",
+  "alpha_policy": "Physical filtering uses the assemblies sheet. Candidate-level search uses databank. Incomplete pore/evidence/audit sheets are not used for hard filtering."
+}

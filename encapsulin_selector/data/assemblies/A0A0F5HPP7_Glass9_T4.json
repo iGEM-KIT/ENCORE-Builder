@@ -1,0 +1,20 @@
+{
+  "assembly_id": "A0A0F5HPP7_Glass9_T4",
+  "candidate_id": "A0A0F5HPP7",
+  "construct": "Glass9 (9-residue deletion)",
+  "variant_status": "engineered",
+  "assembly_symmetry": "icosahedral",
+  "T_number": 4,
+  "T_number_basis": "directly_reported",
+  "shell_subunit_count": 240,
+  "shell_diameter_nm": null,
+  "inner_diameter_nm": null,
+  "wall_thickness_nm": null,
+  "inner_volume_A3": null,
+  "thermostability_tm_c": null,
+  "condition": "recombinant homomeric Glass9 pore-deletion variant expressed and purified from E. coli",
+  "method": "cryo-EM; SEC",
+  "structure_id": "9ZVV",
+  "source": "Siddiquee et al. 2026 (bioRxiv preprint)",
+  "notes": "Directed-evolution-derived homomeric pore-deletion variant with a 9-residue deletion. Glass9 retains the canonical T=4 240-mer architecture but exhibits substantially enlarged pores: approximately 21 Å at pentameric vertices and elongated approximately 12 × 35 Å openings at hexameric vertices. Cryo-EM structure PDB 9ZVV / EMD-74892 was determined at 2.40 Å."
+}

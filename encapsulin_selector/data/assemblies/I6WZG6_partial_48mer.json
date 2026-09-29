@@ -1,0 +1,20 @@
+{
+  "assembly_id": "I6WZG6_partial_48mer",
+  "candidate_id": "I6WZG6",
+  "construct": "Enc",
+  "variant_status": "wild_type",
+  "assembly_symmetry": "partial_icosahedral",
+  "T_number": null,
+  "T_number_basis": "not_applicable",
+  "shell_subunit_count": 48,
+  "shell_diameter_nm": null,
+  "inner_diameter_nm": null,
+  "wall_thickness_nm": null,
+  "inner_volume_A3": null,
+  "thermostability_tm_c": null,
+  "condition": "recombinant WT shell expressed in E. coli; pH 3 disassembly followed by neutral-pH reassembly; stable incomplete assembly intermediate",
+  "method": "cryo-EM",
+  "structure_id": "9GOT",
+  "source": "Berger et al. 2025",
+  "notes": "Stable incomplete WT shell assembly intermediate containing 48 Enc monomers. The particle retains an overall icosahedral-like geometry but has a single large opening caused by missing subunits on one side. Obtained after low-pH disassembly followed by neutral-pH reassembly."
+}

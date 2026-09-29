@@ -1,0 +1,20 @@
+{
+  "assembly_id": "A0A0F5HPP7_ref",
+  "candidate_id": "A0A0F5HPP7",
+  "construct": "Enc",
+  "variant_status": "wild_type",
+  "assembly_symmetry": "icosahedral",
+  "T_number": 4,
+  "T_number_basis": "directly_reported",
+  "shell_subunit_count": 240,
+  "shell_diameter_nm": 42,
+  "inner_diameter_nm": null,
+  "wall_thickness_nm": null,
+  "inner_volume_A3": null,
+  "thermostability_tm_c": "88.9",
+  "condition": "recombinant WT IMEF cargo-loaded compartment expressed in E. coli",
+  "method": "cryo-EM; thermal unfolding",
+  "structure_id": "6NJ8",
+  "source": "Giessen et al. 2019",
+  "notes": "Canonical WT cargo-loaded T=4 assembly. Giessen et al. 2019 directly reported a 240-subunit T=4 icosahedral shell approximately 42 nm in diameter and 9.6 MDa in mass. PDB 6NJ8 / EMD-9383 represents the IMEF cargo-loaded compartment; targeting-peptide density is modeled in the atomic shell structure while the full IMEF cargo is less ordered. The cargo-loaded compartment has a reported melting temperature of 88.9 °C. Compartments isolated under high-iron conditions reached 91.8 °C, but this represents increased stabilization by internal mineralized material rather than a distinct shell assembly."
+}

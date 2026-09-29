@@ -1,0 +1,20 @@
+{
+  "assembly_id": "Q1D6H4_pmut_T4",
+  "candidate_id": "Q1D6H4",
+  "construct": "Mx_pmut (ΔI195–L202 + GG)",
+  "variant_status": "engineered",
+  "assembly_symmetry": "icosahedral",
+  "T_number": 4,
+  "T_number_basis": "directly_reported",
+  "shell_subunit_count": 240,
+  "shell_diameter_nm": 39,
+  "inner_diameter_nm": null,
+  "wall_thickness_nm": null,
+  "inner_volume_A3": null,
+  "thermostability_tm_c": null,
+  "condition": "recombinant SNAP-tag-TP-loaded pore-engineered shell expressed in E. coli",
+  "method": "cryo-EM / structural study",
+  "structure_id": "9BC8",
+  "source": "Kwon et al. 2024",
+  "notes": "Cargo-loaded Mx_pmut formed T=3 and T=4 shells. T=4 represented ~25% of the sample. Cargo loading was ~97%, with approximately 240 cargo copies per T=4 shell."
+}
