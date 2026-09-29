@@ -81,7 +81,7 @@ interne Schnittstellen geprueft.
 -------------------------------------------------------------------------------
  3. DATENBANK / PERSISTENZ  (Schema ist nur Platzhalter)
 -------------------------------------------------------------------------------
-[ ] server/db/database.sql enthaelt nur eine Beispiel-Tabelle "posts".
+[ ] server/db/web_app_database.sql enthaelt nur eine Beispiel-Tabelle "posts".
     -> Echtes Schema entwerfen, falls Persistenz gebraucht wird:
        - nanocompartments (id, label, T, dia, tp, shell, shell_bp, sequenzen)
        - modules / level0_parts (typ, rolle, overhang5, overhang3, seq)
