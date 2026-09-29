@@ -584,7 +584,7 @@
     <a href="/selector/selector-alpha.html">Encapsulin Filter</a>
   </nav>
   <div class="spacer"></div>
-  <span class="commec-status checking" id="commecStatus" title="Whether the optional COMMEC biosecurity-screening sidecar is reachable right now">
+  <span class="commec-status checking" id="commecStatus" style="display:none" title="Whether the optional COMMEC biosecurity-screening sidecar is reachable right now">
     <span class="commec-dot"></span>
     <span class="commec-status-label" id="commecStatusLabel">Biosecurity screening: checking…</span>
   </span>
@@ -1108,12 +1108,16 @@ function showBuilder(){
   $('#shell').classList.add('show');
   $('#pagefoot').classList.add('show');
   $('#tabBuilder').classList.add('on');
+  // Only relevant once you're actually in the builder (it gates Step 3->4) —
+  // no point showing it on the intro or on the separate selector page.
+  $('#commecStatus').style.display='flex';
 }
 function showIntro(){
   builderStarted=false;
   $('#intro').style.display='';
   ['#sideSteps','#stepperWrap','#shell','#pagefoot'].forEach(sel=>$(sel).classList.remove('show'));
   $('#tabBuilder').classList.remove('on');
+  $('#commecStatus').style.display='none';
   window.scrollTo({top:0,behavior:'instant'});
 }
 /* Browser history: "" = intro, "#step-1".."#step-4" = builder section. */
