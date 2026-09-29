@@ -121,25 +121,39 @@ interne Schnittstellen geprueft.
 
 
 -------------------------------------------------------------------------------
- 6. BIOSECURITY SCREENING (COMMEC) — Pipeline steht, ungetestet
+ 6. BIOSECURITY SCREENING (COMMEC) — steht, end-to-end verifiziert
 -------------------------------------------------------------------------------
-Vor Schritt 4 wird jede selbst eingegebene Sequenz automatisch per COMMEC v2
+Vor Schritt 4 wird jede selbst eingegebene Sequenz automatisch per COMMEC
 ("Common Mechanism", IBBIS) gescreent (server/utils/commec.js, server/api/
 cargo/screen.post.js, commec-service/). Standardmaessig AUS (kein COMMEC_URL
 gesetzt) — siehe README.md "Biosecurity screening".
 
-[ ] commec-service/app.py wurde anhand der oeffentlichen COMMEC-Doku gebaut
-    (CLI-Flags, JSON-Struktur), konnte aber MANGELS Netzwerkzugriff auf die
-    ~40GB-Referenzdatenbanken nicht gegen einen echten `commec screen`-Lauf
-    getestet werden. Vor produktivem Einsatz mit einer bekannten Testsequenz
-    verifizieren (siehe commec-service/README.md).
-[ ] `_find_status()` in app.py durchsucht das Ergebnis-JSON defensiv nach
-    einem `screen_status`-Feld statt eine feste Verschachtelung anzunehmen —
-    das absichtlich, weil das exakte Schema nicht verifiziert werden konnte.
-    Sobald ein echter Lauf vorliegt: Struktur pruefen und ggf. vereinfachen.
+[x] commec-service/ wurde real gebaut (`docker compose --profile biosecurity
+    build commec`, commec 1.0.4) und end-to-end getestet: echter Container,
+    echter `commec setup`-Lauf (Biorisk+Low-concern, ~1.2GB), echter
+    `commec screen`-Aufruf, echtes Frontend-Warn-Modal. Positivtest mit einer
+    aus UniProt bezogenen Conotoxin-Sequenz (Q9BPJ4) korrekt als "Flag"
+    erkannt und im UI blockiert.
+[x] Die urspruengliche Annahme "40GB Datenbank" war falsch — die echte
+    COMMEC-CLI (1.0.4) bietet nur "Biorisk+Low-concern" (~1.2GB) oder volle
+    Protein-NR/Nukleotid-NT-Taxonomiedatenbanken (~530GB / ~580GB, zusammen
+    >1TB). Bewusst nur die kuratierte kleine Variante eingerichtet (siehe
+    commec-service/Dockerfile fuer die exakte, getestete Antwortsequenz an
+    das interaktive `commec setup`).
+[x] Ohne Taxonomie-Datenbanken liefert commec fuer JEDE Sequenz ohne
+    Biorisk-Treffer "screen_status: Warning" (auch fuer harmlose Gene wie
+    GFP) — das Frontend (biosecEffectiveStatus() in frontend/index.html)
+    wertet deshalb gezielt das `biorisk`-Feld aus, nicht den generischen
+    Gesamtstatus. Siehe commec-service/README.md fuer die Begruendung.
+[x] Statusanzeige im Header (naeben Dark-Mode-Button) zeigt live, ob der
+    COMMEC-Container erreichbar ist (server/api/cargo/commec-status.get.js,
+    refreshCommecStatus() im Frontend, alle 30s aktualisiert).
 [ ] Aktuell wird nur der Cargo/eigene-Sequenz-Text gescreent, nicht die
     fertig zusammengesetzten Level-1/2-Konstrukte (Fusion mit TP/Linker/NCS).
     Falls gewuenscht: auch die assemblierte Sequenz zusaetzlich screenen.
+[ ] Falls spaeter echte Taxonomie-Abdeckung gewuenscht ist: Protein-NR oder
+    Nukleotid-NT-Datenbank ergaenzen (grosser Umbau, siehe commec-service/
+    README.md "Datenbankumfang") und COMMEC_SKIP_TAXONOMY=false setzen.
 
 
 -------------------------------------------------------------------------------

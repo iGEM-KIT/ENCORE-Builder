@@ -1633,6 +1633,22 @@ const biosecRiskClass = status => {
   if(s==='warning'||s==='mixed') return 'moderate';
   return 'high'; // flag / error / anything unexpected — treat as the strongest signal
 };
+/* This deployment only has the curated biorisk+low_concern database, not the
+   ~530GB/~580GB protein/nucleotide taxonomy databases (see commec-service/
+   Dockerfile) — so protein_taxonomy/nucleotide_taxonomy always come back
+   "Skip", and commec itself then reports the overall screen_status as
+   "Warning" for EVERY sequence with no biorisk hit, including completely
+   benign genes ("risk is unknown, possibly generated in silico" — it simply
+   never got to check taxonomy). Blocking on that generic status would flag
+   every single cargo. The only step that ran against real reference data is
+   `biorisk`, so that's the actual signal to gate on whenever taxonomy was
+   skipped; fall back to the overall status if a future deployment does have
+   the taxonomy databases (protein_taxonomy/nucleotide_taxonomy no longer
+   "Skip"). */
+function biosecEffectiveStatus(status){
+  if(status.protein_taxonomy==='Skip' && status.nucleotide_taxonomy==='Skip') return status.biorisk || 'Pass';
+  return status.screen_status;
+}
 
 function renderBiosecNote(screening, flaggedCount){
   const note=$('#biosecNote'), text=$('#biosecNoteText');
@@ -1649,12 +1665,15 @@ function renderBiosecNote(screening, flaggedCount){
 
 function showBiosecModal(flagged){
   return new Promise(resolvePromise=>{
-    $('#biosecHits').innerHTML = flagged.map(f=>`
+    $('#biosecHits').innerHTML = flagged.map(f=>{
+      const eff=biosecEffectiveStatus(f.status);
+      return `
       <div class="biosec-hit">
         <h4>${esc(f.label)}</h4>
-        <span class="biosec-badge ${biosecRiskClass(f.status.screen_status)}">${esc(f.status.screen_status||'Flag')}</span>
+        <span class="biosec-badge ${biosecRiskClass(eff)}">${esc(eff||'Flag')}</span>
         <div class="rationale">${esc(f.status.rationale||'No further detail was returned by the screen.')}</div>
-      </div>`).join('');
+      </div>`;
+    }).join('');
     const ack=$('#biosecAck'), cont=$('#biosecContinue'), cancel=$('#biosecCancel'), modal=$('#biosecModal');
     ack.checked=false; cont.disabled=true; modal.classList.add('show');
     const onAck=()=>{ cont.disabled=!ack.checked; };
@@ -1685,7 +1704,7 @@ $('#next2').addEventListener('click', async ()=>{
   }
   let flaggedCount=0;
   if(screening && screening.available){
-    const flagged = items.map((it,i)=>({label:it.label, status:screening.results[i]})).filter(f=>f.status && biosecRiskClass(f.status.screen_status)!=='low');
+    const flagged = items.map((it,i)=>({label:it.label, status:screening.results[i]?.status})).filter(f=>f.status && biosecRiskClass(biosecEffectiveStatus(f.status))!=='low');
     flaggedCount = flagged.length;
     if(flagged.length) proceed = await showBiosecModal(flagged);
   }

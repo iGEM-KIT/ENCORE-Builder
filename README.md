@@ -33,18 +33,31 @@ pnpm dev
 
 Bevor der Builder in Schritt 4 das finale Design berechnet, wird jede vom
 Nutzer selbst eingegebene Sequenz (Cargo, eigene Shell, eigene Modul-Teile)
-automatisch per [COMMEC v2](https://github.com/ibbis-bio/common-mechanism)
-("Common Mechanism", IBBIS) auf Treffer gegen regulierte Pathogene oder
-bekannte Virulenzfaktoren geprüft. Ein Treffer blockiert das Design nicht
-automatisch, sondern zeigt eine Warnung mit Begründung, die der Nutzer
-explizit bestätigen muss, bevor er fortfahren kann (ein "Warning" kann ein
-gutartiges, geteiltes Sequenzmotiv sein — siehe Begründungstext pro Treffer).
+automatisch per [COMMEC](https://github.com/ibbis-bio/common-mechanism)
+("Common Mechanism", IBBIS) auf Treffer gegen eine kuratierte Liste
+bekannter Toxine, Virulenzfaktoren und regulierter Pathogene geprüft. Ein
+Treffer blockiert das Design nicht automatisch, sondern zeigt eine Warnung
+mit Begründung, die der Nutzer explizit bestätigen muss, bevor er fortfahren
+kann. Oben rechts im Header zeigt eine Statusanzeige neben dem
+Dark-Mode-Button live an, ob der Screening-Service gerade erreichbar ist
+("Biosecurity screening: on/off").
 
-**Das ist standardmäßig AUS.** COMMEC braucht Conda, BLAST/HMMER und ~40GB
-Referenzdatenbanken (~7-8GB Download) — das passt nicht ins schlanke
-Haupt-Image und wird nicht automatisch mitinstalliert (anders als
-primer3-py/ViennaRNA). Ohne konfigurierten Service läuft der Builder normal
-weiter, nur ohne dieses Screening (mit einem sichtbaren Hinweis in Schritt 4).
+**Das ist standardmäßig AUS.** COMMEC braucht Conda und BLAST/HMMER — das
+passt nicht ins schlanke Haupt-Image und wird nicht automatisch
+mitinstalliert (anders als primer3-py/ViennaRNA). Ohne konfigurierten
+Service läuft der Builder normal weiter, nur ohne dieses Screening (mit
+einem sichtbaren Hinweis in Schritt 4).
+
+**Datenbankumfang:** Das mitgelieferte `commec-service`-Image lädt beim
+Build nur die kuratierte Biorisk+Low-concern-Datenbank (~1.2 GB) — nicht die
+vollen Protein-/Nukleotid-Taxonomie-Datenbanken (zusammen über 1 TB laut
+COMMEC-eigener Größenangabe), die auf den meisten Entwicklungsrechnern
+weder auf die Platte passen noch in angemessener Zeit herunterladen. Das
+bedeutet: kein Taxonomie-Bestmatch gegen beliebige Organismen, nur direkte
+Treffer gegen die kuratierte Biorisk-Liste — Details und die Konsequenzen
+davon (u. a. wie generische "Warning"-Ergebnisse für ungeprüfte, aber
+harmlose Sequenzen gehandhabt werden) stehen in
+[commec-service/README.md](commec-service/README.md).
 
 Einrichten, wenn gewünscht:
 
@@ -53,26 +66,23 @@ docker compose --profile biosecurity up --build
 ```
 
 Das baut zusätzlich den `commec`-Container ([commec-service/](commec-service/))
-mit den vollen Referenzdatenbanken — der erste Build dauert entsprechend
-lange (grosser Download). Danach der Haupt-App sagen, wo der Service läuft:
+mit der Biorisk-Datenbank — dauert beim ersten Mal ein paar Minuten
+(Conda-Environment + ~1.2GB Download). Danach der Haupt-App sagen, wo der
+Service läuft:
 
 ```bash
 COMMEC_URL=http://localhost:8787 pnpm dev
 ```
 
 (oder `COMMEC_URL=http://commec:8787` als Umgebungsvariable für den `app`-Service
-in `docker-compose.yml`, wenn beide Container zusammen laufen). Ein einzelner
-COMMEC-Lauf kann laut IBBIS-Dokumentation von Sekunden bis zu mehreren
-Minuten dauern — das ist erwartet, siehe `COMMEC_RUN_TIMEOUT_SECONDS` in
-[commec-service/app.py](commec-service/app.py).
+in `docker-compose.yml`, wenn beide Container zusammen laufen).
 
-**Hinweis zur Testabdeckung:** Der `commec-service`-Wrapper wurde gegen die
-öffentliche COMMEC-Dokumentation gebaut (CLI-Flags, JSON-Schema), konnte in
-dieser Umgebung aber mangels Netzwerkzugriff auf die ~40GB-Datenbanken nicht
-gegen einen echten `commec screen`-Lauf getestet werden. Vor dem produktiven
-Einsatz einmal mit einer bekannten Testsequenz (z. B. aus den
-[commec-examples](https://github.com/ibbis-bio/common-mechanism/wiki/Tutorial))
-verifizieren.
+**Verifiziert:** Der komplette Ablauf (Container-Build, echter
+`commec screen`-Aufruf, Frontend-Gate inkl. Warn-Modal) wurde end-to-end
+gegen einen real gebauten und laufenden Container getestet — inklusive
+eines positiven Tests mit einer echten, aus UniProt bezogenen
+Conotoxin-Sequenz, die korrekt als "Flag" erkannt wurde und das Warn-Modal
+auslöste. Details in [commec-service/README.md](commec-service/README.md).
 
 ## Encapsulin-Datenbank erweitern
 

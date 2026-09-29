@@ -15,10 +15,17 @@ Endpunkte:
                            -> {"results": [{"available": bool, "status"?: {...}, "reason"?: str}]}
 
 `status` ist das von commec selbst gelieferte Objekt, unveraendert
-durchgereicht, z.B.:
-  {"screen_status": "Pass", "biorisk": "Pass", "protein_taxonomy": "Pass",
-   "nucleotide_taxonomy": "Pass", "low_concern": "Pass", "rationale": "..."}
-Moegliche screen_status-Werte laut Doku: Pass, Warning, Flag, Mixed, Error, Skip.
+durchgereicht, verifiziert gegen einen echten Lauf (commec 1.0.4, nur
+Biorisk+Low-concern-Datenbank, siehe Dockerfile), z.B.:
+  {"screen_status": "Warning", "biorisk": "Pass", "protein_taxonomy": "Skip",
+   "nucleotide_taxonomy": "Skip", "low_concern": "Pass",
+   "rationale": "No matches found during any stage of analysis. ..."}
+Ohne Protein-/Nukleotid-Taxonomie-Datenbanken (siehe Dockerfile) stehen
+protein_taxonomy/nucleotide_taxonomy immer auf "Skip", und eine Sequenz ohne
+jeden Treffer bekommt "Warning" (nicht "Pass") mit der obigen Begruendung —
+das ist commecs eigene, erwartete Reaktion auf einen unvollstaendigen
+Datenbanksatz, kein Fehler in diesem Wrapper. screen_status-Werte laut Doku:
+Pass, Warning, Flag, Mixed, Error, Skip.
 """
 
 from __future__ import annotations
@@ -34,6 +41,14 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 DB_DIR = os.environ.get("COMMEC_DB_DIR", "/databases")
 THREADS = os.environ.get("COMMEC_THREADS", "4")
 PORT = int(os.environ.get("PORT", "8787"))
+# The Dockerfile here only downloads the curated biorisk+low_concern set
+# (~1.2 GB) via `commec setup`, not the ~530GB protein-NR / ~580GB
+# nucleotide-NT taxonomy databases (see Dockerfile for why) — so the
+# protein/nucleotide taxonomy search steps must be skipped, or commec errors
+# looking for databases that were never downloaded. Kept as an env var, not
+# hardcoded, so a deployment that DID download nr/nt can flip this off
+# without editing code.
+SKIP_TAXONOMY = os.environ.get("COMMEC_SKIP_TAXONOMY", "true").strip().lower() not in ("false", "0", "no")
 # Ein voller Lauf (Biorisk + Protein-/Nukleotid-Taxonomie) kann laut IBBIS
 # mehrere Minuten dauern — Timeout entsprechend grosszuegig, aber nicht
 # unbegrenzt, damit eine haengende Sequenz nicht den ganzen Service blockiert.
@@ -81,9 +96,12 @@ def _screen_one(label: str, sequence: str) -> dict:
         with open(fasta_path, "w") as fh:
             fh.write(f">query_{run_id}\n{seq}\n")
 
+        cmd = ["commec", "screen", "-d", DB_DIR, fasta_path, "-o", out_prefix, "-t", str(THREADS), "-F"]
+        if SKIP_TAXONOMY:
+            cmd += ["--skip-tx", "--skip-nt"]
         try:
             proc = subprocess.run(
-                ["commec", "screen", "-d", DB_DIR, fasta_path, "-o", out_prefix, "-t", str(THREADS), "-F"],
+                cmd,
                 capture_output=True,
                 text=True,
                 timeout=RUN_TIMEOUT_SECONDS,
@@ -122,7 +140,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == "/health":
             db_ok = os.path.isdir(DB_DIR) and bool(os.listdir(DB_DIR)) if os.path.isdir(DB_DIR) else False
-            self._send_json(200, {"ok": db_ok, "detail": DB_DIR if db_ok else f"{DB_DIR} missing or empty — run `commec setup -d {DB_DIR}`."})
+            self._send_json(200, {"ok": db_ok, "detail": DB_DIR if db_ok else f"{DB_DIR} missing or empty — run `commec setup` (see Dockerfile)."})
             return
         self._send_json(404, {"error": "not found"})
 
