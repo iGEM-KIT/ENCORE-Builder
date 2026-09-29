@@ -71,12 +71,18 @@ const errors = []
 const candidateIds = new Set()
 for (const c of candidates) {
   if (!c.candidate_id) { errors.push('Ein Kandidat ohne candidate_id gefunden.'); continue }
+  if (c.candidate_id !== c.candidate_id.trim()) {
+    errors.push(`candidate_id "${c.candidate_id}" hat ein fuehrendes/anhaengendes Leerzeichen (fast immer ein Tippfehler).`)
+  }
   if (candidateIds.has(c.candidate_id)) errors.push(`candidate_id "${c.candidate_id}" kommt doppelt vor.`)
   candidateIds.add(c.candidate_id)
 }
 const assemblyIds = new Set()
 for (const a of assemblies) {
   if (!a.assembly_id) { errors.push('Eine Assembly ohne assembly_id gefunden.'); continue }
+  if (a.assembly_id !== a.assembly_id.trim()) {
+    errors.push(`assembly_id "${a.assembly_id}" hat ein fuehrendes/anhaengendes Leerzeichen (fast immer ein Tippfehler).`)
+  }
   if (assemblyIds.has(a.assembly_id)) errors.push(`assembly_id "${a.assembly_id}" kommt doppelt vor.`)
   assemblyIds.add(a.assembly_id)
   if (!candidateIds.has(a.candidate_id)) {
