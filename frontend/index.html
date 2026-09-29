@@ -1205,7 +1205,7 @@ function renderNcMeta(){
   if(n.custom){
     $('#ncMeta').innerHTML=`
     <div class="nc-tag"><span class="sw" style="background:${cvar('t1')}"></span>Targeting peptide <b>${n.tp}</b></div>
-    <div class="nc-tag"><span class="sw" style="background:${cvar('shell')}"></span>Your shell CDS <b>${n.shell}</b> · ${n.shellBp} bp</div>
+    <div class="nc-tag"><span class="sw" style="background:${cvar('shell')}"></span>Your shell CDS <b>${esc(n.shell)}</b> · ${n.shellBp} bp</div>
     <div class="nc-tag">New part — needs domestication and synthesis</div>`;
     return;
   }
@@ -1561,8 +1561,8 @@ function updateConstructStrip(){
   };
   const promoFilled = !!state.promoter;
   const seg = (p, side) => p.filled
-    ? `<div class="gs-seg ${side}" title="${p.label}" style="background:${cvar(p.kind)};color:${cink(p.kind)}"><span>${p.label}</span></div>`
-    : `<div class="gs-seg empty ${side}" title="${p.label}"><span>–</span></div>`;
+    ? `<div class="gs-seg ${side}" title="${esc(p.label)}" style="background:${cvar(p.kind)};color:${cink(p.kind)}"><span>${esc(p.label)}</span></div>`
+    : `<div class="gs-seg empty ${side}" title="${esc(p.label)}"><span>–</span></div>`;
   // Mirror the actual modules (incl. the NCS / surface slots), matching the Level diagrams.
   // Colour every slot by its Type position (Type 0.1..0.5), like the scheme figure.
   const byPos = arr => arr.map((p,i)=>({...p, kind:'t'+(i+1)}));
@@ -1728,7 +1728,7 @@ $('#restart').addEventListener('click', resetBuilder);
 function partEl(p){
   const star = p.stop ? '<span class="stopstar">*</span>' : '';
   const k = p.kind || 'ncs';
-  return `<div class="part${p.dummy?' dummy':''}" style="background:${cvar(k)};color:${cink(k)}"><span class="ptype">${p.type||''}</span><span class="plab">${p.label}${star}</span><small>${p.note||(p.dummy?'Spacer':'')}</small></div>`;
+  return `<div class="part${p.dummy?' dummy':''}" style="background:${cvar(k)};color:${cink(k)}"><span class="ptype">${p.type||''}</span><span class="plab">${esc(p.label)}${star}</span><small>${p.note||(p.dummy?'Spacer':'')}</small></div>`;
 }
 function renderStrand(elId, parts, opts={}){
   const el=$(elId);
@@ -1783,7 +1783,7 @@ function renderLevel0(elId, m){
     const k = p.kind || 'ncs';
     const star = p.stop ? '<span class="stopstar">*</span>' : '';
     return `<div class="part" style="background:${cvar(k)};color:${cink(k)}">` +
-           `<span class="ptype">${p.type||''}</span><span class="plab">${p.label}${star}</span>` +
+           `<span class="ptype">${p.type||''}</span><span class="plab">${esc(p.label)}${star}</span>` +
            `<small>${p.note||(p.dummy?'Spacer':'')}</small></div>`;
   };
   $(elId).innerHTML = `<div class="partsrow sep l0grid">` + m.l0.map((p,i)=>
@@ -2148,12 +2148,12 @@ function renderOrder(m){
   });
   list.insertAdjacentHTML('beforeend', `<div class="orderitem" style="border-color:var(--orange-deep)">
     <span class="oi-sw" style="background:${cvar('t3')}"></span>
-    <div class="oi-main"><div class="oi-name">${m.cargoLabel} (${m.cargoBp} bp)</div><div class="oi-sub">Type 0.3 · your new cargo (sense, reverse complement) — as synthesis/PCR with overhangs</div></div>
+    <div class="oi-main"><div class="oi-name">${esc(m.cargoLabel)} (${m.cargoBp} bp)</div><div class="oi-sub">Type 0.3 · your new cargo (sense, reverse complement) — as synthesis/PCR with overhangs</div></div>
     <span class="oi-badge synth">order new</span></div>`);
   const extra = newParts(m);
   extra.forEach(e=>list.insertAdjacentHTML('beforeend', `<div class="orderitem" style="border-color:var(--orange-deep)">
     <span class="oi-sw" style="background:${cvar(e.kind)}"></span>
-    <div class="oi-main"><div class="oi-name">${e.label} (${e.bp} bp)</div><div class="oi-sub">Type 0.${e.slot} · your own ${e.what}${e.antisense?' (sense, reverse complement)':''} — as synthesis/PCR with overhangs</div></div>
+    <div class="oi-main"><div class="oi-name">${esc(e.label)} (${e.bp} bp)</div><div class="oi-sub">Type 0.${e.slot} · your own ${e.what}${e.antisense?' (sense, reverse complement)':''} — as synthesis/PCR with overhangs</div></div>
     <span class="oi-badge synth">order new</span></div>`));
   list.previousElementSibling.textContent = extra.length
     ? 'Standard modules are fixed and only need to be sourced once. Your cargo and your own parts are the new parts for this construct.'
@@ -2164,7 +2164,7 @@ function renderOrder(m){
     <div class="cdsname">Cargo (sense, reverse complement) with Golden Gate overhangs<button class="info" data-info="primer">i</button></div>
     <div class="cdsseq"><span class="cds5">5′ </span><span class="oh">${CARGO_L1_FLANK[0]}</span>${cargoAs}<span class="oh">${CARGO_L1_FLANK[1]}</span><span class="cds3"> 3′</span></div>
   </div>` + extra.map(e=>`<div class="cdsbox">
-    <div class="cdsname">${e.label} (Type 0.${e.slot}${e.antisense?', sense':''}) with Golden Gate overhangs</div>
+    <div class="cdsname">${esc(e.label)} (Type 0.${e.slot}${e.antisense?', sense':''}) with Golden Gate overhangs</div>
     <div class="cdsseq"><span class="cds5">5′ </span><span class="oh">${JUNCTIONS[e.slot-1]}</span>${partSeq(e)}<span class="oh">${JUNCTIONS[e.slot]}</span><span class="cds3"> 3′</span></div>
   </div>`).join('');
 }
