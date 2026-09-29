@@ -5,9 +5,12 @@ services:
       - "3000:3000"
     restart: unless-stopped
     environment:
-      # Optional: point at the commec sidecar below once it's running (either
-      # profile). Unset (default) means biosecurity screening is skipped.
-      - COMMEC_URL=${COMMEC_URL:-}
+      # Points at the commec sidecar below by its Compose service name —
+      # resolves fine even when that container isn't running (plain
+      # `docker compose up`, no profile): the health check just fails
+      # gracefully and screening shows as "off". Override with your own
+      # COMMEC_URL if you're running commec-service elsewhere.
+      - COMMEC_URL=${COMMEC_URL:-http://commec:8787}
 
   # Biosecurity screening sidecar (COMMEC v2 / "Common Mechanism", IBBIS) —
   # NOT started by `docker compose up` on its own. It needs ~40GB of reference

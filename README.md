@@ -59,23 +59,28 @@ davon (u. a. wie generische "Warning"-Ergebnisse für ungeprüfte, aber
 harmlose Sequenzen gehandhabt werden) stehen in
 [commec-service/README.md](commec-service/README.md).
 
-Einrichten, wenn gewünscht:
+Einrichten, wenn gewünscht — mit Docker Compose reicht ein Befehl, `app` und
+`commec` finden sich automatisch über den Compose-internen Hostnamen
+(`COMMEC_URL` in `docker-compose.yml` zeigt bereits standardmäßig auf
+`http://commec:8787`):
 
 ```bash
 docker compose --profile biosecurity up --build
 ```
 
-Das baut zusätzlich den `commec`-Container ([commec-service/](commec-service/))
+Baut zusätzlich den `commec`-Container ([commec-service/](commec-service/))
 mit der Biorisk-Datenbank — dauert beim ersten Mal ein paar Minuten
-(Conda-Environment + ~1.2GB Download). Danach der Haupt-App sagen, wo der
-Service läuft:
+(Conda-Environment + ~1.2GB Download). Die Statusanzeige im Header schaltet
+auf "on", sobald der Container bereit ist.
+
+Bei lokaler Entwicklung ohne Docker (`pnpm dev`) stattdessen:
 
 ```bash
 COMMEC_URL=http://localhost:8787 pnpm dev
 ```
 
-(oder `COMMEC_URL=http://commec:8787` als Umgebungsvariable für den `app`-Service
-in `docker-compose.yml`, wenn beide Container zusammen laufen).
+(nachdem der `commec`-Container separat gestartet wurde, z. B. mit
+`docker compose --profile biosecurity up commec`).
 
 **Verifiziert:** Der komplette Ablauf (Container-Build, echter
 `commec screen`-Aufruf, Frontend-Gate inkl. Warn-Modal) wurde end-to-end
