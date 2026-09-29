@@ -24,6 +24,38 @@ function commecUrl() {
   return url ? url.replace(/\/+$/, '') : null
 }
 
+// Kurzer Timeout: das ist ein simpler "laeuft der Container und sind die
+// Datenbanken da"-Ping fuer die Status-Anzeige im Header, kein echter Screen —
+// soll die Seite beim Laden nicht spuerbar verzoegern.
+const HEALTH_TIMEOUT_MS = 4_000
+
+/**
+ * Fuer die Status-Anzeige im Header ("Biosecurity screening: on/off"): fragt
+ * GET /health des Sidecars ab, statt eine ganze Sequenz zu screenen.
+ *
+ * @returns {Promise<{available: boolean, reason?: string}>}
+ */
+export async function checkCommecHealth() {
+  const base = commecUrl()
+  if (!base) return { available: false, reason: 'COMMEC_URL is not set.' }
+
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), HEALTH_TIMEOUT_MS)
+  try {
+    const res = await fetch(`${base}/health`, { signal: controller.signal })
+    if (!res.ok) return { available: false, reason: `commec-service responded ${res.status}` }
+    const data = await res.json()
+    return data.ok ? { available: true } : { available: false, reason: data.detail || 'Databases not ready yet.' }
+  } catch (error) {
+    const reason = error.name === 'AbortError'
+      ? `commec-service at ${base} did not respond within ${HEALTH_TIMEOUT_MS / 1000}s.`
+      : `Could not reach commec-service at ${base}: ${error.message}`
+    return { available: false, reason }
+  } finally {
+    clearTimeout(timer)
+  }
+}
+
 /**
  * Mehrere Sequenzen auf einmal screenen.
  *

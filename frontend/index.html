@@ -108,6 +108,20 @@
   .hbtn:hover{background:rgba(255,255,255,.14)}
   .hbtn.on{background:var(--teal);border-color:var(--teal);color:#fff}
 
+  /* Biosecurity screening (COMMEC) status — a passive header badge, not a
+     button: it only reports whether the sidecar is reachable right now, it
+     doesn't toggle anything. Same dot-language everywhere on the site
+     (green=good, amber=checking/degraded, red=off). */
+  .commec-status{border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.06);color:#E9F2EE;
+    font-family:inherit;font-size:11.5px;font-weight:600;padding:7px 11px;border-radius:9px;
+    display:flex;align-items:center;gap:7px;cursor:default}
+  .commec-dot{width:8px;height:8px;border-radius:50%;flex:none;background:#8a8f97}
+  .commec-status.on .commec-dot{background:#00c98d;box-shadow:0 0 0 3px rgba(0,201,141,.22)}
+  .commec-status.off .commec-dot{background:#8a8f97}
+  .commec-status.checking .commec-dot{background:#e6a400;animation:commecpulse 1s ease-in-out infinite alternate}
+  @keyframes commecpulse{from{opacity:1}to{opacity:.35}}
+  @media(max-width:760px){.commec-status .commec-status-label{display:none}}
+
   /* ============ INFO-BUBBLE ============ */
   .info{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;
     background:var(--teal-soft);color:var(--teal-deep);border:0;cursor:pointer;font-family:'Space Grotesk';
@@ -570,6 +584,10 @@
     <a href="/selector/selector-alpha.html">Encapsulin Filter</a>
   </nav>
   <div class="spacer"></div>
+  <span class="commec-status checking" id="commecStatus" title="Whether the optional COMMEC biosecurity-screening sidecar is reachable right now">
+    <span class="commec-dot"></span>
+    <span class="commec-status-label" id="commecStatusLabel">Biosecurity screening: checking…</span>
+  </span>
   <button class="hbtn" id="themeToggle" title="Toggle light / dark mode">
     <svg id="themeIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/></svg>
     <span id="themeLabel">Light</span>
@@ -2357,6 +2375,33 @@ window.addEventListener('pagehide', saveSession);
 document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='hidden') saveSession(); });
 
 /* ===================== Init ===================== */
+/* Header badge: is the optional COMMEC biosecurity-screening sidecar up right
+   now? Purely informational (no click action) — refreshed on load and every
+   30s afterwards, since the container can be started/stopped independently
+   of this page being open. */
+async function refreshCommecStatus(){
+  const badge=$('#commecStatus'), label=$('#commecStatusLabel');
+  const api=window.ENCORE_API;
+  if(!api){ return; }
+  try{
+    const s = await api.commecStatus();
+    badge.classList.remove('on','off','checking');
+    if(s.available){
+      badge.classList.add('on');
+      label.textContent='Biosecurity screening: on';
+      badge.title='COMMEC is reachable and its databases are ready — cargo/module sequences are screened before Step 4.';
+    } else {
+      badge.classList.add('off');
+      label.textContent='Biosecurity screening: off';
+      badge.title=s.reason || 'COMMEC is not configured for this deployment — sequences are not screened. See README.md.';
+    }
+  }catch(err){
+    badge.classList.remove('on','off','checking');
+    badge.classList.add('off');
+    label.textContent='Biosecurity screening: off';
+    badge.title='Could not check COMMEC status.';
+  }
+}
 async function boot(){
   // Any "#step-N" link (e.g. the header's "ENCORE Builder" tab) should land straight in the
   // builder, whether or not a saved session exists — never show the intro card in that case.
@@ -2373,6 +2418,8 @@ async function boot(){
   applyLocks(); updateStepperLocks(); updateProgress();
   await restoreSession();
   console.info(`[ENCORE] libraries loaded from: ${LIB.source}`);
+  refreshCommecStatus();
+  setInterval(refreshCommecStatus, 30_000);
 }
 // window.ENCORE_API wird in einem SPAETEREN <script>-Block definiert. Wuerde
 // boot() sofort laufen, saehe loadLibraries() die API noch nicht und fiele
@@ -2409,6 +2456,9 @@ window.ENCORE_API = (function(){
     // reports {available:false} if no screening service is configured/reachable —
     // see server/utils/commec.js.
     screenSequences: (sequences) => post('/cargo/screen', { sequences }),
+    // Lightweight ping for the header badge — just "is the sidecar up and are
+    // its databases ready", no sequence involved (see server/utils/commec.js).
+    commecStatus: () => json(base+'/cargo/commec-status'),
     design: (decisions) => post('/design', decisions),
     // Convenience: translate the prototype's `state` object into a design request.
     designFromState: (s) => post('/design', {
