@@ -1,16 +1,17 @@
 /**
  * Brücke zum COMMEC-Sidecar (Biosicherheits-Screening, "Common Mechanism", IBBIS).
  *
- * COMMEC ist bewusst NICHT Teil dieses Node/Python-Stacks: es braucht Conda,
- * BLAST/HMMER und ~40GB Referenzdatenbanken (siehe commec-service/README.md) —
- * viel zu schwer, um es wie primer3-py/ViennaRNA automatisch mitzuinstallieren.
- * Stattdessen läuft es als optionaler eigener Container (commec-service/), den
- * die App per HTTP anspricht, wenn COMMEC_URL gesetzt ist.
+ * COMMEC ist bewusst NICHT Teil dieses Node/Python-Stacks: es braucht Conda
+ * und BLAST/HMMER (siehe commec-service/README.md) — viel zu schwer, um es
+ * wie primer3-py/ViennaRNA automatisch mitzuinstallieren. Stattdessen läuft
+ * es als eigener Container (commec-service/), der per Docker Compose standard-
+ * mäßig zusammen mit der App startet (COMMEC_URL zeigt per Default darauf).
  *
  * Genau wie primer3/ViennaRNA beim Fehlen degradiert dieser Check graziös:
- * ist COMMEC_URL nicht gesetzt oder der Service nicht erreichbar, wird
- * {available:false, reason} zurückgegeben statt eines Fehlers — das Design
- * bleibt nutzbar, nur ohne das Sicherheits-Screening.
+ * ist COMMEC_URL nicht gesetzt oder der Service (noch) nicht erreichbar
+ * (z. B. während der Container erst hochfährt), wird {available:false, reason}
+ * zurückgegeben statt eines Fehlers — das Design bleibt nutzbar, nur ohne das
+ * Sicherheits-Screening.
  */
 
 // Ein voller COMMEC-Lauf (Biorisk + Protein-/Nukleotid-Taxonomie) kann laut
@@ -70,7 +71,7 @@ export async function screenSequences(sequences) {
   if (!base) {
     return {
       available: false,
-      reason: 'COMMEC_URL is not set — biosecurity screening is disabled. See README.md ("Biosecurity screening") for how to run the commec-service sidecar.',
+      reason: 'COMMEC_URL is not set — biosecurity screening is disabled. See README.md ("Biosicherheits-Screening ist immer dabei") for how to run the commec-service sidecar.',
     }
   }
   if (!Array.isArray(sequences) || sequences.length === 0) {

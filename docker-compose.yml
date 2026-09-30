@@ -4,22 +4,23 @@ services:
     ports:
       - "3000:3000"
     restart: unless-stopped
+    depends_on:
+      - commec
     environment:
-      # Points at the commec sidecar below by its Compose service name —
-      # resolves fine even when that container isn't running (plain
-      # `docker compose up`, no profile): the health check just fails
-      # gracefully and screening shows as "off". Override with your own
-      # COMMEC_URL if you're running commec-service elsewhere.
+      # Points at the commec sidecar below by its Compose service name.
+      # Override with your own COMMEC_URL if you're running commec-service
+      # elsewhere.
       - COMMEC_URL=${COMMEC_URL:-http://commec:8787}
 
-  # Biosecurity screening sidecar (COMMEC v2 / "Common Mechanism", IBBIS) —
-  # NOT started by `docker compose up` on its own. It needs ~40GB of reference
-  # databases and takes a while to build/download, so it's opt-in via a
-  # profile: `docker compose --profile biosecurity up --build`. See
-  # README.md "Biosecurity screening" before enabling this.
+  # Biosecurity screening sidecar (COMMEC, "Common Mechanism", IBBIS) — starts
+  # by default with plain `docker compose up`, so screening can't accidentally
+  # be skipped. Builds a curated ~1.2GB database on first build (see
+  # commec-service/README.md), so the first `docker compose up --build` takes
+  # a while longer. Not meant to be a tamper-proof gate (it's self-hosted,
+  # open-source software — a determined user could still disable it locally),
+  # just the honest default so normal usage always includes the check.
   commec:
     build: ./commec-service
-    profiles: ["biosecurity"]
     ports:
       - "8787:8787"
     restart: unless-stopped
