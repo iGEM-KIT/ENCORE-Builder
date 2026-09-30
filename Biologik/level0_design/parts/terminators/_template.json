@@ -1,0 +1,13 @@
+{
+  "id": "example-terminator",
+  "kind": "terminator",
+  "label": "Example terminator",
+  "sequence": null,
+  "sequence_status": "missing",
+  "on_stock": null,
+  "length_bp": null,
+  "organism": null,
+  "source": null,
+  "notes": null,
+  "used_by": []
+}

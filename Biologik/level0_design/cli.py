@@ -22,7 +22,7 @@ import json
 import sys
 
 from .data import get_libraries
-from .design import build_fasta, design_construct
+from .design import build_genbank, design_construct
 from .mrna_dimer import check_mrna_structure
 from .sequence import validate_cargo
 
@@ -42,9 +42,9 @@ def cmd_design(payload: dict) -> dict:
     """Kompletter Golden-Gate-Entwurf aus den drei Entscheidungen."""
     result = design_construct(payload)
 
-    # Wenn der Nutzer FASTA angefordert hat, den Export mit anhängen.
-    if payload.get("fasta"):
-        result["fasta"] = build_fasta(result)
+    # Wenn der Nutzer GenBank angefordert hat, den Export mit anhängen.
+    if payload.get("genbank"):
+        result["genbank"] = build_genbank(result)
 
     return {"design": result}
 

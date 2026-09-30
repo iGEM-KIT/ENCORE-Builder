@@ -1,0 +1,658 @@
+{
+  "id": "pESC-HIS-lvl2-dest",
+  "kind": "level2_backbone",
+  "label": "Level 2 Destination \u2014 pESC-HIS (HIS3 marker)",
+  "sequence": "TCGCGCGTTTCGGTGATGACGGTGAAAACCTCTGACACATGCAGCTCCCGGAGACGGTCACAGCTTGTCTGTAAGCGGATGCCGGGAGCAGACAAGCCCGTCAGGGCGCGTCAGCGGGTGTTGGCGGGTGTCGGGGCTGGCTTAACTATGCGGCATCAGAGCAGATTGTACTGAGAGTGCACCATAAATTCCCGTTTTAAGAGCTTGGTGAGCGCTAGGAGTCACTGCCAGGTATCGTTTGAACACGGCATTAGTCAGGGAAGTCATAACACAGTCCTTTCCCGCAATTTTCTTTTTCTATTACTCTTGGCCTCCTCTAGTACACTCTATATTTTTTTATGCCTCGGTAATGATTTTCATTTTTTTTTTTCCCCTAGCGGATGACTCTTTTTTTTTCTTAGCGATTGGCATTATCACATAATGAATTATACATTATATAAAGTAATGTGATTTCTTCGAAGAATATACTAAAAAATGAGCAGGCAAGATAAACGAAGGCAAAGATGACAGAGCAGAAAGCCCTAGTAAAGCGTATTACAAATGAAACCAAGATTCAGATTGCGATCTCTTTAAAGGGTGGTCCCCTAGCGATAGAGCACTCGATCTTCCCAGAAAAAGAGGCAGAAGCAGTAGCAGAACAGGCCACACAATCGCAAGTGATTAACGTCCACACAGGTATAGGGTTTCTGGACCATATGATACATGCTCTGGCCAAGCATTCCGGCTGGTCGCTAATCGTTGAGTGCATTGGTGACTTACACATAGACGACCATCACACCACTGAGGACTGCGGGATTGCTCTCGGTCAAGCTTTTAAAGAGGCCCTACTGGCGCGTGGAGTAAAAAGGTTTGGATCAGGATTTGCGCCTTTGGATGAGGCACTTTCCAGAGCGGTGGTAGATCTTTCGAACAGGCCGTACGCAGTTGTCGAACTTGGTTTGCAAAGGGAGAAAGTAGGAGATCTCTCTTGCGAGATGATCCCGCATTTTCTTGAAAGCTTTGCAGAGGCTAGCAGAATTACCCTCCACGTTGATTGTCTGCGAGGCAAGAATGATCATCACCGTAGTGAGAGTGCGTTCAAGGCTCTTGCGGTTGCCATAAGAGAAGCCACCTCGCCCAATGGTACCAACGATGTTCCCTCCACCAAAGGTGTTCTTATGTAGTGACACCGATTATTTAAAGCTGCAGCATACGATATATATACATGTGTATATATGTATACCTATGAATGTCAGTAAGTATGTATACGAACAGTATGATACTGAAGATGACAAGGTAATGCATCATTCTATACGTGTCATTCTGAACGAGGCGCGCTTTCCTTTTTTCTTTTTGCTTTTTCTTTTTTTTTCTCTTGAACTCGACGGATCTATGCGGTGTGAAATACCGCACAGATGCGTAAGGAGAAAATACCGCATCAGGAAATTGTAAACGTTAATATTTTGTTAAAATTCGCGTTAAATTTTTGTTAAATCAGCTCATTTTTTAACCAATAGGCCGAAATCGGCAAAATCCCTTATAAATCAAAAGAATAGACCGAGATAGGGTTGAGTGTTGTTCCAGTTTGGAACAAGAGTCCACTATTAAAGAACGTGGACTCCAACGTCAAAGGGCGAAAAACCGTCTATCAGGGCGATGGCCCACTACGTGAACCATCACCCTAATCAAGTTTTTTGGGGTCGAGGTGCCGTAAAGCACTAAATCGGAACCCTAAAGGGAGCCCCCGATTTAGAGCTTGACGGGGAAAGCCGGCGAACGTGGCGAGAAAGGAAGGGAAGAAAGCGAAAGGAGCGGGCGCTAGGGCGCTGGCAAGTGTAGCGGTCACGCTGCGCGTAACCACCACACCCGCCGCGCTTAATGCGCCGCTACAGGGCGCGTCGCGCCATTCGCCATTCAGGCTGCGCAACTGTTGGGAAGGGCGATCGGTGCGGGCCTCTTCGCTATTACGCCAGCTGAATTGGAGCGACCTCATGCTATACCTGAGAAAGCAACCTGACCTACAGGAAAGAGTTACTCAAGAATAAGAATTTTCGTTTTAAAACCTAAGAGTCACTTTAAAATTTGTATACACTTATTTTTTTTYATAACTTATTTAATAATAAAAATCATAAATCATAAGAAATTCGCCCAATTGTCTTCTTGACGGCTAGCTCAGTCCTAGGTACAGTGCTAGCTACTAGAGATTAAAGAGGAGAAAGAGTCCCATGGCGAGCTTAGTCAAGAAAGACATGTGTGTAAAGATGACGATGGAGGGGACTGTTAATGGTTACCACTTTAAGTGTGTGGGGGAAGGTGAGGGGAAACCGTTTGAGGGAACTCAAAACATGCGTATTCGCGTCACGGAGGGTGGACCTTTACCGTTCGCTTTCGATATTCTGGCACCATGTTGCATGTATGGGAGCAAAACCTTTATTAAACATGTCAGCGGCATCCCAGACTATTTTAAAGAGTCGTTCCCCGAAGGGTTCACCTGGGAGCGTACACAGATCTTCGAGGATGGCGGAGTATTGACCGCACATCAGGATACAAGTCTTGAGGGCAATTGCTTGATTTACAAAGTGAAAGTGCTTGGGACGAATTTCCCTGCCAACGGACCCGTTATGCAAAAGAAAACTGCAGGCTGGGAGCCGTGTGTTGAGATGCTTTACCCACGTGACGGGGTATTGTGCGGCCAAAGTCTGATGGCACTGAAATGTACCGATGGTAATCACTTAACGTCGCACTTACGTACAACATACCGTAGCCGTAAGCCCTCCAACGCGGTCAACATGCCTGAGTTTCACTTTGGCGACCACCGCATTGAGATCTTAAAGGCGGAACAGGGGAAATTTTATGAACAGTATGAGTCGGCTGTGGCCCGTTACTCTGATGTGCCTGAGAAAGCAACTTAATGAGAGCTCAAAAAAAAACCCCGCCCCTGACAGGGCGGGGTTTTTTTTGAAGACAAAATGATCCGCTCTAACCGAAAAGGAAGGAGTTAGACAACCTGAAGTCTAGGTCCCTATTTATTTTTTTATAGTTATGTTAGTATTAAGAACGTTATTTATATTTCAAATTTTTCTTTTTTTTCTGTACAGACGCGTGTACGCATGTAACATTATACTGAAAACCTTGCTTGAGAAGGTTTTGGGACGCTCGAAGATCCAGCTGCATTAATGAATCGGCCAACGCGCGGGGAGAGGCGGTTTGCGTATTGGGCGCTCTTCCGCTTCCTCGCTCACTGACTCGCTGCGCTCGGTCGTTCGGCTGCGGCGAGCGGTATCAGCTCACTCAAAGGCGGTAATACGGTTATCCACAGAATCAGGGGATAACGCAGGAAAGAACATGTGAGCAAAAGGCCAGCAAAAGGCCAGGAACCGTAAAAAGGCCGCGTTGCTGGCGTTTTTCCATAGGCTCCGCCCCCCTGACGAGCATCACAAAAATCGACGCTCAAGTCAGAGGTGGCGAAACCCGACAGGACTATAAAGATACCAGGCGTTTCCCCCTGGAAGCTCCCTCGTGCGCTCTCCTGTTCCGACCCTGCCGCTTACCGGATACCTGTCCGCCTTTCTCCCTTCGGGAAGCGTGGCGCTTTCTCATAGCTCACGCTGTAGGTATCTCAGTTCGGTGTAGGTCGTTCGCTCCAAGCTGGGCTGTGTGCACGAACCCCCCGTTCAGCCCGACCGCTGCGCCTTATCCGGTAACTATCGTCTTGAGTCCAACCCGGTAAGACACGACTTATCGCCACTGGCAGCAGCCACTGGTAACAGGATTAGCAGAGCGAGGTATGTAGGCGGTGCTACAGAGTTCTTGAAGTGGTGGCCTAACTACGGCTACACTAGAAGGACAGTATTTGGTATCTGCGCTCTGCTGAAGCCAGTTACCTTCGGAAAAAGAGTTGGTAGCTCTTGATCCGGCAAACAAACCACCGCTGGTAGCGGTGGTTTTTTTGTTTGCAAGCAGCAGATTACGCGCAGAAAAAAAGGATCTCAAGAAGATCCTTTGATCTTTTCTACGGGGTCTGACGCTCAGTGGAACGAAAACTCACGTTAAGGGATTTTGGTCATGAGATTATCAAAAAGGATCTTCACCTAGATCCTTTTAAATTAAAAATGAAGTTTTAAATCAATCTAAAGTATATATGAGTAAACTTGGTCTGACAGTTACCAATGCTTAATCAGTGAGGCACCTATCTCAGCGATCTGTCTATTTCGTTCATCCATAGTTGCCTGACTCCCCGTCGTGTAGATAACTACGATACGGGAGGGCTTACCATCTGGCCCCAGTGCTGCAATGATACCGCGAGACCCACGCTCACCGGCTCCAGATTTATCAGCAATAAACCAGCCAGCCGGAAGGGCCGAGCGCAGAAGTGGTCCTGCAACTTTATCCGCCTCCATCCAGTCTATTAATTGTTGCCGGGAAGCTAGAGTAAGTAGTTCGCCAGTTAATAGTTTGCGCAACGTTGTTGCCATTGCTACAGGCATCGTGGTGTCACGCTCGTCGTTTGGTATGGCTTCATTCAGCTCCGGTTCCCAACGATCAAGGCGAGTTACATGATCCCCCATGTTGTGCAAAAAAGCGGTTAGCTCCTTCGGTCCTCCGATCGTTGTCAGAAGTAAGTTGGCCGCAGTGTTATCACTCATGGTTATGGCAGCACTGCATAATTCTCTTACTGTCATGCCATCCGTAAGATGCTTTTCTGTGACTGGTGAGTACTCAACCAAGTCATTCTGAGAATAGTGTATGCGGCGACCGAGTTGCTCTTGCCCGGCGTCAATACGGGATAATACCGCGCCACATAGCAGAACTTTAAAAGTGCTCATCATTGGAAAACGTTCTTCGGGGCGAAAACTCTCAAGGATCTTACCGCTGTTGAGATCCAGTTCGATGTAACCCACTCGTGCACCCAACTGATCTTCAGCATCTTTTACTTTCACCAGCGTTTCTGGGTGAGCAAAAACAGGAAGGCAAAATGCCGCAAAAAAGGGAATAAGGGCGACACGGAAATGTTGAATACTCATACTCTTCCTTTTTCAATATTATTGAAGCATTTATCAGGGTTATTGTCTCATGAGCGGATACATATTTGAATGTATTTAGAAAAATAAACAAATAGGGGTTCCGCGCACATTTCCCCGAAAAGTGCCACCTGAACGAAGCATCTGTGCTTCATTTTGTAGAACAAAAATGCAACGCGAGAGCGCTAATTTTTCAAACAAAGAATCTGAGCTGCATTTTTACAGAACAGAAATGCAACGCGAAAGCGCTATTTTACCAACGAAGAATCTGTGCTTCATTTTTGTAAAACAAAAATGCAACGCGAGAGCGCTAATTTTTCAAACAAAGAATCTGAGCTGCATTTTTACAGAACAGAAATGCAACGCGAGAGCGCTATTTTACCAACAAAGAATCTATACTTCTTTTTTGTTCTACAAAAATGCATCCCGAGAGCGCTATTTTTCTAACAAAGCATCTTAGATTACTTTTTTTCTCCTTTGTGCGCTCTATAATGCAGTCTCTTGATAACTTTTTGCACTGTAGGTCCGTTAAGGTTAGAAGAAGGCTACTTTGGTGTCTATTTTCTCTTCCATAAAAAAAGCCTGACTCCACTTCCCGCGTTTACTGATTACTAGCGAAGCTGCGGGTGCATTTTTTCAAGATAAAGGCATCCCCGATTATATTCTATACCGATGTGGATTGCGCATACTTTGTGAACAGAAAGTGATAGCGTTGATGATTCTTCATTGGTCAGAAAATTATGAACGGTTTCTTCTATTTTGTCTCTATATACTACGTATAGGAAATGTTTACATTTTCGTATTGTTTTCGATTCACTCTATGAATAGTTCTTACTACAATTTTTTTGTCTAAAGAGTAATACTAGAGATAAACATAAAAAATGTAGAGGTCGAGTTTAGATGCAAGTTCAAGGAGCGAAAGGTGGATGGGTAGGTTATATAGGGATATAGCACAGAGATATATAGCAAAGAGATACTTTTGAGCAATGTTTGTGGAAGCGGTATTCGCAATATTTTAGTAGCTCGTTACAGTCCGGTGCGTTTTTGGTTTTTTGAAAGTGCGTCCTCAGAGCGCTTTTGGTTTTCAAAAGCGCTCTGAAGTTCCTATACTTTCTAGAGAATAGGAACTTCGGAATAGGAACTTCAAAGCGTTTCCGAAAACGAGCGCTTCCGAAAATGCAACGCGAGCTGCGCACATACAGCTCACTGTTCACGTCGCACCTATATCTGCGTGTTGCCTGTATATATATATACATGAGAAGAACGGCATAGTGCGTGTTTATGCTTAAATGCGTACTTATATGCGTCTATTTATGTAGGATGAAAGGTAGTCTAGTACCTCCTGTGATATTATCCCATTCCATGCGGGGTATCGTATGCTTCCTTCAGCACTACCCTTTAGCTGTTCTATATGCTGCCACTCCTCAATTGGATTAGTCTCATCCTTCAATGCTATCATTTCCTTTGATATTGGATCATCTAAGAAACCATTATTATCATGACATTAACCTATAAAAATAGGCGTATCACGAGGCCCTTTCGTC",
+  "sequence_status": "real",
+  "on_stock": null,
+  "length_bp": 6544,
+  "circular": true,
+  "organism": "S. cerevisiae / E. coli shuttle vector",
+  "selection_markers": {
+    "yeast": "HIS3",
+    "bacterial": "AmpR (bla)"
+  },
+  "origins": {
+    "yeast": "2\u03bc ori (5135..6477)",
+    "bacterial": "ColE1/pMB1/pBR322/pUC ori (complement 3384..3972)",
+    "phage": "f1 ori (complement 1423..1878)"
+  },
+  "receiver_overhangs": {
+    "5_prime": {
+      "label": "BbLvl2N",
+      "location": "complement(2128..>2131)",
+      "sequence": "TTGG"
+    },
+    "3_prime": {
+      "label": "BbLvl2C",
+      "location": "2948..2951",
+      "sequence": "AATG"
+    }
+  },
+  "current_insert": {
+    "description": "Belegt aktuell die Level-2-Akzeptorstelle zwischen BbLvl2N und BbLvl2C: J23100-Promotor + B0030-RBS + tsPurple-CDS + B1006-Terminator \u2014 eine Fluoreszenzprotein-Testkassette aus der Golden-Gate-Assemblierung, mit der dieses Backbone verifiziert wurde. Ist NICHT Teil des wiederverwendbaren Backbones selbst \u2014 wird durch die BsaI-basierte Level-2-Assemblierung der eigentlichen NC-/Cargo-Module entfernt/ersetzt.",
+    "promoter": {
+      "label": "Promoter J23100",
+      "location": "2140..2174",
+      "sequence": "TTGACGGCTAGCTCAGTCCTAGGTACAGTGCTAGC"
+    },
+    "rbs": {
+      "label": "RBS B0030",
+      "location": "2186..2197",
+      "sequence": "AAAGAGGAGAAA"
+    },
+    "cds": {
+      "label": "tsPurple",
+      "location": "2205..2894",
+      "sequence": "ATGGCGAGCTTAGTCAAGAAAGACATGTGTGTAAAGATGACGATGGAGGGGACTGTTAATGGTTACCACTTTAAGTGTGTGGGGGAAGGTGAGGGGAAACCGTTTGAGGGAACTCAAAACATGCGTATTCGCGTCACGGAGGGTGGACCTTTACCGTTCGCTTTCGATATTCTGGCACCATGTTGCATGTATGGGAGCAAAACCTTTATTAAACATGTCAGCGGCATCCCAGACTATTTTAAAGAGTCGTTCCCCGAAGGGTTCACCTGGGAGCGTACACAGATCTTCGAGGATGGCGGAGTATTGACCGCACATCAGGATACAAGTCTTGAGGGCAATTGCTTGATTTACAAAGTGAAAGTGCTTGGGACGAATTTCCCTGCCAACGGACCCGTTATGCAAAAGAAAACTGCAGGCTGGGAGCCGTGTGTTGAGATGCTTTACCCACGTGACGGGGTATTGTGCGGCCAAAGTCTGATGGCACTGAAATGTACCGATGGTAATCACTTAACGTCGCACTTACGTACAACATACCGTAGCCGTAAGCCCTCCAACGCGGTCAACATGCCTGAGTTTCACTTTGGCGACCACCGCATTGAGATCTTAAAGGCGGAACAGGGGAAATTTTATGAACAGTATGAGTCGGCTGTGGCCCGTTACTCTGATGTGCCTGAGAAAGCAACTTAATGA"
+    },
+    "terminator": {
+      "label": "Terminator B1006",
+      "location": "2901..2939",
+      "sequence": "AAAAAAAAACCCCGCCCCTGACAGGGCGGGGTTTTTTTT"
+    }
+  },
+  "source": "Level 2 Destination HIS3.gb (vom Nutzer bereitgestellt), generiert per Gibson/Homology Cloning (pESC-HIS PCR Product 2, pIDMv5K-J23100-tsPurple-B1006 PCR Product). Importiert 2026-09-30.",
+  "notes": "Noch nicht in die Level-0/1/2-Design-Engine oder die Frontend-Plasmidkarte/FASTA-Export verdrahtet \u2014 siehe PROJECT_TODO.txt Abschnitt 1/7. Enthaelt die vollstaendige, roh geparste GenBank-FEATURES-Tabelle in \"features\" fuer maximale Nachvollziehbarkeit (inkl. Primer-Bindestellen und Editing-History-Eintraegen aus der urspruenglichen Geneious/SnapGene-Datei).",
+  "features": [
+    {
+      "type": "promoter",
+      "location": "317..503",
+      "qualifiers": {
+        "gene": [
+          "<i>S. cerevisiae HIS3</i>"
+        ],
+        "label": [
+          "HIS3 promoter"
+        ]
+      }
+    },
+    {
+      "type": "CDS",
+      "location": "504..1163",
+      "qualifiers": {
+        "codon_start": [
+          "1"
+        ],
+        "gene": [
+          "<i>S. cerevisiae HIS3</i>"
+        ],
+        "note": [
+          "yeast auxotrophic marker"
+        ],
+        "product": [
+          "imidazoleglycerol-phosphate dehydratase, required for histidine biosynthesis"
+        ],
+        "transl_table": [
+          "1"
+        ],
+        "Original_Translation": [
+          "MTEQKALVKRITNETKIQIAISLKGGPLAIEHSIF PEKEAEAVAEQATQSQVINVHTGIGFLDHMIHALAKHSGWSLIVECIGDLHIDDHHTT EDCGIALGQAFKEALLARGVKRFGSGFAPLDEALSRAVVDLSNRPYAVVELGLQREKV GDLSCEMIPHFLESFAEASRITLHVDCLRGKNDHHRSESAFKALAVAIREATSPNGTN DVPSTKGVLM*"
+        ],
+        "label": [
+          "HIS3"
+        ]
+      }
+    },
+    {
+      "type": "primer_bind",
+      "location": "complement(763..782)",
+      "qualifiers": {
+        "Tm_(binding_region)": [
+          "58.1"
+        ],
+        "Tm_(with_extension)": [
+          "69.2"
+        ],
+        "%GC_(binding_region)": [
+          "50.0"
+        ],
+        "%GC_(with_extension)": [
+          "55.3"
+        ],
+        "Hairpin_Tm_(with_extension)": [
+          "35.1"
+        ],
+        "Self_Dimer_Tm_(with_extension)": [
+          "None"
+        ],
+        "annotation_group": [
+          "1057622706054800e9d81c7e-28c9-40ef-af60 -f1fb97c93236"
+        ],
+        "Sequence": [
+          "AGTGGTGTGATGGTCGTCTA"
+        ],
+        "Mismatches": [
+          "0"
+        ],
+        "Extension": [
+          "AGCAATCCCGCAGTCCTC"
+        ],
+        "#_Local_Off-target_Sites": [
+          "0"
+        ],
+        "Local_Off-target": [
+          "pESC-HIS"
+        ],
+        "label": [
+          "rv HIS3 Mut"
+        ]
+      }
+    },
+    {
+      "type": "misc_feature",
+      "location": "783..788",
+      "qualifiers": {
+        "created_by": [
+          "linus"
+        ],
+        "label": [
+          "BbsI"
+        ]
+      }
+    },
+    {
+      "type": "misc_feature",
+      "location": "785",
+      "qualifiers": {
+        "Original_Bases": [
+          "A"
+        ],
+        "label": [
+          "A"
+        ],
+        "note": [
+          "Geneious type: Editing History Replacement"
+        ]
+      }
+    },
+    {
+      "type": "primer_bind",
+      "location": "789..807",
+      "qualifiers": {
+        "created_by": [
+          "primer3"
+        ],
+        "Tm_(binding_region)": [
+          "62.4"
+        ],
+        "Tm_(with_extension)": [
+          "75.5"
+        ],
+        "%GC_(binding_region)": [
+          "63.2"
+        ],
+        "%GC_(with_extension)": [
+          "60.0"
+        ],
+        "Hairpin_Tm_(with_extension)": [
+          "42.5"
+        ],
+        "Self_Dimer_Tm_(with_extension)": [
+          "9.4"
+        ],
+        "annotation_group": [
+          "10576225374497005c640c32-67a8-41f5-944a -9f24d594328d"
+        ],
+        "Sequence": [
+          "TGCGGGATTGCTCTCGGTC"
+        ],
+        "Mismatches": [
+          "0"
+        ],
+        "Extension": [
+          "TCACACCACTGAGGAC"
+        ],
+        "#_Local_Off-target_Sites": [
+          "0"
+        ],
+        "Local_Off-target": [
+          "pESC-HIS"
+        ],
+        "label": [
+          "fw HIS3 Mut"
+        ]
+      }
+    },
+    {
+      "type": "rep_origin",
+      "location": "complement(1423..1878)",
+      "qualifiers": {
+        "snapgene_direction": [
+          "LEFT"
+        ],
+        "note": [
+          "f1 bacteriophage origin of replication; arrow indicates direction of (+) strand synthesis"
+        ],
+        "label": [
+          "f1 ori"
+        ]
+      }
+    },
+    {
+      "type": "terminator",
+      "location": "1961..2127",
+      "qualifiers": {
+        "gene": [
+          "<i>S. cerevisiae ADH1</i>"
+        ],
+        "note": [
+          "transcription terminator for the <i>S. cerevisiae</i> alcohol dehydrogenase 1 (<i>ADH1</i>) gene"
+        ],
+        "label": [
+          "ADH1 terminator"
+        ]
+      }
+    },
+    {
+      "type": "misc_feature",
+      "location": "2083",
+      "qualifiers": {
+        "Original_Bases": [
+          ""
+        ],
+        "label": [
+          ""
+        ],
+        "note": [
+          "Geneious type: Editing History Insertion"
+        ]
+      }
+    },
+    {
+      "type": "Fragment",
+      "location": "2098..2981",
+      "qualifiers": {
+        "Source_Sequence": [
+          "referenceToDocument: urn:local:excludedDuringImport:dh-kuqq7d1@1.0#0#C2A38AE7D6 094A37C5261235305E485E label: pIDMv5K-J23100-tsPurple-B1006 PCR Product"
+        ],
+        "Cloning_Method": [
+          "Gibson Cloning"
+        ],
+        "Fragment_Type": [
+          "Insert"
+        ],
+        "label": [
+          "pIDMv5K-J23100-tsPurple-B1006 PCR Product (insert)"
+        ]
+      }
+    },
+    {
+      "type": "overhang",
+      "location": "complement(2128..>2131)",
+      "qualifiers": {
+        "created_by": [
+          "Marina Schreidl"
+        ],
+        "label": [
+          "BbLvl2N"
+        ]
+      }
+    },
+    {
+      "type": "misc_feature",
+      "location": "complement(2134..2139)",
+      "qualifiers": {
+        "created_by": [
+          "Marina Schreidl"
+        ],
+        "label": [
+          "BbsI Rec Site"
+        ]
+      }
+    },
+    {
+      "type": "promoter",
+      "location": "2140..2174",
+      "qualifiers": {
+        "label": [
+          "Promoter J23100"
+        ]
+      }
+    },
+    {
+      "type": "misc_feature",
+      "location": "2175..2185",
+      "qualifiers": {
+        "label": [
+          "spacer"
+        ]
+      }
+    },
+    {
+      "type": "RBS",
+      "location": "2186..2197",
+      "qualifiers": {
+        "note": [
+          "strong bacterial ribosome binding site (<a href=\"\"http://www.ncbi.nlm.nih.gov/pubmed/10659856\"\" title=\"\"http://www.ncbi.nlm.nih.gov/pubmed/10659856\"\">Elow itz and Leibler, 2000</a>)"
+        ],
+        "label": [
+          "RBS B0030"
+        ]
+      }
+    },
+    {
+      "type": "misc_feature",
+      "location": "2198..2202",
+      "qualifiers": {
+        "note": [
+          "/__SeqFeature__=True",
+          "/__level__=0",
+          "/name=MlyI",
+          "/official_designation=MlyI",
+          "/uuid=75fb195eb5a74e72bdce2a3ca7265588",
+          "/vntifkey=21"
+        ],
+        "label": [
+          "MlyI"
+        ]
+      }
+    },
+    {
+      "type": "misc_feature",
+      "location": "join(2203,2204..2208)",
+      "qualifiers": {
+        "label": [
+          "NcoI"
+        ]
+      }
+    },
+    {
+      "type": "misc_feature",
+      "location": "2203",
+      "qualifiers": {
+        "label": [
+          "Spacer"
+        ]
+      }
+    },
+    {
+      "type": "CDS",
+      "location": "2205..2894",
+      "qualifiers": {
+        "codon_start": [
+          "1"
+        ],
+        "transl_table": [
+          "1"
+        ],
+        "translation": [
+          "MASLVKKDMCVKMTMEGTVNGYHFKCVGEGEGKPFEGTQNMRIR VTEGGPLPFAFDILAPCCMYGSKTFIKHVSGIPDYFKESFPEGFTWERTQIFEDGGVL TAHQDTSLEGNCLIYKVKVLGTNFPANGPVMQKKTAGWEPCVEMLYPRDGVLCGQSLM ALKCTDGNHLTSHLRTTYRSRKPSNAVNMPEFHFGDHRIEILKAEQGKFYEQYESAVA RYSDVPEKAT**"
+        ],
+        "label": [
+          "tsPurple"
+        ]
+      }
+    },
+    {
+      "type": "misc_feature",
+      "location": "join(2895..2899,2900)",
+      "qualifiers": {
+        "label": [
+          "SacI"
+        ]
+      }
+    },
+    {
+      "type": "terminator",
+      "location": "2901..2939",
+      "qualifiers": {
+        "label": [
+          "Terminator B1006"
+        ]
+      }
+    },
+    {
+      "type": "Fragment",
+      "location": "2910..2169",
+      "qualifiers": {
+        "Source_Sequence": [
+          "referenceToDocument: urn:local:excludedDuringImport:df-kuqq7d1@0.0#0#D197D5DCC7 DBEBEC1C0B317DE4B2D996 label: pESC-HIS PCR Product 2"
+        ],
+        "Cloning_Method": [
+          "Gibson Cloning"
+        ],
+        "Fragment_Type": [
+          "Backbone"
+        ],
+        "label": [
+          "pESC-HIS PCR Product 2 (backbone)"
+        ]
+      }
+    },
+    {
+      "type": "misc_feature",
+      "location": "2940..>2945",
+      "qualifiers": {
+        "created_by": [
+          "linus"
+        ],
+        "label": [
+          "BbsI rec site"
+        ]
+      }
+    },
+    {
+      "type": "overhang",
+      "location": "2948..2951",
+      "qualifiers": {
+        "created_by": [
+          "Marina Schreidl"
+        ],
+        "label": [
+          "BbLvl2C"
+        ]
+      }
+    },
+    {
+      "type": "terminator",
+      "location": "2952..3141",
+      "qualifiers": {
+        "gene": [
+          "<i>S. cerevisiae CYC1</i>"
+        ],
+        "note": [
+          "transcription terminator for <i>CYC1</i>"
+        ],
+        "label": [
+          "CYC1 terminator"
+        ]
+      }
+    },
+    {
+      "type": "rep_origin",
+      "location": "complement(3384..3972)",
+      "qualifiers": {
+        "snapgene_direction": [
+          "LEFT"
+        ],
+        "note": [
+          "high-copy-number ColE1/pMB1/pBR322/pUC origin of replication"
+        ],
+        "label": [
+          "ori"
+        ]
+      }
+    },
+    {
+      "type": "CDS",
+      "location": "join(complement(4935..5003),complement(4143..4934))",
+      "qualifiers": {
+        "codon_start": [
+          "1"
+        ],
+        "gene": [
+          "<i>bla</i>"
+        ],
+        "note": [
+          "confers resistance to ampicillin, carbenicillin, and related antibiotics"
+        ],
+        "product": [
+          "\u03b2-lactamase"
+        ],
+        "transl_table": [
+          "1"
+        ],
+        "translation": [
+          "MSIQHFRVALIPFFAAFCLPVFAHPETLVKVKDAEDQLGARVGY IELDLNSGKILESFRPEERFPMMSTFKVLLCGAVLSRIDAGQEQLGRRIHYSQNDLVE YSPVTEKHLTDGMTVRELCSAAITMSDNTAANLLLTTIGGPKELTAFLHNMGDHVTRL DRWEPELNEAIPNDERDTTMPVAMATTLRKLLTGELLTLASRQQLIDWMEADKVAGPL LRSALPAGWFIADKSGAGERGSRGIIAALGPDGKPSRIVVIYTTGSQATMDERNRQIA EIGASLIKHW*"
+        ],
+        "label": [
+          "AmpR"
+        ]
+      }
+    },
+    {
+      "type": "misc_feature",
+      "location": "complement(4283..4288)",
+      "qualifiers": {
+        "created_by": [
+          "linus"
+        ],
+        "label": [
+          "BsaI"
+        ]
+      }
+    },
+    {
+      "type": "promoter",
+      "location": "complement(5004..5108)",
+      "qualifiers": {
+        "gene": [
+          "<i>bla</i>"
+        ],
+        "label": [
+          "AmpR promoter"
+        ]
+      }
+    },
+    {
+      "type": "rep_origin",
+      "location": "5135..6477",
+      "qualifiers": {
+        "note": [
+          "yeast 2\u03bc plasmid origin of replication"
+        ],
+        "label": [
+          "2\u03bc ori"
+        ]
+      }
+    },
+    {
+      "type": "primer_bind",
+      "location": "complement(6039..6062)",
+      "qualifiers": {
+        "Tm_(binding_region)": [
+          "59.7"
+        ],
+        "Tm_(with_extension)": [
+          "68.8"
+        ],
+        "%GC_(binding_region)": [
+          "37.5"
+        ],
+        "%GC_(with_extension)": [
+          "45.5"
+        ],
+        "Hairpin_Tm_(with_extension)": [
+          "50.9"
+        ],
+        "Self_Dimer_Tm_(with_extension)": [
+          "20.3"
+        ],
+        "annotation_group": [
+          "105882331072550088dca1da-2a51-4c91-af13 -f45e99d4394f"
+        ],
+        "Sequence": [
+          "GCACTTTCAAAAAACCAAAAACGC"
+        ],
+        "Mismatches": [
+          "0"
+        ],
+        "Extension": [
+          "ACCAAAAGCGCTCTGAGGAC"
+        ],
+        "#_Local_Off-target_Sites": [
+          "0"
+        ],
+        "Local_Off-target": [
+          "pESC-HIS"
+        ],
+        "label": [
+          "rv 2u Mut"
+        ]
+      }
+    },
+    {
+      "type": "misc_feature",
+      "location": "complement(6063..6068)",
+      "qualifiers": {
+        "created_by": [
+          "linus"
+        ],
+        "label": [
+          "BbsI"
+        ]
+      }
+    },
+    {
+      "type": "misc_feature",
+      "location": "6066",
+      "qualifiers": {
+        "Original_Bases": [
+          "T"
+        ],
+        "label": [
+          "T"
+        ],
+        "note": [
+          "Geneious type: Editing History Replacement"
+        ]
+      }
+    },
+    {
+      "type": "primer_bind",
+      "location": "6069..6091",
+      "qualifiers": {
+        "Tm_(binding_region)": [
+          "59.1"
+        ],
+        "Tm_(with_extension)": [
+          "65.9"
+        ],
+        "%GC_(binding_region)": [
+          "39.1"
+        ],
+        "%GC_(with_extension)": [
+          "40.9"
+        ],
+        "Hairpin_Tm_(with_extension)": [
+          "51.1"
+        ],
+        "Self_Dimer_Tm_(with_extension)": [
+          "23.7"
+        ],
+        "annotation_group": [
+          "105882312085710029799995-9832-4c2f-b345 -30b4049dd63a"
+        ],
+        "Sequence": [
+          "AGAGCGCTTTTGGTTTTCAAAAG"
+        ],
+        "Mismatches": [
+          "0"
+        ],
+        "Extension": [
+          "GTTTTTTGAAAGTGCGTCCTC"
+        ],
+        "#_Local_Off-target_Sites": [
+          "0"
+        ],
+        "Local_Off-target": [
+          "pESC-HIS"
+        ],
+        "label": [
+          "fw 2u Mut"
+        ]
+      }
+    }
+  ]
+}

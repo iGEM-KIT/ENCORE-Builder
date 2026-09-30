@@ -1,0 +1,13 @@
+{
+  "id": "adh1-terminator",
+  "kind": "terminator",
+  "label": "ADH1 terminator (S. cerevisiae)",
+  "sequence": "GAGCGACCTCATGCTATACCTGAGAAAGCAACCTGACCTACAGGAAAGAGTTACTCAAGAATAAGAATTTTCGTTTTAAAACCTAAGAGTCACTTTAAAATTTGTATACACTTATTTTTTTTYATAACTTATTTAATAATAAAAATCATAAATCATAAGAAATTCGC",
+  "sequence_status": "real",
+  "on_stock": null,
+  "length_bp": 167,
+  "organism": "S. cerevisiae",
+  "source": "Extrahiert aus Level 2 Destination HIS3.gb (pESC-HIS-Backbone), GenBank-Location 1961..2127.",
+  "notes": "Noch kein eigener Slot in der Level-0/1/2-Design-Engine \u2014 aktuell rein informationell.",
+  "used_by": []
+}

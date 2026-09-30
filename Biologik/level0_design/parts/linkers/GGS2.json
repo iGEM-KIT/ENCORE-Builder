@@ -1,0 +1,15 @@
+{
+  "id": "GGS2",
+  "kind": "linker",
+  "label": "2\u00d7(GGS)",
+  "sequence": null,
+  "sequence_status": "missing",
+  "on_stock": null,
+  "length_bp": 18,
+  "organism": null,
+  "source": null,
+  "notes": "Aminosaeure-Wiederholung ist bekannt (2\u00d7GGS), aber noch keine festgelegte, codon-optimierte Nukleotidsequenz hinterlegt.",
+  "used_by": [
+    "LINKERS[GGS2]"
+  ]
+}

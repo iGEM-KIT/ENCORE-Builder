@@ -2,7 +2,7 @@ import json
 import subprocess
 import sys
 
-from Biologik.level0_design.design import build_fasta, design_construct, make_primer_pair
+from Biologik.level0_design.design import build_genbank, design_construct, make_primer_pair
 from Biologik.level0_design.sequence import validate_cargo
 
 
@@ -69,17 +69,19 @@ def test_design_construct_builds_level0_modules():
     assert design['level0']['cargoModule'][0]['role'] == 'targeting-peptide'
 
 
-def test_make_primer_pair_and_fasta_export():
+def test_make_primer_pair_and_genbank_export():
     primers = make_primer_pair('ATGAAATTTGAA', 'CCAA', 'GCAA')
     assert len(primers) == 2
 
-    # build_fasta erwartet die volle design_construct()-Antwort (cargoSlots, ncSlots,
+    # build_genbank erwartet die volle design_construct()-Antwort (cargoSlots, ncSlots,
     # sequenceAntisense, ...) — ein von Hand gebautes Teil-Dict war hier frueher schon
     # einmal veraltet, ohne dass es auffiel. Deshalb jetzt gegen ein echtes Ergebnis.
     design = _design()
-    fasta = build_fasta(design)
-    assert 'Level1_Cargo-Module' in fasta
-    assert '>Cargo_GFP [Type0.3]' in fasta
+    genbank = build_genbank(design)
+    assert 'LOCUS       Level1_Cargo-Module_GFP' in genbank
+    assert 'LOCUS       Cargo_GFP ' in genbank
+    assert '/label="GFP"' in genbank
+    assert genbank.count('//') == genbank.count('LOCUS')
 
 
 def test_json_cli_connects_backend_request_to_biologik():
@@ -121,8 +123,8 @@ def test_json_cli_serves_libraries():
     assert response['ok'] is True
     libraries = response['libraries']
     assert sorted(libraries) == [
-        'cargoPresets', 'linkers', 'nanocompartments', 'promoters', 'surfaceMarkers',
-        'typeOverhangs',
+        'cargoPresets', 'level0Backbones', 'level1Backbones', 'level2Backbones', 'linkers',
+        'nanocompartments', 'promoters', 'surfaceMarkers', 'terminators', 'typeOverhangs',
     ]
     assert [m['id'] for m in libraries['surfaceMarkers']] == ['spycatcher', 'spytag']
     assert [nc['id'] for nc in libraries['nanocompartments']] == ['tmari', 'mxan', 'qther']

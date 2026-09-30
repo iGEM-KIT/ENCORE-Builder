@@ -1,0 +1,15 @@
+{
+  "id": "GAL110",
+  "kind": "promoter",
+  "label": "GAL1-10",
+  "sequence": null,
+  "sequence_status": "missing",
+  "on_stock": null,
+  "length_bp": 680,
+  "organism": "S. cerevisiae",
+  "source": null,
+  "notes": "Bidirektionaler, induzierbarer Hefe-Promotor \u2014 noch keine echte Sequenz hinterlegt.",
+  "used_by": [
+    "PROMOTERS[GAL110]"
+  ]
+}

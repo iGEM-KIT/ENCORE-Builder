@@ -1,0 +1,29 @@
+{
+  "id": "EXAMPLE-lvl1-backbone-id",
+  "kind": "level1_backbone",
+  "label": "Example Level 1 backbone",
+  "sequence": null,
+  "sequence_status": "missing",
+  "on_stock": null,
+  "length_bp": null,
+  "circular": true,
+  "organism": null,
+  "selection_marker": null,
+  "origin": null,
+  "receiver_overhangs": {
+    "5_prime": {
+      "label": null,
+      "location": null,
+      "sequence": null
+    },
+    "3_prime": {
+      "label": null,
+      "location": null,
+      "sequence": null
+    }
+  },
+  "current_insert": null,
+  "source": null,
+  "notes": null,
+  "features": []
+}

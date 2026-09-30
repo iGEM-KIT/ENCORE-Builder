@@ -1,0 +1,13 @@
+{
+  "id": "cyc1-terminator",
+  "kind": "terminator",
+  "label": "CYC1 terminator (S. cerevisiae)",
+  "sequence": "ATCCGCTCTAACCGAAAAGGAAGGAGTTAGACAACCTGAAGTCTAGGTCCCTATTTATTTTTTTATAGTTATGTTAGTATTAAGAACGTTATTTATATTTCAAATTTTTCTTTTTTTTCTGTACAGACGCGTGTACGCATGTAACATTATACTGAAAACCTTGCTTGAGAAGGTTTTGGGACGCTCGAAG",
+  "sequence_status": "real",
+  "on_stock": null,
+  "length_bp": 190,
+  "organism": "S. cerevisiae",
+  "source": "Extrahiert aus Level 2 Destination HIS3.gb (pESC-HIS-Backbone), GenBank-Location 2952..3141.",
+  "notes": "Noch kein eigener Slot in der Level-0/1/2-Design-Engine \u2014 aktuell rein informationell.",
+  "used_by": []
+}

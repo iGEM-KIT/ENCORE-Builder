@@ -1,0 +1,13 @@
+{
+  "id": "EXAMPLE-marker-id",
+  "kind": "surface_marker",
+  "label": "Example marker",
+  "sequence": null,
+  "sequence_status": "missing",
+  "on_stock": null,
+  "length_bp": null,
+  "organism": null,
+  "source": null,
+  "notes": null,
+  "used_by": []
+}

@@ -21,6 +21,8 @@ from .data import (
 # Z.B. zum Bilden von Komplementären DNA-Sequenzen, zur Berechnung der Schmelztemperatur
 from .sequence import reverse_complement, validate_cargo, wallace_tm
 from .mrna_dimer import check_mrna_structure
+from .parts_db import find_real_sequence, load_parts
+from .genbank_writer import format_genbank_record, location_span, shift_location
 
 
 CUSTOM_NC_ID = "custom"
@@ -524,88 +526,225 @@ def placeholder_seq(seed: str, length: int) -> str:
     return "".join(result)
 
 
-def fasta_wrap(sequence: str, width: int = 70) -> str:
-    return "\n".join(sequence[index:index + width] for index in range(0, len(sequence), width))
+def resolve_seq(kind: str, part_id: str, seed: str, length: int) -> tuple[str, bool]:
+    """(sequence, is_real). Nutzt eine echte Sequenz aus der Teile-Datenbank
+    (Biologik/level0_design/parts/<kind>/<part_id>.json), falls dort mit
+    sequence_status "real" hinterlegt — sonst faellt es auf die bisherige
+    deterministische Platzhalter-Sequenz zurueck. Sobald jemand die JSON-Datei
+    ausfuellt, verwendet der naechste Request automatisch die echte Sequenz."""
+    real = find_real_sequence(kind, part_id)
+    if real:
+        return real, True
+    return placeholder_seq(seed, length), False
 
 
-def build_fasta(design: dict) -> str:
-    # FASTA ist ein einfaches Format für DNA-Sequenzen. Hier wird eine Export-Datei für die Bausteine gebaut.
-    # Eine Funktion kann einen neuen String aus mehreren Teilen zusammensetzen.
-    output = []
+def _feat(ftype: str, location: str, label: str, note: str | None = None, extra: list | None = None) -> dict:
+    qualifiers = [("label", label)]
+    if note:
+        qualifiers.append(("note", note))
+    qualifiers.extend(extra or [])
+    return {"type": ftype, "location": location, "qualifiers": qualifiers}
 
-    def add(header: str, sequence: str):
-        output.append(f">{header}\n{fasta_wrap(sequence)}")
+
+def build_genbank(design: dict) -> str:
+    """GenBank-Export statt FASTA: dieselben Sequenzen wie zuvor, aber jetzt mit
+    echter Feature-Tabelle (Type-Zuordnung, Quelle PLACEHOLDER/PARTS DB/REAL
+    INPUT) statt nur einem Kommentar-Header — siehe genbank_writer.py. Der
+    Level-2-COMPLETE-Record verwendet, falls vorhanden, das echte importierte
+    Backbone (Biologik/level0_design/parts/level2_backbones/) samt seiner
+    echten Annotationen (HIS3, AmpR, Origins, ...), nicht nur die reine
+    Insert-Sequenz."""
+    records: list[str] = []
+
+    def add_record(name: str, sequence: str, features: list[dict] | None = None,
+                    circular: bool = False, definition: str = ""):
+        records.append(format_genbank_record(name, sequence, features, circular, definition))
 
     nc = design["nanocompartment"]
     cargo_sense = design["cargo"]["sequence"]
     cargo_seq = design["cargo"]["sequenceAntisense"]
     cargo_name = design["cargo"]["label"].replace(" ", "-")
 
-    shell_seq = nc["sequence"] if nc.get("custom") else placeholder_seq("SHELL" + nc["shell"], nc["shellBp"])
-    promo_seq = placeholder_seq("PROMO" + design["level2"]["promoter"]["id"], 600)
-    ncs_seq = placeholder_seq("NCS", 30)
-    tp_seq = placeholder_seq("TP" + design["targetingPeptide"], 36)
+    shell_seq, shell_is_real = (nc["sequence"], True) if nc.get("custom") else \
+        resolve_seq("nanocompartment_shells", nc["shell"], "SHELL" + nc["shell"], nc["shellBp"])
+    promo_seq, promo_is_real = resolve_seq(
+        "promoters", design["level2"]["promoter"]["id"], "PROMO" + design["level2"]["promoter"]["id"], 600)
+    ncs_seq, ncs_is_real = resolve_seq("ncs_spacers", "standard", "NCS", 30)
+    tp_seq, tp_is_real = resolve_seq(
+        "targeting_peptides", design["targetingPeptide"], "TP" + design["targetingPeptide"], 36)
     cargo_slots = {entry["slot"]: entry for entry in design["cargoSlots"]}
     nc_slots = {entry["slot"]: entry for entry in design["ncSlots"]}
 
-    def slot_seq(entry: dict) -> str:
+    def slot_seq(entry: dict) -> tuple[str, bool]:
         if entry["kind"] == "custom":
-            return entry["sequence"]
+            return entry["sequence"], True
         if entry["kind"] == "tp":
-            return tp_seq
+            return tp_seq, tp_is_real
         if entry["kind"] == "linker":
-            return placeholder_seq("LINK" + entry["id"], entry["bp"])
+            return resolve_seq("linkers", entry["id"], "LINK" + entry["id"], entry["bp"])
         if entry["kind"] == "marker":
-            return placeholder_seq("MARK" + entry["id"], entry["bp"])
-        return ncs_seq
+            return resolve_seq("surface_markers", entry["id"], "MARK" + entry["id"], entry["bp"])
+        return ncs_seq, ncs_is_real
+
+    def source_note(is_real: bool) -> str:
+        return "Source: parts database (real sequence)." if is_real else "Source: deterministic placeholder — no real sequence in the parts database yet."
 
     def add_slot_records(slots: dict, where: str, antisense: bool):
         for n in (1, 2, 4, 5):
             entry = slots[n]
             tag = f"Type0.{n}"
+            seq, is_real = slot_seq(entry)
             if entry["kind"] == "tp":
-                add(f"Targeting-Peptide_{design['targetingPeptide']} [{tag}] [{where}] [PLACEHOLDER]", slot_seq(entry))
+                add_record(f"Targeting-Peptide_{design['targetingPeptide']}_{tag}",
+                           seq, [_feat("CDS", f"1..{len(seq)}", f"TP_{design['targetingPeptide']}",
+                                       f"{tag} · {where}. {source_note(is_real)}")])
             elif entry["kind"] == "linker":
-                add(f"Linker_{entry['id']} [{tag}] [{where}] [PLACEHOLDER {entry['bp']}bp]", slot_seq(entry))
+                add_record(f"Linker_{entry['id']}_{tag}",
+                           seq, [_feat("misc_feature", f"1..{len(seq)}", f"Linker_{entry['id']}",
+                                       f"{tag} · {where}. {source_note(is_real)}")])
             elif entry["kind"] == "marker":
-                add(f"Surface-Marker_{entry['label']} [{tag}] [{where}] [PLACEHOLDER {entry['bp']}bp]", slot_seq(entry))
+                add_record(f"Surface-Marker_{entry['label']}_{tag}",
+                           seq, [_feat("CDS", f"1..{len(seq)}", entry["label"],
+                                       f"{tag} · {where} · surface display. {source_note(is_real)}")])
             elif entry["kind"] == "custom":
                 label = entry["label"].replace(" ", "-")
                 seq = reverse_complement(entry["sequence"]) if antisense else entry["sequence"]
-                # pESC-eigene Strangbenennung: die Cargo sitzt auf dem Antisense-Strang von MCS1, daher ist das
-                # Reverse Complement (das hier bestellt wird) der SENSE-Strang von pESC — nicht der Gen-Sense-Strang.
-                note = " [SENSE = reverse complement of the input]" if antisense else ""
-                add(f"Custom-Part_{label} [{tag}] [{where}] [REAL INPUT {entry['bp']}bp]{note}", seq)
-                add(f"Custom-Part_{label}_with-overhangs [{JUNCTION_OVERHANGS[n - 1]}...{JUNCTION_OVERHANGS[n]}]",
-                    f"{JUNCTION_OVERHANGS[n - 1]}{seq}{JUNCTION_OVERHANGS[n]}")
+                note = " SENSE = reverse complement of the input." if antisense else ""
+                add_record(f"Custom-Part_{label}_{tag}", seq,
+                           [_feat("CDS", f"1..{len(seq)}", label, f"{tag} · {where} · real user input.{note}")])
+                oh_left, oh_right = JUNCTION_OVERHANGS[n - 1], JUNCTION_OVERHANGS[n]
+                add_record(f"Custom-Part_{label}_{tag}_with-overhangs",
+                           f"{oh_left}{seq}{oh_right}",
+                           [_feat("overhang", f"1..{len(oh_left)}", oh_left, "5' Golden Gate junction overhang"),
+                            _feat("CDS", f"{len(oh_left) + 1}..{len(oh_left) + len(seq)}", label),
+                            _feat("overhang", f"{len(oh_left) + len(seq) + 1}..{len(oh_left) + len(seq) + len(oh_right)}",
+                                  oh_right, "3' Golden Gate junction overhang")])
 
-    add(f"Cargo_{cargo_name} [Type0.3] [REAL INPUT {len(cargo_seq)}bp] [SENSE = reverse complement of the input CDS]", cargo_seq)
-    add(f"Cargo_{cargo_name}_input-CDS [reference only] [{len(cargo_sense)}bp]", cargo_sense)
+    add_record(f"Cargo_{cargo_name}", cargo_seq,
+               [_feat("CDS", f"1..{len(cargo_seq)}", cargo_name,
+                      "Type0.3 · real user input · SENSE = reverse complement of the input CDS")])
+    add_record(f"Cargo_{cargo_name}_input-CDS", cargo_sense,
+               [_feat("CDS", f"1..{len(cargo_sense)}", cargo_name, "Reference only — the input CDS as typed, before reverse-complementing")])
     add_slot_records(cargo_slots, "cargo module", antisense=True)
     if nc.get("custom"):
         name = nc["shell"].replace(" ", "-")
-        add(f"Nanocompartment-Shell_{name} [Type0.3] [REAL INPUT {len(shell_seq)}bp]", shell_seq)
-        add(f"Nanocompartment-Shell_{name}_with-overhangs [{JUNCTION_OVERHANGS[2]}...{JUNCTION_OVERHANGS[3]}]",
-            f"{JUNCTION_OVERHANGS[2]}{shell_seq}{JUNCTION_OVERHANGS[3]}")
+        add_record(f"Nanocompartment-Shell_{name}", shell_seq,
+                   [_feat("CDS", f"1..{len(shell_seq)}", name, "Type0.3 · nanocompartment site · real user input")])
+        oh_left, oh_right = JUNCTION_OVERHANGS[2], JUNCTION_OVERHANGS[3]
+        add_record(f"Nanocompartment-Shell_{name}_with-overhangs", f"{oh_left}{shell_seq}{oh_right}",
+                   [_feat("overhang", f"1..{len(oh_left)}", oh_left, "5' Golden Gate junction overhang"),
+                    _feat("CDS", f"{len(oh_left) + 1}..{len(oh_left) + len(shell_seq)}", name),
+                    _feat("overhang", f"{len(oh_left) + len(shell_seq) + 1}..{len(oh_left) + len(shell_seq) + len(oh_right)}",
+                          oh_right, "3' Golden Gate junction overhang")])
     else:
-        add(f"Nanocompartment-Shell_{nc['shell']} [PLACEHOLDER]", shell_seq)
-    add(f"Promoter_{design['level2']['promoter']['label']} [bidirectional] [PLACEHOLDER]", promo_seq)
-    add("NCS-Spacer [PLACEHOLDER]", ncs_seq)
+        add_record(f"Nanocompartment-Shell_{nc['shell']}", shell_seq,
+                   [_feat("CDS", f"1..{len(shell_seq)}", nc["shell"], f"Type0.3 · nanocompartment site. {source_note(shell_is_real)}")])
+    add_record(f"Promoter_{design['level2']['promoter']['label']}", promo_seq,
+               [_feat("promoter", f"1..{len(promo_seq)}", design["level2"]["promoter"]["label"],
+                      f"Bidirectional. {source_note(promo_is_real)}")])
+    add_record("NCS-Spacer", ncs_seq, [_feat("misc_feature", f"1..{len(ncs_seq)}", "NCS spacer", source_note(ncs_is_real))])
     add_slot_records(nc_slots, "nanocompartment site", antisense=False)
-    add(f"Cargo_{cargo_name}_with-overhangs [sense]", f"{CARGO_L1_FLANK[0]}{cargo_seq}{CARGO_L1_FLANK[1]}")
+    cargo_with_oh = f"{CARGO_L1_FLANK[0]}{cargo_seq}{CARGO_L1_FLANK[1]}"
+    add_record(f"Cargo_{cargo_name}_with-overhangs", cargo_with_oh,
+               [_feat("overhang", f"1..{len(CARGO_L1_FLANK[0])}", CARGO_L1_FLANK[0]),
+                _feat("CDS", f"{len(CARGO_L1_FLANK[0]) + 1}..{len(CARGO_L1_FLANK[0]) + len(cargo_seq)}", cargo_name),
+                _feat("overhang", f"{len(CARGO_L1_FLANK[0]) + len(cargo_seq) + 1}..{len(cargo_with_oh)}", CARGO_L1_FLANK[1])])
 
     # Das Cargo-Modul liegt im Level-2-Konstrukt auf dem Antisense-Strang: die Top-Strand-Sequenz
     # ist die Typ-Reihenfolge 1..5, jedes Teil als Reverse Complement (das Cargo ist schon
     # Antisense). Es wird danach NICHT noch einmal umgedreht.
-    slot_order = [slot_seq(cargo_slots[1]), slot_seq(cargo_slots[2]), cargo_sense, slot_seq(cargo_slots[4]), slot_seq(cargo_slots[5])]
-    cargo_module_seq = "".join(reverse_complement(part) for part in slot_order)
+    cargo_parts = [slot_seq(cargo_slots[1])[0], slot_seq(cargo_slots[2])[0], cargo_sense, slot_seq(cargo_slots[4])[0], slot_seq(cargo_slots[5])[0]]
+    cargo_module_seq = "".join(reverse_complement(part) for part in cargo_parts)
     # NC-Modul (Sense): Slots 1, 2, Shell, 4, 5 in Typ-Reihenfolge.
-    nc_module_seq = slot_seq(nc_slots[1]) + slot_seq(nc_slots[2]) + shell_seq + slot_seq(nc_slots[4]) + slot_seq(nc_slots[5])
-    add(f"Level1_Cargo-Module [{design['cargo']['label']}]", cargo_module_seq)
-    add("Level1_Nanocompartment-Module [" + nc["shell"] + "]", nc_module_seq)
+    nc_parts = [slot_seq(nc_slots[1])[0], slot_seq(nc_slots[2])[0], shell_seq, slot_seq(nc_slots[4])[0], slot_seq(nc_slots[5])[0]]
+    nc_module_seq = "".join(nc_parts)
 
-    level2 = cargo_module_seq + promo_seq + nc_module_seq
-    add(f"Level2_pESC-ENCORE-{nc['id']}_COMPLETE [~{len(level2)}bp] [Cargo(rev)<-promoter->NC]", level2)
+    def sub_features(parts: list[str], labels: list[str], antisense: bool) -> list[dict]:
+        feats, offset = [], 0
+        for part, label in zip(parts, labels):
+            start, end = offset + 1, offset + len(part)
+            loc = f"complement({start}..{end})" if antisense else f"{start}..{end}"
+            feats.append(_feat("misc_feature", loc, label))
+            offset += len(part)
+        return feats
 
-    banner = "; ENCORE Builder — FASTA export (prototype)\n; Standard modules are PLACEHOLDER sequences; the cargo and any own sequences are real input.\n"
-    return banner + "\n".join(output)
+    # Fuer die Cargo-Modul-Unterfeatures gilt: jedes Type-Segment ist im Record bereits
+    # reverse-komplementiert abgelegt (siehe cargo_module_seq oben) — die tatsaechliche
+    # 5'->3'-Leserichtung jedes Teils zeigt deshalb von hoher zu niedriger Position, daher
+    # complement() in den Sub-Features (spiegelt exakt wider, wie das im Frontend gezeichnet wird).
+    cargo_labels = ["Type0.1", "Type0.2", cargo_name, "Type0.4", "Type0.5"]
+    nc_labels = ["Type0.1", "Type0.2", nc["shell"], "Type0.4", "Type0.5"]
+    add_record(f"Level1_Cargo-Module_{cargo_name}", cargo_module_seq,
+               sub_features(cargo_parts, cargo_labels, antisense=True))
+    add_record(f"Level1_Nanocompartment-Module_{nc['shell']}", nc_module_seq,
+               sub_features(nc_parts, nc_labels, antisense=False))
+
+    level2_seq = cargo_module_seq + promo_seq + nc_module_seq
+    insert_labels = cargo_labels + [design["level2"]["promoter"]["label"]] + nc_labels
+    insert_parts = cargo_parts + [promo_seq] + nc_parts
+    insert_antisense = [True] * 5 + [False] * 6
+
+    backbone = next(iter(load_parts()["level2_backbones"]), None)
+    if backbone and backbone.get("sequence"):
+        add_record(*_merge_into_backbone(backbone, level2_seq, insert_parts, insert_labels, insert_antisense, nc["id"]))
+    else:
+        feats = []
+        offset = 0
+        for part, label, antisense in zip(insert_parts, insert_labels, insert_antisense):
+            start, end = offset + 1, offset + len(part)
+            loc = f"complement({start}..{end})" if antisense else f"{start}..{end}"
+            feats.append(_feat("misc_feature", loc, label))
+            offset += len(part)
+        add_record(f"Level2_pESC-ENCORE-{nc['id']}_COMPLETE", level2_seq, feats, circular=True,
+                   definition="No real Level 2 backbone in the parts database — insert only, not embedded in a destination vector.")
+
+    return "\n\n".join(records)
+
+
+def _merge_into_backbone(backbone: dict, insert_seq: str, insert_parts: list[str], insert_labels: list[str],
+                          insert_antisense: list[bool], nc_id: str) -> tuple[str, str, list[dict], bool, str]:
+    """Ersetzt die aktuell im echten Backbone sitzende Stuffer-/Testkassette
+    (zwischen den beiden Akzeptor-Overhangs) durch das frisch assemblierte
+    Insert und verschiebt alle ECHTEN Backbone-Features hinter dem Stuffer
+    entsprechend — die Backbone-Annotationen (Marker, Origins, ...) bleiben so
+    an ihrer korrekten Position im neuen, laengeren/kuerzeren Plasmid erhalten.
+    Returns (name, sequence, features, circular, definition) fuer add_record()."""
+    seq = backbone["sequence"]
+    oh5 = backbone["receiver_overhangs"]["5_prime"]
+    oh3 = backbone["receiver_overhangs"]["3_prime"]
+    stuffer_start = location_span(oh5["location"])[1] + 1   # gleich hinter dem Ende des 5'-Overhangs
+    stuffer_end = location_span(oh3["location"])[0] - 1     # gleich vor dem Anfang des 3'-Overhangs
+    shift = len(insert_seq) - (stuffer_end - stuffer_start + 1)
+
+    kept_features = []
+    for feature in backbone.get("features", []):
+        lo, hi = location_span(feature["location"])
+        if hi < stuffer_start:
+            kept_features.append(feature)
+        elif lo > stuffer_end:
+            kept_features.append({**feature, "location": shift_location(feature["location"], shift)})
+        # sonst: liegt (teilweise) im Stuffer-Bereich -> das ist die ALTE Testkassette, wird verworfen.
+
+    def to_genbank_feature(f: dict) -> dict:
+        # /translation weglassen (macht Records unnoetig lang, laesst sich aus der Sequenz ableiten).
+        qualifiers = [(key, value) for key, values in f["qualifiers"].items() if key != "translation" for value in values]
+        return {"type": f["type"], "location": f["location"], "qualifiers": qualifiers}
+
+    features = [to_genbank_feature(f) for f in kept_features]
+
+    offset = stuffer_start - 1
+    for part, label, antisense in zip(insert_parts, insert_labels, insert_antisense):
+        start, end = offset + 1, offset + len(part)
+        loc = f"complement({start}..{end})" if antisense else f"{start}..{end}"
+        features.append(_feat("misc_feature", loc, label))
+        offset += len(part)
+
+    new_seq = seq[:stuffer_start - 1] + insert_seq + seq[stuffer_end:]
+    name = f"pESC-HIS-ENCORE-{nc_id}"
+    definition = (
+        f"Real {backbone['label']} ({backbone['length_bp']}bp) with its stuffer cassette "
+        f"(between {oh5['label']} and {oh3['label']}) replaced by the assembled construct. "
+        "Junction accuracy depends on CARGO_L1_FLANK/NC_L1_FLANK/PROMO_FLANK matching the "
+        f"real {oh5['label']}/{oh3['label']} overhangs — not yet verified, see PROJECT_TODO.txt section 1."
+    )
+    return name, new_seq, features, True, definition

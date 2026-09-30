@@ -19,7 +19,9 @@ installiert. Keine Programmierkenntnisse, kein Node.js, kein Python nötig.
    ```bash
    docker compose up --build
    ```
-   Der erste Start dauert ein paar Minuten (lädt und baut alles automatisch).
+   Der erste Start dauert etwas länger (baut den Builder und lädt zusätzlich
+   die ~1,2GB-Datenbank für das automatische Biosicherheits-Screening
+   herunter, siehe unten).
 3. Im Browser öffnen: **[http://localhost:3000](http://localhost:3000)**
 4. Zum Beenden im Terminal `Ctrl+C` drücken, oder in einem neuen Terminal:
    ```bash
@@ -28,21 +30,15 @@ installiert. Keine Programmierkenntnisse, kein Node.js, kein Python nötig.
 
 Das war's — der Builder und der Encapsulin-Filter laufen jetzt vollständig.
 
-### Mit Biosicherheits-Screening starten
+### Biosicherheits-Screening ist immer dabei
 
-Jede selbst eingegebene Gensequenz kann automatisch auf bekannte Toxine,
-Virulenzfaktoren und regulierte Pathogene geprüft werden
-([COMMEC](https://github.com/ibbis-bio/common-mechanism) von IBBIS). Das ist
-optional (siehe unten, warum) — wer es will, startet stattdessen mit:
-
-```bash
-docker compose --profile biosecurity up --build
-```
-
-Der erste Start dauert dadurch etwas länger (lädt zusätzlich eine ~1,2GB
-Datenbank herunter). Sobald es läuft, zeigt der Header oben rechts
-**"Biosecurity screening: on"** mit einem grünen Punkt. Zum Beenden:
-`docker compose --profile biosecurity down`.
+Jede selbst eingegebene Gensequenz wird automatisch auf bekannte Toxine,
+Virulenzfaktoren und regulierte Pathogene geprüft
+([COMMEC](https://github.com/ibbis-bio/common-mechanism) von IBBIS) — dafür
+startet `docker compose up` standardmäßig einen zweiten Container mit, ohne
+dass dafür etwas extra angegeben werden muss. Sobald beide Container laufen,
+zeigt der Header oben rechts **"Biosecurity screening: on"** mit einem
+grünen Punkt.
 
 ## Die Software benutzen
 
@@ -57,7 +53,8 @@ Datenbank herunter). Sobald es läuft, zeigt der Header oben rechts
    mit; nur bei einem echten Treffer erscheint eine Warnung, die man vor dem
    Fortfahren bestätigen muss
 6. **Schritt 4 – Ergebnis:** fertiges Golden-Gate-Design (Level 0 → 1 → 2),
-   Primer, Plasmidkarte und Bestellliste, als FASTA exportierbar
+   Primer, Plasmidkarte und Bestellliste, als annotierte GenBank-Datei (.gb)
+   exportierbar
 
 Passendes Encapsulin noch nicht klar? Oben im Header auf **"Encapsulin
 Filter"** wechseln — dort lässt sich nach Organismus/Accession suchen oder
@@ -99,11 +96,18 @@ Virulenzfaktoren und regulierter Pathogene geprüft. Ein Treffer blockiert das
 Design nicht automatisch, sondern zeigt eine Warnung mit Begründung, die der
 Nutzer explizit bestätigen muss, bevor er fortfahren kann.
 
-**Standardmäßig AUS**, weil COMMEC Conda und BLAST/HMMER braucht — das passt
-nicht ins schlanke Haupt-Image und wird nicht automatisch mitinstalliert
-(anders als primer3-py/ViennaRNA). Ohne konfigurierten Service läuft der
-Builder normal weiter, nur ohne dieses Screening (mit sichtbarem Hinweis in
-Schritt 4).
+**Läuft standardmäßig als zweiter Container mit**, weil COMMEC Conda und
+BLAST/HMMER braucht — das passt nicht ins schlanke Haupt-Image und wird nicht
+automatisch mitinstalliert (anders als primer3-py/ViennaRNA), deshalb der
+eigene Sidecar-Container statt eines eingebauten Checks. Bewusst kein reines
+Opt-in mehr: ein Sicherheits-Check, den man erst manuell dazuschalten müsste,
+würde im Alltag zu leicht vergessen oder übersprungen. Ist `commec` einmal
+nicht erreichbar (z. B. während des Hochfahrens, oder bei `COMMEC_URL`
+manuell auf leer gesetzt), läuft der Builder trotzdem normal weiter, nur ohne
+dieses Screening (mit sichtbarem Hinweis in Schritt 4) — echte
+Unumgehbarkeit kann selbst gehostete, quelloffene Software ohnehin nicht
+garantieren, das ist hier also die ehrliche Grundeinstellung, kein
+Manipulationsschutz.
 
 **Datenbankumfang:** Das mitgelieferte `commec-service`-Image lädt beim Build
 nur die kuratierte Biorisk+Low-concern-Datenbank (~1.2 GB) — nicht die vollen
@@ -124,7 +128,7 @@ COMMEC_URL=http://localhost:8787 pnpm dev
 ```
 
 (nachdem der `commec`-Container separat gestartet wurde, z. B. mit
-`docker compose --profile biosecurity up commec`).
+`docker compose up commec`).
 
 **Verifiziert:** Der komplette Ablauf (Container-Build, echter
 `commec screen`-Aufruf, Frontend-Gate inkl. Warn-Modal) wurde end-to-end

@@ -1,0 +1,15 @@
+{
+  "id": "spycatcher",
+  "kind": "surface_marker",
+  "label": "SpyCatcher",
+  "sequence": null,
+  "sequence_status": "missing",
+  "on_stock": null,
+  "length_bp": 339,
+  "organism": null,
+  "source": null,
+  "notes": "113-aa-Protein, bindet kovalent an SpyTag (Isopeptidbindung) \u2014 noch keine echte Sequenz hinterlegt.",
+  "used_by": [
+    "SURFACE_MARKERS[spycatcher]"
+  ]
+}

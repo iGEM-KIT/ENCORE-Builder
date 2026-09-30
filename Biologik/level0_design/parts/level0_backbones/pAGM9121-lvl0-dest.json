@@ -1,0 +1,426 @@
+{
+  "id": "pAGM9121-lvl0-dest",
+  "kind": "level0_backbone",
+  "label": "Level 0 Universal Acceptor \u2014 pAGM9121",
+  "sequence": "GTGCCGAGGCACGAACCCAGTGGACATAAGCCTGTTCGGTTCGTAAGCTGTAATGCAAGTAGCGTATGCGCTCACGCAACTGGTCCAGAACCTTGACCGAACGCAGCGGTGGTAACGGCGCAGTGGCGGTTTTCATGGCTTGTTATGACTGTTTTTTTGGGGTACAGTCTATGCCTCGGGCATCCAAGCAGCAAGCGCGTTACGCCGTGGGTCGATGTTTGATGTTATGGAGCAGCAACGATGTTACGCAGCAGGGCAGTCGCCCTAAAACAAAGTTAAACATCATGGGGGAAGCGGTGATCGCCGAAGTATCGACTCAACTATCAGAGGTAGTTGGCGTCATCGAGCGCCATCTCGAACCGACGTTGCTGGCCGTACATTTGTACGGCTCCGCAGTGGATGGCGGCCTGAAGCCACACAGCGATATTGATTTGCTGGTTACGGTGACCGTAAGGCTTGATGAAACAACGCGGCGAGCTTTGATCAACGACCTTTTGGAAACTTCGGCTTCCCCTGGAGAGAGCGAGATTCTCCGCGCTGTAGAAGTCACCATTGTTGTGCACGACGACATCATTCCGTGGCGTTATCCAGCTAAGCGCGAACTGCAATTTGGAGAATGGCAGCGCAATGACATTCTTGCAGGTATCTTCGAGCCAGCCACGATCGACATTGATCTGGCTATCTTGCTGACAAAAGCAAGAGAACATAGCGTTGCCTTGGTAGGTCCAGCGGCGGAGGAACTCTTTGATCCGGTTCCTGAACAGGATCTATTTGAGGCGCTAAATGAAACCTTAACGCTATGGAACTCGCCGCCCGACTGGGCTGGCGATGAGCGAAATGTAGTGCTTACGTTGTCCCGCATTTGGTACAGCGCAGTAACCGGCAAAATCGCGCCGAAGGATGTCGCTGCCGACTGGGCAATGGAGCGCCTGCCGGCCCAGTATCAGCCCGTCATACTTGAAGCTAGACAGGCTTATCTTGGACAAGAAGAAGATCGCTTGGCCTCGCGCGCAGATCAGTTGGAAGAATTTGTCCATTACGTGAAAGGCGAGATCACCAAGGTAGTCGGCAAATAATGTCTAGCTAGAAATTCGTTCAAGCCGACGCCGCTTCGCGGCGCGGCTTAACTCAAGCGTTAGATGCACTAAGCACATAATTGCTCACAGCCAAACTATCAGGTCAAGTCTGCTTTTATTATTTTTAAGCGTGCATAATAAGCCCTACACAAATTGGGAGATATATCATGCTGTCAGACCAAGTTTACTCATATATACTTTAGATTGATTTAAAACTTCATTTTTAATTTAAAAGGATCTAGGTGAAGATCCTTTTTGATAATCTCATGACCAAAATCCCTTAACGTGAGTTTTCGTTCCACTGAGCGTCAGACCCCGTAGAAAAGATCAAAGGATCTTCTTGAGATCCTTTTTTTCTGCGCGTAATCTGCTGCTTGCAAACAAAAAAACCACCGCTACCAGCGGTGGTTTGTTTGCCGGATCAAGAGCTACCAACTCTTTTTCCGAAGGTAACTGGCTTCAGCAGAGCGCAGATACCAAATACTGTTCTTCTAGTGTAGCCGTAGTTAGGCCACCACTTCAAGAACTCTGTAGCACCGCCTACATACCTCGCTCTGCTAATCCTGTTACCAGTGGCTGCTGCCAGTGGCGATAAGTCGTGTCTTACCGGGTTGGACTCAAGACGATAGTTACCGGATAAGGCGCAGCGGTCGGGCTGAACGGGGGGTTCGTGCACACAGCCCAGCTTGGAGCGAACGACCTACACCGAACTGAGATACCTACAGCGTGAGCTATGAGAAAGCGCCACGCTTCCCGAAGGGAGAAAGGCGGACAGGTATCCGGTAAGCGGCAGGGTCGGAACAGGAGAGCGCACGAGGGAGCTTCCAGGGGGAAACGCCTGGTATCTTTATAGTCCTGTCGGGTTTCGCCACCTCTGACTTGAGCGTCGATTTTTGTGATGCTCGTCAGGGGGGCGGAGCCTATGGAAAAACGCCAGCAACGCGGCCTTTTTACGGTTCCTGCACTCTGTGGTCTCATTGTCTTCGCAGCTGGCACGACAGGTTTCCCGACTGGAAAGCGGGCAGTGAGCGCAACGCAATTAATGTGAGTTAGCTCACTCATTAGGCACCCCAGGCTTTACACTTTATGCTTCCGGCTCGTATGTTGTGTGGAATTGTGAGCGGATAACAATTTCACACAGGAAACAGCTATGACCATGATTACGCCAAGCTTGCATGCCTGCAGGTCGACTCTAGAGGATCCCCGGGTACCGAGCTCGAATTCACTGGCCGTCGTTTTACAACGTCGTGACTGGGAAAACCCTGGCGTTACCCAACTTAATCGCCTTGCAGCACATCCCCCTTTCGCCAGCTGGCGTAATAGCGAAGAGGCCCGCACCGATCGCCCTTCCCAACAGTTGCGCAGCCTGAATGGCGAATGGCGCCTGATGCGGTATTTTCTCCTTACGCATCTGTGCGGTATTTCACACCGCATATGGTGCACTCTCAGTACAATCTGCTCTGATGCCGCATAGTTAAGCCAGCCCCGACACCCGCCAACACCCGCTGACGCGCCCTGACGGGCTTGTCTGCTCCCGGCATCCGCTTACAGACAAGCTGTGACGAAGACAACGAGACCACGAA",
+  "sequence_status": "real",
+  "on_stock": null,
+  "length_bp": 2659,
+  "circular": true,
+  "organism": "synthetic DNA construct (E. coli cloning vector)",
+  "selection_marker": "SmR (spectinomycin/streptomycin resistance, aadA)",
+  "origin": "ColE1/pMB1/pBR322/pUC ori (1417..2005)",
+  "receiver_overhangs": {
+    "5_prime": {
+      "label": "NLvl0",
+      "location": "complement(2050..2053)",
+      "sequence": "TGAG"
+    },
+    "3_prime": {
+      "label": "CLvl0",
+      "location": "2648..2651",
+      "sequence": "CGAG"
+    }
+  },
+  "current_insert": {
+    "description": "Placeholder lacZ-alpha stuffer (blue/white screening) between the BsaI-cut NLvl0/CLvl0 acceptor overhangs, labelled \"pL0-P\" \u2014 cut out and replaced by the actual Level 0 part once domesticated via BsaI.",
+    "region": {
+      "label": "pL0-P",
+      "location": "2055..2646"
+    }
+  },
+  "source": "Level 0 Destination.gb (vom Nutzer bereitgestellt), pAGM9121 aus Weber E, Engler C, Gruetzner R, Werner S, Marillonnet S. \"A modular cloning system for standardized assembly of multigene constructs.\" PLoS One. 2011 Feb 18;6(2):e16765. PMID 21364738. Importiert 2026-09-30.",
+  "notes": "Die Overhang-Labels \"NLvl0\"/\"CLvl0\" hatten im Original ein Leerzeichen am Ende (\"NLvl0 \"/\"CLvl0 \") \u2014 hier bereinigt. Noch nicht in die Level-0/1/2-Design-Engine oder die Frontend-Plasmidkarte verdrahtet.",
+  "features": [
+    {
+      "type": "source",
+      "location": "1..2659",
+      "qualifiers": {
+        "mol_type": [
+          "other DNA"
+        ],
+        "organism": [
+          "synthetic DNA construct"
+        ]
+      }
+    },
+    {
+      "type": "primer_bind",
+      "location": "complement(20..42)",
+      "qualifiers": {
+        "%GC": [
+          "52.2"
+        ],
+        "Hairpin_Tm": [
+          "46.5"
+        ],
+        "Self_Dimer_Tm": [
+          "None"
+        ],
+        "Tm": [
+          "61.7"
+        ],
+        "annotation_group": [
+          "533708218107666ea21bb6d-364a-4720-94e6- eb4bbdcd2c9a"
+        ],
+        "created_by": [
+          "primer3"
+        ],
+        "Sequence": [
+          "GAACCGAACAGGCTTATGTCCAC"
+        ],
+        "Mismatches": [
+          "0"
+        ],
+        "#_Local_Off-target_Sites": [
+          "0"
+        ],
+        "Local_Off-target": [
+          "Level 0 Destination"
+        ],
+        "label": [
+          "66_Lvl0_bb_rv"
+        ]
+      }
+    },
+    {
+      "type": "CDS",
+      "location": "285..1076",
+      "qualifiers": {
+        "codon_start": [
+          "1"
+        ],
+        "gene": [
+          "aadA"
+        ],
+        "product": [
+          "aminoglycoside adenylyltransferase (Murphy, 1985)"
+        ],
+        "note": [
+          "confers resistance to spectinomycin and streptomycin"
+        ],
+        "translation": [
+          "MGEAVIAEVSTQLSEVVGVIERHLEPTLLAVHLYGSAVDGGLKP HSDIDLLVTVTVRLDETTRRALINDLLETSASPGESEILRAVEVTIVVHDDIIPWRYP AKRELQFGEWQRNDILAGIFEPATIDIDLAILLTKAREHSVALVGPAAEELFDPVPEQ DLFEALNETLTLWNSPPDWAGDERNVVLTLSRIWYSAVTGKIAPKDVAADWAMERLPA QYQPVILEARQAYLGQEEDRLASRADQLEEFVHYVKGEITKVVGK"
+        ],
+        "label": [
+          "SmR"
+        ]
+      }
+    },
+    {
+      "type": "rep_origin",
+      "location": "1417..2005",
+      "qualifiers": {
+        "direction": [
+          "RIGHT"
+        ],
+        "note": [
+          "high-copy-number ColE1/pMB1/pBR322/pUC origin of replication"
+        ],
+        "label": [
+          "ori"
+        ]
+      }
+    },
+    {
+      "type": "primer_bind",
+      "location": "1906..1925",
+      "qualifiers": {
+        "note": [
+          "pBR322 origin, forward primer"
+        ],
+        "label": [
+          "pBR322ori-F"
+        ]
+      }
+    },
+    {
+      "type": "primer_bind",
+      "location": "2000..2018",
+      "qualifiers": {
+        "%GC": [
+          "52.6"
+        ],
+        "Hairpin_Tm": [
+          "None"
+        ],
+        "Self_Dimer_Tm": [
+          "None"
+        ],
+        "Tm": [
+          "59.9"
+        ],
+        "annotation_group": [
+          "53370817760537586200378-664b-4fd3-bbf3- 71a26217a74c"
+        ],
+        "created_by": [
+          "primer3"
+        ],
+        "Sequence": [
+          "TGGAAAAACGCCAGCAACG"
+        ],
+        "Mismatches": [
+          "0"
+        ],
+        "#_Local_Off-target_Sites": [
+          "0"
+        ],
+        "Local_Off-target": [
+          "Level 0 Destination"
+        ],
+        "label": [
+          "65_Lvl0_bb_fw"
+        ]
+      }
+    },
+    {
+      "type": "misc_feature",
+      "location": "2047..2052",
+      "qualifiers": {
+        "created_by": [
+          "linus"
+        ],
+        "label": [
+          "BsaI rec site"
+        ]
+      }
+    },
+    {
+      "type": "overhang",
+      "location": "complement(2050..2053)",
+      "qualifiers": {
+        "created_by": [
+          "linus"
+        ],
+        "modified_by": [
+          "linus"
+        ],
+        "label": [
+          "NLvl0 "
+        ]
+      }
+    },
+    {
+      "type": "misc_feature",
+      "location": "2055..2646",
+      "qualifiers": {
+        "created_by": [
+          "linus"
+        ],
+        "label": [
+          "pL0-P"
+        ]
+      }
+    },
+    {
+      "type": "misc_feature",
+      "location": "complement(2056..2061)",
+      "qualifiers": {
+        "created_by": [
+          "linus"
+        ],
+        "label": [
+          "BbsI rec site"
+        ]
+      }
+    },
+    {
+      "type": "protein_bind",
+      "location": "2117..2138",
+      "qualifiers": {
+        "bound_moiety": [
+          "E. coli catabolite activator protein"
+        ],
+        "note": [
+          "CAP binding activates transcription in the presence of cAMP."
+        ],
+        "label": [
+          "CAP binding site"
+        ]
+      }
+    },
+    {
+      "type": "promoter",
+      "location": "join(2153..2158,2159..2176,2177..2183)",
+      "qualifiers": {
+        "note": [
+          "promoter for the E. coli lac operon"
+        ],
+        "label": [
+          "lac promoter"
+        ]
+      }
+    },
+    {
+      "type": "protein_bind",
+      "location": "2191..2207",
+      "qualifiers": {
+        "bound_moiety": [
+          "lac repressor encoded by lacI"
+        ],
+        "note": [
+          "The lac repressor binds to the lac operator to inhibit transcription in E. coli. This inhibition can be relieved by adding lactose or isopropyl-beta-D-thiogalactopyranoside (IPTG)."
+        ],
+        "label": [
+          "lac operator"
+        ]
+      }
+    },
+    {
+      "type": "primer_bind",
+      "location": "2196..2218",
+      "qualifiers": {
+        "note": [
+          "In lacZ gene"
+        ],
+        "label": [
+          "M13/pUC Reverse"
+        ]
+      }
+    },
+    {
+      "type": "primer_bind",
+      "location": "2215..2231",
+      "qualifiers": {
+        "note": [
+          "common sequencing primer, one of multiple similar variants"
+        ],
+        "label": [
+          "M13 rev"
+        ]
+      }
+    },
+    {
+      "type": "primer_bind",
+      "location": "2215..2231",
+      "qualifiers": {
+        "note": [
+          "In lacZ gene. Also called M13-rev"
+        ],
+        "label": [
+          "M13 Reverse"
+        ]
+      }
+    },
+    {
+      "type": "CDS",
+      "location": "2227..2550",
+      "qualifiers": {
+        "codon_start": [
+          "1"
+        ],
+        "gene": [
+          "lacZ fragment"
+        ],
+        "product": [
+          "LacZ-alpha fragment of beta-galactosidase"
+        ],
+        "translation": [
+          "MTMITPSLHACRSTLEDPRVPSSNSLAVVLQRRDWENPGVTQLN RLAAHPPFASWRNSEEARTDRPSQQLRSLNGEWRLMRYFLLTHLCGISHRIWCTLSTI CSDAA"
+        ],
+        "label": [
+          "lacZ-alpha"
+        ]
+      }
+    },
+    {
+      "type": "misc_feature",
+      "location": "2244..2300",
+      "qualifiers": {
+        "note": [
+          "pUC18/19 multiple cloning site"
+        ],
+        "label": [
+          "MCS"
+        ]
+      }
+    },
+    {
+      "type": "primer_bind",
+      "location": "complement(2301..2318)",
+      "qualifiers": {
+        "note": [
+          "In lacZ gene. Also called M13-F20 or M13 (-21) Forward"
+        ],
+        "label": [
+          "M13 Forward"
+        ]
+      }
+    },
+    {
+      "type": "primer_bind",
+      "location": "complement(2301..2317)",
+      "qualifiers": {
+        "note": [
+          "common sequencing primer, one of multiple similar variants"
+        ],
+        "label": [
+          "M13 fwd"
+        ]
+      }
+    },
+    {
+      "type": "primer_bind",
+      "location": "complement(2310..2332)",
+      "qualifiers": {
+        "note": [
+          "In lacZ gene"
+        ],
+        "label": [
+          "M13/pUC Forward"
+        ]
+      }
+    },
+    {
+      "type": "primer_bind",
+      "location": "complement(2526..2545)",
+      "qualifiers": {
+        "note": [
+          "pRS vectors, use to sequence yeast selectable marker"
+        ],
+        "label": [
+          "pRS-marker"
+        ]
+      }
+    },
+    {
+      "type": "misc_feature",
+      "location": "2640..2645",
+      "qualifiers": {
+        "created_by": [
+          "linus"
+        ],
+        "label": [
+          "BbsI rec site"
+        ]
+      }
+    },
+    {
+      "type": "overhang",
+      "location": "2648..2651",
+      "qualifiers": {
+        "created_by": [
+          "linus"
+        ],
+        "modified_by": [
+          "linus"
+        ],
+        "label": [
+          "CLvl0 "
+        ]
+      }
+    },
+    {
+      "type": "misc_feature",
+      "location": "complement(2649..2654)",
+      "qualifiers": {
+        "created_by": [
+          "linus"
+        ],
+        "label": [
+          "BsaI rec site"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "pabp",
+  "kind": "cargo_preset",
+  "label": "PABP (Pab1p)",
+  "sequence": "ATGGCAGATATTACCGAAAAACTGCTGGAACAGCTGAACAGCCTGACCCTGGAAGAAAGCAGCAAAGAAGTTAGCGGCGAACTGAGCGGCAAACTGGAAGCAAGCAGCAGCGAAAGCAGCGGC",
+  "sequence_status": "real",
+  "on_stock": null,
+  "length_bp": 123,
+  "organism": "S. cerevisiae",
+  "source": "Bereits vor dieser Datenbank in Biologik/level0_design/data.py hinterlegt.",
+  "notes": "Codiert den Anfang von Pab1p (Poly(A)-bindendes Protein), aber nur ein kurzes N-terminales Fragment, kein vollstaendiger ORF \u2014 ebenfalls nur als Demo-Cargo geeignet, nicht als funktionales PABP-Gen.",
+  "used_by": [
+    "CARGO_PRESETS[pabp]"
+  ]
+}

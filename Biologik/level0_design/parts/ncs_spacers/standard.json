@@ -1,0 +1,13 @@
+{
+  "id": "standard",
+  "kind": "ncs_spacer",
+  "label": "NCS spacer (standard)",
+  "sequence": null,
+  "sequence_status": "missing",
+  "on_stock": null,
+  "length_bp": 15,
+  "organism": null,
+  "source": null,
+  "notes": "Genereller Fuell-/Spacer-Baustein fuer unbelegte Module-Slots (Type 0.1/0.2/0.4/0.5) \u2014 kein Bezug zu einem bestimmten Nanocompartment. Noch keine echte Sequenz hinterlegt.",
+  "used_by": []
+}

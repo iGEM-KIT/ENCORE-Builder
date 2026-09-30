@@ -1,0 +1,13 @@
+{
+  "id": "EXAMPLE-shell-id",
+  "kind": "nanocompartment_shell",
+  "label": "Example shell",
+  "sequence": null,
+  "sequence_status": "missing",
+  "on_stock": null,
+  "length_bp": null,
+  "organism": null,
+  "source": null,
+  "notes": null,
+  "used_by": []
+}

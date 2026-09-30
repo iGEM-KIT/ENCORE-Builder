@@ -2,6 +2,8 @@ from __future__ import annotations
 
 """Statische Daten und Konstanten für das Level-0-Design."""
 
+from .parts_db import load_parts
+
 # Stop-Codons: Diese Tripletts markieren das Ende einer Proteinkodierung, STOP_CODONS ist eine Variable
 STOP_CODONS = ["TAA", "TAG", "TGA"]
 
@@ -54,20 +56,19 @@ NANOCOMPARTMENTS = [
 ]
 
 # Bibliothek für Cargo-Vorlagen, also beispielhafte Gene of Interest Sequenzen, die ins Plasmid eingebaut werden können.
-# Welche Beispiele für Cargo-Sequenzen sollen wir hier aufnehmen?
+# Kommt jetzt aus der Sequenz-Datenbank (parts/cargo_presets/, siehe parts/README.md) statt
+# hier hart codiert zu sein — ein neues Preset hinzufuegen heisst nur noch: eine JSON-Datei
+# dort anlegen, kein Python aendern.
 
-CARGO_PRESETS = [
-    {
-        "id": "gfp",
-        "label": "GFP",
-        "seq": "ATGAGCAAAGGCGAAGAACTGTTTACCGGCGTTGTTCCGATTCTGGTTGAACTGGATGGCGATGTTAACGGCCATAAATTTAGCGTTAGCGGCGAAGGCGAAGGCGATGCGACCTATGGCAAACTGACCCTGAAATTTATTTGCACCACCGGCAAACTGCCGGTTCCGTGGCCGACCCTGGTTACCACCCTGAGC",
-    },
-    {
-        "id": "pabp",
-        "label": "PABP (Pab1p)",
-        "seq": "ATGGCAGATATTACCGAAAAACTGCTGGAACAGCTGAACAGCCTGACCCTGGAAGAAAGCAGCAAAGAAGTTAGCGGCGAACTGAGCGGCAAACTGGAAGCAAGCAGCAGCGAAAGCAGCGGC",
-    },
-]
+def _load_cargo_presets() -> list[dict]:
+    return [
+        {"id": entry["id"], "label": entry["label"], "seq": entry["sequence"]}
+        for entry in load_parts()["cargo_presets"]
+        if entry.get("sequence")
+    ]
+
+
+CARGO_PRESETS = _load_cargo_presets()
 
 # Bibliothek für Linker mit Aminosäuren aa; kurze Beschreibungdesc; Wiederholungssequenz gibt an, welche Sequenz wiederholt wird repeat;
 # Wiederholungssequenz beschreibt, aus welchen Bausteinen er augebaut ist
@@ -94,6 +95,7 @@ SURFACE_MARKERS = [
 # lesen kann, ohne dass sich die Aufrufer ändern (siehe PROJECT_TODO.txt, 5).
 
 def get_libraries() -> dict:
+    parts = load_parts()
     return {
         "nanocompartments": NANOCOMPARTMENTS,
         "cargoPresets": CARGO_PRESETS,
@@ -101,6 +103,12 @@ def get_libraries() -> dict:
         "promoters": PROMOTERS,
         "surfaceMarkers": SURFACE_MARKERS,
         "typeOverhangs": TYPE_OVERHANGS,
+        # Noch nicht in Katalog-Listen oben referenziert (kein Dropdown im Frontend) —
+        # siehe Biologik/level0_design/parts/README.md.
+        "level0Backbones": parts["level0_backbones"],
+        "level1Backbones": parts["level1_backbones"],
+        "level2Backbones": parts["level2_backbones"],
+        "terminators": parts["terminators"],
     }
 
 
