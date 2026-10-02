@@ -3,7 +3,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ENCORE toolKIT</title>
 <script>try{if(localStorage.getItem('encore.theme')==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}</script>
-<script>try{if(/^#step-[1-4]$/.test(location.hash))document.documentElement.setAttribute('data-entry','builder')}catch(e){}</script>
+<script>try{if(/^#step-[1-5]$/.test(location.hash))document.documentElement.setAttribute('data-entry','builder')}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -314,7 +314,7 @@
   .assembly .levelblock:last-of-type{margin-bottom:4px}
   .assembly .l0oh,.assembly .enzyme-tag{background:rgba(255,255,255,.72);
     border-color:rgba(23,128,111,.34);color:#14544A}
-  .assembly .strand-dir,.assembly .l2-dir,.assembly .legend{color:#2C6A60}
+  .assembly .strand-dir,.assembly .l2-dir{color:#2C6A60}
   .assembly .note{background:rgba(255,255,255,.7);border-color:rgba(23,128,111,.28);color:#153B35}
   .assembly .note svg{color:var(--brand-teal-deep)}
   /* Outline every part the way the artwork outlines its shapes. The inset shadow
@@ -324,7 +324,7 @@
   [data-theme="dark"] .assembly{border-color:var(--brand-teal)}
   [data-theme="dark"] .assembly .l0oh,[data-theme="dark"] .assembly .enzyme-tag{
     background:rgba(255,255,255,.07);border-color:rgba(47,191,166,.34);color:#9FD9CD}
-  [data-theme="dark"] .assembly .strand-dir,[data-theme="dark"] .assembly .l2-dir,[data-theme="dark"] .assembly .legend{color:#9FD9CD}
+  [data-theme="dark"] .assembly .strand-dir,[data-theme="dark"] .assembly .l2-dir{color:#9FD9CD}
   [data-theme="dark"] .assembly .note{background:rgba(255,255,255,.05);
     border-color:rgba(47,191,166,.28);color:#D7ECE7}
   [data-theme="dark"] .assembly .l2-hub .l2-arrows{color:var(--brand-teal)}
@@ -342,8 +342,7 @@
     background:var(--forest);padding:4px 10px;border-radius:7px;letter-spacing:.04em;flex:none}
   [data-theme="dark"] .lvltab-badge{background:var(--teal);color:#062019}
   .lvltab-title{font-family:'Space Grotesk';font-weight:600;font-size:15px}
-  .lvltab-sub{font-size:12px;color:var(--muted);margin-left:auto;text-align:right}
-  .lvltab-chev{flex:none;color:var(--muted);transition:transform .15s}
+  .lvltab-chev{flex:none;margin-left:auto;color:var(--muted);transition:transform .15s}
   .lvltab.open .lvltab-chev{transform:rotate(180deg)}
   .lvltab-body{padding:0 18px 20px;display:none}
   .lvltab.open .lvltab-body{display:block}
@@ -412,17 +411,17 @@
      the .strand-dir header above each row (which flips for the antisense
      cargo ORF) says which of the two actually carries that module's coding
      sequence — see l0ModuleRow(). */
-  .partsrow.sep.l0grid{min-width:0;align-items:stretch;justify-content:space-between;gap:10px 6px}
-  .l0grid .part{min-width:66px;padding:8px 9px;font-size:11.5px}
+  /* Identical column template in the cargo row and the NC row (edge chip · 5 modules each separated by a junction
+     chip · edge chip), so the two rows stand exactly on top of each other. */
+  .partsrow.sep.l0grid{display:grid;grid-template-columns:35px repeat(4,minmax(54px,1fr) 66px) minmax(54px,1fr) 35px;min-width:0;align-items:stretch;gap:0 4px}
+  .l0grid .part{min-width:0;align-items:center;text-align:center;padding:8px 7px;font-size:11.5px}
   .l0grid .part small{font-size:9px}
   .l0grid .part .ptype{font-size:8.5px}
   .l0frag{display:flex}
   .l0frag .part{flex:1}
   .l0frag .part{box-shadow:inset 0 0 0 2px rgba(11,58,51,.75),0 2px 10px rgba(11,58,51,.18)}
-  .l0cap{font-size:11.5px;line-height:1.5;color:var(--muted);margin:11px 0 0;max-width:72ch}
+  .lvlinfo{display:flex;align-items:center;gap:8px;margin:12px 0 0;font-size:12px;font-weight:600;color:var(--muted)}
   [data-theme="dark"] .l0frag .part{box-shadow:inset 0 0 0 2px rgba(0,0,0,.55),0 2px 10px rgba(0,0,0,.35)}
-  .assembly .l0cap{color:#2C6A60}
-  [data-theme="dark"] .assembly .l0cap{color:#9FD9CD}
   .l0ohcol{display:flex;flex-direction:column;justify-content:space-between;gap:6px}
   .l0oh{font-family:'JetBrains Mono';font-size:9.5px;font-weight:700;color:var(--muted);background:var(--card-2);border:1px solid var(--line);border-radius:6px;padding:3px 5px;white-space:nowrap}
   .l0oh.sense{color:var(--ink);margin-left:32px}   /* top-strand 5' overhang hangs off the part to the RIGHT of the junction... */
@@ -436,29 +435,29 @@
   .part .ptype{font-family:'JetBrains Mono';font-size:9px;opacity:.85;letter-spacing:.02em}
 
   /* Level 2 bidirektional */
-  .l2-row{display:flex;align-items:flex-end;gap:4px;flex-wrap:nowrap;min-width:max-content}
-  .l2-side{display:flex;flex-direction:column;gap:5px}
-  .l2-dir{display:flex;justify-content:space-between;align-items:center;gap:10px;font-family:'JetBrains Mono';font-size:10px;color:var(--muted);white-space:nowrap}
+  #lvl2strand{display:flex;width:100%}
+  .l2grid .part,.l2-hub .part{overflow-wrap:anywhere}
+  .l2-row{display:flex;align-items:stretch;gap:4px;flex-wrap:nowrap;width:100%;min-width:max-content}
+  .l2-side{display:flex;flex-direction:column;gap:5px;flex:5 1 0;min-width:0}
+  .l2-dir{height:14px;display:flex;justify-content:space-between;align-items:center;gap:10px;font-family:'JetBrains Mono';font-size:10px;color:var(--muted);white-space:nowrap}
   .l2-strandtag{font-size:9px;font-weight:700;padding:1px 7px;border-radius:20px;letter-spacing:.02em;white-space:nowrap}
   .l2-strandtag.sense{background:rgba(47,191,166,.22);color:var(--brand-teal-deep)}
   .l2-strandtag.anti{background:rgba(255,156,33,.26);color:#A35C00}
   [data-theme="dark"] .l2-strandtag.sense{color:#6FD8C3}
   [data-theme="dark"] .l2-strandtag.anti{color:#FFB85C}
-  .l2-hub{display:flex;flex-direction:column;align-items:center;gap:5px;margin:0 4px}
+  .l2-hub{display:flex;flex-direction:column;align-items:stretch;gap:5px;margin:0 4px;flex:1.3 1 0;min-width:0}
+  .l2-hub .l2-arrows{justify-content:center;height:14px}
+  .l2-dir.ph{visibility:hidden}
   .l2-hub .l2-arrows{display:flex;gap:14px;align-items:center;color:var(--promo)}
   .tri{display:inline-block;width:9px;height:10px;vertical-align:middle;fill:currentColor;flex:none}
   .l2-hub .part{margin-right:0;clip-path:none!important;border-radius:8px;min-width:92px;align-items:center;text-align:center}
   /* left side: mirror arrow direction to the left */
-  .l2-left-row .part{clip-path:polygon(8px 0, 100% 0, 100% 100%, 8px 100%, 0 50%)!important;margin-right:0;margin-left:-4px}
-  .l2-left-row .part:last-child{border-radius:0 8px 8px 0}
-  .l2-left-row .part:first-child{border-radius:0}
-
-  .legend{display:flex;flex-wrap:wrap;gap:10px 16px;margin-top:14px;font-size:11.5px;color:var(--muted)}
-  .legend span{display:flex;align-items:center;gap:6px}
-  /* The lighter brand fills (yellow, mint) would vanish on a white card, so every
-     swatch carries the artwork's dark outline. */
-  .legend i{width:11px;height:11px;border-radius:3px;display:inline-block;flex:none;
-    box-shadow:inset 0 0 0 1px rgba(11,58,51,.3)}
+  /* Level 2 boxes: same flat boxes as Level 0 / 1 */
+  .partsrow.sep.l2grid{flex-wrap:nowrap;gap:4px;min-width:0;flex:1}
+  .l2grid .part,.l2-hub .part{flex:1 1 0;min-width:56px;align-items:center;text-align:center;padding:8px 4px;font-size:10.5px;box-shadow:inset 0 0 0 2px rgba(11,58,51,.75),0 2px 10px rgba(11,58,51,.18)}
+  .l2grid .part small,.l2-hub .part small{font-size:9px}
+  .l2grid .part .ptype,.l2-hub .part .ptype{font-size:8.5px}
+  [data-theme="dark"] .l2grid .part,[data-theme="dark"] .l2-hub .part{box-shadow:inset 0 0 0 2px rgba(0,0,0,.55),0 2px 10px rgba(0,0,0,.35)}
 
   .note{display:flex;gap:9px;align-items:flex-start;background:var(--card-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--ink-soft);margin-top:10px}
   .note svg{flex:none;margin-top:1px;color:var(--teal-deep)}
@@ -468,6 +467,9 @@
   .plate{display:grid;grid-template-columns:auto repeat(12,1fr);gap:5px;min-width:560px}
 
   /* ============ ORDER / TO ORDER ============ */
+  .oi-seq{font-family:'JetBrains Mono';font-size:11px;line-height:1.5;word-break:break-all;color:var(--ink-soft);margin-top:2px}
+  .oi-seq b{font-weight:700;color:var(--ink)}
+  .ordblock .orderlist{margin-top:10px}
   .orderlist{display:flex;flex-direction:column;gap:9px}
   .orderitem{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:11px;padding:12px 14px;background:var(--card)}
   .orderitem .oi-sw{width:11px;height:32px;border-radius:4px;flex:none;
@@ -514,7 +516,7 @@
   [data-theme="dark"] .biosec-badge.low{background:rgba(0,158,115,.22);color:#7ee0bd}
   [data-theme="dark"] .biosec-badge.moderate{background:rgba(230,159,0,.22);color:#f0c060}
   [data-theme="dark"] .biosec-badge.high{background:rgba(213,94,0,.22);color:#f0a883}
-  .biosec-result{--c:#0a8f66;--bg:rgba(0,158,115,.08);display:flex;gap:14px;align-items:flex-start;border:1px solid var(--line);border-left:4px solid var(--c);background:var(--bg);border-radius:12px;padding:14px 16px;margin:2px 0 28px}
+  .biosec-result{--c:#0a8f66;--bg:rgba(0,158,115,.08);display:flex;gap:14px;align-items:flex-start;border:1px solid var(--line);border-left:4px solid var(--c);background:var(--bg);border-radius:12px;padding:14px 16px;margin:2px 0 20px}
   .biosec-result[data-state="flagged"]{--c:#d98e00;--bg:rgba(230,159,0,.10)}
   .biosec-result[data-state="off"]{--c:#8a948f;--bg:var(--card-2)}
   [data-theme="dark"] .biosec-result{--c:#2fbfa6;--bg:rgba(47,191,166,.09)}
@@ -550,6 +552,15 @@
   [data-theme="dark"] .l0m-badge.sense{color:#9FD9CD}
   .l0m-end{font-family:'JetBrains Mono';font-weight:700;color:var(--ink);opacity:.7;user-select:none}
   .l0m-actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 8px}
+  .l0m-prim{display:flex;flex-direction:column;gap:8px}
+  .l0m-primer{background:var(--card-2);border:1px solid var(--line);border-radius:10px;padding:8px 12px}
+  .l0m-primer .pn{font-weight:700;font-size:12.5px}
+  .l0m-primer .pn small{font-family:'JetBrains Mono';font-weight:400;font-size:11px;color:var(--muted);margin-left:6px}
+  .l0m-primer .ps{font-family:'JetBrains Mono';font-size:11.5px;line-height:1.6;word-break:break-all;margin-top:2px}
+  .ps .clamp{color:var(--muted)}
+  .ps .flank{background:rgba(23,128,111,.16);border-radius:3px}
+  .ps .ann{color:var(--ink);font-weight:700}
+  .l0m-note{font-size:12px;color:var(--muted);margin:6px 0 0}
   .l0m-warn{border:1px solid rgba(163,92,0,.4);background:rgba(224,141,0,.1);color:#7a4600;border-radius:10px;padding:8px 12px;font-size:12.5px;margin-bottom:6px}
   [data-theme="dark"] .l0m-warn{color:#f0c27a}
   .modal-backdrop{position:fixed;inset:0;background:rgba(4,10,8,.55);z-index:80;display:none;align-items:center;justify-content:center;padding:20px}
@@ -577,6 +588,34 @@
   .featlist .bp{margin-left:auto;font-family:'JetBrains Mono';font-size:11px;color:var(--muted)}
 
   .copybar{display:flex;justify-content:flex-end;gap:8px;margin-top:16px;flex-wrap:wrap}
+  .chip:disabled{opacity:.45;cursor:not-allowed}
+  /* Level 1 module rows: the parts are ligated, so each junction is ONE chip (no stagger). Grey = Level 1 acceptor
+     overhangs (NLvl1/CLvl1), orange = Level 2 overhangs (cut later with BbsI), dark = junction between two parts. */
+  .partsrow.sep.l1grid{display:grid;grid-template-columns:34px 34px repeat(5,minmax(54px,1fr)) 34px 34px;min-width:0;align-items:stretch;gap:0 6px}
+  .partsrow.sep.l1grid.single{grid-template-columns:34px 34px minmax(120px,1fr) 34px 34px}
+  .l1grid .part{min-width:0;align-items:center;text-align:center;padding:8px 7px;font-size:11.5px;box-shadow:inset 0 0 0 2px rgba(11,58,51,.75),0 2px 10px rgba(11,58,51,.18)}
+  .l1grid .part small{font-size:9px}
+  .l1grid .part .ptype{font-size:8.5px}
+  [data-theme="dark"] .l1grid .part{box-shadow:inset 0 0 0 2px rgba(0,0,0,.55),0 2px 10px rgba(0,0,0,.35)}
+  .l1oh{align-self:center;justify-self:center;font-family:'JetBrains Mono';font-size:9.5px;font-weight:700;color:var(--muted);background:var(--card-2);border:1px solid var(--line);border-radius:6px;padding:3px 4px;white-space:nowrap}
+  .l1oh.l2{color:#7a4600;background:rgba(224,141,0,.12);border-color:rgba(163,92,0,.4)}
+  [data-theme="dark"] .l1oh.l2{color:#f0c27a}
+  .l1oh.t{align-self:start}
+  .l1oh.b{align-self:end}
+  .l2ohcol{align-self:stretch;padding:19px 0;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;align-items:center;margin:0 2px;flex:none}
+  .l2ohcol.left{justify-content:flex-start}
+  .l2ohcol.right{justify-content:flex-end}
+  .l1grid.clickable,.l2-row.clickable{cursor:pointer}
+  .l1grid.clickable .part,.l2-row.clickable .part{transition:transform .12s, filter .12s}
+  .l1grid.clickable:hover .part,.l2-row.clickable:hover .part{filter:brightness(1.06)}
+  .l1grid.clickable:focus-visible,.l2-row.clickable:focus-visible{outline:2px solid var(--teal);outline-offset:4px;border-radius:8px}
+  .asm-parts{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px}
+  .asm-parts li{display:flex;align-items:center;gap:9px;font-size:12.5px}
+  .asm-parts i{width:10px;height:10px;border-radius:3px;flex:none}
+  .asm-parts .bp{margin-left:auto;font-family:'JetBrains Mono';font-size:11px;color:var(--muted)}
+  .asm-parts .ph{font-family:'JetBrains Mono';font-size:10px;color:#7a4600}
+  .l0bulkrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0 0}
+  .l0bulkrow>span{min-width:76px;font-size:12px;font-weight:700;color:var(--muted)}
   .chip{background:var(--card);border:1px solid var(--line);color:var(--ink);font-family:inherit;font-weight:600;font-size:12.5px;padding:8px 14px;border-radius:9px;cursor:pointer;transition:.12s}
   .chip:hover{background:var(--line-soft)}
   .chip.primary-chip{background:var(--forest);color:#fff;border-color:var(--forest)}
@@ -623,7 +662,9 @@
     <span class="flowarrow">→</span>
     <div class="flowstep"><span class="dot" style="background:var(--promo)"></span>Promoter</div>
     <span class="flowarrow">→</span>
-    <div class="flowstep"><span class="dot" style="background:var(--teal)"></span>Modules &amp; primers</div>
+    <div class="flowstep"><span class="dot" style="background:var(--teal)"></span>Modules</div>
+    <span class="flowarrow">→</span>
+    <div class="flowstep"><span class="dot" style="background:var(--orange)"></span>Order</div>
   </div>
   <div class="prereq">
     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
@@ -649,7 +690,8 @@
     <div class="s-step" data-target="sec-0"><button class="s-node"><span class="s-dot">1</span><span class="s-text"><span class="t">Nanocompartment Site</span><span class="sub">Shell &amp; modules</span></span></button><span class="s-line"></span></div>
     <div class="s-step" data-target="sec-1"><button class="s-node"><span class="s-dot">2</span><span class="s-text"><span class="t">Cargo Site</span><span class="sub">Cargo &amp; modules</span></span></button><span class="s-line"></span></div>
     <div class="s-step" data-target="sec-2"><button class="s-node"><span class="s-dot">3</span><span class="s-text"><span class="t">Promoter</span><span class="sub">Drives both modules</span></span></button><span class="s-line"></span></div>
-    <div class="s-step" data-target="sec-3"><button class="s-node"><span class="s-dot">4</span><span class="s-text"><span class="t">Result</span><span class="sub">Modules &amp; primers</span></span></button></div>
+    <div class="s-step" data-target="sec-3"><button class="s-node"><span class="s-dot">4</span><span class="s-text"><span class="t">Result</span><span class="sub">Modules</span></span></button><span class="s-line"></span></div>
+    <div class="s-step" data-target="sec-4"><button class="s-node"><span class="s-dot">5</span><span class="s-text"><span class="t">Order</span><span class="sub">Stock, oligos, primers, dsDNA</span></span></button></div>
   </nav>
 </aside>
 <!-- ============ TOP BAR: progress + live construct map ============ -->
@@ -808,8 +850,8 @@
         <span class="num-badge">4</span>
         <div class="htext">
           <div class="eyebrow">Step 4</div>
-          <h2>Modules &amp; primers</h2>
-          <p>Golden Gate assembly Level 0 → 1 → 2, cargo primers and order export.</p>
+          <h2>Modules</h2>
+          <p>Golden Gate assembly Level 0 → 1 → 2.</p>
         </div>
       </div>
       <div class="card-body">
@@ -840,12 +882,11 @@
                 <button class="lvltab-head" type="button">
                   <span class="lvltab-badge">Level 0</span>
                   <span class="lvltab-title">Individual parts</span>
-                  <span class="lvltab-sub" id="l0sub"></span>
                   <svg class="lvltab-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
                 <div class="lvltab-body">
                   <div class="strandwrap"><div class="strand" id="lvl0strand"></div></div>
-                  <p class="l0cap" id="l0note">Level 0 parts are cloned <b>separately</b> — one plasmid each. They are not joined yet: the <b>Type number</b> alone fixes where each part ends up once BsaI assembles them into the Level 1 module.</p>
+                                    <div class="lvlinfo"><button class="info" type="button" data-info="level0" aria-label="How this level works">i</button><span>How this level works</span></div>
 
                   <div class="lvlsubhead">Destination plasmid</div>
                   <div class="platrow">
@@ -860,6 +901,22 @@
                     <button class="chip" type="button" id="plat0Copy">Copy sequence</button>
                     <button class="chip primary-chip" type="button" id="plat0Dl">Download GenBank (.gb)</button>
                   </div>
+                  <div class="l0m-sec" id="l0bulk" style="display:none">
+                    <div class="l0m-h">Level 0 downloads <span class="l0m-meta" id="l0bulkMeta"></span></div>
+                    <p class="l0m-note" style="margin:0">Multi-record GenBank files — no need to open every module separately: module sequences, PCR primers, and the Level 0 plasmids with the parts cloned in. Record names end in <code>_Cargo</code> or <code>_NC</code> (site).</p>
+                    <div class="l0bulkrow"><span>All sites</span>
+                      <button class="chip primary-chip" type="button" data-bulk="seq" data-site="all">Module sequences (.gb)</button>
+                      <button class="chip primary-chip" type="button" data-bulk="prim" data-site="all">Primers (.gb)</button>
+                      <button class="chip primary-chip" type="button" data-bulk="pl" data-site="all">Plasmids (.gb)</button></div>
+                    <div class="l0bulkrow"><span>Cargo site</span>
+                      <button class="chip" type="button" data-bulk="seq" data-site="cargo_site">Module sequences (.gb)</button>
+                      <button class="chip" type="button" data-bulk="prim" data-site="cargo_site">Primers (.gb)</button>
+                      <button class="chip" type="button" data-bulk="pl" data-site="cargo_site">Plasmids (.gb)</button></div>
+                    <div class="l0bulkrow"><span>NC site</span>
+                      <button class="chip" type="button" data-bulk="seq" data-site="nc_site">Module sequences (.gb)</button>
+                      <button class="chip" type="button" data-bulk="prim" data-site="nc_site">Primers (.gb)</button>
+                      <button class="chip" type="button" data-bulk="pl" data-site="nc_site">Plasmids (.gb)</button></div>
+                  </div>
                 </div>
               </div>
 
@@ -867,28 +924,43 @@
                 <button class="lvltab-head" type="button">
                   <span class="lvltab-badge">Level 1</span>
                   <span class="lvltab-title">Modules</span>
-                  <span class="lvltab-sub">Cargo site · Nanocompartment site · Promoter</span>
                   <svg class="lvltab-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
                 <div class="lvltab-body">
                   <div class="levelblock">
-                    <div class="levellabel"><h4>Cargo module</h4><span class="enzyme-tag" id="cargoModTag"></span></div>
+                    <div class="levellabel"><h4>Cargo module</h4><span class="l0m-badge antisense">antisense strand</span></div>
                     <div class="strandwrap"><div class="strand" id="lvl1cargo"></div></div>
-                  </div>
-                  <div class="levelblock">
-                    <div class="levellabel"><h4>Nanocompartment module</h4><span class="enzyme-tag">BsaI</span></div>
-                    <div class="strandwrap"><div class="strand" id="lvl1nc"></div></div>
                   </div>
                   <div class="levelblock">
                     <div class="levellabel"><h4>Promoter</h4><span class="enzyme-tag">bidirectional</span></div>
                     <div class="strandwrap"><div class="strand" id="lvl1promo"></div></div>
                   </div>
+                  <div class="levelblock">
+                    <div class="levellabel"><h4>Nanocompartment module</h4><span class="l0m-badge sense">sense strand</span></div>
+                    <div class="strandwrap"><div class="strand" id="lvl1nc"></div></div>
+                  </div>
+                                    <div class="lvlinfo" id="l1fold"><button class="info" type="button" data-info="level1" aria-label="How this level works">i</button><span>How this level works</span></div>
 
-                  <div class="lvlsubhead">Acceptor plasmids</div>
-                  <div class="platchips" id="platchips1"></div>
-
-                  <div class="lvlsubhead">To order</div>
-                  <div class="orderlist" id="orderList1"></div>
+                  <div class="lvlsubhead">Destination plasmid</div>
+                  <div class="platrow">
+                    <svg id="plasmid1" viewBox="-70 0 570 380"></svg>
+                    <div class="platext">
+                      <h4 id="plat1title"></h4>
+                      <p id="plat1explain"></p>
+                      <ul class="featlist" id="plat1feats"></ul>
+                    </div>
+                  </div>
+                  <div class="l0m-actions" id="plat1actions" style="display:none">
+                    <button class="chip" type="button" id="plat1Copy">Copy sequence</button>
+                    <button class="chip primary-chip" type="button" id="plat1Dl">Download GenBank (.gb)</button>
+                  </div>
+                  <div class="l0m-sec" id="l1bulk" style="display:none">
+                    <div class="l0m-h">Level 1 downloads <span class="l0m-meta" id="l1bulkMeta"></span></div>
+                    <p class="l0m-note" style="margin:0">Multi-record GenBank files — no need to open every module separately.</p>
+                    <div class="l0bulkrow"><span>Modules</span>
+                      <button class="chip primary-chip" type="button" id="l1bulkIns">Module inserts (.gb)</button>
+                      <button class="chip primary-chip" type="button" id="l1bulkPl">Level 1 plasmids (.gb)</button></div>
+                  </div>
                 </div>
               </div>
 
@@ -896,32 +968,35 @@
                 <button class="lvltab-head" type="button">
                   <span class="lvltab-badge">Level 2</span>
                   <span class="lvltab-title">Finished construct</span>
-                  <span class="lvltab-sub" id="l2sub"></span>
                   <svg class="lvltab-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
                 <div class="lvltab-body">
                   <div class="strandwrap"><div class="strand" id="lvl2strand"></div></div>
-                  <div class="legend" id="legend"></div>
-                  <div class="note">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-                    <div>Both transcripts <b>start (5′) at the central promoter</b> and run outward (3′): the NC module on the <b>sense (+) strand</b> (right), the cargo module on the <b>antisense (−) strand</b> (left). The four modules around the shell (Type 0.1, 0.2, 0.4, 0.5) can be NCS spacers, linkers, display markers — e.g. <b>SpyCatcher</b>, displayed on the encapsulin exterior — or your own sequences. A <b style="color:#A35C00">*</b> marks the part carrying the <b>stop codon</b> (each ORF's 3′ end); its position follows the C/N fusion and the modules next to the shell.</div>
-                  </div>
+                                    <div class="lvlinfo"><button class="info" type="button" data-info="level2" aria-label="How this level works">i</button><span>How this level works</span></div>
 
-                  <div class="lvlsubhead">Destination plasmid</div>
+                  <div class="lvlsubhead">Destination backbone</div>
                   <div class="platrow">
-                    <svg id="plasmid2" viewBox="-70 0 570 380"></svg>
+                    <svg id="plasmid2b" viewBox="-70 0 570 380"></svg>
                     <div class="platext">
-                      <h4 id="plat2title"></h4>
-                      <p id="plat2explain"></p>
-                      <ul class="featlist" id="plat2feats"></ul>
+                      <h4 id="plat2btitle"></h4>
+                      <p id="plat2bexplain"></p>
+                      <ul class="featlist" id="plat2bfeats"></ul>
                     </div>
                   </div>
-
-                  <div class="lvlsubhead">To order</div>
-                  <div class="orderlist" id="orderList2"></div>
+                  <div class="l0m-actions" id="plat2bactions" style="display:none">
+                    <button class="chip" type="button" id="plat2bCopy">Copy sequence</button>
+                    <button class="chip primary-chip" type="button" id="plat2bDl">Download GenBank (.gb)</button>
+                  </div>
+                  <div class="l0m-sec" id="l2bulk" style="display:none">
+                    <div class="l0m-h">Level 2 downloads</div>
+                    <p class="l0m-note" style="margin:0">GenBank files of the finished construct — the assembled insert and the plasmid with the insert cloned into pESC-HIS.</p>
+                    <div class="l0bulkrow"><span>Construct</span>
+                      <button class="chip primary-chip" type="button" id="plat2DlIns">Insert (.gb)</button>
+                      <button class="chip primary-chip" type="button" id="plat2Dl">Level 2 plasmid (.gb)</button></div>
+                  </div>
 
                   <div class="copybar">
-                    <button class="chip primary-chip" id="dlGenbank" style="display:none">Download GenBank (.gb)</button>
+                    <button class="chip primary-chip" id="dlGenbank" style="display:none">Download complete GenBank (all levels, .gb)</button>
                   </div>
                 </div>
               </div>
@@ -930,6 +1005,55 @@
 
           <div class="nav">
             <button class="btn btn-ghost" id="back3">Back</button>
+            <button class="btn btn-primary" id="next3">Continue to order</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="sec-4">
+    <div class="card" id="card-4">
+      <div class="card-head">
+        <span class="num-badge">5</span>
+        <div class="htext">
+          <div class="eyebrow">Step 5</div>
+          <h2>Order</h2>
+          <p>What the KIT can ship, what to order as oligos or primers, and the sequences as dsDNA.</p>
+        </div>
+      </div>
+      <div class="card-body">
+        <div id="lock4" class="lockhint" style="display:none">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+          Complete step 4 first.
+        </div>
+        <div id="body4" style="display:none">
+          <div class="l0m-sec ordblock" id="ordStock">
+            <div class="l0m-h">From the KIT <span class="l0m-meta" id="ordStockMeta"></span></div>
+            <p class="l0m-note">Toolbox parts the KIT has on stock — shipped on request as Level 0 plasmids in <i>E.&nbsp;coli</i>.</p>
+            <div class="orderlist" id="ordStockList"></div>
+          </div>
+          <div class="l0m-sec ordblock" id="ordOligo">
+            <div class="l0m-h">Oligos <span class="l0m-meta" id="ordOligoMeta"></span></div>
+            <p class="l0m-note">Parts shorter than 40 bp are too short for PCR primers: order the two oligos of a pair, anneal them and ligate the product into the Level 0 backbone — the 5′ overhangs already fit, no digest needed. Also an option for toolbox parts if you do not want to request them from the KIT.</p>
+            <div class="orderlist" id="ordOligoList"></div>
+            <div class="l0m-actions" id="ordOligoActions"></div>
+          </div>
+          <div class="l0m-sec ordblock" id="ordPrimer">
+            <div class="l0m-h">Primers <span class="l0m-meta" id="ordPrimerMeta"></span></div>
+            <p class="l0m-note">To build your own sequences into the toolbox: PCR them with these primers (annealing part plus BbsI site, overhangs and frame spacer), then clone the product into the Level 0 backbone with BbsI.</p>
+            <div class="orderlist" id="ordPrimerList"></div>
+            <div class="l0m-actions" id="ordPrimerActions"></div>
+          </div>
+          <div class="l0m-sec ordblock" id="ordDs">
+            <div class="l0m-h">dsDNA <span class="l0m-meta" id="ordDsMeta"></span></div>
+            <p class="l0m-note">Every part with a real sequence as one double-stranded fragment (adapter with BbsI sites, overhangs and frame spacer around the part). Order it as dsDNA instead of PCR with primers, or instead of requesting the plasmid from the KIT, and clone it with BbsI into the Level 0 backbone.</p>
+            <div class="orderlist" id="ordDsList"></div>
+            <div class="l0m-actions" id="ordDsActions"></div>
+          </div>
+
+          <div class="nav">
+            <button class="btn btn-ghost" id="back4">Back</button>
             <button class="btn btn-primary" id="restart">New construct</button>
           </div>
         </div>
@@ -964,6 +1088,48 @@
   </div>
 </div>
 
+<!-- Level 1 / Level 2 detail: click a module in Step 4 / Level 1 or the finished construct in Level 2. Shows the assembled
+     insert with its overhangs and the plasmid it ends up in, each copyable and downloadable as annotated GenBank. -->
+<div class="modal-backdrop" id="asmModal">
+  <div class="modal wide" role="dialog" aria-modal="true" aria-labelledby="asmTitle">
+    <h3 id="asmTitle"></h3>
+    <p class="modal-sub" id="asmSub"></p>
+    <div class="l0m-warn" id="asmWarn" style="display:none"></div>
+
+    <div class="l0m-sec">
+      <div class="l0m-h"><span id="asmInsH"></span> <span class="l0m-meta" id="asmInsMeta"></span></div>
+      <div class="l0m-seq" id="asmSeq"></div>
+      <div class="l0m-legend" id="asmLegend"></div>
+      <div class="l0m-actions">
+        <button class="chip" type="button" id="asmCopySeq">Copy sequence</button>
+        <button class="chip primary-chip" type="button" id="asmDlSeq">Download GenBank (.gb)</button>
+      </div>
+    </div>
+
+    <div class="l0m-sec">
+      <div class="l0m-h"><span id="asmPartsH"></span></div>
+      <ul class="asm-parts" id="asmParts"></ul>
+    </div>
+
+    <div class="l0m-sec" id="asmPlSec">
+      <div class="l0m-h"><span id="asmPlH"></span> <span class="l0m-meta" id="asmPlName"></span></div>
+      <div class="platrow">
+        <svg id="asmSvg" viewBox="-70 0 570 380"></svg>
+        <div class="platext">
+          <p id="asmExplain"></p>
+          <ul class="featlist" id="asmFeats"></ul>
+        </div>
+      </div>
+      <div class="l0m-actions">
+        <button class="chip" type="button" id="asmCopyPl">Copy plasmid sequence</button>
+        <button class="chip primary-chip" type="button" id="asmDlPl">Download GenBank (.gb)</button>
+      </div>
+    </div>
+
+    <div class="modal-actions"><button class="btn btn-ghost" type="button" id="asmClose">Close</button></div>
+  </div>
+</div>
+
 <!-- Level 0 module detail: click a module in Step 4 / Level 0. Shows the part inside its overhang adapter and the
      Level 0 plasmid it ends up in after BbsI cloning, each copyable and downloadable as annotated GenBank. -->
 <div class="modal-backdrop" id="l0Modal">
@@ -980,6 +1146,12 @@
         <button class="chip" type="button" id="l0mCopySeq">Copy sequence</button>
         <button class="chip primary-chip" type="button" id="l0mDlSeq">Download GenBank (.gb)</button>
       </div>
+    </div>
+
+    <div class="l0m-sec" id="l0mPrimSec">
+      <div class="l0m-h">PCR primers <span class="l0m-meta" id="l0mPrimMeta"></span></div>
+      <p class="l0m-note" style="margin:0 0 8px">Make an existing sequence Level 0-compatible: PCR it with these primers, then clone the product into the Level 0 backbone with BbsI.</p>
+      <div id="l0mPrimBody"></div>
     </div>
 
     <div class="l0m-sec" id="l0mPlasmidSec">
@@ -1096,6 +1268,12 @@ async function loadLibraries(){
 
 /* ---------- Info bubble content (placeholder graphic + theory) ---------- */
 const INFO = {
+  level0: { title:'Level 0 · individual parts', img:'Diagram: ten parts, one plasmid each',
+    body:`<p>Level 0 parts are cloned <b>separately</b> — one plasmid each. They are not joined yet: the <b>Type number</b> alone fixes where each part ends up once BsaI assembles them into the Level 1 module.</p>` },
+  level1: { title:'Level 1 · modules (BsaI)', img:'Diagram: BsaI assembly of five Level 0 parts',
+    body:`<p>The Level 0 parts are <b>joined</b> through their shared overhangs by BsaI and sit between the acceptor overhangs of the Level 1 backbone. <span class="l1oh" style="display:inline-block">grey</span> acceptor overhangs (BsaI) · <span class="l1oh l2" style="display:inline-block">orange</span> Level 2 overhangs (BbsI, cut later). Sticky ends as they pair: top strand 5′→3′ at the upper left, bottom strand at the lower right (3′→5′) — the right end of one construct matches the left end of the next. Click a module to see its sequence and the Level 1 plasmid.</p>` },
+  level2: { title:'Level 2 · finished construct (BbsI)', img:'Diagram: cargo ← promoter → NC module',
+    body:`<p>Both transcripts <b>start (5′) at the central promoter</b> and run outward (3′): the NC module on the <b>sense (+) strand</b> (right), the cargo module on the <b>antisense (−) strand</b> (left). The four modules around the shell (Type 0.1, 0.2, 0.4, 0.5) can be NCS spacers, linkers, display markers — e.g. <b>SpyCatcher</b>, displayed on the encapsulin exterior — or your own sequences. A <b style="color:#A35C00">*</b> marks the part carrying the <b>stop codon</b> (each ORF's 3′ end); its position follows the C/N fusion and the modules next to the shell.</p>` },
   nc: { title:'What is a nanocompartment?', img:'Diagram: encapsulin shell with cargo',
     body:`<p>Encapsulins are hollow protein cages that self-assemble and encapsulate cargo proteins inside.</p>
           <p>The variant you choose determines the matching <b>targeting peptide (TP)</b>, which directs your cargo into the compartment.</p>
@@ -1139,7 +1317,7 @@ const state = {
   promoter:'',
   ncSlots:{ 1:{kind:'none'}, 2:{kind:'none'}, 4:{kind:'none'}, 5:{kind:'none'} },
   cargoSlots:{ 1:{kind:'none'}, 2:{kind:'none'}, 4:{kind:'none'}, 5:{kind:'none'} },
-  unlocked:[true,false,false,false],
+  unlocked:[true,false,false,false,false],
 };
 let lastResult=null;
 
@@ -1218,7 +1396,7 @@ function showIntro(){
   window.scrollTo({top:0,behavior:'instant'});
 }
 /* Browser history: "" = intro, "#step-1".."#step-4" = builder section. */
-const stepFromHash = () => { const m=/^#step-([1-4])$/.exec(location.hash); return m ? +m[1]-1 : -1; };
+const stepFromHash = () => { const m=/^#step-([1-5])$/.exec(location.hash); return m ? +m[1]-1 : -1; };
 function pushStep(idx){
   const h='#step-'+(idx+1);
   if(location.hash!==h) history.pushState(null,'',h);
@@ -1679,7 +1857,7 @@ function slotsPayload(mod){
 
 /* ===================== Lock / navigation ===================== */
 function applyLocks(){
-  [1,2,3].forEach(i=>{
+  [1,2,3,4].forEach(i=>{
     $('#lock'+i).style.display = state.unlocked[i]?'none':'flex';
     $('#body'+i).style.display = state.unlocked[i]?'block':'none';
     $('#card-'+i).classList.toggle('locked', !state.unlocked[i]);
@@ -1879,12 +2057,14 @@ $('#next2').addEventListener('click', async ()=>{
   if(proceed){
     try{ await compute(); } finally { refreshNext2(); }
     renderBiosecNote(screening, flaggedCount, items);
-    state.unlocked[3]=true; applyLocks(); updateStepperLocks(); scrollToSection('sec-3');
+    state.unlocked[3]=true; state.unlocked[4]=true; applyLocks(); updateStepperLocks(); scrollToSection('sec-3');
   } else {
     btn.disabled=false;
   }
 });
 $('#back3').addEventListener('click', ()=>scrollToSection('sec-2'));
+$('#next3').addEventListener('click', ()=>scrollToSection('sec-4'));
+$('#back4').addEventListener('click', ()=>scrollToSection('sec-3'));
 /* "New construct": wipe every input and every derived result, then start over at step 1. */
 function resetBuilder(){
   // state back to its initial shape
@@ -1893,7 +2073,7 @@ function resetBuilder(){
   state.cargoFromPreset=null; state.cargoValid=false;
   state.promoter='';
   state.ncSlots=defaultSlots(); state.cargoSlots=defaultSlots();
-  state.unlocked=[true,false,false,false];
+  state.unlocked=[true,false,false,false,false];
   lastResult=null;
 
   // form controls
@@ -1916,12 +2096,13 @@ function resetBuilder(){
 
   // derived output
   $('#cargoLen').textContent='0 bp';
-  $('#cargoModTag').textContent='';
   ['#ncMeta','#shellMeta','#shellStopArea','#shellMrna','#cargoMeta','#cargoStopArea','#cargoMrna','#lvl0strand','#lvl1cargo','#lvl1nc','#lvl2strand',
-   '#lvl1promo','#legend','#biosecNoteText','#biosecChips','#plat0feats','#platchips1','#orderList1','#plat2feats','#orderList2']
+   '#lvl1promo','#biosecNoteText','#biosecChips','#plat0feats','#plat1feats','#plat2bfeats','#ordStockList','#ordOligoList','#ordPrimerList','#ordDsList','#ordOligoActions','#ordPrimerActions','#ordDsActions']
     .forEach(sel=>{ const el=$(sel); if(el) el.innerHTML=''; });
-  $('#plat2title').textContent=''; $('#plat2explain').textContent=''; $('#l2sub').textContent='';
+
   $('#plat0title').textContent=''; $('#plat0explain').textContent=''; $('#plasmid0').innerHTML='';
+  $('#plat1title').textContent=''; $('#plat1explain').textContent=''; $('#plasmid1').innerHTML=''; $('#l1bulk').style.display='none';
+  $('#plat2btitle').textContent=''; $('#plat2bexplain').textContent=''; $('#plasmid2b').innerHTML=''; $('#l2bulk').style.display='none';
   $('#dlGenbank').style.display='none';
   $('#biosecNote').style.display='none';
   try{ sessionStorage.removeItem(BIOSEC_KEY); }catch(e){}
@@ -1971,7 +2152,6 @@ function renderStrand(elId, parts, opts={}){
    becomes the bottom one (= the junction reversed). All ten parts are shown in full
    colour; only a thin inset ring marks new vs. stock. */
 const JUNCTIONS=['ACAT','TATG','TTCT','ATCC','TGGC','TTGT'];   // Type n runs from JUNCTIONS[n-1] to JUNCTIONS[n]
-const L0_NOTE_BASE=$('#l0note').innerHTML;
 function l0Box(p){
   const k = p.kind || 'ncs';
   const star = p.stop ? '<span class="stopstar">*</span>' : '';
@@ -2002,10 +2182,6 @@ function l0ModuleRow(parts, antisense){
   return `<div class="strand-dir"><span>5′</span><span>3′</span></div><div class="partsrow sep l0grid">${cells.join('')}</div>`;
 }
 function renderLevel0(elId, m){
-  const items = buildLevel0Items(m);
-  const newCount = items.filter(it=>it.status!=='stock').length;
-  $('#l0sub').textContent = `${items.length-newCount} of ${items.length} from toolkit stock · ${newCount} new`;
-  $('#l0note').innerHTML = L0_NOTE_BASE;
   $(elId).innerHTML =
     `<div class="l0shellcap">Cargo site <span class="l0m-badge antisense">antisense strand</span></div>` + l0ModuleRow(m.l0, true) +
     `<div class="l0shellcap">Nanocompartment site <span class="l0m-badge sense">sense strand</span></div>` + l0ModuleRow(m.l1nc, false);
@@ -2013,29 +2189,39 @@ function renderLevel0(elId, m){
 
 /* Level 2: bidirectional promoter as the pivot point — cargo module transcribes to the left,
    NC module to the right. The cargo side is shown mirrored (5'->3' away from the promoter). */
-function renderLevel2(elId, m){
+function renderLevel2(elId, m, api){
   const el=$(elId);
   // Natural Type 1->5 order (as in the scheme): the cargo's C-terminus/stop (Type 1) points
   // OUTWARD (far left, 3'), the 5' end sits next to the promoter. The leftward arrow/clip-path
   // already conveys that the cargo is read on the antisense strand.
-  const cargoHtml = m.l1cargo.map(partEl).join('');
-  const ncHtml = m.l1nc.map(partEl).join('');
-  const promoHtml = `<div class="part promo-hub" style="background:${cvar('promo')};color:${cink('promo')}">
-      <span class="ptype">Promoter</span>${m.promo.label}<small>bidirectional</small></div>`;
+  const cargoHtml = m.l1cargo.map(l0Box).join('');
+  const ncHtml = m.l1nc.map(l0Box).join('');
+  const promoHtml = l0Box({ label:m.promo.label, kind:'promo', note:'bidirectional', type:'Promoter' });
+  const j = api && api.level2Construct && api.level2Construct.junctions;
+  // one column per junction: top strand (upper, the next fragment's 5′ overhang) + bottom strand (lower, the previous fragment's)
+  const col = (seq, title, pos) => !j ? '' : `<div class="l2ohcol ${pos}" title="${title}">` +
+    (pos!=='right' ? `<span class="l1oh l2">${seq}</span>` : '') + (pos!=='left' ? `<span class="l1oh l2">${comp(seq)}</span>` : '') + `</div>`;
   el.innerHTML = `
-    <div class="l2-row">
+    <div class="l2-row${j?' clickable':''}"${j?' data-l2="1" role="button" tabindex="0" aria-label="Finished construct — show sequence and plasmid"':''}>
+      ${col(j&&j.n,'BbLvl2N — Level 2 backbone overhang','left')}
       <div class="l2-side l2-left">
+        <div class="l2-dir ph">&nbsp;</div>
+        <div class="partsrow sep l2grid">${cargoHtml}</div>
         <div class="l2-dir"><span>3′ ${TRI_L} Cargo module <span class="l2-strandtag anti">antisense (−)</span></span><span>5′</span></div>
-        <div class="partsrow l2-left-row">${cargoHtml}</div>
       </div>
+      ${col(j&&j.cargoPromoter,'Lvl2 junction cargo module | promoter','mid')}
       <div class="l2-hub">
         <div class="l2-arrows">${TRI_L}${TRI_R}</div>
         ${promoHtml}
+        <div class="l2-dir ph">&nbsp;</div>
       </div>
+      ${col(j&&j.promoterNc,'Lvl2 junction promoter | NC module','mid')}
       <div class="l2-side l2-right">
         <div class="l2-dir"><span>5′</span><span>NC module <span class="l2-strandtag sense">sense (+)</span> ${TRI_R} 3′</span></div>
-        <div class="partsrow">${ncHtml}</div>
+        <div class="partsrow sep l2grid">${ncHtml}</div>
+        <div class="l2-dir ph">&nbsp;</div>
       </div>
+      ${col(j&&j.c,'BbLvl2C — Level 2 backbone overhang','right')}
     </div>`;
 }
 
@@ -2045,60 +2231,6 @@ $('#lvltabs').addEventListener('click', e=>{
   if(head) head.closest('.lvltab').classList.toggle('open');
 });
 
-/* Small schematic "acceptor plasmid" chip — used for Level 0/1, where no real backbone
-   sequence exists yet (see Biologik/level0_design/parts/level2_backbones/README.md).
-   Not to scale; the highlighted arc just marks "this is where the insert goes". */
-function platChip(insertLabel, backboneLabel, kind, backbone, insertBp){
-  // With a real backbone (Biologik/level0_design/parts/level{0,1}_backbones/), the
-  // highlighted arc is the real insert-to-total-plasmid proportion; without one, it
-  // falls back to a fixed ~25% arc that's purely decorative (no real backbone yet).
-  let a0=-45, a1=45;
-  if(backbone && insertBp){
-    const span = Math.max((insertBp/(backbone.length_bp+insertBp))*360, 14);
-    a0=-span/2; a1=span/2;
-  }
-  return `<div class="platchip">
-    <svg width="46" height="46" viewBox="0 0 46 46">
-      <circle cx="23" cy="23" r="18" fill="none" stroke="var(--line-soft)" stroke-width="6"/>
-      <path d="${arc(23,23,18,a0,a1)}" fill="none" stroke="${cvar(kind||'t3')}" stroke-width="6" stroke-linecap="round"/>
-    </svg>
-    <div class="platchip-text"><b>${esc(insertLabel)}</b><span>${esc(backboneLabel)}</span></div>
-  </div>`;
-}
-
-function orderRow(name, sub, status){
-  const badge = status==='stock' ? '<span class="oi-badge fixed">in stock</span>'
-    : status==='pcr' ? '<span class="oi-badge pcr">PCR + overhangs</span>'
-    : status==='assemble' ? '<span class="oi-badge assemble">assemble (BsaI)</span>'
-    : '<span class="oi-badge synth">order new</span>';
-  const sw = status==='stock' ? 'ncs' : status==='assemble' ? 'promo' : 't3';
-  return `<div class="orderitem">
-    <span class="oi-sw" style="background:${cvar(sw)}"></span>
-    <div class="oi-main"><div class="oi-name">${esc(name)}</div><div class="oi-sub">${esc(sub)}</div></div>
-    ${badge}
-  </div>`;
-}
-
-/* Level 0: every one of the ten Type 0.1-0.5 parts (cargo + NC-site modules), classified as
-   already-domesticated stock, cargo needing PCR (with the real overhangs/primers), or an own
-   sequence to order as a synthesized fragment. */
-function buildLevel0Items(m){
-  const items=[];
-  const addEntries=(entries, where)=>entries.forEach(e=>{
-    if(e.kind==='custom') items.push({name:e.label, sub:`Type 0.${e.slot} · ${where} · your own sequence (${e.bp} bp)`, status:'synth', bp:e.bp});
-    else if(e.kind==='tp') items.push({name:`Targeting peptide ${m.n.tp}`, sub:`Type 0.${e.slot} · ${where} · standard toolkit part`, status:'stock', bp:e.bp});
-    else if(e.kind==='linker') items.push({name:`Linker ${e.label}`, sub:`Type 0.${e.slot} · ${where} · standard toolkit part`, status:'stock', bp:e.bp});
-    else if(e.kind==='marker') items.push({name:`Surface marker ${e.label}`, sub:`Type 0.${e.slot} · ${where} · standard toolkit part`, status:'stock', bp:e.bp});
-    else items.push({name:'NCS spacer', sub:`Type 0.${e.slot} · ${where} · standard toolkit part`, status:'stock', bp:e.bp});
-  });
-  addEntries(m.cslots, 'cargo module');
-  items.splice(2, 0, {name:m.cargoLabel, sub:`Type 0.3 · cargo module · your gene of interest (${m.cargoBp} bp)`, status:'pcr', bp:m.cargoBp});
-  addEntries(m.slots, 'nanocompartment site');
-  items.push(m.n.custom
-    ? {name:m.n.shell, sub:'Type 0.3 · nanocompartment site · your own shell sequence', status:'synth', bp:m.n.shellBp}
-    : {name:`Shell CDS ${m.n.shell}`, sub:'Type 0.3 · nanocompartment site · standard toolkit part', status:'stock', bp:m.n.shellBp});
-  return items;
-}
 /* Level 0: the real pAGM9121 acceptor backbone as a full ring map, like Level 2 — the plain destination
    vector as it is, still carrying its lacZα stuffer between the NLvl0/CLvl0 overhangs (every Level 0
    part later replaces that stuffer, one part per plasmid). Segment sizes come from the backbone's own
@@ -2106,11 +2238,17 @@ function buildLevel0Items(m){
 /* Ring segments of the Level 0 backbone: SmR, ColE1 ori and the cloning site, the rest as neutral gaps. The
    same function draws the plain backbone (cloning site = lacZα stuffer, positions from its overhangs) and a
    backbone with a part cloned in (cloning site = the inserted fragment, positions from the backend). */
-function level0RingSegs(bb, mid){
-  const sm = featRange(bb,'SmR'), ori = featRange(bb,'ori');
-  if(!sm || !ori) return null;
-  const parts = [ { name:'SmR', kind:'mark', from:sm[0], to:sm[1] }, { name:'ColE1 ori', kind:'promo', from:ori[0], to:ori[1] },
-                  { name:mid.name, kind:'t3', from:mid.from, to:mid.to } ].sort((x,y)=>x.from-y.from);
+const L0_MARKERS = [['SmR','SmR','mark'], ['ori','ColE1 ori','promo']];
+const L1_MARKERS = [['KanR','KanR','mark'], ['ori','ColE1 ori','promo']];
+function level0RingSegs(bb, mid, markers=L0_MARKERS){
+  // Features right of the replaced cloning site move with the insert: shift by the length change of the whole plasmid.
+  const c1 = locRange(bb.receiver_overhangs['3_prime'].location)[1], delta = mid.total - bb.length_bp;
+  const marks=[];
+  for(const [label,name,kind] of markers){
+    const r=featRange(bb,label); if(!r) return null;
+    marks.push({ name, kind, from: r[0]>c1 ? r[0]+delta : r[0], to: r[1]>c1 ? r[1]+delta : r[1] });
+  }
+  const parts = [ ...marks, { name:mid.name, kind:'t3', from:mid.from, to:mid.to } ].sort((x,y)=>x.from-y.from);
   const segs=[]; let other=0, cursor=1;
   parts.forEach(p=>{ const gap=p.from-cursor; if(gap>0){ segs.push({name:'',bp:gap,kind:'gap'}); other+=gap; }
     segs.push({name:p.name,bp:p.to-p.from+1,kind:p.kind}); cursor=p.to+1; });
@@ -2183,6 +2321,35 @@ function l0SeqHtml(seq, insertLoc, overhangs){
   flush();
   return html;
 }
+function primerHtml(p, clamp){
+  const ext=p.extension, flank=ext.slice(clamp.length);
+  return `<div class="l0m-primer"><div class="pn">${esc(p.name)}<small>${p.length} nt · anneal ${p.annealLength} nt · Tm ${p.tm} °C</small></div>`+
+    `<div class="ps"><span class="l0m-end">5′ </span><span class="clamp">${clamp}</span><span class="flank">${flank}</span><span class="ann">${p.anneal}</span><span class="l0m-end"> 3′</span></div></div>`;
+}
+function renderL0Primers(c){
+  const pr=c.primers, sec=$('#l0mPrimSec'), body=$('#l0mPrimBody');
+  sec.style.display = pr ? '' : 'none';
+  if(!pr) return;
+  if(!pr.possible){
+    $('#l0mPrimMeta').textContent='';
+    body.innerHTML=`<p class="l0m-note">${esc(pr.reason)}</p>`;
+    return;
+  }
+  const f=pr.forward, r=pr.reverse;
+  $('#l0mPrimMeta').textContent = `PCR product ${pr.productLength} bp`;
+  const notes=[];
+  if(pr.q5AnnealingTemp) notes.push(`Q5 annealing temperature ≈ ${pr.q5AnnealingTemp} °C`);
+  notes.push(pr.tmMethod==='primer3-nn' ? 'Tm: primer3 nearest-neighbour, annealing part only' : 'Tm: rough Wallace estimate (primer3 unavailable) — preview only');
+  let warn='';
+  if(pr.internalSites.length) warn+=`<div class="l0m-warn">The insert contains ${esc(pr.internalSites.join(', '))} — domesticate (mutate silently) before cloning, otherwise the enzyme also cuts inside the part.</div>`;
+  if(pr.issues.length) warn+=`<div class="l0m-warn">${pr.issues.map(esc).join('<br>')}</div>`;
+  body.innerHTML = `<div class="l0m-prim">${primerHtml(f,pr.clamp)}${primerHtml(r,pr.clamp)}</div>`+
+    `<div class="l0m-legend"><span style="color:var(--muted)">${pr.clamp}</span> clamp · <span class="oh">BbsI site + overhangs (adapter ${esc(c.adapter)})</span> · <span class="ins">annealing part</span></div>`+
+    `<p class="l0m-note">${notes.join(' · ')}</p>`+warn+
+    `<div class="l0m-actions"><button class="chip" type="button" id="l0mCopyPrim">Copy primers</button><button class="chip primary-chip" type="button" id="l0mDlPrim">Download primers + PCR product (.gb)</button></div>`;
+  $('#l0mDlPrim').onclick = ()=>downloadText(`${fileSlug(c.label)}_${fileSlug(c.type)}_primers.gb`, pr.genbank);
+  $('#l0mCopyPrim').onclick = e=>copyText(e.currentTarget, `${f.name}\t${f.sequence}\n${r.name}\t${r.sequence}`);
+}
 function openLevel0Modal(c){
   $('#l0mTitle').textContent = c.label;
   $('#l0mSub').textContent = `${c.type} · ${c.module==='cargo_site'?'cargo site':'nanocompartment site'} · ${c.what}`;
@@ -2193,6 +2360,8 @@ function openLevel0Modal(c){
   $('#l0mSeq').innerHTML = `<span class="l0m-end">5′ </span>${l0SeqHtml(c.sequence, c.insert.location, c.overhangs)}<span class="l0m-end"> 3′</span>`;
   $('#l0mCopySeq').onclick = e=>copyText(e.currentTarget, c.sequence);
   $('#l0mDlSeq').onclick = ()=>downloadText(`${fileSlug(c.label)}_${fileSlug(c.type)}_${c.adapter}.gb`, c.genbank);
+
+  renderL0Primers(c);
 
   const pl = c.plasmid, bb=(LIB.level0Backbones||[])[0];
   const ring = pl && bb && level0RingSegs(bb, { name:`Insert: ${c.label}`, from:pl.insertStart, to:pl.insertEnd, total:pl.length });
@@ -2223,39 +2392,38 @@ $('#lvl0strand').addEventListener('click', e=>openFromFrag(e.target.closest('.l0
 $('#lvl0strand').addEventListener('keydown', e=>{
   if(e.key==='Enter' || e.key===' '){ const el=e.target.closest('.l0frag.clickable'); if(el){ e.preventDefault(); openFromFrag(el); } }
 });
+function level0Bulk(site){
+  const all = (lastResult && lastResult.api && lastResult.api.level0Constructs) || [];
+  const list = site && site!=='all' ? all.filter(c=>c.module===site) : all;
+  return { list, withPrimers: list.filter(c=>c.primers && c.primers.possible) };
+}
+const joinGb = records => records.map(g=>g.trimEnd()).join('\n\n') + '\n';
+const SITE_FILE = { all:'all', cargo_site:'cargo_site', nc_site:'nc_site' };
+$('#l0bulk').addEventListener('click', e=>{
+  const b=e.target.closest('button[data-bulk]'); if(!b || b.disabled) return;
+  const {list, withPrimers}=level0Bulk(b.dataset.site), name=SITE_FILE[b.dataset.site];
+  if(b.dataset.bulk==='seq') downloadText(`level0_${name}_modules.gb`, joinGb(list.map(c=>c.genbank)));
+  else if(b.dataset.bulk==='pl') downloadText(`level0_${name}_plasmids.gb`, joinGb(list.filter(c=>c.plasmid).map(c=>c.plasmid.genbank)));
+  else downloadText(`level0_${name}_primers.gb`, joinGb(withPrimers.map(c=>c.primers.genbank)));
+});
+function renderLevel0Bulk(){
+  const {list, withPrimers}=level0Bulk('all');
+  $('#l0bulk').style.display = list.length ? '' : 'none';
+  $('#l0bulkMeta').textContent = list.length ? `${list.length} modules · ${withPrimers.length} with primers` : '';
+  $$('#l0bulk button[data-bulk="prim"]').forEach(b=>{
+    const n = level0Bulk(b.dataset.site).withPrimers.length;
+    b.disabled = !n;
+    b.title = n ? '' : 'Primers exist only for modules with a real sequence of at least 40 bp (your own cargo or parts).';
+  });
+}
 function renderLevel0Extras(res){
   renderLevel0Plasmid(res);
+  renderLevel0Bulk();
   const hasConstructs = !!(res.api && res.api.level0Constructs && res.api.level0Constructs.length);
   $$('#lvl0strand .l0frag').forEach(el=>el.classList.toggle('clickable', hasConstructs));
 }
 
-/* Level 1: the three pieces that combine into Level 2 — cargo module, NC module, promoter.
-   Nothing is literally "ordered" at this level (that already happened at Level 0); the action
-   here is assembling the Level 0 parts above via BsaI into each acceptor plasmid — except the
-   promoter, which is always a ready-to-use standard part. */
-function renderLevel1Promo(m){
-  $('#lvl1promo').innerHTML = `<div class="partsrow"><div class="part" style="background:${cvar('promo')};color:${cink('promo')}">
-    <span class="ptype">Promoter</span><span class="plab">${esc(m.promo.label)}</span><small>bidirectional</small></div></div>`;
-}
-function renderLevel1Extras(m){
-  const bb=(LIB.level1Backbones||[])[0];
-  const bbLabel = bb ? `${bb.label} (${bb.length_bp.toLocaleString('en-US')} bp)` : 'Level 1 acceptor plasmid (generic — no real backbone sequence yet)';
-  const cargoModBp = m.l1cargo.reduce((a,p)=>a+(p.bp||0),0);
-  const ncModBp = m.l1nc.reduce((a,p)=>a+(p.bp||0),0);
-  $('#platchips1').innerHTML = [
-    platChip('Cargo module', bbLabel, 't3', bb, cargoModBp),
-    platChip('Nanocompartment module', bbLabel, 'shell', bb, ncModBp),
-    platChip(m.promo.label, bbLabel, 'promo', bb, m.promo.bp),
-  ].join('');
-  $('#orderList1').innerHTML = [
-    orderRow('Cargo module', 'Assembled via BsaI from the Level 0 cargo-module parts above.', 'assemble'),
-    orderRow('Nanocompartment module', 'Assembled via BsaI from the Level 0 nanocompartment-site parts above.', 'assemble'),
-    orderRow(m.promo.label, 'Standard toolkit part — always ready to use, no assembly needed.', 'stock'),
-    orderRow(bb ? bb.label : 'Level 1 acceptor plasmid',
-      bb ? 'Real Level 1 acceptor backbone — sequence already in the parts database.' : 'Generic placeholder — no real acceptor backbone connected yet.', 'stock'),
-  ].join('');
-}
-
+/* Level 1 / Level 2: see renderLevel1 / renderLevel2Plasmid below. */
 /* Level 2: the real, fully annotated pESC-HIS destination backbone (Biologik/level0_design/
    parts/level2_backbones/) with the just-assembled Level 1 modules replacing its current
    BbLvl2N...BbLvl2C test insert. Falls back to a generic placeholder ring if the backend
@@ -2292,8 +2460,10 @@ function drawPlasmidRing(svg, segs, name, subtitle){
     if(p.kind!=='gap'){
       const [lx,ly]=polar(cx,cy,r+28,mid), [t1x,t1y]=polar(cx,cy,r+10,mid), [t2x,t2y]=polar(cx,cy,r+24,mid);
       paths+=`<line x1="${t1x}" y1="${t1y}" x2="${t2x}" y2="${t2y}" stroke="var(--line)" stroke-width="1"/>`;
-      const shown = p.name.length>19 ? p.name.slice(0,18)+'…' : p.name;       // long names would run out of the map (the legend keeps the full name)
-      paths+=`<text x="${lx}" y="${ly}" font-size="10.5" font-family="JetBrains Mono" fill="var(--ink)" text-anchor="${mid>180?'end':'start'}" dominant-baseline="middle">${esc(shown)}</text>`;
+      // a name may contain line breaks (\n); a line that is still too long would run out of the map (the legend keeps the full name)
+      const lines = p.name.split('\n').map(t=>t.length>19 ? t.slice(0,18)+'…' : t);
+      const tspans = lines.map((t,i)=>`<tspan x="${lx}" dy="${i===0 ? -(lines.length-1)*6.5 : 13}">${esc(t)}</tspan>`).join('');
+      paths+=`<text x="${lx}" y="${ly}" font-size="10.5" font-family="JetBrains Mono" fill="var(--ink)" text-anchor="${mid>180?'end':'start'}" dominant-baseline="middle">${tspans}</text>`;
     }
     ang+=span;
   });
@@ -2310,58 +2480,49 @@ function featRange(bb, label){
   const f=(bb.features||[]).find(x=>(x.qualifiers.label||[]).includes(label));
   return f ? locRange(f.location) : null;
 }
+/* Ring segments of the Level 2 plasmid: every segment's length comes straight from the real backbone's GenBank
+   annotation, only the cassette between BbLvl2N and BbLvl2C is the insert (or, in the empty backbone, its test cassette). */
+function level2Segs(bb, insertBp, insertName, withArrow){
+  const segs = [
+    { name:'HIS3 marker', bp: featLen(bb,'HIS3 promoter') + featLen(bb,'HIS3'), kind:'mark', dir:0 },
+    { name:'f1 ori', bp: featLen(bb,'f1 ori'), kind:'t1', dir:0 },
+    { name:'ADH1 term.', bp: featLen(bb,'ADH1 terminator'), kind:'t4', dir:0 },
+    { name:insertName, bp: Math.max(insertBp,1), kind:'t3', dir:1, txn:!!withArrow },
+    { name:'CYC1 term.', bp: featLen(bb,'CYC1 terminator'), kind:'t5', dir:0 },
+    { name:'ColE1 ori', bp: featLen(bb,'ori'), kind:'promo', dir:0 },
+    { name:'AmpR', bp: featLen(bb,'AmpR') + featLen(bb,'AmpR promoter'), kind:'t2', dir:0 },
+    { name:'2μ ori', bp: featLen(bb,'2μ ori'), kind:'ncs', dir:0 },
+  ];
+  // the unannotated rest of the backbone, so the ring adds up to the real plasmid length
+  const o5=locRange(bb.receiver_overhangs['5_prime'].location), o3=locRange(bb.receiver_overhangs['3_prime'].location);
+  const known = segs.reduce((t,p)=>t+p.bp,0) - Math.max(insertBp,1);
+  const other = bb.length_bp - (o3[1]-o5[0]+1) - known;
+  if(other>0) segs.push({ name:'', bp:other, kind:'gap', dir:0 });
+  return segs;
+}
+const segLegendHtml = segs => segs.map(p=>`<li><i style="background:${ringColor(p.kind)}"></i><b>${esc((p.name || 'other backbone sequence').replace(/\n/g,' '))}</b><span class="bp">${p.bp.toLocaleString('en-US')} bp</span></li>`).join('');
+const l2Name = bb => bb.id.replace(/-lvl2-dest$/,'');
 function renderLevel2Plasmid(res){
-  const m=res.model;
-  const bb = (LIB.level2Backbones||[])[0];
-  const cargoModBp = m.l1cargo.reduce((a,p)=>a+(p.bp||0),0);
-  const ncModBp = m.l1nc.reduce((a,p)=>a+(p.bp||0),0);
-  const insertBp = cargoModBp + (m.promo.bp||PROMO_BP) + ncModBp;
-  const svg=$('#plasmid2');
-
-  let segs, name, sourceNote;
-  if(bb){
-    // Everything between the two acceptor overhangs (the backbone's own test cassette) is
-    // replaced by the real insert; every other segment's length comes straight from the
-    // backbone's own GenBank annotation (bb.features), not a guess.
-    segs = [
-      { name:'HIS3 marker', bp: featLen(bb,'HIS3 promoter') + featLen(bb,'HIS3'), kind:'mark', dir:0 },
-      { name:'f1 ori', bp: featLen(bb,'f1 ori'), kind:'t1', dir:0 },
-      { name:'ADH1 term.', bp: featLen(bb,'ADH1 terminator'), kind:'t4', dir:0 },
-      { name:'Insert: Cargo ← Promoter → NC', bp: Math.max(insertBp,700), kind:'t3', dir:1, txn:true },
-      { name:'CYC1 term.', bp: featLen(bb,'CYC1 terminator'), kind:'t5', dir:0 },
-      { name:'ColE1 ori', bp: featLen(bb,'ori'), kind:'promo', dir:0 },
-      { name:'AmpR', bp: featLen(bb,'AmpR') + featLen(bb,'AmpR promoter'), kind:'t2', dir:0 },
-      { name:'2μ ori', bp: featLen(bb,'2μ ori'), kind:'ncs', dir:0 },
-    ];
-    name = `pESC-HIS-ENCORE-${m.n.id}`;
-    sourceNote = `Real pESC-HIS Level 2 destination backbone (${bb.length_bp.toLocaleString('en-US')} bp) — segment sizes read from its actual GenBank annotation, only the insert between the BbLvl2N/BbLvl2C overhangs is new.`;
-  } else {
-    segs = [
-      { name:'GAL1-10', bp:500, kind:'promo', dir:0 },
-      { name:'NC module', bp:ncModBp, kind:'shell', dir:1, txn:true },
-      { name:'backbone', bp:2600, kind:'ncs', dir:0 },
-      { name:'Cargo module', bp:Math.max(cargoModBp,700), kind:'t3', dir:-1, txn:true },
-    ];
-    name = `pESC-ENCORE-${m.n.id}`;
-    sourceNote = 'Backend not connected — showing a generic placeholder backbone instead of the real pESC-HIS sequence.';
-  }
-  const colOf = ringColor;
-  const sum = drawPlasmidRing(svg, segs, name, bb?'HIS3 · yeast/E. coli shuttle':'bidirectional');
-
-  $('#plat2title').textContent = `${name} · ~${sum.toLocaleString('en-US')} bp`;
-  $('#plat2explain').textContent = sourceNote;
-  $('#plat2feats').innerHTML = segs.map(p=>`<li><i style="background:${colOf(p.kind)}"></i><b>${p.name}</b><span class="bp">${p.bp.toLocaleString('en-US')} bp</span></li>`).join('');
-  $('#l2sub').textContent = `~${sum.toLocaleString('en-US')} bp total`;
-
-  $('#orderList2').innerHTML = [
-    orderRow('Finished construct', 'Assembled via BsaI from the three Level 1 modules above.', 'assemble'),
-    orderRow(name, bb ? 'Real destination backbone — sequence already in the parts database.' : 'Generic placeholder — no real destination backbone connected yet.', 'stock'),
-  ].join('');
+  const l2 = res.api && res.api.level2Construct;
+  $('#l2bulk').style.display = l2 && l2.plasmid ? '' : 'none';
+  renderLevel2Backbone();
 
   // GenBank export (annotated — see Biologik/level0_design/design.py: build_genbank) only exists
   // once the backend has actually computed it; the offline/inline fallback has no GenBank writer.
   const dlBtn = $('#dlGenbank');
   dlBtn.style.display = (res.api && res.api.genbank) ? 'inline-flex' : 'none';
+}
+/* The empty destination backbone as delivered (pESC-HIS with its test cassette), copyable / downloadable like at Level 0. */
+function renderLevel2Backbone(){
+  const bb=(LIB.level2Backbones||[])[0], svg=$('#plasmid2b');
+  $('#plat2bactions').style.display = (bb && bb.genbank) ? '' : 'none';
+  if(!bb){ svg.innerHTML=''; $('#plat2btitle').textContent='Level 2 destination backbone'; $('#plat2bexplain').textContent='Backend not connected — the real Level 2 backbone (pESC-HIS) is only available with the server running.'; $('#plat2bfeats').innerHTML=''; return; }
+  const o5=locRange(bb.receiver_overhangs['5_prime'].location), o3=locRange(bb.receiver_overhangs['3_prime'].location), cassette=o3[1]-o5[0]+1;
+  const segs = level2Segs(bb, cassette, 'Test cassette', false);
+  const sum = drawPlasmidRing(svg, segs, l2Name(bb), 'HIS3 · Level 2 acceptor');
+  $('#plat2btitle').textContent = `${l2Name(bb)} · ${sum.toLocaleString('en-US')} bp`;
+  $('#plat2bexplain').textContent = `Real Level 2 acceptor backbone as delivered, with its ${cassette.toLocaleString('en-US')} bp test cassette between BbLvl2N (${bb.sequence.slice(o5[0]-1,o5[0]+3)}) and BbLvl2C. BbsI replaces that cassette with the assembled insert — click the finished construct above to see it.`;
+  $('#plat2bfeats').innerHTML = segLegendHtml(segs);
 }
 function downloadGenbank(){
   if(!lastResult || !lastResult.api || !lastResult.api.genbank) return;
@@ -2370,25 +2531,260 @@ function downloadGenbank(){
 }
 $('#dlGenbank').addEventListener('click', downloadGenbank);
 
+
+/* ===================== Level 1 / Level 2: assembled modules, modals, downloads ===================== */
+const api1 = () => (lastResult && lastResult.api && lastResult.api.level1Constructs) || [];
+const api2 = () => (lastResult && lastResult.api && lastResult.api.level2Construct) || null;
+
+/* One Level 1 module as a row: [NLvl1][Lvl2 N] box · junction · box ... box [Lvl2 C][CLvl1]. The parts are ligated at this
+   level, so every junction is a single chip. Sequences come from the backend (top strand). */
+function l1Row(kind, c, parts){
+  // Sticky ends as BsaI/BbsI leave them: the top strand carries the 5′ overhang at the LEFT end (upper), the bottom strand
+  // carries its 5′ overhang at the RIGHT end (lower, shown as the complement under the top strand, 3′→5′) — so the right
+  // end of one fragment always pairs with the left end of the next, instead of repeating the same four letters.
+  const top = (seq, cls, title) => `<div class="l1oh t ${cls}" title="${esc(title)} · top strand 5′→3′">${seq}</div>`;
+  const bot = (seq, cls, title) => `<div class="l1oh b ${cls}" title="${esc(title)} · bottom strand, shown 3′→5′ under the top strand">${comp(seq)}</div>`;
+  const v = c.shown || c, seq = v.sequence;      // cargo module: rotated by 180° so the cargo reads 5′→3′ left to right
+  const cells = [top(seq.slice(0,4),'', 'Level 1 acceptor overhang (BsaI)'), top(v.level2Overhangs.n,'l2','Level 2 overhang (BbsI)')];
+  parts.forEach(p=>cells.push(l0Box(p)));
+  cells.push(bot(v.level2Overhangs.c,'l2','Level 2 overhang (BbsI)'), bot(seq.slice(-4),'','Level 1 acceptor overhang (BsaI)'));
+  return `<div class="strand-dir"><span>5′</span><span>3′</span></div>` +
+         `<div class="partsrow sep l1grid${parts.length===1?' single':''} clickable" data-l1="${kind}" role="button" tabindex="0" aria-label="${esc(c.label)} — show sequence and plasmid">${cells.join('')}</div>`;
+}
+function renderLevel1(res){
+  const m=res.model, list=(res.api && res.api.level1Constructs) || [];
+  const byKind = k => list.find(c=>c.site===k);
+  const cargo=byKind('cargo_site'), nc=byKind('nc_site'), promo=byKind('promoter');
+  if(cargo && nc && promo){
+    $('#lvl1cargo').innerHTML = l1Row('cargo_site', cargo, [...m.l1cargo].reverse());
+    $('#lvl1nc').innerHTML = l1Row('nc_site', nc, m.l1nc);
+    $('#lvl1promo').innerHTML = l1Row('promoter', promo, [{ label:m.promo.label, kind:'promo', note:'bidirectional', type:'' }]);
+    $('#l1fold').style.display='';
+  } else {
+    renderStrand('#lvl1cargo', m.l1cargo, {antisense:true});
+    renderStrand('#lvl1nc', m.l1nc);
+    $('#lvl1promo').innerHTML = `<div class="partsrow"><div class="part" style="background:${cvar('promo')};color:${cink('promo')}">
+      <span class="ptype">Promoter</span><span class="plab">${esc(m.promo.label)}</span><small>bidirectional</small></div></div>`;
+    $('#l1fold').style.display='none';
+  }
+  renderLevel1Backbone(list);
+}
+function renderLevel1Backbone(list){
+  const bb=(LIB.level1Backbones||[])[0], svg=$('#plasmid1');
+  $('#plat1actions').style.display = (bb && bb.genbank) ? '' : 'none';
+  $('#l1bulk').style.display = list.length ? '' : 'none';
+  $('#l1bulkMeta').textContent = list.length ? `${list.length} modules` : '';
+  const o5 = bb && locRange(bb.receiver_overhangs['5_prime'].location), o3 = bb && locRange(bb.receiver_overhangs['3_prime'].location);
+  const ring = bb && o5 && o3 && level0RingSegs(bb, { name:'lacZα stuffer', from:o5[0], to:o3[1], total:bb.length_bp }, L1_MARKERS);
+  if(!ring){
+    svg.innerHTML=''; $('#plat1title').textContent='Level 1 acceptor plasmid';
+    $('#plat1explain').textContent='Backend not connected — the real Level 1 backbone (pAGM1311) is only available with the server running.';
+    $('#plat1feats').innerHTML=''; return;
+  }
+  const name = bb.id.split('-')[0];
+  const sum = drawPlasmidRing(svg, ring.segs, name, 'KanR · Level 1 acceptor');
+  $('#plat1title').textContent = `${name} · ${sum.toLocaleString('en-US')} bp`;
+  $('#plat1explain').textContent = `Real Level 1 acceptor backbone as delivered, with its ${(o3[1]-o5[0]+1).toLocaleString('en-US')} bp lacZα stuffer between the NLvl1/CLvl1 overhangs. BsaI replaces that stuffer with an assembled module (cargo module, NC module or promoter) — click a module above to see it cloned in. Segment sizes are read from the backbone's real GenBank annotation.`;
+  $('#plat1feats').innerHTML = ringLegendHtml(ring);
+}
+$('#plat1Copy').addEventListener('click', e=>{ const bb=(LIB.level1Backbones||[])[0]; if(bb) copyText(e.currentTarget, bb.sequence); });
+$('#plat1Dl').addEventListener('click', ()=>{ const bb=(LIB.level1Backbones||[])[0]; if(bb && bb.genbank) downloadText(`${fileSlug(bb.id.split('-')[0])}.gb`, bb.genbank); });
+$('#plat2bCopy').addEventListener('click', e=>{ const bb=(LIB.level2Backbones||[])[0]; if(bb) copyText(e.currentTarget, bb.sequence); });
+$('#plat2bDl').addEventListener('click', ()=>{ const bb=(LIB.level2Backbones||[])[0]; if(bb && bb.genbank) downloadText(`${fileSlug(l2Name(bb))}.gb`, bb.genbank); });
+$('#plat2Dl').addEventListener('click', ()=>{ const l2=api2(); if(l2 && l2.plasmid) downloadText(`${fileSlug(l2.plasmid.name)}.gb`, l2.plasmid.genbank); });
+$('#plat2DlIns').addEventListener('click', ()=>{ const l2=api2(); if(l2) downloadText(`Level2_${fileSlug(l2.name)}_insert.gb`, l2.genbank); });
+$('#l1bulkIns').addEventListener('click', ()=>{ const l=api1(); if(l.length) downloadText('level1_all_modules.gb', joinGb(l.map(c=>(c.shown||c).genbank))); });
+$('#l1bulkPl').addEventListener('click', ()=>{ const l=api1().filter(c=>c.plasmid); if(l.length) downloadText('level1_all_plasmids.gb', joinGb(l.map(c=>c.plasmid.genbank))); });
+
+/* Sequence with parts bold and overhang bases tinted (all positions 1-based, from the backend). */
+function asmSeqHtml(seq, parts, overhangs){
+  const cls = new Array(seq.length).fill('');
+  parts.forEach(p=>{ for(let k=p.start;k<=p.end;k++) cls[k-1]='ins'; });
+  overhangs.forEach(o=>{ for(let k=o.start;k<=o.end;k++) cls[k-1]='oh'; });
+  let html='', run='', cur=null;
+  const flush=()=>{ if(run) html += cur ? `<span class="${cur}">${run}</span>` : run; run=''; };
+  for(let k=0;k<seq.length;k++){ if(cls[k]!==cur){ flush(); cur=cls[k]; } run += seq[k]; }
+  flush(); return html;
+}
+function openAsmModal(o){
+  $('#asmTitle').textContent = o.title;
+  $('#asmSub').textContent = o.sub;
+  const warn=$('#asmWarn'); warn.style.display = o.warn ? '' : 'none'; warn.innerHTML = o.warn || '';
+  $('#asmInsH').textContent = o.insertHeading;
+  $('#asmInsMeta').textContent = o.insertMeta;
+  $('#asmSeq').innerHTML = `<span class="l0m-end">5′ </span>${asmSeqHtml(o.seq, o.parts, o.overhangs)}<span class="l0m-end"> 3′</span>`;
+  $('#asmLegend').innerHTML = o.legend;
+  $('#asmCopySeq').onclick = e=>copyText(e.currentTarget, o.seq);
+  $('#asmDlSeq').onclick = ()=>downloadText(o.insertFile, o.insertGenbank);
+  $('#asmPartsH').textContent = o.partsHeading;
+  $('#asmParts').innerHTML = o.partsList.map(p=>`<li><i style="background:${p.color}"></i><b>${esc(p.name)}</b>${p.placeholder?'<span class="ph">placeholder</span>':''}<span class="bp">${p.bp.toLocaleString('en-US')} bp</span></li>`).join('');
+  $('#asmPlSec').style.display = o.ring ? '' : 'none';
+  if(o.ring){
+    $('#asmPlH').textContent = o.plasmidHeading;
+    drawPlasmidRing($('#asmSvg'), o.ring.segs, o.plasmid.name, o.ringSub);
+    $('#asmPlName').textContent = `${o.plasmid.name} · ${o.plasmid.length.toLocaleString('en-US')} bp`;
+    $('#asmExplain').textContent = o.explain;
+    $('#asmFeats').innerHTML = o.ring.legend;
+    $('#asmCopyPl').onclick = e=>copyText(e.currentTarget, o.plasmid.sequence);
+    $('#asmDlPl').onclick = ()=>downloadText(`${fileSlug(o.plasmid.name)}.gb`, o.plasmid.genbank);
+  }
+  $('#asmModal').classList.add('show');
+  scrollModalToTop($('#asmModal'));
+  $('#asmClose').focus({preventScroll:true});
+}
+function closeAsmModal(){ $('#asmModal').classList.remove('show'); }
+$('#asmClose').addEventListener('click', closeAsmModal);
+$('#asmModal').addEventListener('click', e=>{ if(e.target.id==='asmModal') closeAsmModal(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape' && $('#asmModal').classList.contains('show')) closeAsmModal(); });
+function scrollAsmSeqTop(){ $('#asmSeq').scrollTop = 0; }
+
+const partColor = t => { const n=(String(t).match(/0\.(\d)/)||[])[1]; return n ? cvar('t'+n) : cvar('promo'); };
+function openLevel1Modal(c){
+  const bb=(LIB.level1Backbones||[])[0], pl=c.plasmid;
+  const isCargo=c.site==='cargo_site', isPromo=c.site==='promoter', v=c.shown||c;
+  const ringBase = pl && bb && level0RingSegs(bb, { name:`Insert: ${c.label}`, from:pl.insertStart, to:pl.insertEnd, total:pl.length }, L1_MARKERS);
+  const junctions = c.overhangs.filter(o=>o.role==='level1_C' || o.role==='level1_N').map(o=>o.sequence);
+  const strandLine = isPromo ? 'bidirectional — the same on both strands'
+    : isCargo ? 'antisense strand' : 'sense strand';
+  const notes = c.notes.concat(c.internalSites.length ? [`Internal restriction site${c.internalSites.length>1?'s':''} — ${c.internalSites.join('; ')}. Domesticate (silent mutation) before assembling, otherwise the enzyme also cuts inside the part.`] : []);
+  openAsmModal({
+    title: c.label,
+    sub: `${c.what} · ${strandLine}`,
+    warn: notes.length ? notes.map(esc).join('<br>') : '',
+    insertHeading: 'Assembled module with overhangs',
+    insertMeta: `BsaI · ${c.length} bp`,
+    seq: v.sequence, parts: v.parts, overhangs: v.overhangs,
+    legend: `<span class="ins">parts</span> · <span class="oh">overhangs</span>`,
+    insertFile: `${fileSlug(c.name)}.gb`, insertGenbank: v.genbank,
+    partsHeading: isPromo ? 'Part' : 'Assembled from the Level 0 parts (BsaI)',
+    partsList: v.parts.map(p=>({ name: p.type==='Promoter' ? p.label : `${p.type} · ${p.label}`, bp: p.end-p.start+1, color: partColor(p.type), placeholder: !p.isReal })),
+    ring: ringBase && { segs: ringBase.segs, legend: ringLegendHtml(ringBase) },
+    plasmid: pl, plasmidHeading: 'Cloned into the Level 1 backbone', ringSub: 'KanR · Level 1 acceptor',
+    explain: isPromo
+      ? `The promoter is a toolkit part, not assembled from Level 0 pieces: it is flanked by the Level 1 acceptor overhangs (ACAT … TTGT) and carries the two Level 2 overhangs ${c.level2Overhangs.n} / ${c.level2Overhangs.c} that join it to the cargo module and the NC module. BsaI replaces the lacZα stuffer of ${bb ? bb.id.split('-')[0] : 'the backbone'} with it; both BsaI sites are cut away with the stuffer, the two BbsI sites of the backbone stay for Level 2. Plasmid sequence = top strand 5′→3′.`
+      : `BsaI releases each Level 0 part together with its two 4-nt Level 1 overhangs. The five fragments ligate through the shared overhangs (${junctions.join(' · ')}) and fit between NLvl1 and CLvl1 of ${bb ? bb.id.split('-')[0] : 'the backbone'}: the lacZα stuffer and both BsaI sites are cut away, so this plasmid can no longer be cut by BsaI. The two BbsI sites of the backbone stay — BbsI later releases the module at its Level 2 overhangs (${c.level2Overhangs.n} … ${c.level2Overhangs.c}). Plasmid sequence = top strand 5′→3′${isCargo ? '; the cargo module sits on it as the reverse complement (antisense strand) — the module above is shown rotated by 180°, the plasmid stays in backbone orientation' : ''}.`,
+  });
+  scrollAsmSeqTop();
+}
+function openLevel2Modal(){
+  const l2=api2(), bb=(LIB.level2Backbones||[])[0]; if(!l2) return;
+  const pl=l2.plasmid, mods=api1();
+  const segs = bb && pl ? level2Segs(bb, l2.length, 'Insert:\nCargo ← Promoter\n→ NC', true) : null;
+  const j=l2.junctions;
+  openAsmModal({
+    title: 'Finished Level 2 construct',
+    sub: 'Level 2 · cargo module (antisense) ← promoter → nanocompartment module (sense)',
+    warn: l2.notes.length ? l2.notes.map(esc).join('<br>') : '',
+    insertHeading: 'Assembled insert with overhangs',
+    insertMeta: `BbsI · ${l2.length.toLocaleString('en-US')} bp`,
+    seq: l2.sequence, parts: l2.parts, overhangs: l2.overhangs,
+    legend: `<span class="ins">parts</span> · <span class="oh">overhangs</span> (${j.n} · ${j.cargoPromoter} · ${j.promoterNc} · ${j.c} are the Level 2 overhangs)`,
+    insertFile: `Level2_${fileSlug(l2.name)}_insert.gb`, insertGenbank: l2.genbank,
+    partsHeading: 'Assembled from the three Level 1 modules (BbsI)',
+    partsList: mods.map(m=>({ name:m.label, bp:m.length-8, color: m.site==='promoter' ? cvar('promo') : m.site==='cargo_site' ? cvar('t3') : cvar('shell'), placeholder: m.notes.length>0 })),
+    ring: segs && { segs, legend: segLegendHtml(segs) },
+    plasmid: pl, plasmidHeading: 'Cloned into the Level 2 backbone', ringSub: 'HIS3 · yeast/E. coli shuttle',
+    explain: `BbsI cuts the three Level 1 plasmids at their Level 2 overhangs and releases cargo module (${j.n} … ${j.cargoPromoter}), promoter (${j.cargoPromoter} … ${j.promoterNc}) and NC module (${j.promoterNc} … ${j.c}). They ligate through ${j.cargoPromoter} and ${j.promoterNc}; the ends ${j.n} and ${j.c} match BbLvl2N and BbLvl2C of ${bb ? l2Name(bb) : 'the Level 2 backbone'}, whose own test cassette and BbsI sites are cut away. Plasmid sequence = top strand 5′→3′; the cargo module sits on it antisense, the NC module sense.`,
+  });
+  scrollAsmSeqTop();
+}
+function level1ConstructFor(el){ return api1().find(c=>c.site===el.dataset.l1); }
+['#lvl1cargo','#lvl1nc','#lvl1promo'].forEach(sel=>{
+  $(sel).addEventListener('click', e=>{ const el=e.target.closest('.l1grid[data-l1]'); const c=el && level1ConstructFor(el); if(c) openLevel1Modal(c); });
+  $(sel).addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ const el=e.target.closest('.l1grid[data-l1]'); const c=el && level1ConstructFor(el); if(c){ e.preventDefault(); openLevel1Modal(c); } } });
+});
+$('#lvl2strand').addEventListener('click', e=>{ if(e.target.closest('.l2-row[data-l2]')) openLevel2Modal(); });
+$('#lvl2strand').addEventListener('keydown', e=>{ if((e.key==='Enter'||e.key===' ') && e.target.closest('.l2-row[data-l2]')){ e.preventDefault(); openLevel2Modal(); } });
+
+
+/* ===================== Step 5: order ===================== */
+function orderRow(name, sub, status, seqHtml){
+  const badge = status==='stock' ? '<span class="oi-badge fixed">in stock · E. coli</span>'
+    : status==='oligo' ? '<span class="oi-badge synth">oligo pair</span>'
+    : status==='primer' ? '<span class="oi-badge pcr">primer pair</span>'
+    : '<span class="oi-badge assemble">dsDNA</span>';
+  const sw = status==='stock' ? 'ncs' : status==='oligo' ? 't3' : status==='primer' ? 'shell' : 'promo';
+  return `<div class="orderitem"><span class="oi-sw" style="background:${cvar(sw)}"></span>
+    <div class="oi-main"><div class="oi-name">${esc(name)}</div><div class="oi-sub">${esc(sub)}</div>${seqHtml||''}</div>${badge}</div>`;
+}
+const orderSite = c => c.module==='cargo_site' ? 'cargo site' : 'nanocompartment site';
+const orderWhere = c => `${c.type} · ${orderSite(c)}`;
+const recName = c => (c.genbank.match(/^LOCUS\s+(\S+)/)||[])[1] || `${c.type}_${c.label}`;
+const seqLine = (n, seq) => `<div class="oi-seq"><b>${esc(n)}</b> 5′-${esc(seq)}-3′ <span style="color:var(--muted)">(${seq.length} nt)</span></div>`;
+function listActions(el, text, csv, file){
+  el.innerHTML = `<button class="chip" type="button" data-act="copy">Copy list</button><button class="chip primary-chip" type="button" data-act="csv">Download list (.csv)</button>`;
+  el.onclick = e=>{ const b=e.target.closest('button[data-act]'); if(!b) return;
+    if(b.dataset.act==='copy') copyText(b, text); else downloadText(file, csv); };
+}
+function renderOrder(res){
+  const list = (res.api && res.api.level0Constructs) || [];
+  const empty = (id, msg) => { $(id).innerHTML = `<p class="l0m-note" style="margin:0">${msg}</p>`; };
+  $('#ordStockMeta').textContent=$('#ordOligoMeta').textContent=$('#ordPrimerMeta').textContent=$('#ordDsMeta').textContent='';
+  ['#ordOligoActions','#ordPrimerActions','#ordDsActions'].forEach(id=>{ $(id).innerHTML=''; $(id).onclick=null; });
+  if(!list.length){
+    ['#ordStockList','#ordOligoList','#ordPrimerList','#ordDsList'].forEach(id=>empty(id,'Backend not connected — the order lists are only available with the server running.'));
+    return;
+  }
+
+  // 1 — toolbox parts the KIT has on stock
+  const stock = list.filter(c=>c.onStock===true);
+  $('#ordStockMeta').textContent = stock.length ? `${stock.length} part${stock.length>1?'s':''}` : '';
+  if(stock.length) $('#ordStockList').innerHTML = stock.map(c=>orderRow(c.label, `${orderWhere(c)} · toolbox part — Level 0 plasmid, shipped on request`, 'stock')).join('');
+  else empty('#ordStockList','None of the toolbox parts in this design is marked as on stock yet — the stock status comes with the part sequences.');
+
+  // 2 — oligo pairs (parts too short for PCR)
+  const oligo = list.filter(c=>c.oligos);
+  $('#ordOligoMeta').textContent = oligo.length ? `${oligo.length} pair${oligo.length>1?'s':''} · ${oligo.length*2} oligos` : '';
+  if(oligo.length){
+    $('#ordOligoList').innerHTML = oligo.map(c=>orderRow(c.label, `${orderWhere(c)} · ${c.insert.sequence.length} bp part · anneals to ${c.oligos.annealedLength} bp with 5′ overhangs ${c.oligos.overhangs.left} / ${c.oligos.overhangs.right}`, 'oligo',
+      seqLine(c.oligos.top.name, c.oligos.top.sequence)+seqLine(c.oligos.bottom.name, c.oligos.bottom.sequence))).join('');
+    const rows = oligo.flatMap(c=>[c.oligos.top, c.oligos.bottom]);
+    listActions($('#ordOligoActions'), rows.map(o=>`${o.name}\t${o.sequence}`).join('\n'),
+      'name,sequence,length\n'+rows.map(o=>`${o.name},${o.sequence},${o.length}`).join('\n')+'\n', 'level0_oligos.csv');
+  } else empty('#ordOligoList','No oligos needed — every part with a real sequence is long enough for PCR primers.');
+
+  // 3 — primer pairs for your own sequences
+  const primer = list.filter(c=>c.isUser && c.primers && c.primers.possible);
+  $('#ordPrimerMeta').textContent = primer.length ? `${primer.length} pair${primer.length>1?'s':''} · ${primer.length*2} primers` : '';
+  if(primer.length){
+    $('#ordPrimerList').innerHTML = primer.map(c=>{ const p=c.primers;
+      return orderRow(c.label, `${orderWhere(c)} · your own sequence · PCR product ${p.productLength} bp${p.q5AnnealingTemp ? ` · Q5 annealing ≈ ${p.q5AnnealingTemp} °C` : ''}`, 'primer',
+        seqLine(p.forward.name, p.forward.sequence)+seqLine(p.reverse.name, p.reverse.sequence)); }).join('');
+    const rows = primer.flatMap(c=>[c.primers.forward, c.primers.reverse]);
+    listActions($('#ordPrimerActions'), rows.map(o=>`${o.name}\t${o.sequence}`).join('\n'),
+      'name,sequence,length\n'+rows.map(o=>`${o.name},${o.sequence},${o.length}`).join('\n')+'\n', 'level0_primers.csv');
+  } else empty('#ordPrimerList','No primers needed — your own sequences are too short for PCR (see the oligos above) or none is part of this design.');
+
+  // 4 — dsDNA: every part with a real sequence
+  const ds = list.filter(c=>c.isReal);
+  $('#ordDsMeta').textContent = ds.length ? `${ds.length} fragment${ds.length>1?'s':''}` : '';
+  if(ds.length){
+    $('#ordDsList').innerHTML = ds.map(c=>orderRow(c.label, `${orderWhere(c)} · ${c.length} bp fragment (part ${c.insert.sequence.length} bp)${c.isUser ? ' · your own sequence' : c.onStock ? ' · toolbox part, also on stock' : ' · toolbox part'}`, 'dsdna')).join('');
+    const names = ds.map(recName);
+    const fasta = ds.map((c,i)=>`>${names[i]}\n${c.sequence}`).join('\n')+'\n';
+    $('#ordDsActions').innerHTML = `<button class="chip" type="button" data-act="copy">Copy FASTA</button><button class="chip primary-chip" type="button" data-act="fasta">Download FASTA (.fasta)</button><button class="chip primary-chip" type="button" data-act="gb">Download GenBank (.gb)</button>`;
+    $('#ordDsActions').onclick = e=>{ const b=e.target.closest('button[data-act]'); if(!b) return;
+      if(b.dataset.act==='copy') copyText(b, fasta);
+      else if(b.dataset.act==='fasta') downloadText('level0_dsdna.fasta', fasta);
+      else downloadText('level0_dsdna.gb', joinGb(ds.map(c=>c.genbank))); };
+  } else empty('#ordDsList','No part with a real sequence in this design yet — placeholder parts cannot be ordered.');
+  const ph = list.filter(c=>!c.isReal).length;
+  if(ph) $('#ordDsList').insertAdjacentHTML('beforeend', `<p class="l0m-note" style="margin:6px 0 0">${ph} part${ph>1?'s':''} still ha${ph>1?'ve':'s'} a placeholder sequence in the parts database and cannot be ordered yet.</p>`);
+}
+
 /* ===================== Calculation ===================== */
 /* nominal lengths for the schematic construct map (real bp come from the model where known) */
 const TP_BP=54, PROMO_BP=680, NCS_BP=15;
-/* One module = five parts in Type order. `behind` = the two slots behind the central part along the ORF
-   (nearest first). The stop codon sits at the ORF's 3' end: in the last used slot behind the central part,
-   otherwise in the first NCS behind it — unless the user placed an "NCS with stop codon" explicitly. */
-function moduleParts(entries, middle, behind){
-  const part = e => e.kind==='linker' ? { label:e.label, kind:'t2', note:e.aa+' aa', bp:e.bp }
-    : e.kind==='marker' ? { label:e.label, kind:'mark', note:e.aa+' aa · surface display', bp:e.bp }
+/* One module = five parts in Type order. The stop codon is never placed automatically: only an "NCS with stop codon"
+   that the user picked explicitly carries it. */
+function moduleParts(entries, middle){
+  const part = e => e.kind==='linker' ? { label:e.label, kind:'t2', note:'Linker', bp:e.bp }
+    : e.kind==='marker' ? { label:e.label, kind:'mark', note:'Surface marker', bp:e.bp }
     : e.kind==='tp' ? { label:e.label, kind:'t'+e.slot, note:'Targeting peptide', bp:e.bp, mapnote:'TP' }
-    : e.kind==='custom' ? { label:e.label, kind:'t'+e.slot, note:e.bp+' bp · your sequence', bp:e.bp, isNew:true }
+    : e.kind==='custom' ? { label:e.label, kind:'t'+e.slot, note:'Your sequence', bp:e.bp, isNew:true }
     : e.kind==='ncsstop' ? { label:'NCS', dummy:true, note:'Spacer · stop codon', bp:NCS_BP, stop:true }
     : { label:'NCS', dummy:true, note:'Spacer', bp:NCS_BP };
   const byNo = {}; entries.forEach(e=>{ byNo[e.slot]=part(e); });
-  if(!entries.some(e=>e.kind==='ncsstop')){
-    const used = behind.some(k=>!byNo[k].dummy);
-    const stopSlot = used ? behind[1] : behind[0];
-    byNo[stopSlot] = { ...byNo[stopSlot], stop:true };
-  }
   const parts = [ byNo[1], byNo[2], middle, byNo[4], byNo[5] ];
   // Fusion-site type = the slot position; the part colour follows its Type (as in the scheme figure).
   parts.forEach((p,i)=>{ p.type = 'Type 0.'+(i+1); if(p.kind!=='shell') p.kind = 't'+(i+1); });
@@ -2400,16 +2796,16 @@ function buildModel(){
   const cargoLabel = state.cargoLabel;
   // isCargo mirrors the same field in Biologik/level0_design/design.py, so the
   // renderer never has to guess which of the five parts is the user's own.
-  const cg   = { label:cargoLabel, kind:'t3', note:cargoBp+' bp', bp:cargoBp, mapnote:cargoBp+' bp', isCargo:true };
+  const cg   = { label:cargoLabel, kind:'t3', note:'Cargo', bp:cargoBp, mapnote:cargoBp+' bp', isCargo:true };
   const cslots = slotsFromState('cargo'), slots = slotsFromState('nc');
 
   // Level 0 / Level 1 cargo module (antisense): the ORF runs Type 0.5 -> 0.1, the stop sits on the left.
-  const l0 = moduleParts(cslots, cg, [2,1]);
+  const l0 = moduleParts(cslots, cg);
   const l1cargo = l0.map(p=>({...p}));
 
   // Level 1 NC module (sense): the ORF runs Type 0.1 -> 0.5, the stop sits on the right.
-  const shellPart = { label:n.shell, kind:'shell', note:n.shellBp+' bp', bp:n.shellBp, mapnote:'Shell', isNew:!!n.custom };
-  const l1nc = moduleParts(slots, shellPart, [4,5]);
+  const shellPart = { label:n.shell, kind:'shell', note:'Shell', bp:n.shellBp, mapnote:'Shell', isNew:!!n.custom };
+  const l1nc = moduleParts(slots, shellPart);
 
   // Level 2: cargo module  <-promoter->  NC module
   const promo = { label:state.promoter==='GAL110'?'GAL1-10':state.promoter, kind:'promo', note:'bidirectional', bp:PROMO_BP };
@@ -2483,7 +2879,7 @@ function primersFromApi(primers){
   }));
 }
 
-const DESIGN_KEY='encore.design.v1';
+const DESIGN_KEY='encore.design.v19';
 let renderedFromCache=false;
 const resultFromApi = d => ({ model:modelFromApi(d), primers:primersFromApi(d.primers), api:d });
 async function compute(){
@@ -2515,33 +2911,22 @@ function renderAll(res){
 
   /* --- Level 0: only the cargo is new — show it with its Type 3 overhangs --- */
   renderLevel0('#lvl0strand', m);
-  /* --- Level 1 cargo --- */
-  renderStrand('#lvl1cargo', m.l1cargo, {antisense:true});
-  $('#cargoModTag').textContent = 'BsaI';
-  /* --- Level 1 NC --- */
-  renderStrand('#lvl1nc', m.l1nc);
+  /* --- Level 1: cargo module, NC module, promoter (assembled via BsaI, with overhangs) --- */
+  renderLevel1(res);
   /* --- Level 2: cargo module ← [promoter] → NC module (bidirectional) --- */
-  renderLevel2('#lvl2strand', m);
+  renderLevel2('#lvl2strand', m, res.api);
 
-  /* --- Legend --- */
-  $('#legend').innerHTML = [
-    ['Type 0.1','t1'],['Type 0.2','t2'],['Type 0.3 · cargo / shell','t3'],['Type 0.4','t4'],['Type 0.5','t5'],
-  ].map(([n,k])=>`<span><i style="background:${cvar(k)}"></i>${n}</span>`).join('')
-   + `<span><i style="background:var(--promo)"></i>Promoter</span>`
-   + `<span style="gap:5px"><b style="font-size:15px">*</b> = stop codon (ORF 3′ end)</span>`;
-
-  /* --- Acceptor plasmids + order checklists, per level --- */
-  renderLevel1Promo(m);
+  /* --- Destination plasmids, downloads --- */
   renderLevel0Extras(res);
-  renderLevel1Extras(m);
   renderLevel2Plasmid(res);
+  renderOrder(res);
 }
 
 /* ===================== Stepper scroll-spy ===================== */
 const stepEls=$$('.s-step');
 stepEls.forEach((el,i)=>el.querySelector('.s-node').addEventListener('click', ()=>{ if(i===0||state.unlocked[i]) scrollToSection(el.dataset.target); }));
 function updateStepperLocks(){ stepEls.forEach((el,i)=>el.querySelector('.s-node').disabled=!(i===0||state.unlocked[i])); }
-const secEls=['sec-0','sec-1','sec-2','sec-3'].map(id=>document.getElementById(id));
+const secEls=['sec-0','sec-1','sec-2','sec-3','sec-4'].map(id=>document.getElementById(id));
 // Track every section's latest known ratio (not just the ones that changed in
 // the current callback batch) — otherwise a section's own "just left the
 // viewport" event (ratio 0) can fire in its own batch *after* another
@@ -2556,7 +2941,7 @@ const io=new IntersectionObserver(es=>{
 },{rootMargin:'-134px 0px -55% 0px',threshold:[0,.1,.25,.5,.75,1]});
 secEls.forEach(s=>io.observe(s));
 function setActive(idx){
-  stepEls.forEach((el,i)=>{ const done=i<3&&!!state.unlocked[i+1]; el.classList.toggle('active',i===idx); el.classList.toggle('done',done); el.querySelector('.s-dot').innerHTML=done?'✓':(i+1); });
+  stepEls.forEach((el,i)=>{ const done=i<4&&!!state.unlocked[i+1]; el.classList.toggle('active',i===idx); el.classList.toggle('done',done); el.querySelector('.s-dot').innerHTML=done?'✓':(i+1); });
 }
 function updateProgress(){ const d=document.documentElement,tot=d.scrollHeight-window.innerHeight; $('#progressFill').style.width=(tot>0?Math.min(100,Math.max(0,window.scrollY/tot*100)):0)+'%'; }
 window.addEventListener('scroll',updateProgress,{passive:true}); window.addEventListener('resize',updateProgress);
@@ -2626,6 +3011,7 @@ async function restoreSession(){
   updateConstructStrip(); refreshNext2(); refreshNext0(); refreshNext1();
 
   state.unlocked=s.unlocked||state.unlocked;
+  while(state.unlocked.length<5) state.unlocked.push(!!state.unlocked[3]);     // sessions saved before step 5 existed
   applyLocks(); updateStepperLocks();
   // Step 4 was already computed before the refresh: show that result right away (cached in sessionStorage)
   // so the saved scroll position below is valid immediately, then refresh it silently in the background.

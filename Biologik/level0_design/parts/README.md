@@ -39,10 +39,10 @@ die zugehoerige echte Sequenz, nachgeschlagen ueber dieselbe ID:
 | `SURFACE_MARKERS[i]`                  | `id`            | `surface_markers/`          |
 | (kein Katalog — ein generischer Spacer, siehe `design.py: placeholder_seq("NCS", 30)`) | — | `ncs_spacers/` (feste ID `standard`) |
 
-`terminators/`, `level0_backbones/`, `level1_backbones/`, `level2_backbones/` und
-`type_overhangs/` haben (noch) keinen Katalog in `data.py` — sie sind rein informationell aus
-importierten GenBank-Dateien befuellt und noch nicht in die
-Level-0/1/2-Design-Logik verdrahtet (siehe PROJECT_TODO.txt).
+`terminators/` und `type_overhangs/` haben keinen Katalog in `data.py` — `terminators/` ist rein informationell
+(noch nicht verdrahtet), `type_overhangs/` ist die Quelle der Overhangs (siehe unten). Die drei Backbone-Ordner sind
+verdrahtet: Level 0 (BbsI-Klonierung jedes Teils, `design.py`), Level 1 (BsaI-Assemblierung der Module in pAGM1311,
+`assembly.py`) und Level 2 (BbsI-Assemblierung der drei Level-1-Inserts in pESC-HIS, `assembly.py`).
 
 `cargo_presets/` ist die einzige Kategorie, die KEINE eigene Katalog-Liste in
 `data.py` mehr hat — `CARGO_PRESETS` wird direkt aus dieser Datenbank gebaut
@@ -117,6 +117,11 @@ Felder (zusaetzlich zu `id`/`kind`/`label`/`sequence`/`sequence_status`/`on_stoc
   `sequence_top_strand` (Basen auf dem Top-Strang) und `sequence_own_strand_5to3` (so wie auf
   dem eigenen Strang gelesen, also bei `strand: "-"` das Reverse-Komplement).
 - `insert` — Position und Platzhalter (`AAAA`) der Stelle, an der die CDS eingesetzt wird.
+- `frame_spacer` — 2 nt (`GC`) direkt vor dem Insert (5'-Seite, Top-Strand), hinter dem Level-1-N-Overhang und damit
+  INNERHALB des BsaI-Fragments (wird beim Klonieren nicht herausgeschnitten). Der 4-nt-Overhang zwischen zwei Teilen
+  allein verschiebt das Leseraster um 1 nt; Overhang (4) + Spacer (2) = 6 nt = zwei Codons, fusionierte Teile bleiben im
+  Raster. Gewaehlt so, dass in beiden Leserichtungen (Sense- und Cargo-Modul, das antisense liegt) kein Stopcodon an
+  der Naht entsteht und keine BsaI-/BbsI-Stelle neu gebildet wird (Test: `test_junction_codons_are_never_stops_...`).
 - `features` — die komplette, roh geparste GenBank-Feature-Tabelle.
 
 Stand: Die Overhangs der Adapter waren gegen die frueheren hartcodierten Konstanten gegengeprueft (Level-1-Overhangs

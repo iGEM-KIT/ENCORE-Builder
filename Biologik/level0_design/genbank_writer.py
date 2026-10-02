@@ -76,6 +76,14 @@ def format_genbank_record(name: str, sequence: str, features: list[dict] | None 
 # ohne sie voll parsen zu muessen.
 # ---------------------------------------------------------------------------
 
+def make_feature(ftype: str, location: str, label: str, note: str | None = None, extra: list | None = None) -> dict:
+    qualifiers = [("label", label)]
+    if note:
+        qualifiers.append(("note", note))
+    qualifiers.extend(extra or [])
+    return {"type": ftype, "location": location, "qualifiers": qualifiers}
+
+
 def location_span(location: str) -> tuple[int, int]:
     """(min, max) aller Positionszahlen in einer Location — reicht, um zu
     entscheiden, ob ein Feature vor/nach/innerhalb eines auszutauschenden

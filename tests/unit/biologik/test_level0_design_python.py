@@ -82,7 +82,9 @@ def test_make_primer_pair_and_genbank_export():
     # einmal veraltet, ohne dass es auffiel. Deshalb jetzt gegen ein echtes Ergebnis.
     design = _design()
     genbank = build_genbank(design)
-    assert 'LOCUS       Level1_Cargo-Module_GFP' in genbank
+    assert 'LOCUS       Level1_Cargo ' in genbank
+    assert 'LOCUS       Level1_NC ' in genbank
+    assert 'LOCUS       pESC-HIS_Level2_ENCORE-tmari ' in genbank
     assert 'LOCUS       Cargo_GFP ' in genbank
     assert '/label="GFP"' in genbank
     assert genbank.count('//') == genbank.count('LOCUS')
@@ -158,17 +160,15 @@ def test_json_cli_reports_the_real_error_on_stdout():
     assert result.stderr.strip() == ''
 
 
-def test_stop_codon_follows_the_targeting_peptide_slot():
-    # Der ORF endet am C-Terminus des Fusionsproteins. Sitzt das TP in Type 0.1, ist
-    # das der C-Terminus (Cargo liegt "vor" ihm im ORF); sitzt es in Type 0.5, traegt
-    # stattdessen der NCS in Type 0.2 (direkt hinter der Cargo) das Stopcodon.
-    c_term_module = _design(cargo_slots=CARGO_SLOTS_C_TERM)['level0']['cargoModule']
-    n_term_module = _design(cargo_slots=CARGO_SLOTS_N_TERM)['level0']['cargoModule']
+def test_stop_codon_is_only_set_where_the_user_put_an_ncs_with_stop():
+    # Kein automatisches Stopcodon: ohne ausdruecklich gewaehlten "NCS mit Stopcodon" traegt kein Slot eines.
+    for slots in (CARGO_SLOTS_C_TERM, CARGO_SLOTS_N_TERM):
+        module = _design(cargo_slots=slots)['level0']['cargoModule']
+        assert not any(p['stop'] for p in module)
 
-    assert [p['stop'] for p in c_term_module] == [True, False, False, False, False]
-    assert [p['stop'] for p in n_term_module] == [False, True, False, False, False]
-    assert c_term_module[0]['role'] == 'targeting-peptide'
-    assert n_term_module[1]['role'] == 'ncs'
+    # Mit ausdruecklich gewaehltem NCS mit Stopcodon (NC Site, direkt hinter der Shell) sitzt es genau dort.
+    nc_module = _design(nc_slots={'4': {'kind': 'ncsstop'}})['level0']['ncModule']
+    assert [p['stop'] for p in nc_module] == [False, False, False, True, False]
 
 
 def test_surface_marker_sits_at_the_chosen_terminus():
@@ -180,17 +180,14 @@ def test_surface_marker_sits_at_the_chosen_terminus():
 
     assert n_term[0]['kind'] == 'mark' and n_term[1]['role'] == 'nc-linker'
     assert c_term[4]['kind'] == 'mark' and c_term[3]['role'] == 'nc-linker'
-
-    # Das Stopcodon wandert an das neue 3'-Ende des ORFs mit.
-    assert n_term[3]['stop'] is True
-    assert c_term[4]['stop'] is True
+    assert not any(p['stop'] for p in n_term + c_term)
 
 
 def test_without_a_marker_the_slots_stay_inert_spacers():
     nc_module = _design()['level0']['ncModule']
 
     assert [p['role'] for p in nc_module] == ['ncs', 'ncs', 'shell', 'ncs', 'ncs']
-    assert [p['stop'] for p in nc_module] == [False, False, False, True, False]
+    assert [p['stop'] for p in nc_module] == [False] * 5
 
 
 def test_unknown_surface_marker_is_rejected():
@@ -279,7 +276,7 @@ def test_design_builds_a_level0_construct_for_every_user_entered_sequence():
         assert c['sequence'][i0 - 1:i1] == c['insert']['sequence']
 
     genbank = build_genbank(design)
-    assert 'LOCUS       Level0_Part-A_Type0.1_0.1rc' in genbank
+    assert 'LOCUS       Level0.1_Part-A_Cargo' in genbank
     assert 'with-overhangs' not in genbank
     assert genbank.count('//') == genbank.count('LOCUS')
 
@@ -378,7 +375,357 @@ def test_libraries_ship_the_level0_backbone_with_a_ready_genbank_text():
 
 def test_design_response_only_carries_what_the_ui_and_export_use():
     design = _design()
-    assert sorted(design) == ['cargo', 'cargoSlots', 'level0', 'level0Constructs', 'level2', 'nanocompartment',
-                              'ncSlots', 'primers', 'targetingPeptide']
+    assert sorted(design) == ['cargo', 'cargoSlots', 'level0', 'level0Constructs', 'level1Constructs', 'level2',
+                              'level2Construct', 'nanocompartment', 'ncSlots', 'primers', 'targetingPeptide']
     assert sorted(design['cargo']) == ['bp', 'label', 'sequence', 'sequenceAntisense']
     assert sorted(design['level2']['promoter']) == ['bp', 'id', 'label']
+
+
+def _long_cargo():
+    import random
+    rng = random.Random(7)
+    codons = [a + b + c for a in 'ACGT' for b in 'ACGT' for c in 'ACGT' if a + b + c not in ('TAA', 'TAG', 'TGA')]
+    seq = 'ATG' + ''.join(rng.choice(codons) for _ in range(200))
+    return seq
+
+
+def test_level0_primers_carry_the_adapter_flanks_and_anneal_to_the_insert():
+    cds = _long_cargo()
+    design = _design(cargoSeq=cds)
+    construct = next(c for c in design['level0Constructs'] if c['module'] == 'cargo_site' and c['slot'] == 3)
+    pr = construct['primers']
+    assert pr['possible'] is True
+
+    start, end = location_span(construct['insert']['location'])
+    flank5, flank3 = construct['sequence'][:start - 1], construct['sequence'][end:]
+    insert = construct['insert']['sequence']
+    assert insert == cds                                  # Cargo Site wird in Leserichtung gezeigt
+    fwd, rev = pr['forward'], pr['reverse']
+    assert fwd['sequence'] == pr['clamp'] + flank5 + fwd['anneal']
+    assert insert.startswith(fwd['anneal'])
+    assert rev['sequence'] == pr['clamp'] + reverse_complement(flank3) + rev['anneal']
+    assert insert.endswith(reverse_complement(rev['anneal']))
+    # PCR-Produkt = Konstrukt + je ein Polster
+    assert pr['productLength'] == construct['length'] + 2 * len(pr['clamp'])
+    # BbsI-Erkennungsstelle liegt hinter dem Polster, damit das Enzym am Produktende schneidet
+    assert fwd['sequence'][len(pr['clamp']):].startswith('GAAGAC')
+    assert rev['sequence'][len(pr['clamp']):].startswith('GAAGAC')
+    assert pr['internalSites'] == [] or all('site' in s for s in pr['internalSites'])
+    assert '/label="%s"' % fwd['name'] in construct['genbank']
+    assert '/label="%s"' % rev['name'] in construct['genbank']
+    assert 'primer_bind' in construct['genbank']
+
+
+def test_level0_primers_need_a_real_long_enough_insert():
+    design = _design(cargoSeq=_long_cargo())
+    placeholder = next(c for c in design['level0Constructs'] if not c['isReal'])
+    assert placeholder['primers']['possible'] is False
+    assert 'real sequence' in placeholder['primers']['reason']
+
+    short = next(c for c in _design()['level0Constructs'] if c['module'] == 'cargo_site' and c['slot'] == 3)
+    assert short['primers']['possible'] is False and 'too short' in short['primers']['reason']
+
+
+def test_level0_primers_flag_internal_restriction_sites():
+    cds = _long_cargo()
+    cds = cds[:60] + 'GAAGAC' + cds[66:]                 # BbsI-Stelle mitten im Insert
+    design = _design(cargoSeq=cds)
+    pr = next(c for c in design['level0Constructs'] if c['module'] == 'cargo_site' and c['slot'] == 3)['primers']
+    assert any('BbsI' in s for s in pr['internalSites'])
+
+
+def test_level0_primers_export_a_genbank_of_the_pcr_product():
+    cds = _long_cargo()
+    design = _design(cargoSeq=cds)
+    construct = next(c for c in design['level0Constructs'] if c['module'] == 'cargo_site' and c['slot'] == 3)
+    pr = construct['primers']
+    gb = pr['genbank']
+    assert gb.startswith('LOCUS') and gb.count('//') == 1 and 'linear' in gb.splitlines()[0]
+    assert f"{pr['productLength']} bp" in gb.splitlines()[0]
+    for primer in (pr['forward'], pr['reverse']):
+        assert f'/label="{primer["name"]}"' in gb
+    assert gb.count('primer_bind') == 2
+    assert f"1..{pr['forward']['length']}" in gb and f"complement({pr['productLength'] - pr['reverse']['length'] + 1}..{pr['productLength']})" in gb
+    # liegt auch im Gesamt-GenBank-Export
+    full = build_genbank(design)
+    assert 'LOCUS       Level0.3_Primers_GFP_Cargo' in full
+    assert 'LOCUS       Level0.3_GFP_Cargo' in full
+
+
+def test_record_names_tell_the_site_without_reading_the_description():
+    design = _design(cargoSeq=_long_cargo())
+    names = {(c['module'], c['slot']): c['genbank'].splitlines()[0].split()[1] for c in design['level0Constructs']}
+    assert names[('cargo_site', 3)] == 'Level0.3_GFP_Cargo'
+    assert names[('nc_site', 3)] == 'Level0.3_E-Tm_NC'
+    assert names[('cargo_site', 2)].startswith('Level0.2_') and names[('cargo_site', 2)].endswith('_Cargo') and names[('nc_site', 2)].startswith('Level0.2_') and names[('nc_site', 2)].endswith('_NC')
+    assert len(set(names.values())) == 10
+
+    cargo = next(c for c in design['level0Constructs'] if c['module'] == 'cargo_site' and c['slot'] == 3)
+    assert cargo['primers']['genbank'].splitlines()[0].split()[1] == 'Level0.3_Primers_GFP_Cargo'
+    assert cargo['primers']['forward']['name'] == 'Level0.3_GFP_Cargo_F'
+    assert cargo['primers']['reverse']['name'] == 'Level0.3_GFP_Cargo_R'
+
+
+# ---------------------------------------------------------------------------------------------------------
+# Level 1 (BsaI) und Level 2 (BbsI): die Assemblies werden hier wirklich "verdaut" nachgerechnet.
+
+def _bsai_fragment(plasmid: str) -> str:
+    """Top-Strand-Fragment, das BsaI aus einem Level-0-Plasmid schneidet (Stuecke zwischen den beiden Schnitten)."""
+    left = plasmid.index('GGTCTC')                    # Top-Strand-Stelle, schneidet 1 nt dahinter, Overhang = 4 nt
+    right = plasmid.index('GAGACC')                   # Stelle auf dem Gegenstrang, schneidet 1 nt davor
+    return plasmid[left + 7:right - 1]
+
+
+def _bbsi_piece(plasmid: dict) -> str:
+    """Top-Strand-Stueck zwischen den beiden BbsI-Schnitten des Level-1-Plasmids: 2 nt hinter GAAGAC bzw. 2 nt vor
+    GTCTTC, jeweils mit 4-nt-Overhang. Die beiden Stellen sind die des Backbones links/rechts des Inserts."""
+    seq = plasmid['sequence']
+    left = 2                                                # GAAGAC an 3..8
+    right = plasmid['insertEnd'] - 2                        # GTCTTC beginnt am G von TTGT
+    assert seq.startswith('GAAGAC', left) and seq.startswith('GTCTTC', right)
+    return seq[left + 8:right - 2]
+
+
+def _real_design():
+    return _design(cargoSeq=_long_cargo(), nc_slots={'4': {'kind': 'custom', 'label': 'MyPart', 'seq': 'ATG' + 'GCT' * 20}})
+
+
+def test_level1_modules_are_the_bsai_assembly_of_the_level0_parts():
+    design = _real_design()
+    cargo, promoter, nc = design['level1Constructs']
+    assert [m['name'] for m in (cargo, promoter, nc)] == ['Level1_Cargo', 'Level1_Promoter', 'Level1_NC']
+    for m in (cargo, promoter, nc):
+        assert m['sequence'].startswith('ACAT') and m['sequence'].endswith('TTGT')        # NLvl1 / CLvl1 of pAGM1311
+    assert cargo['level2Overhangs'] == {'n': 'CCAA', 'c': 'CGTT'}
+    assert promoter['level2Overhangs'] == {'n': 'CGTT', 'c': 'TGAT'}
+    assert nc['level2Overhangs'] == {'n': 'TGAT', 'c': 'AATG'}
+
+    # Die fuenf Fragmente, die BsaI aus den echten Level-0-Plasmiden schneidet, ergeben genau das Modul.
+    for module, site in ((cargo, 'cargo_site'), (nc, 'nc_site')):
+        pieces = [_bsai_fragment(c['plasmid']['sequence']) for c in design['level0Constructs'] if c['module'] == site]
+        assembled = pieces[0]
+        for piece in pieces[1:]:
+            assert assembled[-4:] == piece[:4]
+            assembled += piece[4:]
+        assert assembled == module['sequence']
+    junctions = [o['sequence'] for o in cargo['overhangs'] if o['label'].startswith('0.')]
+    assert 'TATG' in junctions and 'TTCT' in junctions and 'ATCC' in junctions and 'TGGC' in junctions
+
+
+def test_level1_parts_sit_where_their_features_say():
+    design = _real_design()
+    cargo, _, nc = design['level1Constructs']
+    gene = next(p for p in cargo['parts'] if p['label'] == 'GFP')
+    # Das Cargo-Modul liegt als Reverse Complement auf dem Top-Strand (antisense).
+    assert gene['strand'] == 'antisense'
+    assert cargo['sequence'][gene['start'] - 1:gene['end']] == reverse_complement(design['cargo']['sequence'])
+    mine = next(p for p in nc['parts'] if p['label'] == 'MyPart')
+    assert mine['strand'] == 'sense' and nc['sequence'][mine['start'] - 1:mine['end']] == 'ATG' + 'GCT' * 20
+    assert 'complement(' in cargo['genbank'] and '/label="GFP"' in cargo['genbank']
+
+
+def test_level1_plasmid_has_the_module_between_bbsi_sites_and_no_bsai_site():
+    design = _real_design()
+    backbone = next(iter(load_parts()['level1_backbones']))
+    cargo = design['level1Constructs'][0]
+    pl = cargo['plasmid']
+    assert pl['length'] == backbone['length_bp'] - (606 - 7 + 1) + cargo['length']
+    seq = pl['sequence']
+    assert seq[pl['insertStart'] - 1:pl['insertEnd']] == cargo['sequence']
+    assert seq.count('GGTCTC') + seq.count('GAGACC') == 0                       # BsaI sites are cut away with the stuffer
+    assert seq[2:8] == 'GAAGAC' and seq[:pl['insertStart'] - 1] == backbone['sequence'][:pl['insertStart'] - 1]
+    assert seq.endswith(backbone['sequence'][-100:])
+    assert '/label="KanR"' in pl['genbank'] and '/label="0.1N Lvl1"' in pl['genbank']
+    # BbsI schneidet aus dem Plasmid genau das Stueck zwischen den Level-2-Overhangs
+    assert _bbsi_piece(pl) == cargo['sequence'][4:-4]
+
+
+def test_level2_is_the_bbsi_assembly_of_the_three_level1_modules():
+    design = _real_design()
+    cargo, promoter, nc = design['level1Constructs']
+    level2 = design['level2Construct']
+    pieces = [_bbsi_piece(m['plasmid']) for m in (cargo, promoter, nc)]
+    assembled = pieces[0]
+    for piece in pieces[1:]:
+        assert assembled[-4:] == piece[:4]
+        assembled += piece[4:]
+    assert assembled == level2['sequence']
+    assert level2['junctions'] == {'n': 'CCAA', 'cargoPromoter': 'CGTT', 'promoterNc': 'TGAT', 'c': 'AATG'}
+
+    backbone = next(iter(load_parts()['level2_backbones']))
+    pl = level2['plasmid']
+    assert pl['length'] == backbone['length_bp'] - 824 + level2['length']
+    assert pl['sequence'][pl['insertStart'] - 1:pl['insertEnd']] == level2['sequence']
+    assert pl['sequence'].startswith(backbone['sequence'][:2127] + 'CCAA')
+    assert pl['sequence'][pl['insertEnd'] - 4:pl['insertEnd']] == 'AATG' and pl['sequence'][pl['insertEnd']:pl['insertEnd'] + 20] == backbone['sequence'][2951:2971]
+    for label in ('HIS3', 'AmpR', 'ADH1 terminator', 'CYC1 terminator', 'GFP', 'BbLvl2N', 'BbLvl2C'):
+        assert f'/label="{label}"' in pl['genbank']
+    assert 'BbsI Rec Site' not in pl['genbank']                       # the cassette's own BbsI sites are gone
+
+
+def test_internal_restriction_sites_are_reported_on_level1():
+    cds = _long_cargo()
+    cds = cds[:60] + 'GGTCTC' + cds[66:]
+    cargo = _design(cargoSeq=cds)['level1Constructs'][0]
+    assert any('BsaI' in s and 'GFP' in s for s in cargo['internalSites'])
+    assert any('PLACEHOLDER' in n for n in cargo['notes'])
+
+
+def test_libraries_ship_level1_and_level2_backbones_with_a_ready_genbank_text():
+    from Biologik.level0_design.data import get_libraries
+    libs = get_libraries()
+    for key, name, bp, labels in (('level1Backbones', 'pAGM1311', 2621, ('KanR', 'ori', 'lacZ-alpha', 'BbsI rec site', 'BsaI rec site')),
+                                  ('level2Backbones', 'pESC', 6544, ('HIS3', 'AmpR', 'ADH1 terminator', 'CYC1 terminator'))):
+        gb = libs[key][0]['genbank']
+        assert gb.startswith(f'LOCUS       {name}') and f'{bp} bp' in gb and 'circular' in gb and gb.count('LOCUS') == 1 and gb.strip().endswith('//')
+        for label in labels:
+            assert f'/label="{label}"' in gb
+
+
+def test_level0_plasmid_names_are_unique_and_tell_type_and_site():
+    design = _design(cargoSeq=_long_cargo())
+    names = [c['plasmid']['name'] for c in design['level0Constructs']]
+    assert len(set(names)) == 10
+    assert 'pAGM9121_Level0.3_GFP_Cargo' in names and 'pAGM9121_Level0.2_NCS_NC' in names
+    assert all(c['plasmid']['genbank'].startswith('LOCUS       ' + c['plasmid']['name']) for c in design['level0Constructs'])
+
+
+def test_cargo_module_is_shown_rotated_so_the_cargo_reads_5_to_3_left_to_right():
+    design = _real_design()
+    cargo, promoter, nc = design['level1Constructs']
+    shown = cargo['shown']
+    assert shown['sequence'] == reverse_complement(cargo['sequence'])
+    assert [p['label'] for p in shown['parts']][0] == 'NCS' and [p['label'] for p in shown['parts']][-1] == 'TP-Tm'     # Type 0.5 ... 0.1
+    gene = next(p for p in shown['parts'] if p['label'] == 'GFP')
+    assert gene['strand'] == 'sense' and shown['sequence'][gene['start'] - 1:gene['end']] == design['cargo']['sequence']
+    assert shown['level2Overhangs'] == {'n': reverse_complement('CGTT'), 'c': reverse_complement('CCAA')}
+    assert shown['sequence'][:4] == reverse_complement('TTGT') and shown['sequence'][-4:] == reverse_complement('ACAT')
+    assert 'complement(' not in shown['genbank'] and '/label="GFP"' in shown['genbank']
+    # NC-Modul und Promotor bleiben unveraendert; Plasmid und Level 2 arbeiten mit der Top-Strand-Orientierung weiter
+    assert promoter['shown'] is None and nc['shown'] is None
+    assert cargo['plasmid']['sequence'][cargo['plasmid']['insertStart'] - 1:cargo['plasmid']['insertEnd']] == cargo['sequence']
+    assert shown['genbank'] in build_genbank(design)
+
+
+# ---------------------------------------------------------------------------------------------------------
+# Leseraster: 2-nt-Frame-Spacer direkt vor dem Insert jedes Adapters (parts/type_overhangs/)
+
+def _orf_codons(sequence: str) -> list:
+    return [sequence[i:i + 3] for i in range(0, len(sequence), 3)]
+
+
+def _frame_design():
+    import random
+    rng = random.Random(5)
+    codons = [a + b + c for a in 'ACGT' for b in 'ACGT' for c in 'ACGT' if a + b + c not in ('TAA', 'TAG', 'TGA')]
+
+    def cds(n):
+        return 'ATG' + ''.join(rng.choice(codons) for _ in range(n))
+
+    parts = {'cargo': cds(100), 'A': cds(10), 'B': cds(14), 'C': cds(20), 'D': cds(8)}
+    design = design_construct({
+        'nanocompartment': 'tmari', 'cargoSeq': parts['cargo'], 'cargoLabel': 'G',
+        'cargoSlots': {'1': {'kind': 'custom', 'label': 'A', 'seq': parts['A']}, '2': {'kind': 'custom', 'label': 'B', 'seq': parts['B']}},
+        'ncSlots': {'4': {'kind': 'custom', 'label': 'C', 'seq': parts['C']}, '5': {'kind': 'custom', 'label': 'D', 'seq': parts['D']}},
+    })
+    return design, parts
+
+
+def test_every_adapter_carries_a_two_base_frame_spacer_directly_before_the_insert():
+    for adapter in load_parts()['type_overhangs']:
+        sp = adapter['frame_spacer']
+        a, b = location_span(sp['location'])
+        i0, _ = location_span(adapter['insert']['location'])
+        assert b - a + 1 == 2 and b + 1 == i0                                       # directly 5' of the insert
+        assert adapter['sequence'][a - 1:b] == sp['sequence'] == 'GC'
+        assert adapter['length_bp'] == len(adapter['sequence'])
+        # the spacer lies behind the Level 1 N overhang and before the Level 1 C overhang -> inside the BsaI fragment
+        n0, _ = location_span(next(o for o in adapter['overhangs'] if o['role'] == 'level1_N')['location'])
+        c0, _ = location_span(next(o for o in adapter['overhangs'] if o['role'] == 'level1_C')['location'])
+        assert n0 < a and b < c0
+
+
+def test_fused_parts_stay_in_frame_in_both_modules_and_in_the_final_plasmid():
+    design, parts = _frame_design()
+    cargo_module, _, nc_module = design['level1Constructs']
+
+    # every junction between two parts is overhang (4) + spacer (2) = 6 nt -> a multiple of 3
+    for module in (cargo_module, nc_module):
+        for left, right in zip(module['parts'], module['parts'][1:]):
+            assert (right['start'] - left['end'] - 1) == 6
+
+    # cargo ORF (antisense module, read in the rotated view): cargo -> B -> A, no stop, multiple of 3
+    shown = cargo_module['shown']
+    ps = {p['label']: p for p in shown['parts']}
+    orf = shown['sequence'][ps['G']['start'] - 1:ps['A']['end']]
+    assert len(orf) == len(parts['cargo']) + len(parts['B']) + len(parts['A']) + 12 and len(orf) % 3 == 0
+    assert not {'TAA', 'TAG', 'TGA'} & set(_orf_codons(orf))
+
+    cargo_orf = orf
+    # NC ORF: C -> D
+    ps = {p['label']: p for p in nc_module['parts']}
+    nc_orf = nc_module['sequence'][ps['C']['start'] - 1:ps['D']['end']]
+    assert len(nc_orf) == len(parts['C']) + len(parts['D']) + 6 and len(nc_orf) % 3 == 0
+    assert not {'TAA', 'TAG', 'TGA'} & set(_orf_codons(nc_orf))
+
+    # the same ORFs sit unchanged in the finished Level 2 plasmid: NC on the top strand, cargo as reverse complement
+    plasmid = design['level2Construct']['plasmid']['sequence']
+    assert nc_orf in plasmid and reverse_complement(cargo_orf) in plasmid
+
+
+def test_junction_codons_are_never_stops_in_either_reading_direction():
+    for adapter in load_parts()['type_overhangs']:
+        n = next(o for o in adapter['overhangs'] if o['role'] == 'level1_N')['sequence_top_strand']
+        six = n + adapter['frame_spacer']['sequence']
+        for reading in (six, reverse_complement(six)):
+            assert not {'TAA', 'TAG', 'TGA'} & set(_orf_codons(reading)), (adapter['id'], reading)
+
+
+def test_frame_spacers_are_annotated_in_constructs_and_plasmids():
+    design, _ = _frame_design()
+    for construct in design['level0Constructs']:
+        assert '/label="Frame spacer"' in construct['genbank']
+        assert '/label="Frame spacer"' in construct['plasmid']['genbank']
+    for module in design['level1Constructs']:
+        if module['site'] != 'promoter':
+            assert module['genbank'].count('/label="Frame spacer"') == 5
+            assert module['plasmid']['genbank'].count('/label="Frame spacer"') == 5
+    assert design['level1Constructs'][0]['shown']['genbank'].count('/label="Frame spacer"') == 5
+    assert design['level2Construct']['plasmid']['genbank'].count('/label="Frame spacer"') == 10
+
+
+# ---------------------------------------------------------------------------------------------------------
+# Bestellung: Oligos fuer zu kurze Teile, Lagerstatus der Toolkit-Teile
+
+def test_short_real_parts_get_an_oligo_pair_that_anneals_to_the_bbsi_cut_fragment():
+    short = 'ATG' + 'GCT' * 5
+    design = _design(cargoSeq=_long_cargo(), nc_slots={'4': {'kind': 'custom', 'label': 'Tiny', 'seq': short}})
+    tiny = next(c for c in design['level0Constructs'] if c['label'] == 'Tiny')
+    assert tiny['primers']['possible'] is False and tiny['isReal'] and tiny['isUser']
+    o = tiny['oligos']
+    assert o['possible'] and o['top']['name'] == 'Level0.4_Oligo_Tiny_NC_F' and o['bottom']['name'] == 'Level0.4_Oligo_Tiny_NC_R'
+    # top = 0N overhang + ds part, bottom = reverse complement of everything after 0N up to and including 0C
+    assert o['overhangs'] == {'left': 'CTCA', 'right': 'CTCG'}
+    pl = tiny['plasmid']
+    fragment = pl['sequence'][pl['insertStart'] - 1:pl['insertEnd']]                     # what BbsI leaves between the backbone overhangs
+    assert fragment == o['top']['sequence'][:4] + reverse_complement(o['bottom']['sequence'])
+    assert o['top']['sequence'][4:] == reverse_complement(o['bottom']['sequence'])[:-4]   # the two strands are complementary
+    assert short in fragment
+
+    # real parts long enough for primers, and placeholders, get no oligos
+    gene = next(c for c in design['level0Constructs'] if c['label'] == 'GFP')
+    assert gene['oligos'] is None and gene['primers']['possible']
+    assert all(c['oligos'] is None for c in design['level0Constructs'] if not c['isReal'])
+
+
+def test_constructs_carry_the_stock_flag_of_toolkit_parts(monkeypatch):
+    import Biologik.level0_design.design as design_module
+    design = _design(cargoSeq=_long_cargo())
+    assert all(c['onStock'] is None for c in design['level0Constructs'])            # nothing entered in the DB yet
+
+    monkeypatch.setattr(design_module, '_stock', lambda kind, part_id: kind == 'nanocompartment_shells')
+    design = _design(cargoSeq=_long_cargo(), nc_slots={'4': {'kind': 'custom', 'label': 'Mine', 'seq': 'ATG' + 'GCT' * 20}})
+    flags = {(c['module'], c['slot']): c['onStock'] for c in design['level0Constructs']}
+    assert flags[('nc_site', 3)] is True                                           # toolkit shell
+    assert flags[('nc_site', 1)] is False                                          # toolkit NCS, flagged "not on stock"
+    assert flags[('nc_site', 4)] is None and flags[('cargo_site', 3)] is None      # own sequences have no stock status

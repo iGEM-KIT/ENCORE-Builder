@@ -88,8 +88,8 @@ def get_libraries() -> dict:
         # Die Backbones kommen aus der Parts-Datenbank (Biologik/level0_design/parts/README.md); das Level-0-Backbone
         # samt fertigem GenBank-Text (Copy/Download im Frontend, Step 4 / Level 0).
         "level0Backbones": [{**b, "genbank": format_backbone_record(b)} for b in parts["level0_backbones"] if b.get("sequence")],
-        "level1Backbones": parts["level1_backbones"],
-        "level2Backbones": parts["level2_backbones"],
+        "level1Backbones": [{**b, "genbank": format_backbone_record(b)} for b in parts["level1_backbones"] if b.get("sequence")],
+        "level2Backbones": [{**b, "genbank": format_backbone_record(b)} for b in parts["level2_backbones"] if b.get("sequence")],
     }
 
 

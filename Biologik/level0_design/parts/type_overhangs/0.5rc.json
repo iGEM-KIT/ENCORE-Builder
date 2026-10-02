@@ -2,10 +2,10 @@
   "id": "0.5rc",
   "kind": "type_overhang",
   "label": "Type 0.5 overhang adapter (0.5rc) — cargo site",
-  "sequence": "GAAGACAACTCATGGCAAAACGTTTTGTCGAGAAGTCTTC",
+  "sequence": "GAAGACAACTCATGGCGCAAAACGTTTTGTCGAGAAGTCTTC",
   "sequence_status": "real",
   "on_stock": null,
-  "length_bp": 40,
+  "length_bp": 42,
   "type_slot": 5,
   "used_for_modules": [
     "cargo_site"
@@ -20,7 +20,7 @@
       "sequence_top_strand": "GAAGAC"
     },
     {
-      "location": "complement(35..40)",
+      "location": "complement(37..42)",
       "strand": "-",
       "sequence_top_strand": "GTCTTC"
     }
@@ -45,7 +45,7 @@
     {
       "label": "1.1C Lvl2",
       "role": "level2_C",
-      "location": "complement(21..24)",
+      "location": "complement(23..26)",
       "strand": "-",
       "sequence_top_strand": "CGTT",
       "sequence_own_strand_5to3": "AACG"
@@ -53,7 +53,7 @@
     {
       "label": "0.5C Lvl1",
       "role": "level1_C",
-      "location": "complement(25..28)",
+      "location": "complement(27..30)",
       "strand": "-",
       "sequence_top_strand": "TTGT",
       "sequence_own_strand_5to3": "ACAA"
@@ -61,20 +61,20 @@
     {
       "label": "0C",
       "role": "level0_C",
-      "location": "complement(29..32)",
+      "location": "complement(31..34)",
       "strand": "-",
       "sequence_top_strand": "CGAG",
       "sequence_own_strand_5to3": "CTCG"
     }
   ],
   "insert": {
-    "location": "17..20",
+    "location": "19..22",
     "placeholder_sequence": "AAAA",
     "note": "4 nt filler, replaced by the CDS (or part sequence) when the adapter is attached."
   },
   "organism": null,
   "source": "User-supplied GenBank file \"7 documents from Überhänge.gb\" (record 0.5rc); authors per feature qualifiers: Marina Schreidl, Felix Cuntz, linus.",
-  "notes": "Adapter flanking a Level 0 part: BbsI site, the Level 0 overhangs (0N/0C) that match the Level 0 acceptor backbone, the Level 1 overhangs for this Type slot, and (Type 0.1/0.5 only) the Level 2 overhangs, around a 4 nt 'Insert' placeholder that the CDS/part sequence replaces.",
+  "notes": "Adapter flanking a Level 0 part: BbsI site, the Level 0 overhangs (0N/0C) that match the Level 0 acceptor backbone, the Level 1 overhangs for this Type slot, and (Type 0.1/0.5 only) the Level 2 overhangs, around a 4 nt 'Insert' placeholder that the CDS/part sequence replaces. A 2-nt frame spacer (GC) sits directly in front of the insert, inside the BsaI fragment, so that the 4-nt junction overhang plus spacer adds 6 nt (two codons) between fused parts.",
   "used_by": [],
   "features": [
     {
@@ -121,7 +121,19 @@
     },
     {
       "type": "misc_feature",
-      "location": "17..20",
+      "location": "17..18",
+      "qualifiers": {
+        "label": [
+          "Frame spacer"
+        ],
+        "note": [
+          "2-nt spacer GC directly 5' of the insert: with the 4-nt overhang in front of it every junction between two parts adds 6 nt (two codons), so fused parts stay in frame. Lies inside the BsaI fragment, so it is kept when cloning."
+        ]
+      }
+    },
+    {
+      "type": "misc_feature",
+      "location": "19..22",
       "qualifiers": {
         "created_by": [
           "Marina Schreidl"
@@ -136,7 +148,7 @@
     },
     {
       "type": "overhang",
-      "location": "complement(21..24)",
+      "location": "complement(23..26)",
       "qualifiers": {
         "created_by": [
           "Marina Schreidl"
@@ -151,7 +163,7 @@
     },
     {
       "type": "overhang",
-      "location": "complement(25..28)",
+      "location": "complement(27..30)",
       "qualifiers": {
         "created_by": [
           "Marina Schreidl"
@@ -166,7 +178,7 @@
     },
     {
       "type": "overhang",
-      "location": "complement(29..32)",
+      "location": "complement(31..34)",
       "qualifiers": {
         "created_by": [
           "Marina Schreidl"
@@ -181,7 +193,7 @@
     },
     {
       "type": "misc_feature",
-      "location": "complement(35..40)",
+      "location": "complement(37..42)",
       "qualifiers": {
         "created_by": [
           "Marina Schreidl"
@@ -194,5 +206,10 @@
         ]
       }
     }
-  ]
+  ],
+  "frame_spacer": {
+    "location": "17..18",
+    "sequence": "GC",
+    "note": "Added to keep the reading frame: directly 5' of the insert (top strand), inside the BsaI fragment. Overhang (4 nt) + spacer (2 nt) = 6 nt between two fused parts."
+  }
 }

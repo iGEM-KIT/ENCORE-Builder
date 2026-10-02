@@ -263,9 +263,17 @@ Erkennungsstellen/Akzeptor-Overhangs vorliegen, waere eine echte Restriktions-
 /Ligations-Simulation möglich, nicht nur das Verketten ueber schon bekannte
 Overhang-Konstanten:
 
-[ ] Einfache Stufe: Teile ueber die Overhangs der Type-Adapter (parts/type_overhangs/)
-    verketten (design.py macht das im Kern schon fuer den Level-1/2-GenBank-
-    Export, inkl. echtem Level-2-Backbone — siehe Abschnitt 1).
+[x] Leseraster: jeder Adapter traegt einen 2-nt-Frame-Spacer (GC) direkt vor dem Insert (parts/type_overhangs/,
+    Feld `frame_spacer`). Overhang (4) + Spacer (2) = 6 nt zwischen zwei fusionierten Teilen, damit bleibt der ORF ueber
+    alle Naehte im Raster (Level 0 -> 1 -> 2, Sense- und Antisense-Modul). Offen/zu klaeren: ob die echten Toolkit-Teile
+    ihre Overhang-Basen schon selbst kodieren (dann waere der Spacer doppelt) — Teilsequenzen fehlen noch in der DB.
+[x] Einfache Stufe: Teile ueber die Overhangs der Type-Adapter (parts/type_overhangs/)
+    verketten — erledigt in assembly.py: Level 0 -> 1 per BsaI (5 Fragmente ueber ACAT|TATG|TTCT|ATCC|TGGC|TTGT
+    zwischen NLvl1/CLvl1 von pAGM1311), Level 1 -> 2 per BbsI (Cargo-Modul CCAA..CGTT, Promotor CGTT..TGAT,
+    NC-Modul TGAT..AATG zwischen BbLvl2N/BbLvl2C von pESC-HIS). Die Tests "verdauen" die Plasmide nach (BsaI aus
+    den Level-0-, BbsI aus den Level-1-Plasmiden) und pruefen, dass wieder dieselbe Sequenz herauskommt. Offen:
+    der Promotor GAL1-10 hat noch keine echte Sequenz (Platzhalter), ebenso TP/Linker/NCS/Shell; in pESC-HIS
+    bleibt eine BsaI-Stelle in AmpR (Level 2 nutzt BbsI, daher unkritisch).
 [ ] Vollstaendige Stufe: BsaI-(GGTCTC)/BbsI-(GAAGAC)-Erkennungsstellen in den
     echten Sequenzen suchen, den Schnittversatz je Enzym anwenden, die
     tatsaechlich entstehenden 4nt-Ueberhaenge berechnen, passende Ueberhaenge
