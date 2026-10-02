@@ -69,8 +69,7 @@ Server rechnet die Seite inline weiter (Wallace-Tm, keine Slot-Sequenz-Checks).
       - parts/level1_backbones/pAGM1311-lvl1-dest.json (2621bp, KanR, MoClo
         Level-1-Universalbackbone, Weber et al. 2011) — dessen echte
         Akzeptor-Overhangs (NLvl1="ACAT", CLvl1="TTGT") stimmen exakt mit
-        JUNCTION_OVERHANGS[0]/[5] in data.py ueberein — gute Bestaetigung,
-        dass die bestehenden Overhang-Konstanten korrekt sind.
+        den Level-1-Overhangs der Type-Adapter (parts/type_overhangs/) ueberein.
       - parts/level2_backbones/pESC-HIS-lvl2-dest.json (6544bp, HIS3-Marker,
         vom Nutzer bereitgestellt)
     Alle drei mit voller FEATURES-Tabelle und kuratierten Akzeptor-Overhangs
@@ -89,6 +88,21 @@ Server rechnet die Seite inline weiter (Wallace-Tm, keine Slot-Sequenz-Checks).
     korrekt verschoben) — Level 0/1-Backbones und eine echte
     Restriktions-/Ligations-Simulation sind das noch NICHT (kein
     Katalog-Eintrag in data.py verweist bisher darauf).
+[x] Sieben Overhang-Adapter importiert (parts/type_overhangs/{0.1,0.1rc,0.2,0.3,0.4,0.5,0.5rc}.json,
+    aus "7 documents from Ueberhaenge.gb"): BbsI-Stellen, Level-0/1/2-Overhangs und 4-nt-Insert-
+    Platzhalter je Type-Slot; `used_for_modules` sagt, ob nc_site, cargo_site oder beide (0.1rc/
+    0.5rc = Cargo Site, 0.1/0.5 = NC Site, 0.2-0.4 = beide). Gegengeprueft (vor dem Entfernen der
+    hartcodierten Konstanten aus data.py): die Level-1-Overhangs je Slot (ACAT TATG TTCT ATCC TGGC TTGT),
+    die NC-Flanken TGAT/TTAC und die Cargo-Flanken CCAA/GCAA stimmen mit den Adaptern ueberein (rechter
+    Wert als Komplement). Offen: die Promotor-Flanken CGTT/ACTA — ACTA steht in keiner der Dateien.
+    Die Adapter sind jetzt die Quelle fuer die Overhangs; data.py hat nur noch CARGO_L1_FLANK (Primer).
+[x] Level-0-Konstrukte fuer ALLE zehn Module (design.py: attach_adapter, build_level0_constructs): jede Teilsequenz
+    im Type-Adapter + das per BbsI ins Level-0-Backbone klonierte Plasmid (clone_into_level0_backbone: Stuffer raus,
+    Fragment 0N..0C rein, BbsI-Stellen weg, BsaI-Stellen an den Naehten neu; Annotationen des Backbones ausserhalb
+    des Stuffers + Overhangs/Insert des Adapters). Frontend: Klick auf ein Level-0-Modul oeffnet ein Fenster mit
+    Sequenz samt Overhangs und dem klonierten Plasmid, jeweils kopierbar und als GenBank ladbar. Toolkit-Teile ohne
+    echte Sequenz in der Datenbank zeigen einen markierten Platzhalter. GenBank-Gesamtexport enthaelt weiterhin nur
+    die Konstrukte der Nutzereingaben. Offen: Primer-Anzeige fuer das Cargo (aus dem Level-0-Reiter entfernt).
 [x] Cargo-Presets (GFP, PABP) aus data.py in die Datenbank migriert
     (parts/cargo_presets/) — beide echt, aber nur kurze N-terminale Fragmente
     ohne Stopcodon, kein vollstaendiger ORF (siehe notes-Feld je Datei).
@@ -102,18 +116,16 @@ Server rechnet die Seite inline weiter (Wallace-Tm, keine Slot-Sequenz-Checks).
         codon-optimierte Nukleotidsequenz fehlt noch)
       - parts/surface_markers/{spycatcher,spytag}.json
       - parts/ncs_spacers/standard.json                      (genereller Spacer)
-[ ] Typ-Overhangs (data.py -> TYPE_OVERHANGS/JUNCTION_OVERHANGS) und die
-    Level-1/2-Flanken (CARGO_L1_FLANK, NC_L1_FLANK, PROMO_FLANK) stammen aus
-    dem Prototyp-Diagramm. -> Gegen die REALE Toolbox verifizieren (4-nt-
-    Fusionsstellen muessen exakt stimmen, sonst ligiert die Assembly nicht).
+[ ] Die Promotor-Flanke ACTA (CGTT/ACTA) ist nirgends belegt und wurde mit den Konstanten entfernt —
+    gegen die reale Toolbox verifizieren, sobald der Promotor als Adapter/Teil vorliegt. CARGO_L1_FLANK
+    (data.py, nur fuer die Primer) stimmt mit den Adaptern 0.1rc/0.5rc ueberein.
 [ ] Nominale bp-Laengen (data.py -> NOMINAL_BP: TP=54, PROMO=680, NCS=15) und
     shellBp in NANOCOMPARTMENTS sind Naeherungen. -> Durch echte Laengen
     ersetzen, sobald bekannt (bzw. automatisch durch length_bp aus der
     Datenbank ueberholt, sobald eine echte Sequenz vorliegt).
 [ ] Biologik/primer_design/add_extensions.py hat eigene Overhang-Kassetten
-    (TYPE_EXTENSIONS: type0.3/type1.3), unabhaengig von data.py's
-    TYPE_OVERHANGS/JUNCTION_OVERHANGS. Noch nicht abgeglichen, ob beide
-    dieselbe Toolbox beschreiben.
+    (TYPE_EXTENSIONS: type0.3/type1.3), unabhaengig von den Type-Adaptern
+    (parts/type_overhangs/). Noch nicht abgeglichen, ob beide dieselbe Toolbox beschreiben.
 [x] GenBank-Export ersetzt den bisherigen reinen FASTA-Export (design.py:
     build_genbank, genbank_writer.py) — jeder Export-Record traegt jetzt eine
     echte Feature-Tabelle (Type-Zuordnung, Quelle PLACEHOLDER/PARTS DB/REAL
@@ -123,8 +135,8 @@ Server rechnet die Seite inline weiter (Wallace-Tm, keine Slot-Sequenz-Checks).
     Backbone-Features (HIS3, AmpR, Origins, ...) danach/davor werden korrekt
     um die Laengendifferenz verschoben (verifiziert: 2μ ori/AmpR-Koordinaten
     stimmen exakt). Bekannte Einschraenkung: die genaue Uebergangsstelle
-    Insert<->Backbone haengt von CARGO_L1_FLANK/NC_L1_FLANK/PROMO_FLANK ab,
-    die noch nicht gegen die echten BbLvl2N/BbLvl2C-Overhangs verifiziert sind
+    Insert<->Backbone haengt von den Level-2-Overhangs der Flanken ab,
+    die fuer Cargo/NC jetzt gegen die Adapter stimmen (nur die Promotor-Flanke ist offen)
     (siehe Punkt direkt darueber) — im Export-Kommentar (DEFINITION-Zeile)
     entsprechend vermerkt.
 [ ] Level 0/1-Backbones und eine echte Restriktions-/Ligations-Simulation
@@ -147,10 +159,10 @@ interne Schnittstellen geprueft.
 
 
 -------------------------------------------------------------------------------
- 3. DATENBANK / PERSISTENZ  (Schema ist nur Platzhalter)
+ 3. DATENBANK / PERSISTENZ  (nicht vorhanden)
 -------------------------------------------------------------------------------
-[ ] server/db/web_app_database.sql enthaelt nur eine Beispiel-Tabelle "posts".
-    -> Echtes Schema entwerfen, falls Persistenz gebraucht wird:
+[ ] Es gibt keine Datenbank/Persistenz (die Beispiel-SQL-Datei server/db/web_app_database.sql wurde entfernt).
+    Falls Persistenz gebraucht wird:
        - nanocompartments (id, label, T, dia, tp, shell, shell_bp, sequenzen)
        - modules / level0_parts (typ, rolle, overhang5, overhang3, seq)
        - linkers, promoters, surface_markers
@@ -251,7 +263,7 @@ Erkennungsstellen/Akzeptor-Overhangs vorliegen, waere eine echte Restriktions-
 /Ligations-Simulation möglich, nicht nur das Verketten ueber schon bekannte
 Overhang-Konstanten:
 
-[ ] Einfache Stufe: Teile ueber die bekannten TYPE_OVERHANGS/JUNCTION_OVERHANGS
+[ ] Einfache Stufe: Teile ueber die Overhangs der Type-Adapter (parts/type_overhangs/)
     verketten (design.py macht das im Kern schon fuer den Level-1/2-GenBank-
     Export, inkl. echtem Level-2-Backbone — siehe Abschnitt 1).
 [ ] Vollstaendige Stufe: BsaI-(GGTCTC)/BbsI-(GAAGAC)-Erkennungsstellen in den

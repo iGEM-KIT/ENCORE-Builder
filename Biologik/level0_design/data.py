@@ -3,36 +3,19 @@ from __future__ import annotations
 """Statische Daten und Konstanten für das Level-0-Design."""
 
 from .parts_db import load_parts
+from .genbank_writer import format_backbone_record
 
 # Stop-Codons: Diese Tripletts markieren das Ende einer Proteinkodierung, STOP_CODONS ist eine Variable
 STOP_CODONS = ["TAA", "TAG", "TGA"]
-
-# Feste 4-Basen-Overhangs für die Assemblierung der Level-0-Teile.
-# Dictionary speichert Daten in Form von Schlüssel-Wert-Paaren
-# Für jeden Typ (1-5) gibt es eine Liste von zwei Overhangs, die für die Assemblierung verwendet werden.
-# Verbindungsteile der Level0 Module
-
-TYPE_OVERHANGS = {
-    1: ["ACAT", "ATAC"],
-    2: ["TATG", "AAGA"],
-    3: ["TTCT", "TAGG"],
-    4: ["ATCC", "ACCG"],
-    5: ["TGGC", "AACA"],
-}
-
-# Die sechs Nahtstellen (Top-Strand) zwischen den Typen: Typ n reicht von JUNCTION_OVERHANGS[n-1]
-# bis JUNCTION_OVERHANGS[n]. TYPE_OVERHANGS oben nennt als 3'-Wert das Komplement der naechsten
-# Nahtstelle (so wie es auf dem Gegenstrang steht) — fuer echte Sequenzen zaehlen diese Werte.
-JUNCTION_OVERHANGS = ["ACAT", "TATG", "TTCT", "ATCC", "TGGC", "TTGT"]
 
 # Definition des Anfangsteils eines Primers, der für Assemblierung benötigt wird. 
 # Dieser ist beim Golden Gate Assembly für alle Primer gleich und wird hier als Konstante gespeichert.
 
 BSAI_PRIMER_PREFIX = "GGTCTCN"
 
+# BsaI-Flanken des Cargo-Moduls (Level 1) — von der Primer-Berechnung genutzt. Entsprechen den Level-2-Overhangs
+# der Adapter 0.1rc/0.5rc (parts/type_overhangs/): links CCAA, rechts GCAA (= Komplement von CGTT).
 CARGO_L1_FLANK = ["CCAA", "GCAA"]
-NC_L1_FLANK = ["TGAT", "TTAC"]
-PROMO_FLANK = ["CGTT", "ACTA"]
 
 # Näherungswerte für die Länge einzelner Bausteine in Basenpaaren (bp), nicht echte biologische Länge
 # Wenn ein Modul gebaut wird, weiß das Programm ungefähr, wie viele Basenpaare es hat, und kann die
@@ -102,13 +85,11 @@ def get_libraries() -> dict:
         "linkers": LINKERS,
         "promoters": PROMOTERS,
         "surfaceMarkers": SURFACE_MARKERS,
-        "typeOverhangs": TYPE_OVERHANGS,
-        # Noch nicht in Katalog-Listen oben referenziert (kein Dropdown im Frontend) —
-        # siehe Biologik/level0_design/parts/README.md.
-        "level0Backbones": parts["level0_backbones"],
+        # Die Backbones kommen aus der Parts-Datenbank (Biologik/level0_design/parts/README.md); das Level-0-Backbone
+        # samt fertigem GenBank-Text (Copy/Download im Frontend, Step 4 / Level 0).
+        "level0Backbones": [{**b, "genbank": format_backbone_record(b)} for b in parts["level0_backbones"] if b.get("sequence")],
         "level1Backbones": parts["level1_backbones"],
         "level2Backbones": parts["level2_backbones"],
-        "terminators": parts["terminators"],
     }
 
 
@@ -117,10 +98,6 @@ def get_libraries() -> dict:
 def find_nanocompartment(identifier: str):
     # next(...) sucht das erste passende Element und gibt es zurück.
     return next((item for item in NANOCOMPARTMENTS if item["id"] == identifier), None)
-
-
-def find_cargo_preset(identifier: str):
-    return next((item for item in CARGO_PRESETS if item["id"] == identifier), None)
 
 
 def find_linker(identifier: str):

@@ -17,21 +17,15 @@
  *   genbank?: boolean          // also return a GenBank export string (annotated — see design.py: build_genbank)
  * }
  *
- * Runs the Golden Gate design in Biologik (Python) and returns the full
- * assembly plan: 10 Level 0 parts (with Type overhangs), 2 Level 1 modules,
- * the Level 2 construct, cargo primers, the 96-well pick plan and the order
- * list.
+ * Runs the Golden Gate design in Biologik (Python) and returns what the Builder UI shows:
+ * nanocompartment, targetingPeptide, cargo, the 10 Level 0 parts (`level0`), the promoter (`level2`),
+ * the slot summaries (`cargoSlots`/`ncSlots`), the cargo `primers`, `level0Constructs` (every module's
+ * part inside its type adapter plus the plasmid it is BbsI-cloned into, each with a ready GenBank text)
+ * and, with `genbank: true`, the annotated GenBank export (`genbank`).
  *
- * The primers carry `tmMethod`: 'primer3-nn' means real nearest-neighbor
- * thermodynamics (plus q5AnnealingTemp), 'wallace' means primer3 was not
- * available on the server and the values are rough estimates — `warnings`
- * then says so.
- *
- * `cargo.mrnaStructure` (needs ViennaRNA, see Biologik/requirements.txt) checks the cargo's own
- * mRNA for a self-fold (hairpin) and a self-dimer (two copies hybridising) — either can block a
- * scanning ribosome. `available: false` with a `reason` means it was skipped (no ViennaRNA, or the
- * sequence was too long/short); otherwise `selfFold`/`selfDimer` each carry a `deltaG` (kcal/mol)
- * and, for sequences short enough for the shuffled-background z-score, a `risk` grade.
+ * The primers carry `tmMethod`: 'primer3-nn' means real nearest-neighbor thermodynamics (plus
+ * q5AnnealingTemp), 'wallace' means primer3 was not available on the server and the values are rough
+ * estimates.
  */
 import { runBiologik } from '../utils/biologik.js'
 

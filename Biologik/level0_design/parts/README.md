@@ -1,8 +1,8 @@
 # Sequenz-Datenbank fuer Golden-Gate-Standardteile
 
 Jedes Teil (Nanocompartment-Shell, Targeting-Peptid, Promotor, Linker,
-Oberflaechen-Marker, NCS-Spacer, Terminator, Level-0/1/2-Ziel-Backbone oder
-Cargo-Preset) ist eine eigene JSON-Datei, gruppiert nach Art in einem
+Oberflaechen-Marker, NCS-Spacer, Terminator, Level-0/1/2-Ziel-Backbone,
+Type-Overhang-Adapter oder Cargo-Preset) ist eine eigene JSON-Datei, gruppiert nach Art in einem
 Unterordner — genau wie bei `encapsulin_selector/data/` fuer die Encapsuline.
 Um eine neue oder fehlende Sequenz einzutragen, sind KEINE Kenntnisse ueber
 den Rest der Codebase noetig:
@@ -39,8 +39,8 @@ die zugehoerige echte Sequenz, nachgeschlagen ueber dieselbe ID:
 | `SURFACE_MARKERS[i]`                  | `id`            | `surface_markers/`          |
 | (kein Katalog — ein generischer Spacer, siehe `design.py: placeholder_seq("NCS", 30)`) | — | `ncs_spacers/` (feste ID `standard`) |
 
-`terminators/`, `level0_backbones/`, `level1_backbones/` und `level2_backbones/`
-haben (noch) keinen Katalog in `data.py` — sie sind rein informationell aus
+`terminators/`, `level0_backbones/`, `level1_backbones/`, `level2_backbones/` und
+`type_overhangs/` haben (noch) keinen Katalog in `data.py` — sie sind rein informationell aus
 importierten GenBank-Dateien befuellt und noch nicht in die
 Level-0/1/2-Design-Logik verdrahtet (siehe PROJECT_TODO.txt).
 
@@ -85,6 +85,43 @@ Aktuell real hinterlegt: `pAGM9121-lvl0-dest` (Level 0, Weber et al. 2011),
 `pAGM1311-lvl1-dest` (Level 1, Weber et al. 2011), `pESC-HIS-lvl2-dest`
 (Level 2, vom Nutzer bereitgestelltes pESC-HIS). Alle drei stammen aus vom
 Nutzer bereitgestellten GenBank-Dateien, nicht selbst generiert.
+
+## `type_overhangs/<id>.json`
+
+Die sieben Overhang-Adapter, die an die Sequenz jedes Level-0-Teils angehaengt werden
+(BbsI-Schnittstelle, Level-0-Overhangs 0N/0C passend zum Level-0-Backbone, Level-1-Overhangs
+fuer den jeweiligen Type-Slot und bei Type 0.1/0.5 zusaetzlich die Level-2-Overhangs, um einen
+4-nt-"Insert"-Platzhalter herum). Die CDS bzw. Teilsequenz ersetzt diesen Platzhalter. Eine
+Datei pro Adapter, Dateiname = `id` = Name im GenBank-File des Nutzers:
+
+| id      | Type-Slot | `used_for_modules`        | Besonderheit |
+|---------|-----------|---------------------------|--------------|
+| `0.1`   | 0.1       | `nc_site`                 | Level-2-Overhang `2_N` = TGAT |
+| `0.1rc` | 0.1       | `cargo_site`              | Level-2-Overhang `2_N` = CCAA (Cargo-Modul, rc-Variante) |
+| `0.2`   | 0.2       | `nc_site`, `cargo_site`   | beide Seiten |
+| `0.3`   | 0.3       | `nc_site`, `cargo_site`   | beide Seiten |
+| `0.4`   | 0.4       | `nc_site`, `cargo_site`   | beide Seiten |
+| `0.5`   | 0.5       | `nc_site`                 | Level-2-Overhang `2_C` = AATG |
+| `0.5rc` | 0.5       | `cargo_site`              | Level-2-Overhang `2_C` = CGTT (Cargo-Modul, rc-Variante) |
+
+Felder (zusaetzlich zu `id`/`kind`/`label`/`sequence`/`sequence_status`/`on_stock`/
+`length_bp`/`source`/`notes`/`used_by`, siehe oben):
+
+- `type_slot` — 1..5 (Type 0.x).
+- `used_for_modules` — Liste aus `"nc_site"` (Nanocompartment-Site) und/oder `"cargo_site"`.
+- `reverse_complement_variant` — `true` bei den `rc`-Adaptern der Cargo Site (Antisense-Modul).
+- `description` — DEFINITION-Zeile aus dem GenBank-File.
+- `enzyme`, `bbsi_sites` — Erkennungsstellen (`GAAGAC` bzw. rc) mit Position/Strang.
+- `overhangs` — Liste der beschrifteten Overhangs: `label` (z.B. `0.5N Lvl1`), `role`
+  (`level0_N`, `level1_N`, `level2_N`, `level1_C`, `level2_C`, `level0_C`), `location`, `strand`,
+  `sequence_top_strand` (Basen auf dem Top-Strang) und `sequence_own_strand_5to3` (so wie auf
+  dem eigenen Strang gelesen, also bei `strand: "-"` das Reverse-Komplement).
+- `insert` — Position und Platzhalter (`AAAA`) der Stelle, an der die CDS eingesetzt wird.
+- `features` — die komplette, roh geparste GenBank-Feature-Tabelle.
+
+Stand: Die Overhangs der Adapter waren gegen die frueheren hartcodierten Konstanten gegengeprueft (Level-1-Overhangs
+je Slot, NC-Flanken TGAT/TTAC, Cargo-Flanken CCAA/GCAA — rechter Wert jeweils als Komplement); die Adapter sind jetzt
+die Quelle dafuer. Nicht belegt: die Promotor-Flanke ACTA.
 
 ## Validierung
 

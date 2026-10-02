@@ -77,7 +77,6 @@
   body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;
     font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;transition:background .25s,color .25s}
   h1,h2,h3,h4,.display{font-family:'Space Grotesk',sans-serif;letter-spacing:-.01em}
-  .mono{font-family:'JetBrains Mono',monospace}
   img,svg{max-width:100%}
 
   /* ============ HEADER ============ */
@@ -86,7 +85,6 @@
   .brand{display:flex;align-items:center;gap:11px;min-width:0}
   a.brand{text-decoration:none;color:inherit;cursor:pointer;border-radius:8px}
   a.brand:focus-visible{outline:2px solid #E69F00;outline-offset:4px}
-  .brand-symbol{height:34px;width:auto;flex:none;display:block}
   .brand-wordmark{height:30px;width:auto;flex:none;display:block;color:#fff}
   .brand-sub{font-size:12.5px;color:#aebfd2;letter-spacing:.01em;
     padding-left:11px;margin-left:3px;border-left:1px solid rgba(255,255,255,.2);line-height:1.2;font-weight:600}
@@ -171,7 +169,6 @@
     font-family:'Space Grotesk';font-weight:600;font-size:15.5px;padding:14px 26px;border-radius:12px;
     cursor:pointer;box-shadow:0 8px 22px rgba(230,159,0,.32);transition:.15s}
   .start-cta:hover{transform:translateY(-1px);filter:brightness(1.03)}
-  .intro-foot{margin-top:14px;font-size:12px;color:var(--muted)}
 
   /* ============ STEPPER ============ */
   .stepper-wrap{position:sticky;top:var(--hdr-h);z-index:35;background:var(--paper);border-bottom:1px solid var(--line);
@@ -271,28 +268,11 @@
   .seqmeta b{font-family:'JetBrains Mono';color:var(--teal-deep);font-weight:700}
   .seqmeta .err{color:#9a4100;font-weight:600}
 
-  /* Preset chips (casual) */
-  .preset-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px}
-  .preset-row .plabel{font-size:12px;color:var(--muted)}
-  .preset-chip{border:1px solid var(--line);background:var(--card);color:var(--ink);font-family:inherit;font-size:12px;
-    font-weight:500;padding:6px 12px;border-radius:999px;cursor:pointer;transition:.12s;display:flex;align-items:center;gap:6px}
-  .preset-chip:hover{border-color:var(--teal-deep);background:var(--teal-soft)}
-  .preset-chip.on{background:var(--teal);color:#fff;border-color:var(--teal);font-weight:600}
-  .preset-chip .pc-dot{width:7px;height:7px;border-radius:50%;background:var(--t3)}
-
   .nc-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
   .nc-tag{font-size:11.5px;background:var(--card-2);border:1px solid var(--line);border-radius:8px;padding:7px 11px;color:var(--ink-soft)}
   .nc-tag b{color:var(--ink);font-weight:600}
   .nc-tag .sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:middle;
     box-shadow:inset 0 0 0 1px rgba(11,58,51,.3)}
-
-  .seg-full{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
-  .seg-full button{flex:1;border:0;background:var(--card);padding:13px 10px;font-family:inherit;font-size:14px;font-weight:600;
-    color:var(--muted);cursor:pointer;transition:.12s;display:flex;flex-direction:column;gap:2px}
-  .seg-full button small{font-weight:400;font-size:11px;opacity:.85}
-  .seg-full button.on{background:var(--forest);color:#fff}
-  [data-theme="dark"] .seg-full button.on{background:var(--teal);color:#062019}
-  .seg-full button:not(.on):hover{background:var(--line-soft)}
 
   /* group sub-headings inside a step */
   .grouplab{font-family:'Space Grotesk';font-weight:700;font-size:13.5px;color:var(--ink);margin:24px 0 12px;padding-top:18px;border-top:1px solid var(--line-soft);display:flex;align-items:center;gap:8px}
@@ -305,7 +285,7 @@
 
   .stopwarn,.stopok{display:flex;gap:9px;align-items:flex-start;border-radius:10px;padding:11px 13px;font-size:12.5px;margin-top:12px}
   .stopwarn{background:rgba(213,94,0,.12);border:1px solid rgba(213,94,0,.5);color:#9a4100}
-  [data-theme="dark"] .stopwarn,[data-theme="dark"] .tmflag.warn,[data-theme="dark"] .seqmeta .err{color:#f0a883}
+  [data-theme="dark"] .stopwarn,[data-theme="dark"] .seqmeta .err{color:#f0a883}
   .stopok{background:var(--teal-soft);border:1px solid var(--teal-deep);color:var(--teal-deep)}
   .stopwarn svg,.stopok svg{flex:none;margin-top:1px}
 
@@ -320,7 +300,6 @@
   /* ============ LEVEL VISUALISIERUNG ============ */
   .sectitle{display:flex;align-items:center;gap:9px;margin:0 0 2px}
   .sectitle h3{font-size:17px;margin:0;font-family:'Space Grotesk';font-weight:600;display:flex;align-items:center}
-  .sectitle .num{font-family:'JetBrains Mono';font-size:12px;color:var(--teal-deep);font-weight:700}
   .secsub{color:var(--muted);font-size:13px;margin:0 0 14px}
   .block{margin-bottom:34px}
   .block:last-child{margin-bottom:0}
@@ -333,11 +312,9 @@
   .assembly{background:var(--brand-mint);border:3px solid var(--brand-teal-deep);
     border-radius:16px;padding:20px 22px 22px;margin-top:2px}
   .assembly .levelblock:last-of-type{margin-bottom:4px}
-  .assembly .levellabel .lvltag{background:var(--brand-teal-deep);color:#fff}
   .assembly .l0oh,.assembly .enzyme-tag{background:rgba(255,255,255,.72);
     border-color:rgba(23,128,111,.34);color:#14544A}
-  .assembly .strand-dir,.assembly .l2-dir,.assembly .ohlabel,.assembly .legend,
-  .assembly .levellabel .lvlsub{color:#2C6A60}
+  .assembly .strand-dir,.assembly .l2-dir,.assembly .legend{color:#2C6A60}
   .assembly .note{background:rgba(255,255,255,.7);border-color:rgba(23,128,111,.28);color:#153B35}
   .assembly .note svg{color:var(--brand-teal-deep)}
   /* Outline every part the way the artwork outlines its shapes. The inset shadow
@@ -345,12 +322,9 @@
   .assembly .part{box-shadow:inset 0 0 0 1.5px rgba(11,58,51,.5)}
   .assembly .l2-hub .l2-arrows{color:var(--brand-teal-deep)}
   [data-theme="dark"] .assembly{border-color:var(--brand-teal)}
-  [data-theme="dark"] .assembly .levellabel .lvltag{background:var(--brand-teal);color:#062019}
   [data-theme="dark"] .assembly .l0oh,[data-theme="dark"] .assembly .enzyme-tag{
     background:rgba(255,255,255,.07);border-color:rgba(47,191,166,.34);color:#9FD9CD}
-  [data-theme="dark"] .assembly .strand-dir,[data-theme="dark"] .assembly .l2-dir,
-  [data-theme="dark"] .assembly .ohlabel,[data-theme="dark"] .assembly .legend,
-  [data-theme="dark"] .assembly .levellabel .lvlsub{color:#9FD9CD}
+  [data-theme="dark"] .assembly .strand-dir,[data-theme="dark"] .assembly .l2-dir,[data-theme="dark"] .assembly .legend{color:#9FD9CD}
   [data-theme="dark"] .assembly .note{background:rgba(255,255,255,.05);
     border-color:rgba(47,191,166,.28);color:#D7ECE7}
   [data-theme="dark"] .assembly .l2-hub .l2-arrows{color:var(--brand-teal)}
@@ -396,10 +370,7 @@
 
   .levelblock{margin-bottom:20px}
   .levellabel{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-  .levellabel .lvltag{font-family:'JetBrains Mono';font-size:11px;font-weight:700;color:#fff;background:var(--forest);padding:3px 9px;border-radius:6px;letter-spacing:.04em}
-  [data-theme="dark"] .levellabel .lvltag{background:var(--teal);color:#062019}
   .levellabel h4{font-size:14px;margin:0}
-  .levellabel .lvlsub{font-size:12px;color:var(--muted);margin-left:auto}
   .enzyme-tag{font-family:'JetBrains Mono';font-size:10px;color:var(--muted);background:var(--card-2);border:1px solid var(--line);padding:2px 7px;border-radius:5px}
 
   /* DNA-Strang-Darstellung mit 5'->3' */
@@ -421,7 +392,7 @@
   .slothint{margin-top:8px;font-size:12px;color:var(--muted)}
   .slotcustom{margin-top:10px;display:flex;flex-direction:column;gap:8px}
   .slotcustom textarea{min-height:84px}
-  .l0shellcap{font-size:12px;font-weight:600;color:#2C6A60;margin:18px 0 8px}
+  .l0shellcap{font-size:12px;font-weight:600;color:#2C6A60;margin:18px 0 8px;display:flex;align-items:center;gap:8px}
   [data-theme="dark"] .l0shellcap{color:#9FD9CD}
   .part{position:relative;color:#fff;padding:12px 16px;font-size:12.5px;font-weight:600;display:flex;flex-direction:column;gap:2px;min-width:88px;justify-content:center;
     clip-path:polygon(0 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 0 100%);margin-right:-4px}
@@ -429,36 +400,40 @@
   /* Level 0: discrete, unconnected parts (each is its own Golden Gate part) */
   .partsrow.sep{gap:10px;flex-wrap:wrap}
   .partsrow.sep .part{clip-path:none!important;margin:0!important;border-radius:8px!important;box-shadow:inset 0 0 0 1px rgba(0,0,0,.12)}
-  /* ---- Level 0 row: the five individual parts ----
-     Level 0 is the stage BEFORE assembly: each part is cloned on its own
-     plasmid. Hence discrete boxes with gaps and deliberately NO 5'→3' axis —
-     nothing here is adjacent yet, the Type number alone fixes where each part
-     lands once BsaI builds the Level 1 module. Four parts come off the toolkit
-     stock plate and are long domesticated, so they are desaturated; the cargo is
-     the only part the user has to make and keeps full colour, its Type 3 fusion
-     sites and the BbsI tag. */
-  .partsrow.sep.l0grid{min-width:0;align-items:flex-end;gap:14px 10px}
-  .l0part{display:flex;flex-direction:column;gap:5px;align-items:flex-start}
-  .l0badge{font-family:'JetBrains Mono';font-size:8.5px;font-weight:700;text-transform:uppercase;
-    letter-spacing:.06em;padding:2px 6px;border-radius:5px;white-space:nowrap;line-height:1.5}
-  .l0badge.stock{background:rgba(23,128,111,.1);color:#2C6A60;border:1px solid rgba(23,128,111,.22)}
-  .l0badge.new{background:var(--brand-orange);color:#3a1f00;border:1px solid rgba(11,58,51,.4)}
-  .l0ohrow{display:flex;align-items:center;gap:8px}
-  .partsrow.sep .l0stock .part{filter:saturate(.28);opacity:.7;box-shadow:inset 0 0 0 1px rgba(11,58,51,.3)}
-  .partsrow.sep .l0new .part{box-shadow:inset 0 0 0 2px rgba(11,58,51,.75),0 2px 10px rgba(11,58,51,.18)}
+  /* ---- Level 0 row: the five individual parts of one module ----
+     Level 0 is the stage BEFORE assembly: each part is still cloned on its own
+     plasmid, hence discrete boxes with gaps rather than a joined strand. New/
+     all parts share the same inset ring and are shown in full colour.
+     Overhang chips (.l0oh) sit beside the boxes, all on one horizontal line —
+     one shared chip per junction (not duplicated per part). Each chip shows
+     BOTH strands of the 4nt sticky end, stacked (sense/top 5'->3' above,
+     antisense/bottom 3'->5' below) — this is a fixed physical property of the
+     DNA fragment, so it's the same in the cargo row and the nc-site row; only
+     the .strand-dir header above each row (which flips for the antisense
+     cargo ORF) says which of the two actually carries that module's coding
+     sequence — see l0ModuleRow(). */
+  .partsrow.sep.l0grid{min-width:0;align-items:stretch;justify-content:space-between;gap:10px 6px}
+  .l0grid .part{min-width:66px;padding:8px 9px;font-size:11.5px}
+  .l0grid .part small{font-size:9px}
+  .l0grid .part .ptype{font-size:8.5px}
+  .l0frag{display:flex}
+  .l0frag .part{flex:1}
+  .l0frag .part{box-shadow:inset 0 0 0 2px rgba(11,58,51,.75),0 2px 10px rgba(11,58,51,.18)}
   .l0cap{font-size:11.5px;line-height:1.5;color:var(--muted);margin:11px 0 0;max-width:72ch}
-  [data-theme="dark"] .l0badge.stock{background:rgba(47,191,166,.12);color:#9FD9CD;border-color:rgba(47,191,166,.28)}
-  [data-theme="dark"] .partsrow.sep .l0stock .part{opacity:.62;box-shadow:inset 0 0 0 1px rgba(0,0,0,.35)}
-  [data-theme="dark"] .partsrow.sep .l0new .part{box-shadow:inset 0 0 0 2px rgba(0,0,0,.55),0 2px 10px rgba(0,0,0,.35)}
+  [data-theme="dark"] .l0frag .part{box-shadow:inset 0 0 0 2px rgba(0,0,0,.55),0 2px 10px rgba(0,0,0,.35)}
   .assembly .l0cap{color:#2C6A60}
   [data-theme="dark"] .assembly .l0cap{color:#9FD9CD}
-  .l0oh{font-family:'JetBrains Mono';font-size:11px;font-weight:700;color:var(--muted);background:var(--card-2);border:1px solid var(--line);border-radius:6px;padding:5px 8px}
+  .l0ohcol{display:flex;flex-direction:column;justify-content:space-between;gap:6px}
+  .l0oh{font-family:'JetBrains Mono';font-size:9.5px;font-weight:700;color:var(--muted);background:var(--card-2);border:1px solid var(--line);border-radius:6px;padding:3px 5px;white-space:nowrap}
+  .l0oh.sense{color:var(--ink);margin-left:32px}   /* top-strand 5' overhang hangs off the part to the RIGHT of the junction... */
+  .l0oh.anti{margin-right:32px}
+  .l0oh.edge{margin-left:0;margin-right:0}
+  .l0oh.anti{margin-top:auto}                    /* ...bottom-strand overhang off the part to the LEFT: staggered like a real sticky end */
   /* NCS spacers are coloured by their Type position (like the scheme figure), set inline */
   /* stop-codon carrier: a simple `*` on the part at the 3' end of an ORF (explained in the legend) */
   .stopstar{font-weight:800;font-size:15px;margin-left:1px}
   .part small{font-weight:400;opacity:.9;font-size:10px}
   .part .ptype{font-family:'JetBrains Mono';font-size:9px;opacity:.85;letter-spacing:.02em}
-  .ohlabel{align-self:center;font-family:'JetBrains Mono';font-size:9px;font-weight:700;color:var(--muted);padding:0 3px;z-index:3}
 
   /* Level 2 bidirektional */
   .l2-row{display:flex;align-items:flex-end;gap:4px;flex-wrap:nowrap;min-width:max-content}
@@ -489,20 +464,8 @@
   .note svg{flex:none;margin-top:1px;color:var(--teal-deep)}
 
   /* ============ 96-WELL PLATE ============ */
-  .plate-wrap{background:var(--card-2);border:1px solid var(--line);border-radius:14px;padding:18px;overflow-x:auto}
+  
   .plate{display:grid;grid-template-columns:auto repeat(12,1fr);gap:5px;min-width:560px}
-  .plate .corner{}
-  .plate .colhead,.plate .rowhead{font-family:'JetBrains Mono';font-size:10px;color:var(--muted);display:grid;place-items:center}
-  .well{aspect-ratio:1;border-radius:50%;border:1.5px solid var(--line);background:var(--card);position:relative;
-    display:grid;place-items:center;transition:.15s}
-  .well.filled{border-color:transparent;box-shadow:inset 0 0 0 2px rgba(255,255,255,.25)}
-  .well.filled::after{content:'';position:absolute;inset:3px;border-radius:50%;background:rgba(255,255,255,.0)}
-  .well .wtip{font-family:'JetBrains Mono';font-size:8px;font-weight:700;color:#fff;
-    text-shadow:0 0 2px rgba(0,0,0,.9),0 1px 1px rgba(0,0,0,.75)}
-  .plate-legend{display:flex;flex-wrap:wrap;gap:9px 16px;margin-top:16px;font-size:12px}
-  .plate-legend span{display:flex;align-items:center;gap:7px;color:var(--ink-soft)}
-  .plate-legend i{width:13px;height:13px;border-radius:50%;flex:none;border:1.5px solid rgba(0,0,0,.08)}
-  .pickcount{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin-left:auto}
 
   /* ============ ORDER / TO ORDER ============ */
   .orderlist{display:flex;flex-direction:column;gap:9px}
@@ -516,37 +479,11 @@
   .oi-badge.fixed{background:var(--card-2);color:var(--muted);border:1px solid var(--line)}
   .oi-badge.synth{background:rgba(230,159,0,.16);color:var(--orange-deep)}
 
-  .cdsbox{background:var(--forest-deep);border-radius:10px;padding:14px 16px;margin-top:12px}
-  .cdsbox .cdsname{color:#9fc0da;font-size:11px;text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin-bottom:6px;display:flex;align-items:center}
-  .cdsbox .cdsseq{font-family:'JetBrains Mono';font-size:11.5px;color:#E9F2EE;word-break:break-all;line-height:1.7}
-  .cdsbox .cdsseq .oh{background:var(--orange);color:var(--orange-ink);border-radius:3px;padding:0 3px;font-weight:700}
-  .cdsbox .cds5,.cdsbox .cds3{color:#7FA99B;font-size:10px}
-
   /* ============ PRIMER ============ */
   table{width:100%;border-collapse:collapse;font-size:13px}
   thead th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--teal-deep);font-weight:600;padding:0 12px 9px;border-bottom:1px solid var(--line)}
   tbody td{padding:11px 12px;border-bottom:1px solid var(--line-soft);vertical-align:top}
   tbody tr:last-child td{border-bottom:0}
-  .pname{font-weight:600;white-space:nowrap}
-  .pname small{display:block;font-weight:400;color:var(--muted);font-size:11px}
-  .pseq{font-family:'JetBrains Mono';font-size:11.5px;word-break:break-all;line-height:1.5}
-  .pseq .bsa{background:rgba(230,159,0,.2);color:var(--orange-deep);border-radius:3px;padding:0 1px;font-weight:700}
-  .pseq .oh{background:var(--orange);color:var(--orange-ink);border-radius:3px;padding:0 2px;font-weight:700}
-  .num-cell{font-family:'JetBrains Mono';white-space:nowrap}
-  .tmcell{display:flex;align-items:center;gap:6px}
-  .tmflag{font-size:10px;padding:1px 6px;border-radius:5px;font-weight:700;font-family:'JetBrains Mono'}
-  .tmflag.ok{background:var(--teal-soft);color:var(--teal-deep)}
-  .tmflag.warn{background:rgba(213,94,0,.16);color:#9a4100}
-
-  .backendnote{display:flex;gap:10px;align-items:flex-start;background:var(--teal-soft);border:1px dashed var(--teal-deep);border-radius:10px;padding:11px 13px;font-size:12px;color:var(--ink-soft);margin-top:16px}
-  .backendnote svg{flex:none;margin-top:1px;color:var(--teal-deep)}
-  .backendnote code{font-family:'JetBrains Mono';background:var(--card);border-radius:4px;padding:1px 5px;color:var(--teal-deep)}
-
-  .mrna-checks{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  @media(max-width:640px){.mrna-checks{grid-template-columns:1fr}}
-  .mrna-card{border:1px solid var(--line);border-radius:10px;padding:12px 14px}
-  .mrna-card h4{margin:0 0 6px;font-size:13px}
-  .mrna-card .mrna-figs{font-family:'JetBrains Mono';font-size:12px;color:var(--ink-soft);margin:0 0 8px}
   .mrna-risk{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:12px;padding:3px 9px;border-radius:999px}
   .mrna-risk.low{background:rgba(0,158,115,.14);color:#0a6b4a}
   .mrna-risk.moderate{background:rgba(230,159,0,.16);color:#8a5a00}
@@ -577,8 +514,44 @@
   [data-theme="dark"] .biosec-badge.low{background:rgba(0,158,115,.22);color:#7ee0bd}
   [data-theme="dark"] .biosec-badge.moderate{background:rgba(230,159,0,.22);color:#f0c060}
   [data-theme="dark"] .biosec-badge.high{background:rgba(213,94,0,.22);color:#f0a883}
-  #biosecNote{margin-top:10px}
+  .biosec-result{--c:#0a8f66;--bg:rgba(0,158,115,.08);display:flex;gap:14px;align-items:flex-start;border:1px solid var(--line);border-left:4px solid var(--c);background:var(--bg);border-radius:12px;padding:14px 16px;margin:2px 0 28px}
+  .biosec-result[data-state="flagged"]{--c:#d98e00;--bg:rgba(230,159,0,.10)}
+  .biosec-result[data-state="off"]{--c:#8a948f;--bg:var(--card-2)}
+  [data-theme="dark"] .biosec-result{--c:#2fbfa6;--bg:rgba(47,191,166,.09)}
+  [data-theme="dark"] .biosec-result[data-state="flagged"]{--c:#f0b24a;--bg:rgba(240,178,74,.10)}
+  [data-theme="dark"] .biosec-result[data-state="off"]{--c:#8a948f}
+  .br-icon{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--c);color:#fff;box-shadow:0 0 0 5px color-mix(in srgb, var(--c) 18%, transparent)}
+  [data-theme="dark"] .br-icon{color:#062019}
+  .br-title{display:flex;align-items:center;font-weight:700;font-size:14px;color:var(--ink);line-height:1.3}
+  .br-title .info{margin-left:8px}
+  .br-text{font-size:12.5px;color:var(--ink-soft);margin-top:3px;line-height:1.5}
+  .br-text code{font-family:'JetBrains Mono';background:var(--card);border-radius:4px;padding:1px 5px;color:var(--teal-deep)}
+  .br-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .br-chips:empty{display:none}
+  .br-chip{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono';font-size:11px;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:3px 10px;color:var(--ink)}
+  .br-chip i{width:7px;height:7px;border-radius:50%;background:#0a8f66}
+  .br-chip.flag i{background:#d98e00}
 
+  .modal.wide{max-width:880px}
+  .l0frag.clickable{cursor:pointer}
+  .l0frag.clickable .part{transition:transform .12s, filter .12s}
+  .l0frag.clickable:hover .part,.l0frag.clickable:focus-visible .part{transform:translateY(-2px);filter:brightness(1.06)}
+  .l0frag.clickable:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:8px}
+  .l0m-sec{border-top:1px solid var(--line);padding:14px 0 4px;margin-top:12px}
+  .l0m-h{font-weight:700;font-size:13.5px;margin-bottom:8px}
+  .l0m-meta{font-family:'JetBrains Mono';font-weight:400;font-size:11px;color:var(--muted);margin-left:6px}
+  .l0m-seq{font-family:'JetBrains Mono';font-size:11.5px;line-height:1.6;word-break:break-all;color:var(--muted);background:var(--card-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;max-height:150px;overflow:auto}
+  .l0m-seq .ins,.l0m-legend .ins{color:var(--ink);font-weight:700}
+  .l0m-seq .oh,.l0m-legend .oh{background:rgba(23,128,111,.16);border-radius:3px}
+  .l0m-legend{font-size:11px;color:var(--muted);margin:6px 0 0}
+  .l0m-badge{font-family:'JetBrains Mono';font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;border-radius:6px;padding:2px 8px;border:1px solid var(--line)}
+  .l0m-badge.sense{background:rgba(23,128,111,.14);color:#2C6A60}
+  .l0m-badge.antisense{background:var(--brand-orange);color:#3a1f00;border-color:rgba(11,58,51,.4)}
+  [data-theme="dark"] .l0m-badge.sense{color:#9FD9CD}
+  .l0m-end{font-family:'JetBrains Mono';font-weight:700;color:var(--ink);opacity:.7;user-select:none}
+  .l0m-actions{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 8px}
+  .l0m-warn{border:1px solid rgba(163,92,0,.4);background:rgba(224,141,0,.1);color:#7a4600;border-radius:10px;padding:8px 12px;font-size:12.5px;margin-bottom:6px}
+  [data-theme="dark"] .l0m-warn{color:#f0c27a}
   .modal-backdrop{position:fixed;inset:0;background:rgba(4,10,8,.55);z-index:80;display:none;align-items:center;justify-content:center;padding:20px}
   .modal-backdrop.show{display:flex}
   .modal{background:var(--card);border:1px solid var(--line);border-radius:16px;max-width:560px;width:100%;max-height:86vh;overflow-y:auto;padding:22px 24px}
@@ -592,7 +565,8 @@
   .modal-actions{display:flex;justify-content:flex-end;gap:10px}
 
   /* ============ PLASMID ============ */
-  .platrow{display:grid;grid-template-columns:360px 1fr;gap:24px;align-items:center}
+  .platrow{display:grid;grid-template-columns:minmax(0,500px) 1fr;gap:20px;align-items:center}
+  .platrow svg{width:100%;height:auto;display:block;overflow:visible}
   @media(max-width:760px){.platrow{grid-template-columns:1fr}}
   #plasmid{width:100%;height:auto;display:block}
   .platext h4{font-size:14px;margin:0 0 6px;color:var(--teal-deep);font-family:'Space Grotesk'}
@@ -659,7 +633,7 @@
         <li>Know which nanocompartment fits your use case — if you want, use the separate nanocompartment filter first — <a href="/selector/selector-alpha.html" class="prereq-link">open the filter&nbsp;→</a></li>
         <li>Prefer parts we already have on cryo stock at KIT over ordering something new.</li>
         <li>Codon-optimize every sequence you use for your target organism.</li>
-        <li>All toolbox sequences are codon-optimized for <i>S.&nbsp;cerevisiae</i> — re-optimize them if you're targeting a different organism.</li>
+        <li>All toolbox sequences are codon-optimized for <i>S.&nbsp;cerevisiae</i> — the builder can't re-optimize them for you, so if you're targeting a different organism, use the "Your own sequence …" option and paste in a version optimized for it instead.</li>
       </ul>
     </div>
   </div>
@@ -763,18 +737,24 @@
           <div class="termlab"><span class="tbadge">C</span>C-terminus of the cargo<small>Type 0.1 &amp; 0.2 · fused behind the cargo</small></div>
           <div class="slotrow" id="cargoSlotsTop"></div>
           <label class="field">
+            <span class="lab">Cargo · Type 0.3 <span class="hint">choose an example or use your own</span></span>
+            <select id="cargoSelect">
+              <option value="" disabled selected>— please select —</option>
+            </select>
+          </label>
+          <label class="field" id="cargoNameField" style="display:none">
+            <span class="lab">Name <span class="hint">optional</span></span>
+            <input type="text" id="cargoName" placeholder="e.g. My enzyme" maxlength="60">
+          </label>
+          <label class="field" id="cargoSeqField" style="display:none">
             <span class="lab">Cargo sequence (CDS) · Type 0.3
               <button class="info" data-info="stop">i</button>
               <span class="hint" id="cargoLen">0 bp</span></span>
-            <textarea id="cargoSeq" placeholder="Paste your own cargo CDS (A/T/G/C) — without a stop codon at the end …"></textarea>
+            <textarea id="cargoSeq" style="display:none" placeholder="Paste your own cargo CDS (A/T/G/C) — without a stop codon at the end …"></textarea>
             <div class="seqmeta" id="cargoMeta"></div>
             <div id="cargoMrna" class="mrna-inline"></div>
           </label>
           <div id="cargoStopArea"></div>
-          <div class="preset-row">
-            <span class="plabel">Or load an example:</span>
-            <div id="presetChips" style="display:flex;gap:8px;flex-wrap:wrap"></div>
-          </div>
           <div class="termlab gap"><span class="tbadge">N</span>N-terminus of the cargo<small>Type 0.4 &amp; 0.5 · fused in front of the cargo</small></div>
           <div class="slotrow" id="cargoSlotsBottom"></div>
           <div class="nav">
@@ -839,9 +819,13 @@
         </div>
         <div id="body3" style="display:none">
 
-          <div class="backendnote" id="biosecNote" style="display:none">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/></svg>
-            <div id="biosecNoteText"></div>
+          <div class="biosec-result" id="biosecNote" data-state="ok" role="status" style="display:none">
+            <div class="br-icon" id="biosecIcon"></div>
+            <div class="br-main">
+              <div class="br-title"><span id="biosecTitle"></span><button class="info" type="button" data-info="commec" aria-label="About the biosecurity screening">i</button></div>
+              <div class="br-text" id="biosecNoteText"></div>
+              <div class="br-chips" id="biosecChips"></div>
+            </div>
           </div>
 
           <!-- Level 0 / 1 / 2 — collapsible tabs. Each shows that level's modules in
@@ -852,7 +836,7 @@
             <p class="secsub">Level 0 (individual parts) → Level 1 (modules) → Level 2 (finished construct). Click a level to expand or collapse it.</p>
 
             <div class="lvltabs" id="lvltabs">
-              <div class="lvltab open" data-level="0">
+              <div class="lvltab" data-level="0">
                 <button class="lvltab-head" type="button">
                   <span class="lvltab-badge">Level 0</span>
                   <span class="lvltab-title">Individual parts</span>
@@ -863,15 +847,23 @@
                   <div class="strandwrap"><div class="strand" id="lvl0strand"></div></div>
                   <p class="l0cap" id="l0note">Level 0 parts are cloned <b>separately</b> — one plasmid each. They are not joined yet: the <b>Type number</b> alone fixes where each part ends up once BsaI assembles them into the Level 1 module.</p>
 
-                  <div class="lvlsubhead">Acceptor plasmids</div>
-                  <div class="platchips" id="platchips0"></div>
-
-                  <div class="lvlsubhead">To order</div>
-                  <div class="orderlist" id="orderList0"></div>
+                  <div class="lvlsubhead">Destination plasmid</div>
+                  <div class="platrow">
+                    <svg id="plasmid0" viewBox="-70 0 570 380"></svg>
+                    <div class="platext">
+                      <h4 id="plat0title"></h4>
+                      <p id="plat0explain"></p>
+                      <ul class="featlist" id="plat0feats"></ul>
+                    </div>
+                  </div>
+                  <div class="l0m-actions" id="plat0actions" style="display:none">
+                    <button class="chip" type="button" id="plat0Copy">Copy sequence</button>
+                    <button class="chip primary-chip" type="button" id="plat0Dl">Download GenBank (.gb)</button>
+                  </div>
                 </div>
               </div>
 
-              <div class="lvltab open" data-level="1">
+              <div class="lvltab" data-level="1">
                 <button class="lvltab-head" type="button">
                   <span class="lvltab-badge">Level 1</span>
                   <span class="lvltab-title">Modules</span>
@@ -900,7 +892,7 @@
                 </div>
               </div>
 
-              <div class="lvltab open" data-level="2">
+              <div class="lvltab" data-level="2">
                 <button class="lvltab-head" type="button">
                   <span class="lvltab-badge">Level 2</span>
                   <span class="lvltab-title">Finished construct</span>
@@ -917,7 +909,7 @@
 
                   <div class="lvlsubhead">Destination plasmid</div>
                   <div class="platrow">
-                    <svg id="plasmid2" viewBox="0 0 380 380"></svg>
+                    <svg id="plasmid2" viewBox="-70 0 570 380"></svg>
                     <div class="platext">
                       <h4 id="plat2title"></h4>
                       <p id="plat2explain"></p>
@@ -972,6 +964,43 @@
   </div>
 </div>
 
+<!-- Level 0 module detail: click a module in Step 4 / Level 0. Shows the part inside its overhang adapter and the
+     Level 0 plasmid it ends up in after BbsI cloning, each copyable and downloadable as annotated GenBank. -->
+<div class="modal-backdrop" id="l0Modal">
+  <div class="modal wide" role="dialog" aria-modal="true" aria-labelledby="l0mTitle">
+    <h3 id="l0mTitle"></h3>
+    <p class="modal-sub" id="l0mSub"></p>
+    <div class="l0m-warn" id="l0mWarn" style="display:none"></div>
+
+    <div class="l0m-sec">
+      <div class="l0m-h">Part with overhangs <span class="l0m-meta" id="l0mAdapter"></span></div>
+      <div class="l0m-seq" id="l0mSeq"></div>
+      <div class="l0m-legend"><span class="ins">insert</span> · <span class="oh">overhangs</span> · rest = BbsI sites / spacer bases</div>
+      <div class="l0m-actions">
+        <button class="chip" type="button" id="l0mCopySeq">Copy sequence</button>
+        <button class="chip primary-chip" type="button" id="l0mDlSeq">Download GenBank (.gb)</button>
+      </div>
+    </div>
+
+    <div class="l0m-sec" id="l0mPlasmidSec">
+      <div class="l0m-h">Cloned into the Level 0 backbone <span class="l0m-meta" id="l0mPlName"></span></div>
+      <div class="platrow">
+        <svg id="l0mSvg" viewBox="-70 0 570 380"></svg>
+        <div class="platext">
+          <p id="l0mExplain"></p>
+          <ul class="featlist" id="l0mFeats"></ul>
+        </div>
+      </div>
+      <div class="l0m-actions">
+        <button class="chip" type="button" id="l0mCopyPl">Copy plasmid sequence</button>
+        <button class="chip primary-chip" type="button" id="l0mDlPl">Download GenBank (.gb)</button>
+      </div>
+    </div>
+
+    <div class="modal-actions"><button class="btn btn-ghost" type="button" id="l0mClose">Close</button></div>
+  </div>
+</div>
+
 <script>
 /* ===================== ENCORE Builder v5 — Logik ===================== */
 const $ = s => document.querySelector(s);
@@ -982,16 +1011,14 @@ const esc = v => String(v??'').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;
 const clean = s => (s||'').toUpperCase().replace(/[^ATGC]/g,'');
 const gc = s => s.length ? Math.round((s.replace(/[^GC]/g,'').length/s.length)*100) : 0;
 const rc = s => s.split('').reverse().map(c => ({A:'T',T:'A',G:'C',C:'G'}[c]||'N')).join('');
+const comp = s => s.split('').map(c => ({A:'T',T:'A',G:'C',C:'G'}[c]||'N')).join('');   // same column order, NOT reversed — the antiparallel strand directly below
 const wallaceTm = s => { const at=(s.match(/[AT]/g)||[]).length, g=(s.match(/[GC]/g)||[]).length; return 2*at+4*g; };
 const STOP_CODONS = ['TAA','TAG','TGA'];
 const findInternalStops = seq => { const h=[]; for(let i=0;i+3<=seq.length;i+=3){const c=seq.slice(i,i+3); if(STOP_CODONS.includes(c)) h.push({pos:i,codon:c});} return h; };
 const endsWithStop = seq => seq.length>=3 && STOP_CODONS.includes(seq.slice(-3)) ? seq.slice(-3) : null;
 
 /* ---------- Golden-Gate-Konstanten (aus dem Type-Diagramm) ---------- */
-const T_OH = { 1:['ACAT','ATAC'], 2:['TATG','AAGA'], 3:['TTCT','TAGG'], 4:['ATCC','ACCG'], 5:['TGGC','AACA'] };
 const CARGO_L1_FLANK = ['CCAA','GCAA'];   // BsaI-Flanken Cargo-Modul (Level1)
-const NC_L1_FLANK    = ['TGAT','TTAC'];   // BsaI-Flanken NC-Modul (Level1)
-const PROMO_FLANK    = ['CGTT','ACTA'];   // Promoter-Flanken
 
 /* ---------- Libraries (expandable — hence dropdown) ---------- */
 const NANOCOMPARTMENTS = [
@@ -1032,22 +1059,36 @@ const LIB = {
   level0Backbones: [], level1Backbones: [], level2Backbones: [],   // only available once the backend serves the real parts database
 };
 
+const LIBS_KEY='encore.libs.v1';
+function applyLibs(l){
+  LIB.nanocompartments = l.nanocompartments || LIB.nanocompartments;
+  LIB.cargoPresets     = l.cargoPresets     || LIB.cargoPresets;
+  LIB.linkers          = l.linkers          || LIB.linkers;
+  LIB.promoters        = l.promoters        || LIB.promoters;
+  LIB.surfaceMarkers   = l.surfaceMarkers   || LIB.surfaceMarkers;
+  LIB.level0Backbones  = l.level0Backbones  || LIB.level0Backbones;
+  LIB.level1Backbones  = l.level1Backbones  || LIB.level1Backbones;
+  LIB.level2Backbones  = l.level2Backbones  || LIB.level2Backbones;
+  LIB.source = 'api';
+}
+/* Stale-while-revalidate: on a refresh the libraries from the last visit (sessionStorage) are applied
+   instantly so the page can restore itself without waiting for the network; the fresh copy fetched by
+   ENCORE_API.ready (the health check, which already downloads /api/libraries) is applied afterwards. */
 async function loadLibraries(){
   const api = window.ENCORE_API;
   if(!api) return;
+  const store = l => { try{ sessionStorage.setItem(LIBS_KEY, JSON.stringify(l)); }catch(e){} };
+  let cached=null;
+  try{ cached=JSON.parse(sessionStorage.getItem(LIBS_KEY)); }catch(e){}
+  if(cached){
+    applyLibs(cached); api.available = true;
+    api.ready.then(()=>{ if(api.available && api.librariesData){ applyLibs(api.librariesData); store(api.librariesData); } });
+    return;
+  }
   try{
-    await api.ready;                       // health check abwarten
+    await api.ready;                       // health check abwarten (laedt dabei schon /api/libraries)
     if(!api.available) return;
-    const l = await api.libraries();
-    LIB.nanocompartments = l.nanocompartments || LIB.nanocompartments;
-    LIB.cargoPresets     = l.cargoPresets     || LIB.cargoPresets;
-    LIB.linkers          = l.linkers          || LIB.linkers;
-    LIB.promoters        = l.promoters        || LIB.promoters;
-    LIB.surfaceMarkers   = l.surfaceMarkers   || LIB.surfaceMarkers;
-    LIB.level0Backbones  = l.level0Backbones  || LIB.level0Backbones;
-    LIB.level1Backbones  = l.level1Backbones  || LIB.level1Backbones;
-    LIB.level2Backbones  = l.level2Backbones  || LIB.level2Backbones;
-    LIB.source = 'api';
+    applyLibs(api.librariesData); store(api.librariesData);
   }catch(err){
     console.warn('[ENCORE] /api/libraries failed — using the inline fallback', err);
   }
@@ -1065,6 +1106,12 @@ const INFO = {
   stop: { title:'Why no stop codon?', img:'Diagram: TP–linker–cargo reading frame',
     body:`<p>The cargo is fused with the linker and targeting peptide into <b>one continuous protein</b>.</p>
           <p>A stop codon (TAA, TAG, or TGA) at the end would terminate translation early — the TP would no longer be attached and the cargo would not be encapsulated.</p>` },
+  commec: { title:'Biosecurity screening (COMMEC)', img:'Diagram: your sequence → COMMEC → curated biorisk database',
+    body:`<p><b>COMMEC</b> (<i>Common Mechanism</i>, from IBBIS — the International Biosecurity and Biosafety Initiative for Science) is an open-source tool that checks DNA for similarity to known biosecurity concerns — the same kind of check DNA synthesis providers run before they ship an order.</p>
+          <p><b>What is screened:</b> only sequences you typed or pasted yourself (cargo, your own shell, your own module parts). Toolkit parts are not screened.</p>
+          <p><b>Against which database:</b> this installation uses COMMEC's curated <b>Biorisk + Low-concern</b> database (about 1.2&nbsp;GB): known toxins, virulence factors and regulated pathogens, plus a list of harmless related sequences so common genes are not over-flagged.</p>
+          <p><b>Not included:</b> the full protein (NR, ~530&nbsp;GB) and nucleotide (NT, ~580&nbsp;GB) taxonomy databases. So there is no best-match against arbitrary organisms — only direct hits against the curated list count, and only a real biorisk hit raises a warning here.</p>
+          <p>A hit never blocks you silently: you review it and confirm before continuing. The screening runs locally in its own container and is a helper check, not a replacement for your institution's biosafety review.</p>` },
   promoter: { title:'Bidirectional promoter', img:'Diagram: GAL1-10 transcribing both ways',
     body:`<p><b>GAL1-10</b> is a bidirectional yeast promoter: it drives <b>two genes at once</b> in opposite directions. Both transcripts <b>start (5′) at the promoter</b> and run outward.</p>
           <p>The nanocompartment module is read off the <b>sense (+) strand</b> (to the right), the cargo module off the <b>antisense (−) strand</b> (to the left) — that is why they point away from each other. Inducible via galactose.</p>` },
@@ -1072,9 +1119,6 @@ const INFO = {
     body:`<p><b>Domestication (BbsI):</b> external sequences are cloned into standardized Level 0 parts using BbsI — internal sites are removed and the fixed 4 nt fusion overhangs are added.</p>
           <p><b>Level 0 → 1 (BsaI):</b> several Level 0 parts are assembled via BsaI into one module (cargo module, NC module).</p>
           <p><b>Level 1 → 2 (BsaI):</b> the modules plus the promoter form the finished construct in the target vector.</p>` },
-  plate: { title:'Pipetting plan (96-well)', img:'Diagram: occupied wells on a plate',
-    body:`<p>The highlighted wells show which standard modules you take from the stock plate and pipette into the assembly reaction for this construct.</p>
-          <p>The colors match the building blocks in the assembly above.</p>` },
   mrnaStructure: { title:'mRNA self-fold &amp; self-dimer', img:'Diagram: mRNA hairpin and mRNA-mRNA duplex',
     body:`<p>A scanning ribosome can be blocked two ways: the mRNA <b>folds back on itself</b> (a hairpin, within one molecule), or <b>two copies of the same mRNA</b> hybridise with each other (a dimer). Either can prevent translation.</p>
           <p>Checked for every sequence you paste yourself — cargo, your own shell, or your own sequence in a module — as a minimum free energy (ΔG, kcal/mol) via <code>ViennaRNA</code> — <code>RNAfold</code> for self-fold, <code>RNAduplex</code> for self-dimer — on its coding (sense) direction, since that is exactly the mRNA sequence (U instead of T).</p>
@@ -1117,27 +1161,39 @@ syncThemeButton();
 
 /* ===================== Info popover ===================== */
 const pop = $('#popover');
-function openPopover(key, anchor){
-  const data = INFO[key]; if(!data) return;
-  $('#popTitle').innerHTML = data.title;  // titles are static, developer-authored strings (may carry entities like &amp;), never user input
-  $('#popText').innerHTML = data.body;
-  $('#popImgText').textContent = data.img;
-  pop.classList.add('show');
-  const r = anchor.getBoundingClientRect();
+let popAnchor = null;
+/* Place the box next to its info button. The button scrolls with the page while the box is position:fixed, so
+   this is re-run on scroll/resize: the box follows its button (clamped inside the viewport) and stays open. */
+function positionPopover(){
+  if(!popAnchor || !pop.classList.contains('show')) return;
+  const r = popAnchor.getBoundingClientRect();
   const pw = 340, ph = pop.offsetHeight;
   let left = r.left + r.width/2 - pw/2;
   left = Math.max(12, Math.min(left, window.innerWidth - pw - 12));
   let top = r.bottom + 8;
   if(top + ph > window.innerHeight - 12) top = r.top - ph - 8;
-  pop.style.left = left+'px'; pop.style.top = Math.max(12,top)+'px';
+  top = Math.max(12, Math.min(top, window.innerHeight - ph - 12));
+  pop.style.left = left+'px'; pop.style.top = top+'px';
 }
+function closePopover(){ pop.classList.remove('show'); popAnchor = null; }
+function openPopover(key, anchor){
+  const data = INFO[key]; if(!data) return;
+  $('#popTitle').innerHTML = data.title;  // titles are static, developer-authored strings (may carry entities like &amp;), never user input
+  $('#popText').innerHTML = data.body;
+  $('#popImgText').textContent = data.img;
+  popAnchor = anchor;
+  pop.classList.add('show');
+  positionPopover();
+}
+/* Closes only on a click outside the box (or its X button) — scrolling no longer dismisses it. */
 document.addEventListener('click', e=>{
   const btn = e.target.closest('.info');
   if(btn){ e.stopPropagation(); openPopover(btn.dataset.info, btn); return; }
-  if(!e.target.closest('#popover')) pop.classList.remove('show');
+  if(!e.target.closest('#popover')) closePopover();
 });
-$('#popClose').addEventListener('click', ()=>pop.classList.remove('show'));
-window.addEventListener('scroll', ()=>pop.classList.remove('show'), {passive:true});
+$('#popClose').addEventListener('click', closePopover);
+window.addEventListener('scroll', positionPopover, {passive:true});
+window.addEventListener('resize', positionPopover);
 
 /* ===================== Intro -> builder ===================== */
 let builderStarted=false;
@@ -1242,16 +1298,33 @@ function renderShellValidation(v){
   state.customNc.valid = v.ok;
   applyCustomNc();
 }
+/* Server validation answers (incl. the slow ViennaRNA mRNA-structure panel) are deterministic per
+   sequence, so they are cached in sessionStorage: after a page refresh the full result renders at once
+   instead of ~700 ms later — which also kept inserting the mRNA panel above the restored scroll position
+   and nudged it. */
+const VAL_KEY='encore.val.v1';
+function valCacheGet(kind,seq){ try{ return (JSON.parse(sessionStorage.getItem(VAL_KEY)||'{}'))[(kind||'cargo')+':'+seq]||null; }catch(e){ return null; } }
+function valCachePut(kind,seq,v){
+  try{
+    const c=JSON.parse(sessionStorage.getItem(VAL_KEY)||'{}'), keys=Object.keys(c);
+    if(keys.length>=12) delete c[keys[0]];
+    c[(kind||'cargo')+':'+seq]=v; sessionStorage.setItem(VAL_KEY, JSON.stringify(c));
+  }catch(e){}
+}
+async function validateCached(api, seq, kind){
+  const v=await api.validateCargo(seq,kind); valCachePut(kind,seq,v); return v;
+}
 let shellCheckTimer=null, shellCheckToken=0;
 function scheduleServerShellCheck(seq){
   const api=window.ENCORE_API;
   if(!api || !api.available || !seq) return;
   clearTimeout(shellCheckTimer);
   const token=++shellCheckToken;
+  const hit=valCacheGet('shell',seq); if(hit){ renderShellValidation(hit); return; }
   shellCheckTimer=setTimeout(async ()=>{
     $('#shellMrna').innerHTML = MRNA_LOADING_HTML;
     try{
-      const v=await api.validateCargo(seq,'shell');
+      const v=await validateCached(api,seq,'shell');
       if(token!==shellCheckToken || seq!==clean(state.customNc.seqRaw)) return;
       renderShellValidation(v);
     }catch(err){
@@ -1280,25 +1353,37 @@ function renderNcMeta(){
 }
 
 /* ===================== Step 2: cargo ===================== */
-function initPresetChips(){
-  const wrap=$('#presetChips');
+const CUSTOM_CARGO='custom';
+/* Cargo dropdown, same pattern as the nanocompartment one: the examples from the library plus "your own" —
+   only "your own" reveals the sequence box (an example just shows its length / checks below). */
+function initCargoDropdown(){
+  const sel=$('#cargoSelect');
   LIB.cargoPresets.forEach(p=>{
-    const b=document.createElement('button');
-    b.className='preset-chip'; b.dataset.id=p.id;
-    b.innerHTML=`<span class="pc-dot"></span>${p.label}`;
-    b.addEventListener('click', ()=>{
-      $('#cargoSeq').value=p.seq;
-      state.cargoFromPreset=p.id; state.cargoLabel=p.label;
-      $$('#presetChips .preset-chip').forEach(c=>c.classList.toggle('on', c.dataset.id===p.id));
-      handleCargoInput();
-    });
-    wrap.appendChild(b);
+    const o=document.createElement('option'); o.value=p.id; o.textContent=p.label; sel.appendChild(o);
   });
+  const co=document.createElement('option'); co.value=CUSTOM_CARGO; co.textContent='Your own sequence …'; sel.appendChild(co);
+  sel.addEventListener('change', ()=>setCargoChoice(sel.value));
+}
+/* Apply a dropdown choice: '' / an example id / 'custom'. `keepText` = keep what is typed (session restore). */
+function setCargoChoice(value, keepText=false){
+  const ta=$('#cargoSeq');
+  const preset = LIB.cargoPresets.find(p=>p.id===value);
+  if(preset){
+    ta.value=preset.seq; ta.style.display='none';
+    state.cargoFromPreset=preset.id; state.cargoLabel=preset.label;
+  } else if(value===CUSTOM_CARGO){
+    if(!keepText && state.cargoFromPreset) ta.value='';        // coming from an example: start the own sequence empty
+    ta.style.display='';
+    state.cargoFromPreset=null;
+  } else { ta.style.display='none'; state.cargoFromPreset=null; }
+  $('#cargoSeqField').style.display = value ? '' : 'none';
+  $('#cargoNameField').style.display = value===CUSTOM_CARGO ? '' : 'none';
+  handleCargoInput();
 }
 function handleCargoInput(){
   const raw=$('#cargoSeq').value, s=clean(raw);
   state.cargoSeq=s;
-  if(!state.cargoFromPreset) state.cargoLabel='Custom cargo';
+  if(!state.cargoFromPreset) state.cargoLabel = $('#cargoName').value.trim() || 'Custom cargo';
   $('#cargoLen').textContent=s.length+' bp';
 
   renderCargoValidation(validateCargoLocal(raw));
@@ -1365,7 +1450,8 @@ function seqMrnaHtml(v){
 }
 function renderCargoValidation(v){
   $('#cargoMeta').innerHTML = seqMetaHtml(v);
-  $('#cargoStopArea').innerHTML = seqNotesHtml(v, 'No stop codon found — sequence is ready for fusion.');
+  // The stop-codon / frame check only makes sense for a CDS the user typed in; the library examples are ours.
+  $('#cargoStopArea').innerHTML = state.cargoFromPreset ? '' : seqNotesHtml(v, 'No stop codon found — sequence is ready for fusion.');
   $('#cargoMrna').innerHTML = seqMrnaHtml(v);
   state.cargoValid = v.ok;
   refreshNext1();
@@ -1381,10 +1467,11 @@ function scheduleServerCargoCheck(seq){
   if(!api || !api.available || !seq) return;
   clearTimeout(cargoCheckTimer);
   const token=++cargoCheckToken;
+  const hit=valCacheGet('cargo',seq); if(hit){ renderCargoValidation(hit); return; }
   cargoCheckTimer=setTimeout(async ()=>{
     $('#cargoMrna').innerHTML = MRNA_LOADING_HTML;
     try{
-      const v=await api.validateCargo(seq);
+      const v=await validateCached(api,seq,undefined);
       if(token!==cargoCheckToken || seq!==state.cargoSeq) return;   // veraltet
       renderCargoValidation(v);
     }catch(err){
@@ -1393,7 +1480,8 @@ function scheduleServerCargoCheck(seq){
     }
   }, 400);
 }
-$('#cargoSeq').addEventListener('input', ()=>{ state.cargoFromPreset=null; $$('#presetChips .preset-chip').forEach(c=>c.classList.remove('on')); handleCargoInput(); });
+$('#cargoSeq').addEventListener('input', ()=>{ state.cargoFromPreset=null; handleCargoInput(); });
+$('#cargoName').addEventListener('input', ()=>{ if(!state.cargoFromPreset) handleCargoInput(); });
 
 /* ===================== Step 3: promoter ===================== */
 function initPromoterDropdown(){
@@ -1554,10 +1642,11 @@ function scheduleServerSlotCheck(mod,n,seq){
   const id=mod+n;
   clearTimeout(slotCheckTimers[id]);
   const token=(slotCheckTokens[id]=(slotCheckTokens[id]||0)+1);
+  const hit=valCacheGet('part',seq); if(hit){ renderSlotValidation(mod,n,hit); return; }
   slotCheckTimers[id]=setTimeout(async ()=>{
     const mrnaEl=slotEl(mod,n).querySelector('.slotmrna'); mrnaEl.innerHTML=MRNA_LOADING_HTML;
     try{
-      const v=await api.validateCargo(seq,'part');
+      const v=await validateCached(api,seq,'part');
       if(token!==slotCheckTokens[id] || seq!==clean(slotsOf(mod)[n].seqRaw||'')) return;
       renderSlotValidation(mod,n,v);
     }catch(err){
@@ -1695,17 +1784,51 @@ function biosecEffectiveStatus(status){
   return status.screen_status;
 }
 
-function renderBiosecNote(screening, flaggedCount){
-  const note=$('#biosecNote'), text=$('#biosecNoteText');
+const BR_ICON = {
+  ok:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  flagged:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v6M12 17h.01"/></svg>',
+  off:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 12h12"/></svg>',
+};
+const BIOSEC_KEY='encore.biosec.v1';
+/* The result card must survive a page refresh: keep just what it needs (state per sequence + labels). */
+function saveBiosecNote(screening, flaggedCount, items){
+  try{
+    sessionStorage.setItem(BIOSEC_KEY, JSON.stringify({
+      screening: screening && screening.available
+        ? { available:true, results:(screening.results||[]).map(r=>({ status:r&&r.status ? {
+              screen_status:r.status.screen_status, biorisk:r.status.biorisk,
+              protein_taxonomy:r.status.protein_taxonomy, nucleotide_taxonomy:r.status.nucleotide_taxonomy } : {} })) }
+        : { available:false },
+      flaggedCount, labels:(items||[]).map(i=>i.label),
+    }));
+  }catch(e){}
+}
+function restoreBiosecNote(){
+  let s=null; try{ s=JSON.parse(sessionStorage.getItem(BIOSEC_KEY)); }catch(e){}
+  if(s && s.screening) renderBiosecNote(s.screening, s.flaggedCount||0, (s.labels||[]).map(l=>({label:l})), false);
+}
+function renderBiosecNote(screening, flaggedCount, items=[], persist=true){
+  if(persist) saveBiosecNote(screening, flaggedCount, items);
+  const note=$('#biosecNote'), title=$('#biosecTitle'), text=$('#biosecNoteText'), chips=$('#biosecChips');
+  const set = (state, t, body, chipHtml='')=>{
+    note.dataset.state=state; note.style.display='flex';
+    $('#biosecIcon').innerHTML = BR_ICON[state]; title.textContent=t; text.innerHTML=body; chips.innerHTML=chipHtml;
+  };
   if(!screening || !screening.available){
-    note.style.display='block';
-    text.innerHTML = 'Biosecurity screening (<code>COMMEC</code>) is not configured for this deployment — sequences were not screened. See <code>COMMEC_URL</code> in the README.';
+    set('off','Biosecurity screening was not run',
+        'Screening (<code>COMMEC</code>) is not configured for this deployment — sequences were not screened. See <code>COMMEC_URL</code> in the README.');
     return;
   }
-  note.style.display='block';
-  text.innerHTML = flaggedCount
-    ? `Biosecurity screening (<code>COMMEC</code>) flagged ${flaggedCount} sequence${flaggedCount===1?'':'s'} — reviewed and continued anyway (see the warning shown before this step).`
-    : `Biosecurity screening (<code>COMMEC</code>) passed for all ${screening.results.length} user-entered sequence${screening.results.length===1?'':'s'}.`;
+  const n=screening.results.length;
+  // results[i] belongs to items[i] (the sequences that were sent) — the labels come from there
+  const chipHtml = screening.results.map((r,i)=>{
+    const flagged = biosecRiskClass(biosecEffectiveStatus((r&&r.status)||{}))!=='low';
+    return `<span class="br-chip${flagged?' flag':''}"><i></i>${esc((items[i]&&items[i].label)||('Sequence '+(i+1)))}</span>`;
+  }).join('');
+  if(flaggedCount) set('flagged', `Biosecurity screening flagged ${flaggedCount} sequence${flaggedCount===1?'':'s'}`,
+      'Reviewed and continued anyway — see the warning shown before this step. Screened with <code>COMMEC</code>.', chipHtml);
+  else set('ok','Biosecurity check passed',
+      `All ${n} sequence${n===1?'':'s'} you entered ${n===1?'was':'were'} screened with <code>COMMEC</code> against known toxins, virulence factors and regulated pathogens — no match found.`, chipHtml);
 }
 
 function showBiosecModal(flagged){
@@ -1720,7 +1843,7 @@ function showBiosecModal(flagged){
       </div>`;
     }).join('');
     const ack=$('#biosecAck'), cont=$('#biosecContinue'), cancel=$('#biosecCancel'), modal=$('#biosecModal');
-    ack.checked=false; cont.disabled=true; modal.classList.add('show');
+    ack.checked=false; cont.disabled=true; modal.classList.add('show'); scrollModalToTop(modal);
     const onAck=()=>{ cont.disabled=!ack.checked; };
     const cleanup=()=>{ modal.classList.remove('show'); ack.removeEventListener('change',onAck); cont.removeEventListener('click',onContinue); cancel.removeEventListener('click',onCancel); };
     const onContinue=()=>{ cleanup(); resolvePromise(true); };
@@ -1755,7 +1878,7 @@ $('#next2').addEventListener('click', async ()=>{
   }
   if(proceed){
     try{ await compute(); } finally { refreshNext2(); }
-    renderBiosecNote(screening, flaggedCount);
+    renderBiosecNote(screening, flaggedCount, items);
     state.unlocked[3]=true; applyLocks(); updateStepperLocks(); scrollToSection('sec-3');
   } else {
     btn.disabled=false;
@@ -1778,7 +1901,8 @@ function resetBuilder(){
   $('#customNc').style.display='none';
   $('#customNcLabel').value=''; $('#customNcTp').selectedIndex=0; $('#shellSeq').value='';
   $('#shellLen').textContent='0 bp';
-  $('#cargoSeq').value='';
+  $('#cargoSeq').value=''; $('#cargoSeq').style.display='none'; $('#cargoSelect').selectedIndex=0; $('#cargoSeqField').style.display='none';
+  $('#cargoName').value=''; $('#cargoNameField').style.display='none';
   $('#promoter').value=state.promoter;
   refreshNext2();
   MOD_NAMES.forEach(mod=>{
@@ -1794,11 +1918,13 @@ function resetBuilder(){
   $('#cargoLen').textContent='0 bp';
   $('#cargoModTag').textContent='';
   ['#ncMeta','#shellMeta','#shellStopArea','#shellMrna','#cargoMeta','#cargoStopArea','#cargoMrna','#lvl0strand','#lvl1cargo','#lvl1nc','#lvl2strand',
-   '#lvl1promo','#legend','#biosecNoteText','#platchips0','#orderList0','#platchips1','#orderList1','#plat2feats','#orderList2']
+   '#lvl1promo','#legend','#biosecNoteText','#biosecChips','#plat0feats','#platchips1','#orderList1','#plat2feats','#orderList2']
     .forEach(sel=>{ const el=$(sel); if(el) el.innerHTML=''; });
   $('#plat2title').textContent=''; $('#plat2explain').textContent=''; $('#l2sub').textContent='';
+  $('#plat0title').textContent=''; $('#plat0explain').textContent=''; $('#plasmid0').innerHTML='';
   $('#dlGenbank').style.display='none';
   $('#biosecNote').style.display='none';
+  try{ sessionStorage.removeItem(BIOSEC_KEY); }catch(e){}
   $('#next0').disabled=true; $('#next1').disabled=true;
 
   applyLocks(); updateStepperLocks(); setActive(0); updateProgress();
@@ -1827,52 +1953,62 @@ function renderStrand(elId, parts, opts={}){
   el.innerHTML = `<div class="strand-dir"><span>${d5}</span><span>${d3}</span></div><div class="partsrow">${partsHtml}</div>`;
 }
 
-/* Level 0: the five parts that will later form the cargo module, each still on
-   its own plasmid. Drawn as discrete boxes (.partsrow.sep) with no 5'→3' header,
-   because at this stage they are not adjacent — only the Type number is binding.
-   Four are toolkit stock and are dimmed; the cargo is the one the user makes, so
-   it alone keeps full colour, shows its Type 3 fusion sites and carries the BbsI
-   tag (the stock parts were domesticated long ago).
-   NOTE: the overhangs are shown for the cargo only, as before. The Type overhangs
-   (T_OH) and the module flanks used for the primers (CARGO_L1_FLANK) do not yet
-   agree — see PROJECT_TODO section 1 — so this view deliberately does not put
-   five more overhang pairs on screen until that is verified. */
-/* Own parts (custom shell and custom module sequences) of both modules. Cargo-module parts sit on the
-   antisense strand, so they are ordered as reverse complement. */
+/* Level 0: the cargo module and the nanocompartment-site module, each still five
+   parts on five separate plasmids (.partsrow.sep) — shown as two separate rows, one
+   per module, all on one horizontal line (junction, box, junction, box, ...) beside
+   each other — nothing stacked above/below or overlapping a box.
+   Each junction is ONE shared column, not duplicated per part, and shows BOTH strands
+   of the 4nt sticky end as two separate fields: top strand (top edge flush with the
+   boxes' top edge) and bottom strand (bottom edge flush with the boxes' bottom edge),
+   horizontally staggered like a real overhang. The strands are antiparallel, so the
+   bottom field is the complement of the top one in the same column order.
+   Both rows read 5' (left) -> 3' (right) along their top strand. The nc-site module
+   is sense and is drawn in its physical order (Type 0.1 -> 0.5, JUNCTIONS as is).
+   The cargo module's ORF is antisense, so its row is the same construct rotated by
+   180 degrees: Type 0.5 -> 0.1 left to right, the junction order reversed, and every
+   junction rotated too — the old bottom strand becomes the top strand, read 5'->3'
+   (= reverse complement of the physical top-strand junction), the old top strand
+   becomes the bottom one (= the junction reversed). All ten parts are shown in full
+   colour; only a thin inset ring marks new vs. stock. */
 const JUNCTIONS=['ACAT','TATG','TTCT','ATCC','TGGC','TTGT'];   // Type n runs from JUNCTIONS[n-1] to JUNCTIONS[n]
-function newParts(m){
-  const out=[];
-  (m.cslots||[]).filter(e=>e.kind==='custom').forEach(e=>out.push({ module:'cargo', slot:e.slot, kind:'t'+e.slot, label:e.label, bp:e.bp, seq:e.sequence, what:'cargo-module sequence', antisense:true }));
-  if(m.n.custom) out.push({ module:'nc', slot:3, kind:'shell', label:m.n.shell, bp:m.n.shellBp, seq:m.n.seq, what:'nanocompartment shell', antisense:false });
-  m.slots.filter(e=>e.kind==='custom').forEach(e=>out.push({ module:'nc', slot:e.slot, kind:'t'+e.slot, label:e.label, bp:e.bp, seq:e.sequence, what:'nanocompartment-site sequence', antisense:false }));
-  return out;
-}
-const partSeq=e=>e.antisense ? rc(e.seq) : e.seq;
 const L0_NOTE_BASE=$('#l0note').innerHTML;
+function l0Box(p){
+  const k = p.kind || 'ncs';
+  const star = p.stop ? '<span class="stopstar">*</span>' : '';
+  return `<div class="part" style="background:${cvar(k)};color:${cink(k)}">` +
+         `<span class="ptype">${p.type||''}</span><span class="plab">${esc(p.label)}${star}</span>` +
+         `<small>${p.note||(p.dummy?'Spacer':'')}</small></div>`;
+}
+function l0Frag(p, module){
+  const isNew = p.isCargo || p.isNew;
+  const slot = (String(p.type||'').match(/(\d)$/)||[])[1] || '';
+  return `<div class="l0frag ${isNew?'l0new':'l0stock'}" data-module="${module}" data-slot="${slot}" role="button" tabindex="0" aria-label="${esc(p.label)} — show sequence">${l0Box(p)}</div>`;
+}
+function l0ModuleRow(parts, antisense){
+  // antisense (cargo): rotate the whole construct by 180 degrees (see comment above)
+  const top = j => antisense ? rc(j) : j;
+  const bottom = j => antisense ? j.split('').reverse().join('') : comp(j);
+  // outermost junctions only keep the overhang that belongs to the adjacent module — nothing is
+  // cloned in beyond the first/last part, so there is no second fragment carrying the other strand
+  const ohChip = (j, edge) => `<div class="l0ohcol">` +
+    (edge==='right' ? '' : `<span class="l0oh sense${edge?' edge':''}">${top(j)}</span>`) +
+    (edge==='left'  ? '' : `<span class="l0oh anti${edge?' edge':''}">${bottom(j)}</span>`) + `</div>`;
+  const ordered = antisense ? parts.map((p,i)=>({p,i})).reverse() : parts.map((p,i)=>({p,i}));
+  const cells = [ohChip(JUNCTIONS[antisense ? 5 : 0], 'left')];
+  ordered.forEach(({p,i},n)=>{
+    cells.push(l0Frag(p, antisense ? 'cargo' : 'nc'));
+    cells.push(ohChip(JUNCTIONS[antisense ? i : i+1], n===ordered.length-1 ? 'right' : null));
+  });
+  return `<div class="strand-dir"><span>5′</span><span>3′</span></div><div class="partsrow sep l0grid">${cells.join('')}</div>`;
+}
 function renderLevel0(elId, m){
-  const cargoNew = m.l0.filter(p=>p.isCargo || p.isNew).length;          // in the cargo module, incl. the cargo
-  const ncExtra = newParts(m).filter(e=>e.module==='nc'), extraAll = newParts(m).length, cust = extraAll>0;
-  $('#l0sub').textContent = `${5-cargoNew} from toolkit stock · ${cargoNew} new` + (ncExtra.length ? ` (+ ${ncExtra.length} in your nanocompartment site)` : '');
-  $('#l0note').innerHTML = cust
-    ? L0_NOTE_BASE.replace('Only your cargo is new and needs BbsI domestication; the other four come off the stock plate.',
-        'Your cargo and your own parts are new and need BbsI domestication; everything else comes off the stock plate.')
-    : L0_NOTE_BASE;
-  const box = p => {
-    const k = p.kind || 'ncs';
-    const star = p.stop ? '<span class="stopstar">*</span>' : '';
-    return `<div class="part" style="background:${cvar(k)};color:${cink(k)}">` +
-           `<span class="ptype">${p.type||''}</span><span class="plab">${esc(p.label)}${star}</span>` +
-           `<small>${p.note||(p.dummy?'Spacer':'')}</small></div>`;
-  };
-  $(elId).innerHTML = `<div class="partsrow sep l0grid">` + m.l0.map((p,i)=>
-    (p.isCargo || p.isNew)
-      ? `<div class="l0part l0new"><span class="l0badge new">new · BbsI domestication</span>
-           <div class="l0ohrow"><span class="l0oh">${T_OH[i+1][0]}</span>${box(p)}<span class="l0oh">${T_OH[i+1][1]}</span></div></div>`
-      : `<div class="l0part l0stock"><span class="l0badge stock">in stock</span>${box(p)}</div>`
-  ).join('') + `</div>`
-  + (ncExtra.length ? `<div class="l0shellcap">Nanocompartment Site — your own parts</div>
-    <div class="partsrow sep l0grid">` + ncExtra.map(e=>`<div class="l0part l0new"><span class="l0badge new">new · BbsI domestication</span>
-      <div class="l0ohrow"><span class="l0oh">${T_OH[e.slot][0]}</span>${box({type:'Type 0.'+e.slot, label:e.label, kind:e.kind, note:e.bp+' bp'})}<span class="l0oh">${T_OH[e.slot][1]}</span></div></div>`).join('') + `</div>` : '');
+  const items = buildLevel0Items(m);
+  const newCount = items.filter(it=>it.status!=='stock').length;
+  $('#l0sub').textContent = `${items.length-newCount} of ${items.length} from toolkit stock · ${newCount} new`;
+  $('#l0note').innerHTML = L0_NOTE_BASE;
+  $(elId).innerHTML =
+    `<div class="l0shellcap">Cargo site <span class="l0m-badge antisense">antisense strand</span></div>` + l0ModuleRow(m.l0, true) +
+    `<div class="l0shellcap">Nanocompartment site <span class="l0m-badge sense">sense strand</span></div>` + l0ModuleRow(m.l1nc, false);
 }
 
 /* Level 2: bidirectional promoter as the pivot point — cargo module transcribes to the left,
@@ -1963,24 +2099,134 @@ function buildLevel0Items(m){
     : {name:`Shell CDS ${m.n.shell}`, sub:'Type 0.3 · nanocompartment site · standard toolkit part', status:'stock', bp:m.n.shellBp});
   return items;
 }
-function renderLevel0Extras(res){
-  const m=res.model;
-  const items=buildLevel0Items(m);
+/* Level 0: the real pAGM9121 acceptor backbone as a full ring map, like Level 2 — the plain destination
+   vector as it is, still carrying its lacZα stuffer between the NLvl0/CLvl0 overhangs (every Level 0
+   part later replaces that stuffer, one part per plasmid). Segment sizes come from the backbone's own
+   GenBank annotation, the unannotated stretches are drawn as neutral gaps. */
+/* Ring segments of the Level 0 backbone: SmR, ColE1 ori and the cloning site, the rest as neutral gaps. The
+   same function draws the plain backbone (cloning site = lacZα stuffer, positions from its overhangs) and a
+   backbone with a part cloned in (cloning site = the inserted fragment, positions from the backend). */
+function level0RingSegs(bb, mid){
+  const sm = featRange(bb,'SmR'), ori = featRange(bb,'ori');
+  if(!sm || !ori) return null;
+  const parts = [ { name:'SmR', kind:'mark', from:sm[0], to:sm[1] }, { name:'ColE1 ori', kind:'promo', from:ori[0], to:ori[1] },
+                  { name:mid.name, kind:'t3', from:mid.from, to:mid.to } ].sort((x,y)=>x.from-y.from);
+  const segs=[]; let other=0, cursor=1;
+  parts.forEach(p=>{ const gap=p.from-cursor; if(gap>0){ segs.push({name:'',bp:gap,kind:'gap'}); other+=gap; }
+    segs.push({name:p.name,bp:p.to-p.from+1,kind:p.kind}); cursor=p.to+1; });
+  const tail=mid.total-cursor+1; if(tail>0){ segs.push({name:'',bp:tail,kind:'gap'}); other+=tail; }
+  return { segs, other };
+}
+function ringLegendHtml(r){
+  return r.segs.filter(p=>p.kind!=='gap').map(p=>`<li><i style="background:${ringColor(p.kind)}"></i><b>${esc(p.name)}</b><span class="bp">${p.bp.toLocaleString('en-US')} bp</span></li>`).join('') +
+    `<li><i style="background:${ringColor('gap')}"></i><b>other backbone sequence</b><span class="bp">${r.other.toLocaleString('en-US')} bp</span></li>`;
+}
+function renderLevel0Plasmid(res){
   const bb=(LIB.level0Backbones||[])[0];
-  const bbLabel = bb ? `${bb.label} (${bb.length_bp.toLocaleString('en-US')} bp)` : 'Level 0 acceptor plasmid (generic — no real backbone sequence yet)';
-  $('#platchips0').innerHTML = items.filter(it=>it.status!=='stock')
-    .map(it=>platChip(it.name, bbLabel, 't3', bb, it.bp)).join('')
-    || `<p class="l0cap" style="margin:0">All Level 0 parts for this construct are already-domesticated toolkit stock — nothing new to clone in.</p>`;
-  const rows = items.map(it=>{
-    if(it.status==='pcr' && res.primers && res.primers.length){
-      const lines = res.primers.map(p=>`<div class="primerline">${p.name} (${p.role}) <span class="oh">${p.oh}</span>${p.anneal} · ${p.len} nt · ${p.tm} °C</div>`).join('');
-      return orderRow(it.name, it.sub, it.status) + `<div class="primerlines">${lines}</div>`;
-    }
-    return orderRow(it.name, it.sub, it.status);
-  });
-  rows.push(orderRow(bb ? bb.label : 'Level 0 acceptor plasmid',
-    bb ? 'Real Level 0 acceptor backbone — sequence already in the parts database.' : 'Generic placeholder — no real acceptor backbone connected yet.', 'stock'));
-  $('#orderList0').innerHTML = rows.join('');
+  const svg=$('#plasmid0');
+  const o5 = bb && locRange((bb.receiver_overhangs||{})['5_prime']?.location), o3 = bb && locRange((bb.receiver_overhangs||{})['3_prime']?.location);
+  const ring = bb && o5 && o3 && level0RingSegs(bb, { name:'lacZα stuffer', from:o5[0], to:o3[1], total:bb.length_bp });
+  $('#plat0actions').style.display = (bb && bb.genbank) ? '' : 'none';
+  if(!ring){
+    svg.innerHTML=''; $('#plat0title').textContent='Level 0 acceptor plasmid';
+    $('#plat0explain').textContent='Backend not connected — the real Level 0 backbone (pAGM9121) is only available with the server running.';
+    $('#plat0feats').innerHTML=''; return;
+  }
+  const name = bb.id.split('-')[0];
+  const sum = drawPlasmidRing(svg, ring.segs, name, 'SmR · Level 0 acceptor');
+  $('#plat0title').textContent = `${name} · ${sum.toLocaleString('en-US')} bp`;
+  $('#plat0explain').textContent = `Real Level 0 acceptor backbone as delivered, with its ${(o3[1]-o5[0]+1).toLocaleString('en-US')} bp lacZα stuffer between the NLvl0/CLvl0 overhangs. Each Level 0 part replaces that stuffer, one part per plasmid — click a module above to see it cloned in. Segment sizes are read from the backbone's real GenBank annotation.`;
+  $('#plat0feats').innerHTML = ringLegendHtml(ring);
+}
+
+/* A reopened popup must always start at the top, not wherever the previous one was scrolled to (the dialog itself
+   and the inner scrollable sequence box). Call after the backdrop is visible — scrollTop is ignored on display:none. */
+function scrollModalToTop(backdrop){
+  const modal = backdrop.querySelector('.modal'); if(modal) modal.scrollTop = 0;
+  backdrop.querySelectorAll('.l0m-seq').forEach(el=>{ el.scrollTop = 0; });
+}
+
+/* Plain Level 0 destination backbone (no insert): copy the sequence / download it as annotated GenBank. */
+$('#plat0Copy').addEventListener('click', e=>{ const bb=(LIB.level0Backbones||[])[0]; if(bb) copyText(e.currentTarget, bb.sequence); });
+$('#plat0Dl').addEventListener('click', ()=>{ const bb=(LIB.level0Backbones||[])[0]; if(bb && bb.genbank) downloadText(`${fileSlug(bb.id.split('-')[0])}.gb`, bb.genbank); });
+
+/* ---------- Level 0 module detail window ---------- */
+function downloadText(filename, text){
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([text],{type:'text/plain'})); a.download=filename; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+}
+const fileSlug = v => String(v).replace(/[^A-Za-z0-9._-]+/g,'-').replace(/^-+|-+$/g,'');
+function flashButton(btn, text){ const t=btn.dataset.t||(btn.dataset.t=btn.textContent); btn.textContent=text; setTimeout(()=>btn.textContent=t,1200); }
+function copyText(btn, text){
+  // Clipboard API first; fall back to a temporary textarea + execCommand where it is blocked (iframes, no permission).
+  const legacy=()=>{
+    const ta=document.createElement('textarea'); ta.value=text; ta.setAttribute('readonly','');
+    ta.style.cssText='position:fixed;top:0;left:0;opacity:0'; document.body.appendChild(ta); ta.select();
+    let ok=false; try{ ok=document.execCommand('copy'); }catch(e){}
+    ta.remove(); flashButton(btn, ok ? 'Copied' : 'Copy failed');
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(()=>flashButton(btn,'Copied'), legacy);
+  else legacy();
+}
+/* Sequence with the insert bold and the overhang bases tinted (positions are 1-based, from the backend). */
+function l0SeqHtml(seq, insertLoc, overhangs){
+  const [i0,i1] = insertLoc.split('..').map(Number);
+  const tint = new Array(seq.length).fill(false);
+  overhangs.forEach(o=>{ const n=(o.location.match(/\d+/g)||[]).map(Number); for(let k=Math.min(...n);k<=Math.max(...n);k++) tint[k-1]=true; });
+  let html='', run='', cls=null;
+  const flush=()=>{ if(run) html += cls ? `<span class="${cls}">${run}</span>` : run; run=''; };
+  for(let k=0;k<seq.length;k++){
+    const c = (k+1>=i0 && k+1<=i1) ? 'ins' : tint[k] ? 'oh' : '';
+    if(c!==cls){ flush(); cls=c; }
+    run += seq[k];
+  }
+  flush();
+  return html;
+}
+function openLevel0Modal(c){
+  $('#l0mTitle').textContent = c.label;
+  $('#l0mSub').textContent = `${c.type} · ${c.module==='cargo_site'?'cargo site':'nanocompartment site'} · ${c.what}`;
+  const warn=$('#l0mWarn');
+  warn.style.display = c.isReal ? 'none' : '';
+  warn.textContent = 'Placeholder sequence — the real sequence of this toolkit part is not in the parts database yet, so the insert shown (and downloaded) is a stand-in.';
+  $('#l0mAdapter').textContent = `adapter ${c.adapter} · ${c.length} bp`;
+  $('#l0mSeq').innerHTML = `<span class="l0m-end">5′ </span>${l0SeqHtml(c.sequence, c.insert.location, c.overhangs)}<span class="l0m-end"> 3′</span>`;
+  $('#l0mCopySeq').onclick = e=>copyText(e.currentTarget, c.sequence);
+  $('#l0mDlSeq').onclick = ()=>downloadText(`${fileSlug(c.label)}_${fileSlug(c.type)}_${c.adapter}.gb`, c.genbank);
+
+  const pl = c.plasmid, bb=(LIB.level0Backbones||[])[0];
+  const ring = pl && bb && level0RingSegs(bb, { name:`Insert: ${c.label}`, from:pl.insertStart, to:pl.insertEnd, total:pl.length });
+  $('#l0mPlasmidSec').style.display = ring ? '' : 'none';
+  if(ring){
+    drawPlasmidRing($('#l0mSvg'), ring.segs, pl.name, 'SmR · Level 0 acceptor');
+    $('#l0mPlName').textContent = `${pl.name} · ${pl.length.toLocaleString('en-US')} bp`;
+    $('#l0mExplain').textContent = `BbsI cuts the lacZα stuffer out of the backbone and the adapter's BbsI sites off the part. The freed 4-nt overhangs (0N / 0C) are identical on both fragments and ligate, so the part sits exactly between NLvl0 and CLvl0 and every BbsI site is gone. At the seams the BsaI sites for Level 1 are re-formed. The GenBank file carries every backbone annotation that survives the cut, plus the part's overhangs and the insert. Plasmid sequence = top strand 5′→3′; on it the insert is on the ${c.plasmidStrand} strand${c.plasmidStrand==='antisense'?' (reverse complement of your input — the cargo module is antisense)':''}.`;
+    $('#l0mFeats').innerHTML = ringLegendHtml(ring);
+    $('#l0mCopyPl').onclick = e=>copyText(e.currentTarget, pl.sequence);
+    $('#l0mDlPl').onclick = ()=>downloadText(`${fileSlug(pl.name)}.gb`, pl.genbank);
+  }
+  $('#l0Modal').classList.add('show');
+  scrollModalToTop($('#l0Modal'));
+  $('#l0mClose').focus({preventScroll:true});
+}
+function closeLevel0Modal(){ $('#l0Modal').classList.remove('show'); }
+$('#l0mClose').addEventListener('click', closeLevel0Modal);
+$('#l0Modal').addEventListener('click', e=>{ if(e.target.id==='l0Modal') closeLevel0Modal(); });
+document.addEventListener('keydown', e=>{ if(e.key==='Escape' && $('#l0Modal').classList.contains('show')) closeLevel0Modal(); });
+function level0ConstructFor(el){
+  const list = (lastResult && lastResult.api && lastResult.api.level0Constructs) || [];
+  const module = el.dataset.module==='cargo' ? 'cargo_site' : 'nc_site';
+  return list.find(c=>c.module===module && String(c.slot)===el.dataset.slot);
+}
+function openFromFrag(el){ const c=el && level0ConstructFor(el); if(c) openLevel0Modal(c); }
+$('#lvl0strand').addEventListener('click', e=>openFromFrag(e.target.closest('.l0frag.clickable')));
+$('#lvl0strand').addEventListener('keydown', e=>{
+  if(e.key==='Enter' || e.key===' '){ const el=e.target.closest('.l0frag.clickable'); if(el){ e.preventDefault(); openFromFrag(el); } }
+});
+function renderLevel0Extras(res){
+  renderLevel0Plasmid(res);
+  const hasConstructs = !!(res.api && res.api.level0Constructs && res.api.level0Constructs.length);
+  $$('#lvl0strand .l0frag').forEach(el=>el.classList.toggle('clickable', hasConstructs));
 }
 
 /* Level 1: the three pieces that combine into Level 2 — cargo module, NC module, promoter.
@@ -2027,13 +2273,50 @@ function featLen(bb, label){
   const f = (bb.features||[]).find(x=>(x.qualifiers.label||[]).includes(label));
   return f ? locLen(f.location) : 0;
 }
+/* Shared ring-map renderer for the Level 0 and Level 2 destination plasmids: proportional arcs
+   from real bp lengths, a label + tick per named segment ('gap' segments = unannotated backbone,
+   drawn neutral without a label). Returns the total bp. */
+const ringColor = k => k==='gap' ? 'var(--line)' : cvar(k);
+function drawPlasmidRing(svg, segs, name, subtitle){
+  const cx=190, cy=190, r=128;
+  const sum=segs.reduce((t,p)=>t+p.bp,0);
+  let ang=-((segs[0].bp/sum)*360)/2, paths='';
+  segs.forEach(p=>{
+    const span=(p.bp/sum)*360, a0=ang+1.0, a1=ang+span-1.0, mid=(a0+a1)/2;
+    paths+=`<path d="${arc(cx,cy,r,a0,a1)}" stroke="${ringColor(p.kind)}" stroke-width="16" fill="none"/>`;
+    if(p.txn){
+      const tipAng = p.dir>0 ? a1 : a0, baseAng = p.dir>0 ? a1-7 : a0+7;
+      const [tx,ty]=polar(cx,cy,r,tipAng), [bx,by]=polar(cx,cy,r+6,baseAng), [bx2,by2]=polar(cx,cy,r-6,baseAng);
+      paths+=`<polygon points="${tx},${ty} ${bx},${by} ${bx2},${by2}" fill="${ringColor(p.kind)}"/>`;
+    }
+    if(p.kind!=='gap'){
+      const [lx,ly]=polar(cx,cy,r+28,mid), [t1x,t1y]=polar(cx,cy,r+10,mid), [t2x,t2y]=polar(cx,cy,r+24,mid);
+      paths+=`<line x1="${t1x}" y1="${t1y}" x2="${t2x}" y2="${t2y}" stroke="var(--line)" stroke-width="1"/>`;
+      const shown = p.name.length>19 ? p.name.slice(0,18)+'…' : p.name;       // long names would run out of the map (the legend keeps the full name)
+      paths+=`<text x="${lx}" y="${ly}" font-size="10.5" font-family="JetBrains Mono" fill="var(--ink)" text-anchor="${mid>180?'end':'start'}" dominant-baseline="middle">${esc(shown)}</text>`;
+    }
+    ang+=span;
+  });
+  svg.innerHTML=`
+    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--line-soft)" stroke-width="16"/>
+    ${paths}
+    <text x="${cx}" y="${cy-10}" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="14" fill="var(--ink)">${name}</text>
+    <text x="${cx}" y="${cy+8}" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--muted)">${sum.toLocaleString('en-US')} bp</text>
+    <text x="${cx}" y="${cy+26}" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="var(--muted)">${subtitle}</text>`;
+  return sum;
+}
+function locRange(loc){ const n=(String(loc||'').match(/\d+/g)||[]).map(Number); return n.length ? [Math.min(...n), Math.max(...n)] : null; }
+function featRange(bb, label){
+  const f=(bb.features||[]).find(x=>(x.qualifiers.label||[]).includes(label));
+  return f ? locRange(f.location) : null;
+}
 function renderLevel2Plasmid(res){
   const m=res.model;
   const bb = (LIB.level2Backbones||[])[0];
   const cargoModBp = m.l1cargo.reduce((a,p)=>a+(p.bp||0),0);
   const ncModBp = m.l1nc.reduce((a,p)=>a+(p.bp||0),0);
   const insertBp = cargoModBp + (m.promo.bp||PROMO_BP) + ncModBp;
-  const svg=$('#plasmid2'), cx=190, cy=190, r=128;
+  const svg=$('#plasmid2');
 
   let segs, name, sourceNote;
   if(bb){
@@ -2062,28 +2345,8 @@ function renderLevel2Plasmid(res){
     name = `pESC-ENCORE-${m.n.id}`;
     sourceNote = 'Backend not connected — showing a generic placeholder backbone instead of the real pESC-HIS sequence.';
   }
-  const colOf = cvar;
-  const sum=segs.reduce((s,p)=>s+p.bp,0);
-  let ang=-((segs[0].bp/sum)*360)/2, paths='';
-  segs.forEach(p=>{
-    const span=(p.bp/sum)*360, a0=ang+1.0, a1=ang+span-1.0, mid=(a0+a1)/2;
-    paths+=`<path d="${arc(cx,cy,r,a0,a1)}" stroke="${colOf(p.kind)}" stroke-width="16" fill="none"/>`;
-    if(p.txn){
-      const tipAng = p.dir>0 ? a1 : a0, baseAng = p.dir>0 ? a1-7 : a0+7;
-      const [tx,ty]=polar(cx,cy,r,tipAng), [bx,by]=polar(cx,cy,r+6,baseAng), [bx2,by2]=polar(cx,cy,r-6,baseAng);
-      paths+=`<polygon points="${tx},${ty} ${bx},${by} ${bx2},${by2}" fill="${colOf(p.kind)}"/>`;
-    }
-    const [lx,ly]=polar(cx,cy,r+28,mid), [t1x,t1y]=polar(cx,cy,r+10,mid), [t2x,t2y]=polar(cx,cy,r+24,mid);
-    paths+=`<line x1="${t1x}" y1="${t1y}" x2="${t2x}" y2="${t2y}" stroke="var(--line)" stroke-width="1"/>`;
-    paths+=`<text x="${lx}" y="${ly}" font-size="9.5" font-family="JetBrains Mono" fill="var(--ink)" text-anchor="${mid>180?'end':'start'}" dominant-baseline="middle">${p.name}</text>`;
-    ang+=span;
-  });
-  svg.innerHTML=`
-    <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--line-soft)" stroke-width="16"/>
-    ${paths}
-    <text x="${cx}" y="${cy-10}" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="14" fill="var(--ink)">${name}</text>
-    <text x="${cx}" y="${cy+8}" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="var(--muted)">${sum.toLocaleString('en-US')} bp</text>
-    <text x="${cx}" y="${cy+26}" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="var(--muted)">${bb?'HIS3 · yeast/E. coli shuttle':'bidirectional'}</text>`;
+  const colOf = ringColor;
+  const sum = drawPlasmidRing(svg, segs, name, bb?'HIS3 · yeast/E. coli shuttle':'bidirectional');
 
   $('#plat2title').textContent = `${name} · ~${sum.toLocaleString('en-US')} bp`;
   $('#plat2explain').textContent = sourceNote;
@@ -2145,7 +2408,7 @@ function buildModel(){
   const l1cargo = l0.map(p=>({...p}));
 
   // Level 1 NC module (sense): the ORF runs Type 0.1 -> 0.5, the stop sits on the right.
-  const shellPart = { label:n.shell, kind:'shell', note:n.shellBp+' bp', bp:n.shellBp, mapnote:'Shell' };
+  const shellPart = { label:n.shell, kind:'shell', note:n.shellBp+' bp', bp:n.shellBp, mapnote:'Shell', isNew:!!n.custom };
   const l1nc = moduleParts(slots, shellPart, [4,5]);
 
   // Level 2: cargo module  <-promoter->  NC module
@@ -2220,12 +2483,22 @@ function primersFromApi(primers){
   }));
 }
 
+const DESIGN_KEY='encore.design.v1';
+let renderedFromCache=false;
+const resultFromApi = d => ({ model:modelFromApi(d), primers:primersFromApi(d.primers), api:d });
 async function compute(){
   const api=window.ENCORE_API;
   if(api && api.available){
     try{
       const d=await api.designFromState(state);
-      lastResult={ model:modelFromApi(d), primers:primersFromApi(d.primers), api:d };
+      const json=JSON.stringify(d);
+      let prev=null; try{ prev=sessionStorage.getItem(DESIGN_KEY); }catch(e){}
+      try{ sessionStorage.setItem(DESIGN_KEY, json); }catch(e){}
+      lastResult=resultFromApi(d);
+      // Background refresh after a restore-from-cache: identical result -> don't re-render (would only
+      // cause a pointless layout shift under the restored scroll position).
+      if(renderedFromCache && prev===json){ renderedFromCache=false; return; }
+      renderedFromCache=false;
       renderAll(lastResult);
       return;
     }catch(err){
@@ -2324,8 +2597,13 @@ async function restoreSession(){
 
   if(s.cargoRaw){
     $('#cargoSeq').value=s.cargoRaw;
-    state.cargoFromPreset=s.cargoFromPreset||null;
-    $$('#presetChips .preset-chip').forEach(c=>c.classList.toggle('on', c.dataset.id===state.cargoFromPreset));
+    const choice = s.cargoFromPreset && LIB.cargoPresets.some(p=>p.id===s.cargoFromPreset) ? s.cargoFromPreset : CUSTOM_CARGO;
+    $('#cargoSelect').value=choice;
+    state.cargoFromPreset = choice===CUSTOM_CARGO ? null : choice;
+    $('#cargoSeq').style.display = choice===CUSTOM_CARGO ? '' : 'none';
+    $('#cargoSeqField').style.display='';
+    $('#cargoNameField').style.display = choice===CUSTOM_CARGO ? '' : 'none';
+    if(choice===CUSTOM_CARGO && s.cargoLabel && s.cargoLabel!=='Custom cargo') $('#cargoName').value=s.cargoLabel;
     handleCargoInput();
     if(state.cargoFromPreset) state.cargoLabel=s.cargoLabel;
   }
@@ -2349,7 +2627,18 @@ async function restoreSession(){
 
   state.unlocked=s.unlocked||state.unlocked;
   applyLocks(); updateStepperLocks();
-  if(state.unlocked[3]) await compute();
+  // Step 4 was already computed before the refresh: show that result right away (cached in sessionStorage)
+  // so the saved scroll position below is valid immediately, then refresh it silently in the background.
+  // Without a cache (or without the backend) fall back to computing it up front, as before.
+  if(state.unlocked[3]){
+    restoreBiosecNote();
+    let cachedDesign=null;
+    try{ cachedDesign=JSON.parse(sessionStorage.getItem(DESIGN_KEY)); }catch(e){}
+    if(cachedDesign && window.ENCORE_API && window.ENCORE_API.available){
+      lastResult=resultFromApi(cachedDesign); renderAll(lastResult); renderedFromCache=true;
+      compute();
+    } else await compute();
+  }
 
   if(step>=0){
     // "#step-1" is the generic "open the builder" entry point (the header tab) — resume the
@@ -2358,7 +2647,15 @@ async function restoreSession(){
     let target = step===0 ? state.unlocked.lastIndexOf(true) : step;
     while(target>0 && !state.unlocked[target]) target--;
     if(target!==step) history.replaceState(null,'','#step-'+(target+1));
-    window.scrollTo({top:s.scrollY||0, behavior:'instant'});
+    const y=s.scrollY||0;
+    window.scrollTo({top:y, behavior:'instant'});
+    // Late layout shifts above the viewport (web fonts swapping in, images) would otherwise push the
+    // restored position off by a few px — re-apply it once those settle, unless the user already scrolled.
+    let touched=false; const mark=()=>{ touched=true; };
+    ['wheel','touchstart','keydown','mousedown'].forEach(ev=>window.addEventListener(ev,mark,{once:true,passive:true}));
+    const reapply=()=>{ if(!touched && Math.abs(window.scrollY-y)>0.5) window.scrollTo({top:y, behavior:'instant'}); };
+    if(document.fonts && document.fonts.ready) document.fonts.ready.then(reapply);
+    if(document.readyState!=='complete') window.addEventListener('load', reapply, {once:true});
   }
   updateProgress();
 }
@@ -2404,7 +2701,7 @@ async function boot(){
   // on, intro/builder visibility is entirely JS-driven again, as before.
   document.documentElement.removeAttribute('data-entry');
   await loadLibraries();          // API, sonst die Inline-Konstanten
-  initNcDropdown(); initPresetChips(); initPromoterDropdown();
+  initNcDropdown(); initCargoDropdown(); initPromoterDropdown();
   initSlots();
   applyLocks(); updateStepperLocks(); updateProgress();
   await restoreSession();
@@ -2463,8 +2760,8 @@ window.ENCORE_API = (function(){
   // Passive health check. `ready` resolves either way, so the app can await it
   // once and then look at `available` instead of racing the check.
   api.ready = api.libraries()
-    .then(()=>{ api.available = true; console.info('[ENCORE] backend connected — window.ENCORE_API ready'); })
-    .catch(()=>{ console.info('[ENCORE] backend not reachable — prototype running standalone (inline logic)'); });
+    .then(l=>{ api.librariesData = l; api.available = true; console.info('[ENCORE] backend connected — window.ENCORE_API ready'); })
+    .catch(()=>{ api.available = false; console.info('[ENCORE] backend not reachable — prototype running standalone (inline logic)'); });
   return api;
 })();
 </script>

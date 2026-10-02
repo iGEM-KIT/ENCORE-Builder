@@ -2,7 +2,8 @@ from __future__ import annotations
 
 """Loader fuer Biologik/level0_design/parts/ — die Sequenz-Datenbank fuer
 Golden-Gate-Standardteile (Shells, Targeting-Peptide, Promotoren, Linker,
-Marker, NCS-Spacer, Terminatoren, Level-2-Ziel-Backbones, Cargo-Presets).
+Marker, NCS-Spacer, Terminatoren, Level-0/1/2-Ziel-Backbones, Type-Overhang-Adapter,
+Cargo-Presets).
 
 Gleiches Prinzip wie encapsulin_selector/data/ (eine JSON-Datei pro Eintrag,
 gruppiert nach Art in Unterordnern) — siehe parts/README.md. Anders als beim
@@ -28,6 +29,7 @@ KINDS = [
     "level0_backbones",
     "level1_backbones",
     "level2_backbones",
+    "type_overhangs",
     "cargo_presets",
 ]
 

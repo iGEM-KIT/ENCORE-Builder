@@ -1,0 +1,22 @@
+{
+  "id": "EXAMPLE-type-overhang-id",
+  "kind": "type_overhang",
+  "label": "Example Type 0.x overhang adapter",
+  "sequence": null,
+  "sequence_status": "missing",
+  "on_stock": null,
+  "length_bp": null,
+  "type_slot": null,
+  "used_for_modules": [],
+  "reverse_complement_variant": false,
+  "description": null,
+  "enzyme": "BbsI",
+  "bbsi_sites": [],
+  "overhangs": [],
+  "insert": null,
+  "organism": null,
+  "source": null,
+  "notes": null,
+  "used_by": [],
+  "features": []
+}

@@ -1,0 +1,198 @@
+{
+  "id": "0.1rc",
+  "kind": "type_overhang",
+  "label": "Type 0.1 overhang adapter (0.1rc) — cargo site",
+  "sequence": "GAAGACAACTCAACATCCAAAAAATATGCGAGAAGTCTTC",
+  "sequence_status": "real",
+  "on_stock": null,
+  "length_bp": 40,
+  "type_slot": 1,
+  "used_for_modules": [
+    "cargo_site"
+  ],
+  "reverse_complement_variant": true,
+  "description": "Type1 Cargo",
+  "enzyme": "BbsI",
+  "bbsi_sites": [
+    {
+      "location": "1..6",
+      "strand": "+",
+      "sequence_top_strand": "GAAGAC"
+    },
+    {
+      "location": "complement(35..40)",
+      "strand": "-",
+      "sequence_top_strand": "GTCTTC"
+    }
+  ],
+  "overhangs": [
+    {
+      "label": "0N",
+      "role": "level0_N",
+      "location": "9..12",
+      "strand": "+",
+      "sequence_top_strand": "CTCA",
+      "sequence_own_strand_5to3": "CTCA"
+    },
+    {
+      "label": "0.1N Lvl1",
+      "role": "level1_N",
+      "location": "13..16",
+      "strand": "+",
+      "sequence_top_strand": "ACAT",
+      "sequence_own_strand_5to3": "ACAT"
+    },
+    {
+      "label": "1.1N Lvl2",
+      "role": "level2_N",
+      "location": "17..20",
+      "strand": "+",
+      "sequence_top_strand": "CCAA",
+      "sequence_own_strand_5to3": "CCAA"
+    },
+    {
+      "label": "0.1C Lvl1",
+      "role": "level1_C",
+      "location": "complement(25..28)",
+      "strand": "-",
+      "sequence_top_strand": "TATG",
+      "sequence_own_strand_5to3": "CATA"
+    },
+    {
+      "label": "0C",
+      "role": "level0_C",
+      "location": "complement(<29..>32)",
+      "strand": "-",
+      "sequence_top_strand": "CGAG",
+      "sequence_own_strand_5to3": "CTCG"
+    }
+  ],
+  "insert": {
+    "location": "21..24",
+    "placeholder_sequence": "AAAA",
+    "note": "4 nt filler, replaced by the CDS (or part sequence) when the adapter is attached."
+  },
+  "organism": null,
+  "source": "User-supplied GenBank file \"7 documents from Überhänge.gb\" (record 0.1rc); authors per feature qualifiers: Marina Schreidl, Felix Cuntz, linus.",
+  "notes": "Adapter flanking a Level 0 part: BbsI site, the Level 0 overhangs (0N/0C) that match the Level 0 acceptor backbone, the Level 1 overhangs for this Type slot, and (Type 0.1/0.5 only) the Level 2 overhangs, around a 4 nt 'Insert' placeholder that the CDS/part sequence replaces.",
+  "used_by": [],
+  "features": [
+    {
+      "type": "misc_feature",
+      "location": "1..6",
+      "qualifiers": {
+        "created_by": [
+          "Marina Schreidl"
+        ],
+        "modified_by": [
+          "Felix Cuntz"
+        ],
+        "label": [
+          "BbsI rec site"
+        ]
+      }
+    },
+    {
+      "type": "overhang",
+      "location": "9..12",
+      "qualifiers": {
+        "created_by": [
+          "Marina Schreidl"
+        ],
+        "modified_by": [
+          "Marina Schreidl"
+        ],
+        "label": [
+          "0N"
+        ]
+      }
+    },
+    {
+      "type": "overhang",
+      "location": "13..16",
+      "qualifiers": {
+        "created_by": [
+          "Marina Schreidl"
+        ],
+        "modified_by": [
+          "Marina Schreidl"
+        ],
+        "label": [
+          "0.1N Lvl1"
+        ]
+      }
+    },
+    {
+      "type": "overhang",
+      "location": "17..20",
+      "qualifiers": {
+        "created_by": [
+          "Marina Schreidl"
+        ],
+        "modified_by": [
+          "Marina Schreidl"
+        ],
+        "label": [
+          "1.1N Lvl2"
+        ]
+      }
+    },
+    {
+      "type": "misc_feature",
+      "location": "21..24",
+      "qualifiers": {
+        "created_by": [
+          "Marina Schreidl"
+        ],
+        "modified_by": [
+          "Felix Cuntz"
+        ],
+        "label": [
+          "Insert"
+        ]
+      }
+    },
+    {
+      "type": "overhang",
+      "location": "complement(25..28)",
+      "qualifiers": {
+        "created_by": [
+          "linus"
+        ],
+        "modified_by": [
+          "Marina Schreidl"
+        ],
+        "label": [
+          "0.1C Lvl1"
+        ]
+      }
+    },
+    {
+      "type": "overhang",
+      "location": "complement(<29..>32)",
+      "qualifiers": {
+        "created_by": [
+          "linus"
+        ],
+        "modified_by": [
+          "Marina Schreidl"
+        ],
+        "label": [
+          "0C"
+        ]
+      }
+    },
+    {
+      "type": "misc_feature",
+      "location": "complement(35..40)",
+      "qualifiers": {
+        "created_by": [
+          "linus"
+        ],
+        "label": [
+          "BbsI rec site"
+        ]
+      }
+    }
+  ]
+}

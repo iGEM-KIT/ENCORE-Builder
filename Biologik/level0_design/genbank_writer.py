@@ -86,3 +86,16 @@ def location_span(location: str) -> tuple[int, int]:
 
 def shift_location(location: str, shift: int) -> str:
     return re.sub(r"\d+", lambda m: str(int(m.group(0)) + shift), location)
+
+
+def format_backbone_record(entry: dict) -> str:
+    """GenBank-Text eines importierten Backbone-Eintrags (parts/level*_backbones/) mit seiner kompletten
+    Feature-Tabelle — die Qualifier liegen dort als {name: [werte]}, der Writer erwartet eine Liste aus
+    (name, wert); /translation wird weggelassen (laesst sich aus der Sequenz ableiten)."""
+    features = [
+        {"type": f["type"], "location": f["location"],
+         "qualifiers": [(k, v) for k, values in f["qualifiers"].items() if k != "translation" for v in values]}
+        for f in entry.get("features", [])
+    ]
+    name = entry["id"].split("-")[0]
+    return format_genbank_record(name, entry["sequence"], features, entry.get("circular", True), entry.get("label", ""))

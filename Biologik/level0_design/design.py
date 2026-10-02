@@ -2,16 +2,13 @@ from __future__ import annotations
 
 """Level-0-Design-Logik für die Erstellung von Golden-Gate-Modulen in Python."""
 
-from typing import List
+import re
 
 from .data import (
     NANOCOMPARTMENTS,
     BSAI_PRIMER_PREFIX,
     CARGO_L1_FLANK,
     NOMINAL_BP,
-    PROMO_FLANK,
-    JUNCTION_OVERHANGS,
-    TYPE_OVERHANGS,
     find_linker,
     find_nanocompartment,
     find_promoter,
@@ -20,8 +17,7 @@ from .data import (
 # Sequence-py enthält Funktionen für die Verarbeitung von DNA-Sequenzen
 # Z.B. zum Bilden von Komplementären DNA-Sequenzen, zur Berechnung der Schmelztemperatur
 from .sequence import reverse_complement, validate_cargo, wallace_tm
-from .mrna_dimer import check_mrna_structure
-from .parts_db import find_real_sequence, load_parts
+from .parts_db import find_part, find_real_sequence, load_parts
 from .genbank_writer import format_genbank_record, location_span, shift_location
 
 
@@ -144,7 +140,7 @@ def _slot_part(n: int, cfg: dict, tp_label: str = "TP") -> dict:
                 "note": f"{cfg['aa']} aa · surface display", "bp": cfg["bp"], "surface": True}
     if kind == "custom":
         return {"role": "custom-part", "label": cfg["label"], "kind": f"t{n}", "note": f"{cfg['bp']} bp · your sequence",
-                "bp": cfg["bp"], "isNew": True, "sequence": cfg["seq"]}
+                "bp": cfg["bp"], "isNew": True}
     if kind == "ncsstop":
         return {"role": "ncs", "label": "NCS", "kind": "ncs", "note": "Spacer · stop codon", "bp": NOMINAL_BP["NCS"], "stop": True}
     return {"role": "ncs", "label": "NCS", "kind": "ncs", "note": "Spacer", "bp": NOMINAL_BP["NCS"]}
@@ -166,8 +162,6 @@ def _layout_with_stop(slots: dict, middle: dict, behind: tuple, tp_label: str = 
 
 def level0_part(slot: int, spec: dict) -> dict:
     # Funktion zur Erstellung eines Level-0-Moduls, eine Art Steckbrief.
-    # TYPE_OVERHANGS enthält die festen Überhänge für jeden Slot eines Level-0-Parts.
-    overhang5, overhang3 = TYPE_OVERHANGS[slot]
     return {
         "slot": slot,
         "type": f"Type 0.{slot}",
@@ -176,12 +170,9 @@ def level0_part(slot: int, spec: dict) -> dict:
         "kind": spec["kind"],
         "note": spec["note"],
         "bp": spec["bp"],
-        "overhang5": overhang5,
-        "overhang3": overhang3,
         "surface": spec.get("surface", False),
         "isCargo": spec.get("isCargo", False),
         "isNew": spec.get("isNew", False),
-        **({"sequence": spec["sequence"]} if spec.get("sequence") else {}),
         # Traegt dieser Slot das Stopcodon? Es sitzt immer am 3'-Ende des ORFs,
         # also am C-Terminus des Fusionsproteins. Welcher Slot das ist, haengt
         # an der Fusionsrichtung bzw. am Display-Terminus.
@@ -289,7 +280,7 @@ def _assemble_primers(anneal_f: str, anneal_r: str, oh_f: str, oh_r: str, tm_f, 
     Die Overhangs kommen unveraendert von der aufrufenden Stelle (aktuell
     CARGO_L1_FLANK). Sie sind NICHT identisch mit den Extensions in
     ``primer_design/add_extensions.py`` (type0.3 haengt TTCT an, also den
-    Type-3-Overhang aus TYPE_OVERHANGS). Welche Variante die reale Toolbox
+    Type-3-Overhang). Welche Variante die reale Toolbox
     beschreibt, ist offen — siehe PROJECT_TODO.txt Abschnitt 1. Hier wird
     bewusst nichts entschieden: die Thermodynamik wurde ausgetauscht, die
     Biologie nicht.
@@ -326,84 +317,6 @@ def make_primer_pair(sequence: str, oh_f: str, oh_r: str, use_primer3: bool = Tr
     return _wallace_primer_pair(sequence, oh_f, oh_r)
 
 
-def build_plate_plan(nc: dict, cargo_label: str, cargo_slots: dict, nc_slots: dict):
-    # Der 96-Well-Plan sagt, welche Bausteine aus dem Stock-Plate für die Assemblierung benötigt werden.
-    plan = [
-        {"well": "A3", "kind": "t3", "name": cargo_label, "tip": "C"},
-        {"well": "B1", "kind": "shell", "name": nc["shell"], "tip": "Sh"},
-        {"well": "B2", "kind": "promo", "name": "GAL1-10", "tip": "P"},
-    ] + [{"well": f"C{i}", "kind": "ncs", "name": "NCS", "tip": "N"} for i in range(1, 7)]
-    # Eine eigene Shell liegt nicht im Stock-Plate — sie wird neu bestellt.
-    plan = [w for w in plan if not (nc.get("custom") and w["kind"] == "shell")]
-    # TP, Linker und Marker aus den Slots beider Module kommen aus dem Stock, jeweils einmal.
-    extras = []
-    for slots in (cargo_slots, nc_slots):
-        for n in NC_SLOTS:
-            cfg = slots[n]
-            if cfg["kind"] in ("tp", "linker", "marker"):
-                label = nc["tp"] if cfg["kind"] == "tp" else cfg["label"]
-                if label not in [e["name"] for e in extras]:
-                    extras.append({"kind": {"tp": f"t{n}", "linker": "t2", "marker": "mark"}[cfg["kind"]], "name": label,
-                                   "tip": {"tp": "T", "linker": "L", "marker": "M"}[cfg["kind"]]})
-    for index, extra in enumerate(extras):
-        plan.append({"well": f"D{index + 1}", **extra})
-    return plan
-
-
-def build_order_list(nc: dict, cargo_label: str, cargo_bp: int, cargo_seq: str, cargo_slots: dict, nc_slots: dict):
-    fixed = []
-    new_parts = []
-
-    def add_slots(slots: dict, module: str):
-        # Cargo-Modul liegt auf dem Antisense-Strang: eigene Teile dort als Reverse Complement bestellen.
-        antisense = module == "cargo"
-        where = "cargo module" if antisense else "nanocompartment site"
-        for n in NC_SLOTS:
-            cfg = slots[n]
-            if cfg["kind"] == "tp":
-                fixed.append({"name": f"Targeting peptide {nc['tp']}", "sub": f"Type 0.{n} · {where} · standard module", "kind": f"t{n}"})
-            elif cfg["kind"] == "linker":
-                fixed.append({"name": f"Linker {cfg['label']}", "sub": f"Type 0.{n} · {where} · standard module", "kind": "t2"})
-            elif cfg["kind"] == "marker":
-                fixed.append({"name": f"Surface marker {cfg['label']}", "sub": f"Type 0.{n} · {where} · standard module · source once", "kind": f"t{n}"})
-            elif cfg["kind"] == "custom":
-                seq = reverse_complement(cfg["seq"]) if antisense else cfg["seq"]
-                left, right = JUNCTION_OVERHANGS[n - 1], JUNCTION_OVERHANGS[n]
-                new_parts.append({
-                    "name": f"{cfg['label']} ({cfg['bp']} bp)", "kind": f"t{n}", "slot": n, "module": module,
-                    "sub": f"Type 0.{n} · your own part{' (sense, reverse complement)' if antisense else ''} — synthesis/PCR with overhangs",
-                    "withOverhangs": f"{left}{seq}{right}", "overhangs": {"left": left, "right": right},
-                })
-
-    add_slots(cargo_slots, "cargo")
-    if not nc.get("custom"):
-        fixed.append({"name": f"Shell CDS {nc['shell']}", "sub": "Nanocompartment · standard module", "kind": "shell"})
-    fixed += [
-        {"name": "Promoter GAL1-10", "sub": "bidirectional · standard module", "kind": "promo"},
-        {"name": "NCS spacer", "sub": "standard module", "kind": "ncs"},
-    ]
-    add_slots(nc_slots, "nc")
-    if nc.get("custom"):
-        left, right = JUNCTION_OVERHANGS[2], JUNCTION_OVERHANGS[3]
-        new_parts.insert(0, {
-            "name": f"{nc['shell']} ({nc['shellBp']} bp)", "kind": "shell", "slot": 3, "module": "nc",
-            "sub": "Type 0.3 · your own nanocompartment shell — synthesis/PCR with overhangs",
-            "withOverhangs": f"{left}{nc['seq']}{right}", "overhangs": {"left": left, "right": right},
-        })
-
-    return {
-        "fixed": fixed,
-        "new": {
-            "name": f"{cargo_label} ({cargo_bp} bp)",
-            "sub": "Type 0.3 · your new cargo (sense, reverse complement) — synthesis/PCR with overhangs",
-            "kind": "t3",
-            "cargoWithOverhangs": f"{CARGO_L1_FLANK[0]}{cargo_seq}{CARGO_L1_FLANK[1]}",
-            "overhangs": {"left": CARGO_L1_FLANK[0], "right": CARGO_L1_FLANK[1]},
-        },
-        "newParts": new_parts,
-    }
-
-
 def _slot_summary(slots: dict) -> list:
     return [
         {"slot": n, **{k: v for k, v in slots[n].items() if k not in ("seq", "validation")},
@@ -438,9 +351,6 @@ def design_construct(decisions: dict = None):
             cfg["label"] = nc["tp"]
             cfg["bp"] = NOMINAL_BP["TP"]
     nc_slots = resolve_slots(decisions.get("ncSlots"), "nc")
-    # Das Targeting-Peptid in Type 0.1 macht die Fusion C-terminal, in Type 0.5 N-terminal.
-    fusion = "C" if cargo_slots[1]["kind"] == "tp" else "N" if cargo_slots[5]["kind"] == "tp" else None
-
     # Das Cargo sitzt im pESC (MCS1) auf dem Antisense-Strang. Deshalb wird gleich
     # hier das Reverse Complement gebildet und ab da nur noch damit gearbeitet:
     # Primer, Bestellsequenz und FASTA beziehen sich auf den Antisense-Strang.
@@ -454,63 +364,18 @@ def design_construct(decisions: dict = None):
     cargo_module, nc_module = build_modules(nc, cargo_label, cargo_bp, cargo_slots, nc_slots)
     primers = make_primer_pair(cargo_antisense, CARGO_L1_FLANK[0], CARGO_L1_FLANK[1])
 
-    # Faltet sich die mRNA der Cargo auf sich selbst (Haarnadel), oder lagern sich zwei Kopien
-    # aneinander an (Dimer)? Beides kann ein scannendes Ribosom blockieren. Das ist eine Eigenschaft
-    # der mRNA selbst — dafuer zaehlt die Sense-/Kodierrichtung (cargo["clean"]), nicht der
-    # Antisense-Strang, mit dem ab hier fuer Primer/Bestellung/FASTA weitergearbeitet wird.
-    cargo_mrna = check_mrna_structure(cargo["clean"])
-
-    # Die Cargo-Validierung liefert eigene Warnungen; die Primer-Methode kommt dazu,
-    # damit im UI erkennbar ist, ob echte Thermodynamik oder nur eine Schaetzung dahintersteht.
-    design_warnings = list(cargo["warnings"])
-    if nc.get("custom"):
-        design_warnings += [f"Custom shell: {w}" for w in nc["validation"]["warnings"]]
-    for label, slots in (("cargo module", cargo_slots), ("nanocompartment site", nc_slots)):
-        for n in NC_SLOTS:
-            if slots[n]["kind"] == "custom":
-                design_warnings += [f"Type 0.{n} ({label}): {w}" for w in slots[n]["validation"]["warnings"]]
-    if fusion is None:
-        design_warnings.append("No targeting peptide selected — the cargo will not be encapsulated.")
-    if cargo_mrna.get("available"):
-        for check_name, label in (("selfFold", "self-fold"), ("selfDimer", "self-dimer")):
-            check = cargo_mrna[check_name]
-            if check["risk"] in ("moderate", "high"):
-                design_warnings.append(
-                    f"Cargo mRNA {label} risk: {check['risk']} (ΔG = {check['deltaG']} kcal/mol, "
-                    f"z = {check['zScore']} vs. {check['shuffles']} shuffled controls) — this may "
-                    "keep the mRNA from being translated. See the mRNA structure note for details."
-                )
-    elif not cargo_mrna.get("reason", "").startswith("Sequence too short"):
-        design_warnings.append(f"mRNA structure check: {cargo_mrna.get('reason')}")
-    if primers and primers[0].get("tmMethod") == "wallace":
-        design_warnings.append(
-            "primer3 is not available — Tm values are rough Wallace estimates (preview only). "
-            "Install primer3-py (see Biologik/requirements.txt) for nearest-neighbor Tm, "
-            "dimer/hairpin checks and the Q5 annealing temperature."
-        )
-
-    def public(slots: dict) -> dict:
-        return {str(n): {k: v for k, v in slots[n].items() if k not in ("seq", "validation")} for n in NC_SLOTS}
-
     return {
-        "input": {"nanocompartment": nc["id"], "promoter": promoter_entry["id"], "cargoLabel": cargo_label,
-                  "cargoSlots": public(cargo_slots), "ncSlots": public(nc_slots)},
         "nanocompartment": {"id": nc["id"], "label": nc["label"], "T": nc["T"], "dia": nc["dia"], "shell": nc["shell"], "shellBp": nc["shellBp"],
                             "custom": bool(nc.get("custom")),
-                            **({"sequence": nc["seq"], "validation": nc["validation"]} if nc.get("custom") else {})},
+                            **({"sequence": nc["seq"]} if nc.get("custom") else {})},
         "targetingPeptide": nc["tp"],
-        "cargo": {"label": cargo_label, "sequence": cargo["clean"], "sequenceAntisense": cargo_antisense, "bp": cargo_bp, "aa": cargo["aa"], "gc": cargo["gc"], "validation": cargo,
-                  "mrnaStructure": cargo_mrna},
-        "fusion": fusion,
-        "level0": {"total": len(cargo_module) + len(nc_module), "cargoModule": cargo_module, "ncModule": nc_module},
-        "level1": {"cargoModule": {"role": "cargo module", "enzyme": "BsaI", "flanks": {"left": CARGO_L1_FLANK[0], "right": CARGO_L1_FLANK[1]}, "parts": cargo_module}, "ncModule": nc_module},
-        "level2": {"promoter": {"id": promoter_entry["id"], "label": promoter_entry["label"], "kind": "promo", "bp": NOMINAL_BP["PROMO"], "flanks": {"left": PROMO_FLANK[0], "right": PROMO_FLANK[1]}}},
+        "cargo": {"label": cargo_label, "sequence": cargo["clean"], "sequenceAntisense": cargo_antisense, "bp": cargo_bp},
+        "level0": {"cargoModule": cargo_module, "ncModule": nc_module},
+        "level2": {"promoter": {"id": promoter_entry["id"], "label": promoter_entry["label"], "bp": NOMINAL_BP["PROMO"]}},
         "cargoSlots": _slot_summary(cargo_slots),
         "ncSlots": _slot_summary(nc_slots),
         "primers": primers,
-        "platePlan": build_plate_plan(nc, cargo_label, cargo_slots, nc_slots),
-        "orderList": build_order_list(nc, cargo_label, cargo_bp, cargo_antisense, cargo_slots, nc_slots),
-        "warnings": design_warnings,
+        "level0Constructs": build_level0_constructs(nc, cargo_label, cargo_antisense, cargo_slots, nc_slots),
     }
 
 
@@ -536,6 +401,274 @@ def resolve_seq(kind: str, part_id: str, seed: str, length: int) -> tuple[str, b
     if real:
         return real, True
     return placeholder_seq(seed, length), False
+
+
+def attach_adapter(adapter, insert_seq: str) -> dict:
+    """Haengt die Overhang-Flanken eines Type-Adapters (parts/type_overhangs/) an eine CDS bzw.
+    Teilsequenz: der 4-nt-Platzhalter ("Insert", z.B. AAAA) wird durch die Sequenz ersetzt.
+
+    `adapter` ist die id ("0.1", "0.1rc", "0.2", ...) oder der bereits geladene Eintrag. Die Sequenz
+    wird unveraendert eingesetzt — die Orientierung (bei den rc-Adaptern der Cargo Site) liegt beim
+    Aufrufer. Alle Features hinter dem Insert werden um die Laengendifferenz verschoben; am Ende wird
+    jeder Overhang und jede BbsI-Stelle gegen die neue Sequenz geprueft, damit eine verrutschte
+    Position nie still durchgeht."""
+    entry = adapter if isinstance(adapter, dict) else find_part("type_overhangs", adapter)
+    if not entry or not entry.get("sequence"):
+        raise ValueError(f"Unbekannter oder leerer Overhang-Adapter: {adapter!r}")
+    adapter_id, seq = entry["id"], entry["sequence"]
+
+    cds = (insert_seq or "").upper()
+    if not cds or set(cds) - set("ACGT"):
+        raise ValueError("Die Insert-Sequenz muss aus A/C/G/T bestehen und darf nicht leer sein.")
+
+    start, end = location_span(entry["insert"]["location"])
+    placeholder = entry["insert"]["placeholder_sequence"]
+    if seq[start - 1:end] != placeholder:
+        raise ValueError(f"Adapter {adapter_id}: an {start}..{end} steht nicht der Platzhalter {placeholder}.")
+
+    shift = len(cds) - (end - start + 1)
+    new_seq = seq[:start - 1] + cds + seq[end:]
+
+    def moved(location: str) -> str:
+        a, b = location_span(location)
+        if b < start:
+            return location
+        if a > end:
+            return shift_location(location, shift)
+        raise ValueError(f"Adapter {adapter_id}: Feature {location} ueberlappt den Insert-Platzhalter.")
+
+    insert_location = f"{start}..{end + shift}"
+    features = []
+    for f in entry["features"]:
+        if f["location"] == entry["insert"]["location"]:
+            features.append({**f, "location": insert_location})
+        else:
+            features.append({**f, "location": moved(f["location"])})
+    overhangs = [{**o, "location": moved(o["location"])} for o in entry["overhangs"]]
+    bbsi_sites = [{**b, "location": moved(b["location"])} for b in entry["bbsi_sites"]]
+
+    for item in overhangs + bbsi_sites:
+        a, b = location_span(item["location"])
+        if new_seq[a - 1:b] != item["sequence_top_strand"]:
+            raise ValueError(f"Adapter {adapter_id}: {item['location']} stimmt nach dem Einsetzen nicht mehr.")
+
+    return {
+        "adapter": adapter_id,
+        "usedForModules": entry["used_for_modules"],
+        "sequence": new_seq,
+        "length": len(new_seq),
+        "insert": {"location": insert_location, "sequence": cds},
+        "overhangs": overhangs,
+        "bbsiSites": bbsi_sites,
+        "features": features,
+    }
+
+
+def adapter_id_for(module: str, slot: int) -> str:
+    """Welcher Adapter (parts/type_overhangs/) fuer ein Teil in Modul `module` ("cargo"/"nc") an Type 0.<slot>
+    gilt: an den Aussenslots 0.1/0.5 haben die Cargo Site eigene rc-Adapter, 0.2-0.4 gelten fuer beide Seiten."""
+    return f"0.{slot}rc" if module == "cargo" and slot in (1, 5) else f"0.{slot}"
+
+
+def clone_into_level0_backbone(built: dict, label: str, backbone: dict, antisense: bool = False) -> dict:
+    """BbsI-Klonierung eines Adapter-Konstrukts (attach_adapter) ins Level-0-Backbone.
+
+    BbsI schneidet aus dem Backbone den Stuffer heraus (die Stelle zwischen den Akzeptor-Overhangs
+    NLvl0/CLvl0) und aus dem Konstrukt das Fragment vom Level-0-N- bis zum Level-0-C-Overhang — die
+    BbsI-Erkennungsstellen des Adapters bleiben im verworfenen Rest zurueck. Die vier-Basen-Enden
+    beider Fragmente sind identisch und ligieren: Plasmid = Backbone bis vor NLvl0 + Fragment + Backbone
+    ab nach CLvl0. An den Naehten entstehen die BsaI-Stellen fuer Level 1 neu (GGT|CTC und GAGACC).
+    Annotationen: alles vom Backbone, was ausserhalb des herausgeschnittenen Bereichs liegt, plus die
+    Overhangs und das Insert aus dem Adapter. Features im Stuffer (lacZ-alpha, MCS, BbsI-Stellen, ...)
+    sind mit dem Stuffer verschwunden. Die Sequenz ist immer der Top-Strand, 5' links -> 3' rechts;
+    `antisense` (Cargo-Modul): das Insert liegt im Backbone-Top-Strand antisense -> CDS-Feature mit complement()."""
+    seq = backbone["sequence"]
+    oh5 = backbone["receiver_overhangs"]["5_prime"]
+    oh3 = backbone["receiver_overhangs"]["3_prime"]
+    bb_n0, bb_n1 = location_span(oh5["location"])
+    bb_c0, bb_c1 = location_span(oh3["location"])
+    roles = {o["role"]: o for o in built["overhangs"]}
+    ad_n0, _ = location_span(roles["level0_N"]["location"])
+    _, ad_c1 = location_span(roles["level0_C"]["location"])
+    if seq[bb_n0 - 1:bb_n1] != roles["level0_N"]["sequence_top_strand"] or \
+            seq[bb_c0 - 1:bb_c1] != roles["level0_C"]["sequence_top_strand"]:
+        raise ValueError(f"Adapter {built['adapter']}: Level-0-Overhangs passen nicht zum Backbone {backbone['id']}.")
+
+    fragment = built["sequence"][ad_n0 - 1:ad_c1]
+    new_seq = seq[:bb_n0 - 1] + fragment + seq[bb_c1:]
+    tail_shift = len(fragment) - (bb_c1 - bb_n0 + 1)
+    adapter_to_plasmid = bb_n0 - ad_n0
+    insert_start, insert_end = bb_n0, bb_n0 + len(fragment) - 1
+
+    features = []
+    for f in backbone.get("features", []):
+        lo, hi = location_span(f["location"])
+        lab = (f["qualifiers"].get("label") or [""])[0]
+        loc = None
+        if f["type"] == "source":
+            loc = f"1..{len(new_seq)}"
+        elif hi < bb_n0:
+            loc = f["location"]
+        elif lo > bb_c1:
+            loc = shift_location(f["location"], tail_shift)
+        elif lab == "BsaI rec site":
+            # die beiden BsaI-Stellen ragen an der Naht in den Austauschbereich hinein; die Basen werden von
+            # Backbone und Fragment gemeinsam neu zusammengesetzt (GGT|CTC bzw. GAG|ACC) — Stelle bleibt erhalten
+            loc = f["location"] if lo < bb_n0 else shift_location(f["location"], tail_shift)
+            a, b = location_span(loc)
+            site = new_seq[a - 1:b]
+            if (reverse_complement(site) if loc.startswith("complement(") else site) != "GGTCTC":
+                raise ValueError(f"BsaI-Stelle {loc} ist nach dem Klonieren nicht intakt.")
+        if loc is not None:
+            quals = [(k, v) for k, vals in f["qualifiers"].items() if k != "translation" for v in vals]
+            features.append({"type": f["type"], "location": loc, "qualifiers": quals})
+
+    for o in built["overhangs"]:
+        features.append(_feat("overhang", shift_location(o["location"], adapter_to_plasmid), o["label"],
+                              f"{o['role']} · top strand {o['sequence_top_strand']}"))
+    insert_loc = shift_location(built["insert"]["location"], adapter_to_plasmid)
+    features.append(_feat("CDS", f"complement({insert_loc})" if antisense else insert_loc, label,
+                          f"Insert cloned via BbsI into {backbone['id']} · adapter {built['adapter']} · "
+                          + ("antisense: the ORF reads on the complement strand" if antisense else "sense strand")))
+    features.sort(key=lambda f: (location_span(f["location"])[0], location_span(f["location"])[1]))
+
+    for f in features:
+        a, b = location_span(f["location"])
+        if a < 1 or b > len(new_seq):
+            raise ValueError(f"Feature {f['location']} liegt ausserhalb des Plasmids.")
+
+    name = f"{backbone['id'].split('-')[0]}-{label.replace(' ', '-')}"
+    definition = (f"{backbone['label']} with {label} cloned in via BbsI (adapter {built['adapter']}): the "
+                  f"{bb_c1 - bb_n0 + 1} bp stuffer between {oh5['label']} and {oh3['label']} is replaced by "
+                  f"{len(fragment)} bp; the adapter's BbsI sites are cut away, BsaI sites for Level 1 remain.")
+    return {
+        "name": name, "sequence": new_seq, "length": len(new_seq),
+        "insertStart": insert_start, "insertEnd": insert_end,
+        "genbank": format_genbank_record(name, new_seq, features, True, definition),
+    }
+
+
+def _flip_location(location: str, length: int) -> str:
+    """Location nach einer Drehung des Molekuels um 180 Grad (Reverse Complement der ganzen Sequenz):
+    Positionen werden gespiegelt, der Strang kippt (complement() an/aus), fuzzy-Markierungen (<, >) tauschen."""
+    complement = location.startswith("complement(")
+    inner = location[len("complement("):-1] if complement else location
+    mirror = {"<": ">", ">": "<", "": ""}
+
+    def swap(m):
+        lm, a, rm, b = m.group(1), int(m.group(2)), m.group(3), int(m.group(4))
+        return f"{mirror[rm]}{length - b + 1}..{mirror[lm]}{length - a + 1}"
+
+    inner = re.sub(r"([<>]?)(\d+)\.\.([<>]?)(\d+)", swap, inner)
+    return inner if complement else f"complement({inner})"
+
+
+def _rotate_built(built: dict) -> dict:
+    """Dasselbe Konstrukt, um 180 Grad gedreht: Reverse Complement der gesamten Sequenz, Overhangs/BbsI-Stellen/
+    Insert an gespiegelten Positionen. Fuer die Cargo Site, damit das Cargo (5' links -> 3' rechts) in seiner
+    eigenen Leserichtung steht — das Konstrukt ist physisch dasselbe Molekuel, nur vom anderen Strang gelesen."""
+    length = built["length"]
+    seq = reverse_complement(built["sequence"])
+
+    def flipped(item: dict) -> dict:
+        loc = _flip_location(item["location"], length)
+        a, b = location_span(loc)
+        top = seq[a - 1:b]
+        out = {**item, "location": loc, "sequence_top_strand": top}
+        if "strand" in item:
+            out["strand"] = "-" if loc.startswith("complement(") else "+"
+        if "sequence_own_strand_5to3" in item:
+            out["sequence_own_strand_5to3"] = reverse_complement(top) if loc.startswith("complement(") else top
+        return out
+
+    insert_loc = _flip_location(built["insert"]["location"], length)
+    return {
+        **built,
+        "sequence": seq,
+        "insert": {"location": insert_loc.replace("complement(", "").rstrip(")") if insert_loc.startswith("complement(") else insert_loc,
+                   "sequence": reverse_complement(built["insert"]["sequence"])},
+        "overhangs": [flipped(o) for o in built["overhangs"]],
+        "bbsiSites": [flipped(b) for b in built["bbsiSites"]],
+    }
+
+
+def build_level0_constructs(nc: dict, cargo_label: str, cargo_antisense: str, cargo_slots: dict, nc_slots: dict) -> list:
+    """Das Level-0-Konstrukt jedes der zehn Module (Cargo Site + NC Site, Type 0.1-0.5): die Teilsequenz im
+    Overhang-Adapter ihres Type-Slots (attach_adapter) und, wenn das Level-0-Backbone in der Datenbank liegt,
+    das daraus per BbsI klonierte Plasmid (clone_into_level0_backbone), jeweils mit fertigem GenBank-Text.
+
+    `isUser` = vom Nutzer eingegeben (Cargo, eigene Shell/Teile), sonst Toolkit-Teil; `isReal` = echte
+    Sequenz (Nutzereingabe oder Parts-Datenbank) statt deterministischem Platzhalter.
+    Orientierung wie im restlichen Design: Teile des Cargo-Moduls liegen auf dem Antisense-Strang, werden
+    also als Reverse Complement eingesetzt (das Cargo ist bereits reverse-komplementiert), Teile der NC Site
+    unveraendert."""
+    ncs_seq, ncs_real = resolve_seq("ncs_spacers", "standard", "NCS", 30)
+
+    def slot_part(cfg: dict):
+        kind = cfg["kind"]
+        if kind == "custom":
+            return cfg["label"], cfg["seq"], True, True, "your own part"
+        if kind == "tp":
+            seq, real = resolve_seq("targeting_peptides", nc["tp"], "TP" + nc["tp"], 36)
+            return nc["tp"], seq, real, False, "targeting peptide (toolkit part)"
+        if kind == "linker":
+            seq, real = resolve_seq("linkers", cfg["id"], "LINK" + cfg["id"], cfg["bp"])
+            return cfg["label"], seq, real, False, "linker (toolkit part)"
+        if kind == "marker":
+            seq, real = resolve_seq("surface_markers", cfg["id"], "MARK" + cfg["id"], cfg["bp"])
+            return cfg["label"], seq, real, False, "surface marker (toolkit part)"
+        return "NCS", ncs_seq, ncs_real, False, "NCS spacer (toolkit part)"
+
+    if nc.get("custom"):
+        shell = (nc["shell"], nc["seq"], True, True, "your own nanocompartment shell")
+    else:
+        shell_seq, shell_real = resolve_seq("nanocompartment_shells", nc["shell"], "SHELL" + nc["shell"], nc["shellBp"])
+        shell = (nc["shell"], shell_seq, shell_real, False, "nanocompartment shell (toolkit part)")
+    cargo = (cargo_label, None, True, True, "cargo gene of interest")
+
+    backbone = next(iter(load_parts()["level0_backbones"]), None)
+    if backbone and not backbone.get("sequence"):
+        backbone = None
+
+    constructs = []
+    for module, slots, middle in (("cargo", cargo_slots, cargo), ("nc", nc_slots, shell)):
+        for n in (1, 2, 3, 4, 5):
+            label, seq, is_real, is_user, what = middle if n == 3 else slot_part(slots[n])
+            if module == "cargo":
+                seq = cargo_antisense if n == 3 else reverse_complement(seq)
+            adapter_id = adapter_id_for(module, n)
+            built = attach_adapter(adapter_id, seq)      # Top-Strand des Level-0-Plasmids, 5' links -> 3' rechts
+            antisense = module == "cargo"                # Cargo-Modul sitzt dort auf dem Antisense-Strang
+            plasmid = clone_into_level0_backbone(built, label, backbone, antisense) if backbone else None
+            # Anzeige/Export des Konstrukts: Cargo Site um 180 Grad gedreht, damit das Cargo in seiner eigenen
+            # Leserichtung steht (5' links -> 3' rechts); NC Site unveraendert.
+            shown = _rotate_built(built) if antisense else built
+            construct_features = [_feat("misc_feature", b["location"], "BbsI rec site") for b in shown["bbsiSites"]]
+            construct_features += [_feat("overhang", o["location"], o["label"], f"{o['role']} · top strand {o['sequence_top_strand']}")
+                                   for o in shown["overhangs"]]
+            orientation = ("antisense strand (cargo module) — shown 5'->3' left to right, rotated 180° vs. the Level 0 plasmid top strand"
+                           if antisense else "sense strand — as entered")
+            construct_features.append(_feat("CDS", shown["insert"]["location"], label,
+                                            f"Type 0.{n} · {what} · {orientation} · adapter {adapter_id}"))
+            construct_features.sort(key=lambda f: location_span(f["location"])[0])
+            definition = (f"Level 0 construct for the {'cargo' if module == 'cargo' else 'nanocompartment'} site: {label} in adapter "
+                          f"{adapter_id} (BbsI). Sequence 5'->3' left to right, {'antisense strand (cargo module); shown rotated 180 degrees relative to the Level 0 plasmid top strand' if antisense else 'sense strand'}.")
+            if not is_real:
+                definition += " PLACEHOLDER insert — the real sequence is not in the parts database yet."
+            record_name = f"Level0_{label.replace(' ', '-')}_Type0.{n}_{adapter_id}"
+            constructs.append({
+                "label": label, "what": what, "module": "cargo_site" if module == "cargo" else "nc_site",
+                "slot": n, "type": f"Type 0.{n}", "orientation": orientation,
+                "strand": "antisense" if antisense else "sense", "rotated": antisense,
+                "plasmidStrand": "antisense" if antisense else "sense",
+                "isUser": is_user, "isReal": is_real,
+                "adapter": built["adapter"], "usedForModules": built["usedForModules"],
+                "sequence": shown["sequence"], "length": shown["length"], "insert": shown["insert"],
+                "overhangs": shown["overhangs"], "bbsiSites": shown["bbsiSites"],
+                "genbank": format_genbank_record(record_name, shown["sequence"], construct_features, False, definition),
+                "plasmid": plasmid,
+            })
+    return constructs
 
 
 def _feat(ftype: str, location: str, label: str, note: str | None = None, extra: list | None = None) -> dict:
@@ -612,13 +745,6 @@ def build_genbank(design: dict) -> str:
                 note = " SENSE = reverse complement of the input." if antisense else ""
                 add_record(f"Custom-Part_{label}_{tag}", seq,
                            [_feat("CDS", f"1..{len(seq)}", label, f"{tag} · {where} · real user input.{note}")])
-                oh_left, oh_right = JUNCTION_OVERHANGS[n - 1], JUNCTION_OVERHANGS[n]
-                add_record(f"Custom-Part_{label}_{tag}_with-overhangs",
-                           f"{oh_left}{seq}{oh_right}",
-                           [_feat("overhang", f"1..{len(oh_left)}", oh_left, "5' Golden Gate junction overhang"),
-                            _feat("CDS", f"{len(oh_left) + 1}..{len(oh_left) + len(seq)}", label),
-                            _feat("overhang", f"{len(oh_left) + len(seq) + 1}..{len(oh_left) + len(seq) + len(oh_right)}",
-                                  oh_right, "3' Golden Gate junction overhang")])
 
     add_record(f"Cargo_{cargo_name}", cargo_seq,
                [_feat("CDS", f"1..{len(cargo_seq)}", cargo_name,
@@ -630,12 +756,6 @@ def build_genbank(design: dict) -> str:
         name = nc["shell"].replace(" ", "-")
         add_record(f"Nanocompartment-Shell_{name}", shell_seq,
                    [_feat("CDS", f"1..{len(shell_seq)}", name, "Type0.3 · nanocompartment site · real user input")])
-        oh_left, oh_right = JUNCTION_OVERHANGS[2], JUNCTION_OVERHANGS[3]
-        add_record(f"Nanocompartment-Shell_{name}_with-overhangs", f"{oh_left}{shell_seq}{oh_right}",
-                   [_feat("overhang", f"1..{len(oh_left)}", oh_left, "5' Golden Gate junction overhang"),
-                    _feat("CDS", f"{len(oh_left) + 1}..{len(oh_left) + len(shell_seq)}", name),
-                    _feat("overhang", f"{len(oh_left) + len(shell_seq) + 1}..{len(oh_left) + len(shell_seq) + len(oh_right)}",
-                          oh_right, "3' Golden Gate junction overhang")])
     else:
         add_record(f"Nanocompartment-Shell_{nc['shell']}", shell_seq,
                    [_feat("CDS", f"1..{len(shell_seq)}", nc["shell"], f"Type0.3 · nanocompartment site. {source_note(shell_is_real)}")])
@@ -644,11 +764,17 @@ def build_genbank(design: dict) -> str:
                       f"Bidirectional. {source_note(promo_is_real)}")])
     add_record("NCS-Spacer", ncs_seq, [_feat("misc_feature", f"1..{len(ncs_seq)}", "NCS spacer", source_note(ncs_is_real))])
     add_slot_records(nc_slots, "nanocompartment site", antisense=False)
-    cargo_with_oh = f"{CARGO_L1_FLANK[0]}{cargo_seq}{CARGO_L1_FLANK[1]}"
-    add_record(f"Cargo_{cargo_name}_with-overhangs", cargo_with_oh,
-               [_feat("overhang", f"1..{len(CARGO_L1_FLANK[0])}", CARGO_L1_FLANK[0]),
-                _feat("CDS", f"{len(CARGO_L1_FLANK[0]) + 1}..{len(CARGO_L1_FLANK[0]) + len(cargo_seq)}", cargo_name),
-                _feat("overhang", f"{len(CARGO_L1_FLANK[0]) + len(cargo_seq) + 1}..{len(cargo_with_oh)}", CARGO_L1_FLANK[1])])
+    # Level-0-Konstrukte der Nutzereingaben (Cargo, eigene Shell/Teile): Sequenz im Type-Adapter, mit
+    # den echten BbsI-Stellen und Level-0/1/2-Overhangs aus parts/type_overhangs/ (siehe attach_adapter).
+    for c in (c for c in design.get("level0Constructs", []) if c["isUser"]):
+        feats = [_feat("misc_feature", b["location"], "BbsI rec site") for b in c["bbsiSites"]]
+        feats += [_feat("overhang", o["location"], o["label"], f"{o['role']} · top strand {o['sequence_top_strand']}")
+                  for o in c["overhangs"]]
+        feats.append(_feat("CDS", c["insert"]["location"], c["label"],
+                           f"{c['type']} · {c['what']} · {c['orientation']} · adapter {c['adapter']}"))
+        add_record(f"Level0_{c['label'].replace(' ', '-')}_{c['type'].replace(' ', '')}_{c['adapter']}",
+                   c["sequence"], feats,
+                   definition=f"Level 0 construct for the {c['module'].replace('_', ' ')}: {c['label']} in adapter {c['adapter']} (BbsI).")
 
     # Das Cargo-Modul liegt im Level-2-Konstrukt auf dem Antisense-Strang: die Top-Strand-Sequenz
     # ist die Typ-Reihenfolge 1..5, jedes Teil als Reverse Complement (das Cargo ist schon
@@ -744,7 +870,7 @@ def _merge_into_backbone(backbone: dict, insert_seq: str, insert_parts: list[str
     definition = (
         f"Real {backbone['label']} ({backbone['length_bp']}bp) with its stuffer cassette "
         f"(between {oh5['label']} and {oh3['label']}) replaced by the assembled construct. "
-        "Junction accuracy depends on CARGO_L1_FLANK/NC_L1_FLANK/PROMO_FLANK matching the "
-        f"real {oh5['label']}/{oh3['label']} overhangs — not yet verified, see PROJECT_TODO.txt section 1."
+        "The cargo/nanocompartment Level 2 overhangs match the type adapters in parts/type_overhangs/; "
+        f"the promoter flank towards {oh3['label']} is not verified yet, see PROJECT_TODO.txt section 1."
     )
     return name, new_seq, features, True, definition
