@@ -20,7 +20,7 @@
   "on_stock": true,
   "length_bp": 28,
   "organism": null,
-  "source": "Level 0 plasmid '0.5TP_Tm_Start' (Lvl0.5_a_026) from the user-supplied GenBank file 'documents from Level 0'; only the insert was taken — the type overhangs and the frame spacer of the plasmid were cut off. Stock: glycerol stock column of 'Level 0 constructs.xlsx'.",
+  "source": "Level 0 plasmid '0.5TP_Tm_Start' (Lvl0.5_a_026) from the user-supplied GenBank file 'documents from Level 0'; only the insert was taken; the type overhangs and the frame spacer of the plasmid were cut off. Stock: glycerol stock column of 'Level 0 constructs.xlsx'.",
   "checks": {
     "length_multiple_of_3": false,
     "starts_with_atg": true,
@@ -28,6 +28,6 @@
     "bsai_sites": [],
     "bbsi_sites": []
   },
-  "notes": "length 28 nt is not a multiple of 3 — fused parts will be out of frame",
+  "notes": "length 28 nt is not a multiple of 3; fused parts will be out of frame",
   "used_by": []
 }

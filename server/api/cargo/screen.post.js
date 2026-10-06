@@ -14,13 +14,30 @@
  */
 import { screenSequences } from '../../utils/commec.js'
 
+// Most frequent S. cerevisiae codon per amino acid (Kazusa) — only used to give an amino acid sequence a DNA form for the
+// screen: COMMEC translates in all frames, so any back-translation of the protein is screened equivalently.
+const BEST_CODON = {
+  A: 'GCT', C: 'TGT', D: 'GAT', E: 'GAA', F: 'TTT', G: 'GGT', H: 'CAT', I: 'ATT', K: 'AAA', L: 'TTG',
+  M: 'ATG', N: 'AAT', P: 'CCA', Q: 'CAA', R: 'AGA', S: 'TCT', T: 'ACT', V: 'GTT', W: 'TGG', Y: 'TAT', '*': 'TAA',
+}
+
+// Same rule as is_protein() in Biologik/level0_design/sequence.py: DNA if at least 90 % of the letters are A/C/G/T/U/N.
+function toDna(text) {
+  const letters = text.toUpperCase().replace(/^>.*$/gm, '').replace(/[^A-Z*]/g, '')
+  const dnaLetters = (letters.match(/[ACGTUN]/g) || []).length
+  if (letters && dnaLetters / letters.length < 0.9) {
+    return letters.split('').map((aa) => BEST_CODON[aa] || '').join('')
+  }
+  return letters.replace(/[^ATGC]/g, '')
+}
+
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const raw = Array.isArray(body?.sequences) ? body.sequences : []
   const sequences = raw
     .map((s) => ({
       label: typeof s?.label === 'string' ? s.label : 'Sequence',
-      sequence: typeof s?.sequence === 'string' ? s.sequence.toUpperCase().replace(/[^ATGC]/g, '') : '',
+      sequence: typeof s?.sequence === 'string' ? toDna(s.sequence) : '',
     }))
     .filter((s) => s.sequence.length > 0)
 

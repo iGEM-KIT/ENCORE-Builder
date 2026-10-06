@@ -8,7 +8,7 @@
   "length_bp": 680,
   "organism": "S. cerevisiae",
   "source": null,
-  "notes": "Bidirektionaler, induzierbarer Hefe-Promotor \u2014 noch keine echte Sequenz hinterlegt.",
+  "notes": "Bidirektionaler, induzierbarer Hefe-Promotor: noch keine echte Sequenz hinterlegt.",
   "used_by": [
     "PROMOTERS[GAL110]"
   ]

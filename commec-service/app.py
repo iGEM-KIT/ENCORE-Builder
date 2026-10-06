@@ -84,7 +84,7 @@ def _screen_one(label: str, sequence: str) -> dict:
     if not seq:
         return {"available": False, "reason": "Sequence is empty after removing non-ACGT characters."}
     if len(seq) > MAX_SEQ_LEN:
-        return {"available": False, "reason": f"Sequence longer than {MAX_SEQ_LEN} bp — skipped for this service's configured limit."}
+        return {"available": False, "reason": f"Sequence longer than {MAX_SEQ_LEN} bp: skipped for this service's configured limit."}
 
     run_id = uuid.uuid4().hex[:12]
     # Kein Nutzertext im Dateinamen/FASTA-Header — nur eine erzeugte ID. Das
@@ -140,7 +140,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == "/health":
             db_ok = os.path.isdir(DB_DIR) and bool(os.listdir(DB_DIR)) if os.path.isdir(DB_DIR) else False
-            self._send_json(200, {"ok": db_ok, "detail": DB_DIR if db_ok else f"{DB_DIR} missing or empty — run `commec setup` (see Dockerfile)."})
+            self._send_json(200, {"ok": db_ok, "detail": DB_DIR if db_ok else f"{DB_DIR} missing or empty: run `commec setup` (see Dockerfile)."})
             return
         self._send_json(404, {"error": "not found"})
 
@@ -168,7 +168,7 @@ class Handler(BaseHTTPRequestHandler):
         self._send_json(200, {"results": results})
 
     def log_message(self, fmt, *args):
-        print(f"[commec-service] {self.address_string()} - {fmt % args}")
+        print(f"[commec-service] {self.address_string()}: {fmt % args}")
 
 
 if __name__ == "__main__":

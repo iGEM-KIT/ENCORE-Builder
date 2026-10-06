@@ -1,7 +1,7 @@
 {
   "id": "0.4",
   "kind": "type_overhang",
-  "label": "Type 0.4 overhang adapter (0.4) — nanocompartment (NC) site and cargo site",
+  "label": "Type 0.4 overhang adapter (0.4); nanocompartment (NC) site and cargo site",
   "sequence": "GAAGACAACTCAATCCGCAAAATGGCCGAGAAGTCTTC",
   "sequence_status": "real",
   "on_stock": null,

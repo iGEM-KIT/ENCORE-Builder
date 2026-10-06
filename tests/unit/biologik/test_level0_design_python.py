@@ -4,6 +4,7 @@ import sys
 
 import pytest
 
+from Biologik.level0_design.codon import cai, find_forbidden, optimize_cds, translate
 from Biologik.level0_design.design import attach_adapter, build_genbank, design_construct, make_primer_pair
 from Biologik.level0_design.genbank_writer import location_span
 from Biologik.level0_design.parts_db import load_parts
@@ -268,7 +269,7 @@ def test_design_builds_a_level0_construct_for_every_user_entered_sequence():
 
     # Cargo-Modul-Teile werden als Reverse Complement eingesetzt, NC-Teile unveraendert
     assert constructs['GFP']['insert']['sequence'] == design['cargo']['sequence']      # shown in its own reading direction
-    assert constructs['Part B']['insert']['sequence'] == 'ATG' + 'CCC' * 10
+    assert translate(constructs['Part B']['insert']['sequence']) == translate('ATG' + 'CCC' * 10)   # codon-optimized, same protein
     for c in constructs.values():
         assert c['sequence'].startswith('GAAGAC') and c['sequence'].endswith('GTCTTC')
         assert c['insert']['sequence'] in c['sequence']
@@ -375,7 +376,7 @@ def test_libraries_ship_the_level0_backbone_with_a_ready_genbank_text():
 
 def test_design_response_only_carries_what_the_ui_and_export_use():
     design = _design()
-    assert sorted(design) == ['cargo', 'cargoSlots', 'level0', 'level0Constructs', 'level1Constructs', 'level2',
+    assert sorted(design) == ['cargo', 'cargoSlots', 'codonOptimization', 'level0', 'level0Constructs', 'level1Constructs', 'level2',
                               'level2Construct', 'nanocompartment', 'ncSlots', 'primers', 'targetingPeptide']
     assert sorted(design['cargo']) == ['bp', 'label', 'sequence', 'sequenceAntisense']
     assert sorted(design['level2']['promoter']) == ['bp', 'id', 'label']
@@ -399,7 +400,7 @@ def test_level0_primers_carry_the_adapter_flanks_and_anneal_to_the_insert():
     start, end = location_span(construct['insert']['location'])
     flank5, flank3 = construct['sequence'][:start - 1], construct['sequence'][end:]
     insert = construct['insert']['sequence']
-    assert insert == cds                                  # Cargo Site wird in Leserichtung gezeigt
+    assert translate(insert) == translate(cds)            # Cargo Site wird in Leserichtung gezeigt (codon-optimiert, gleiches Protein)
     fwd, rev = pr['forward'], pr['reverse']
     assert fwd['sequence'] == pr['clamp'] + flank5 + fwd['anneal']
     assert insert.startswith(fwd['anneal'])
@@ -426,13 +427,16 @@ def test_level0_primers_need_a_real_long_enough_insert(monkeypatch):
 
     monkeypatch.undo()
     short = next(c for c in _design()['level0Constructs'] if c['module'] == 'cargo_site' and c['slot'] == 3)
-    assert short['primers']['possible'] is False and 'too short' in short['primers']['reason']
+    assert short['primers']['possible'] is False and 'below 150 bp' in short['primers']['reason']
 
 
-def test_level0_primers_flag_internal_restriction_sites():
+def test_level0_primers_flag_internal_restriction_sites(monkeypatch):
+    import Biologik.level0_design.design as design_module
     cds = _long_cargo()
     cds = cds[:60] + 'GAAGAC' + cds[66:]                 # BbsI-Stelle mitten im Insert
-    design = _design(cargoSeq=cds)
+    monkeypatch.setattr(design_module, 'codon_optimize_part',
+                        lambda sequence, module, slot, protein=False: optimize_cds(sequence) | {'sequence': sequence, 'optimized': False})
+    design = _design(cargoSeq=cds)                       # ohne Optimierung bleibt die Stelle, und die Primer warnen davor
     pr = next(c for c in design['level0Constructs'] if c['module'] == 'cargo_site' and c['slot'] == 3)['primers']
     assert any('BbsI' in s for s in pr['internalSites'])
 
@@ -523,7 +527,7 @@ def test_level1_parts_sit_where_their_features_say():
     assert gene['strand'] == 'antisense'
     assert cargo['sequence'][gene['start'] - 1:gene['end']] == reverse_complement(design['cargo']['sequence'])
     mine = next(p for p in nc['parts'] if p['label'] == 'MyPart')
-    assert mine['strand'] == 'sense' and nc['sequence'][mine['start'] - 1:mine['end']] == 'ATG' + 'GCT' * 20
+    assert mine['strand'] == 'sense' and translate(nc['sequence'][mine['start'] - 1:mine['end']]) == translate('ATG' + 'GCT' * 20)
     assert 'complement(' in cargo['genbank'] and '/label="GFP"' in cargo['genbank']
 
 
@@ -566,10 +570,13 @@ def test_level2_is_the_bbsi_assembly_of_the_three_level1_modules():
     assert 'BbsI Rec Site' not in pl['genbank']                       # the cassette's own BbsI sites are gone
 
 
-def test_internal_restriction_sites_are_reported_on_level1():
+def test_internal_restriction_sites_are_reported_on_level1(monkeypatch):
+    import Biologik.level0_design.design as design_module
     cds = _long_cargo()
     cds = cds[:60] + 'GGTCTC' + cds[66:]
-    cargo = _design(cargoSeq=cds)['level1Constructs'][0]
+    monkeypatch.setattr(design_module, 'codon_optimize_part',
+                        lambda sequence, module, slot, protein=False: optimize_cds(sequence) | {'sequence': sequence, 'optimized': False})
+    cargo = _design(cargoSeq=cds)['level1Constructs'][0]     # ohne Optimierung bleibt die Stelle
     assert any('BsaI' in s and 'GFP' in s for s in cargo['internalSites'])
 
 
@@ -712,7 +719,7 @@ def test_short_real_parts_get_an_oligo_pair_that_anneals_to_the_bbsi_cut_fragmen
     fragment = pl['sequence'][pl['insertStart'] - 1:pl['insertEnd']]                     # what BbsI leaves between the backbone overhangs
     assert fragment == o['top']['sequence'][:4] + reverse_complement(o['bottom']['sequence'])
     assert o['top']['sequence'][4:] == reverse_complement(o['bottom']['sequence'])[:-4]   # the two strands are complementary
-    assert short in fragment
+    assert tiny['insert']['sequence'] in fragment and translate(tiny['insert']['sequence']) == translate(short)
 
     # real parts long enough for primers, and placeholders, get no oligos
     gene = next(c for c in design['level0Constructs'] if c['label'] == 'GFP')
@@ -794,3 +801,254 @@ def test_toolkit_parts_use_the_inserts_of_their_own_site_and_slot():
     assert by[('nc_site', 1)]['insert']['sequence'] == find_inserts('marker', 'spycatcher')[0]['sequence']
     assert by[('nc_site', 4)]['insert']['sequence'] == find_inserts('ncs', 'ncs', 'nc_site', 4, ncs_role='stop')[0]['sequence']
     assert by[('cargo_site', 5)]['insert']['sequence'] == find_inserts('tp', 'TP-Tm', 'cargo_site', 5, variant='n_term')[0]['sequence']
+
+
+def test_a_custom_nanocompartment_has_no_targeting_peptide():
+    shell = 'ATG' + 'GCT' * 30
+    design = _design(nanocompartment='custom', customNanocompartment={'label': 'MyShell', 'seq': shell},
+                     cargo_slots={'1': {'kind': 'custom', 'label': 'MyTP', 'seq': 'ATG' + 'GCT' * 4}, '2': {'kind': 'linker', 'id': 'GSSS2'}})
+    assert design['targetingPeptide'] is None and design['nanocompartment']['custom'] is True
+    with pytest.raises(ValueError, match='no targeting peptide'):
+        _design(nanocompartment='custom', customNanocompartment={'label': 'MyShell', 'seq': shell},
+                cargo_slots={'1': {'kind': 'tp'}, '2': {'kind': 'linker', 'id': 'GSSS2'}})
+
+
+def test_primers_exist_only_for_own_sequences_of_at_least_150_bp_and_shorter_parts_become_oligos():
+    design = _design(cargoSeq=_long_cargo(), nc_slots={'4': {'kind': 'custom', 'label': 'Mid', 'seq': 'ATG' + 'GCT' * 30}})
+    for c in design['level0Constructs']:
+        n = len(c['insert']['sequence'])
+        # primers: only own sequences that are long enough for PCR
+        assert c['primers']['possible'] is (c['isUser'] and n >= 150)
+        # oligo pair: every part with a real sequence below 150 bp — own or toolbox, no matter which
+        assert (c['oligos'] is not None) == (c['isReal'] and n < 150)
+    mid = next(c for c in design['level0Constructs'] if c['label'] == 'Mid')            # 93 bp own part -> oligos, no primers
+    assert mid['oligos']['possible'] is True and mid['primers']['possible'] is False and 'below 150 bp' in mid['primers']['reason']
+    toolkit = next(c for c in design['level0Constructs'] if not c['isUser'] and len(c['insert']['sequence']) >= 150)
+    assert 'only designed for your own sequences' in toolkit['primers']['reason'] and toolkit['oligos'] is None   # the shell
+    ncs = [c for c in design['level0Constructs'] if c['label'] == 'NCS']
+    assert ncs and all(c['oligos'] and c['oligos']['possible'] for c in ncs)
+
+
+
+def test_ncs_spacers_with_a_stop_codon_are_flagged_on_their_construct():
+    design = _design(cargoSeq=_long_cargo(), nc_slots={'4': {'kind': 'ncsstop'}})
+    flags = {(c['module'], c['slot']): c['stopCodon'] for c in design['level0Constructs']}
+    assert flags[('nc_site', 4)] is True and flags[('nc_site', 5)] is False and flags[('nc_site', 3)] is False
+    stop = next(c for c in design['level0Constructs'] if c['module'] == 'nc_site' and c['slot'] == 4)
+    assert stop['what'] == 'NCS spacer with stop codon (toolkit part)'
+
+
+def test_the_stop_codon_of_an_ncs_with_stop_is_marked_in_construct_oligos_and_plasmid():
+    design = _design(cargoSeq=_long_cargo(), cargo_slots={'1': {'kind': 'ncs'}, '2': {'kind': 'ncsstop'}},
+                     nc_slots={'4': {'kind': 'ncsstop'}})
+    stops = {'TAA', 'TAG', 'TGA'}
+    for module, slot in (('nc_site', 4), ('cargo_site', 2)):
+        c = next(c for c in design['level0Constructs'] if c['module'] == module and c['slot'] == slot)
+        a, b = location_span(c['stopLocation'])
+        assert c['sequence'][a - 1:b] in stops                                    # shown in reading direction
+        assert '/label="Stop codon"' in c['genbank'] and '/label="Stop codon"' in c['plasmid']['genbank']
+        o = c['oligos']['stop']
+        if o['top']:
+            assert c['oligos']['top']['sequence'][o['top'][0]:o['top'][1] + 1] in stops | {reverse_complement(x) for x in stops}
+        if o['bottom']:
+            assert c['oligos']['bottom']['sequence'][o['bottom'][0]:o['bottom'][1] + 1] in stops | {reverse_complement(x) for x in stops}
+        assert o['top'] or o['bottom']
+    plain = next(c for c in design['level0Constructs'] if c['module'] == 'nc_site' and c['slot'] == 5)
+    assert plain['stopLocation'] is None and plain['oligos']['stop'] is None
+
+
+def test_oligo_pairs_come_with_an_annotated_genbank_record_of_the_annealed_fragment():
+    design = _design(cargoSeq=_long_cargo(), nc_slots={'4': {'kind': 'ncsstop'}})
+    for c in design['level0Constructs']:
+        if not c['oligos']:
+            continue
+        gb, o = c['oligos']['genbank'], c['oligos']
+        assert gb.startswith('LOCUS       ' + f"Level0.{c['slot']}_Oligos_") and gb.strip().endswith('//')
+        assert gb.count('primer_bind') == 2 and f"/label=\"{o['top']['name']}\"" in gb and f"/label=\"{o['bottom']['name']}\"" in gb
+        assert f"{o['annealedLength']} bp" in gb.splitlines()[0]
+    stop = next(c for c in design['level0Constructs'] if c['module'] == 'nc_site' and c['slot'] == 4)
+    assert '/label="Stop codon"' in stop['oligos']['genbank'] and '/label="Frame spacer"' in stop['oligos']['genbank']
+
+
+def test_toolbox_constructs_name_the_level0_plasmid_they_come_from():
+    design = _design(cargoSeq=_long_cargo())
+    shell = next(c for c in design['level0Constructs'] if c['module'] == 'nc_site' and c['slot'] == 3)
+    assert shell['plasmid_source'] == {'id': 'Lvl0.3_a_016', 'name': '0.3E-Tm'}
+    own = next(c for c in design['level0Constructs'] if c['isUser'])
+    assert own['plasmid_source'] is None
+
+
+# Codon-Optimierung fuer S. cerevisiae: jede eingegebene Sequenz, Protein unveraendert, keine BsaI/BbsI-Stellen
+
+SITE_CDS = ('ATG' + 'GAAGAC' + 'GGTCTC' + 'GAGACC' + 'GTCTTC' + 'AAATTTGGTCTCAAAGAAGACGAGACCCGT' * 3
+            + 'TTTTTTTTTTTTTTTAAAAAAAAAAAAAAAAAA' + 'GGG' * 3)
+
+
+def test_codon_optimization_keeps_the_protein_and_removes_every_bsai_and_bbsi_site():
+    assert len(find_forbidden(SITE_CDS)) >= 8
+    result = optimize_cds(SITE_CDS)
+    assert result['status'] == 'optimized' and result['optimized']
+    assert translate(result['sequence']) == translate(SITE_CDS) and len(result['sequence']) == len(SITE_CDS)
+    assert find_forbidden(result['sequence']) == [] and result['forbiddenAfter'] == []
+    assert len(result['forbiddenBefore']) >= 8
+    import re
+    assert max(len(m) for m in re.findall(r'A+|C+|G+|T+', result['sequence'])) <= 6
+
+
+def test_codon_optimization_is_reproducible_and_yeast_like_like_vectorbuilder():
+    cds = _long_cargo()
+    a, b = optimize_cds(cds), optimize_cds(cds)
+    assert a['sequence'] == b['sequence']                                   # seeded with the input
+    assert translate(a['sequence']) == translate(cds)
+    # VectorBuilder (S. cerevisiae S288c) gives CAI ~0.87 and GC ~36 % for a poorly adapted CDS; same range here
+    assert a['caiBefore'] < 0.65 and 0.80 <= a['caiAfter'] <= 0.95
+    assert 30 <= a['gcAfter'] <= 45
+    assert a['caiAfter'] == round(cai(a['sequence']), 3)
+
+
+def test_codon_optimization_leaves_an_already_adapted_sequence_alone():
+    # an optimized sequence (CAI ~0.88, no sites, no long runs) is kept as entered, like VectorBuilder returns a yeast-adapted
+    # CDS unchanged — so optimizing twice changes nothing
+    once = optimize_cds(_long_cargo())['sequence']
+    again = optimize_cds(once)
+    assert again['status'] == 'kept' and again['sequence'] == once and again['changed'] == 0
+    assert 'Already well adapted' in again['reason']
+
+
+def test_codon_optimization_skips_a_sequence_that_is_not_a_codon_multiple():
+    result = optimize_cds('ATGAAATT')
+    assert result['status'] == 'skipped' and not result['optimized'] and result['sequence'] == 'ATGAAATT'
+    assert 'multiple of 3' in result['reason']
+
+
+def test_codon_optimization_keeps_an_internal_stop_codon_as_entered():
+    cds = 'ATG' + 'GCTGCTGCT' * 4 + 'TAG' + 'GCTGCTGCT' * 4
+    result = optimize_cds(cds)
+    assert translate(result['sequence']) == translate(cds)
+    assert result['sequence'][39:42] == 'TAG'
+
+
+def test_no_site_can_appear_across_the_seam_to_the_adapter():
+    from Biologik.level0_design.design import codon_optimize_part
+    # every user sequence is optimized against the real flanks of the slot it ends up in: Level 0 adapter, and the
+    # neighbour in the Level 1 module (overhang + GC spacer); in the cargo module the part sits as reverse complement
+    for module in ('cargo', 'nc'):
+        for slot in (1, 2, 3, 4, 5):
+            for seed in range(8):
+                import random
+                rng = random.Random(seed)
+                cds = 'ATG' + ''.join(rng.choice(['GAA', 'GAC', 'GGT', 'CTC', 'GAG', 'ACC', 'GTC', 'TTC', 'AAG']) for _ in range(60))
+                result = codon_optimize_part(cds, module, slot)
+                assert translate(result['sequence']) == translate(cds)
+                assert result['forbiddenAfter'] == [], (module, slot, seed)
+
+
+def test_every_user_sequence_in_a_full_design_is_site_free_from_level0_to_the_level1_modules():
+    seq = lambda i: 'ATG' + ('GAAGACGGTCTCGAGACCGTCTTC' + 'AAGGAAGACGGTCTC') * i
+    design = _design(
+        cargoSeq=_long_cargo()[:90] + 'GGTCTCGAAGACGAGACCGTCTTC' + _long_cargo()[90:],
+        cargo_slots={'1': {'kind': 'custom', 'label': 'PartA', 'seq': seq(2)}, '2': {'kind': 'linker', 'id': 'GSSS2'},
+                     '4': {'kind': 'linker', 'id': 'GSSS2'}, '5': {'kind': 'custom', 'label': 'PartB', 'seq': seq(3)}},
+        nc_slots={'1': {'kind': 'custom', 'label': 'PartC', 'seq': seq(2)}, '2': {'kind': 'linker', 'id': 'GSSS2'},
+                  '4': {'kind': 'linker', 'id': 'GSSS2'}, '5': {'kind': 'custom', 'label': 'PartD', 'seq': seq(1)}},
+    )
+    users = [c for c in design['level0Constructs'] if c['isUser']]
+    assert [c['label'] for c in users] == ['PartA', 'GFP', 'PartB', 'PartC', 'PartD']
+    report = {r['label']: r for r in design['codonOptimization']}
+    assert set(report) == {'PartA', 'GFP', 'PartB', 'PartC', 'PartD'}
+    assert all(r['status'] == 'optimized' and r['sitesRemoved'] and r['sitesLeft'] == [] for r in report.values())
+    for c in users:
+        assert c['codon']['status'] == 'optimized'
+        a, b = location_span(c['insert']['location'])
+        assert find_forbidden(c['sequence'][a - 1 - 5:b + 5]) == []          # insert + its seams in the BbsI-cut fragment
+        assert 'Codon-optimized for S. cerevisiae' in c['genbank']
+    assert all(c['codon'] is None for c in design['level0Constructs'] if not c['isUser'])
+    # the assembled Level 1 modules (BsaI) carry no BsaI/BbsI site anywhere
+    cargo, _, nc = design['level1Constructs']
+    assert find_forbidden(cargo['sequence']) == [] and find_forbidden(nc['sequence']) == []
+    # the cargo shown in the design is the optimized one, with the same protein as entered
+    assert find_forbidden(design['cargo']['sequence']) == []
+
+
+def test_library_parts_and_library_cargo_are_never_codon_optimized():
+    preset = next(e for e in load_parts()['level0_inserts'] if e['category'] == 'cargo' and len(e['sequence']) % 3 == 0
+                  and e['sequence'][-3:] not in ('TAA', 'TAG', 'TGA'))
+    design = _design(cargoSeq=preset['sequence'], cargoLabel=preset['part'])
+    assert design['codonOptimization'] == []
+    assert design['cargo']['sequence'] == preset['sequence']
+    gene = next(c for c in design['level0Constructs'] if c['module'] == 'cargo_site' and c['slot'] == 3)
+    assert not gene['isUser'] and gene['codon'] is None
+
+
+def test_validate_previews_the_codon_optimization_and_checks_the_optimized_mrna():
+    out = json.loads(_run_cli('validate', {'cargoSeq': SITE_CDS}).stdout)
+    codon = out['validation']['codonOptimization']
+    assert codon['status'] == 'optimized' and codon['sitesRemoved'] and codon['sitesLeft'] == []
+    assert 'codonOptimization' not in json.loads(_run_cli('validate', {'cargoSeq': 'ATGTAA'}).stdout)['validation']      # invalid sequence: no preview
+
+
+# Aminosaeuresequenzen als Eingabe: werden mit der Hefe-Codon-Tabelle in DNA uebersetzt
+
+PROTEIN = 'MSKGEELFTGVVPILVELDGDVNGHKFSVSGEGEGDATYGKLTLKFICTTGKLPVPWPTLVTTFGYGVQCFARYPDHMKQHDFFKSAMPEGYVQERTIFFKDDGNYK'
+
+
+def test_dna_and_protein_input_are_told_apart():
+    from Biologik.level0_design.sequence import is_protein
+    assert not is_protein('ATGAAATTTGGTCTCGAAGAC') and not is_protein('atg aaa ttt\n ggt ctc') and not is_protein('AUGAAAUUUGGUCUC')
+    assert is_protein(PROTEIN) and is_protein('>sp|P42212 GFP\nMSKGEELFTGVV') and is_protein('MKV*')
+    assert not is_protein('') and not is_protein('>header only')
+
+
+def test_validate_cargo_accepts_a_protein_and_counts_the_dna_it_becomes():
+    v = validate_cargo(PROTEIN)
+    assert v['ok'] and v['isProtein'] and v['aa'] == len(PROTEIN) and v['length'] == 3 * len(PROTEIN) and v['clean'] == PROTEIN
+    assert validate_cargo('>name\n' + PROTEIN[:60] + ' 1\n' + PROTEIN[60:])['clean'] == PROTEIN        # header, spaces, digits dropped
+    assert validate_cargo(PROTEIN + '*')['ok'] is False and 'Stop codon' in validate_cargo(PROTEIN + '*')['errors'][0]
+    assert validate_cargo('MKV*LL' * 6)['warnings'][0].startswith('Stop (*) at residue 4')
+    assert validate_cargo('MKVLLAGHE')['ok'] is False and 'too short' in validate_cargo('MKVLLAGHE')['errors'][0]
+    assert validate_cargo('MKVLLAGHE', kind='part')['ok']                                            # no minimum for own parts
+    assert validate_cargo('MKVXLLAGHEEDL', kind='part')['invalidChars'] == 1
+
+
+def test_a_protein_is_back_translated_with_yeast_codons_and_no_sites():
+    result = optimize_cds(PROTEIN, protein=True)
+    assert result['fromProtein'] and result['status'] == 'optimized' and result['caiBefore'] is None
+    assert translate(result['sequence']) == PROTEIN and len(result['sequence']) == 3 * len(PROTEIN)
+    assert 0.8 <= result['caiAfter'] <= 0.95 and 30 <= result['gcAfter'] <= 45
+    assert result == optimize_cds(PROTEIN, protein=True)                                                  # reproducible
+    # a repetitive protein with several site-like codon motifs stays site-free and keeps its protein
+    hard = 'MEDGLETVF' * 8 + 'KKKKKKKKKKKK'
+    out = optimize_cds(hard, protein=True)
+    assert translate(out['sequence']) == hard and find_forbidden(out['sequence']) == []
+
+
+def test_design_builds_from_protein_input_everywhere():
+    design = _design(
+        cargoSeq=PROTEIN,
+        cargo_slots={'1': {'kind': 'custom', 'label': 'PartA', 'seq': 'MKVLLAGHEEDLGSGS'}, '2': {'kind': 'linker', 'id': 'GSSS2'}},
+        nc_slots={'5': {'kind': 'custom', 'label': 'PartB', 'seq': 'MAAAKKEEDDGSGSGS'}, '4': {'kind': 'linker', 'id': 'GSSS2'}},
+    )
+    users = {c['label']: c for c in design['level0Constructs'] if c['isUser']}
+    assert set(users) == {'PartA', 'GFP', 'PartB'}
+    assert translate(design['cargo']['sequence']) == PROTEIN and design['cargo']['bp'] == 3 * len(PROTEIN)
+    assert translate(users['GFP']['insert']['sequence']) == PROTEIN                       # cargo site is shown in reading direction
+    for label, protein in (('PartA', 'MKVLLAGHEEDLGSGS'), ('PartB', 'MAAAKKEEDDGSGSGS')):
+        seq = users[label]['insert']['sequence']
+        assert translate(seq) == protein
+    report = {r['label']: r for r in design['codonOptimization']}
+    assert all(r['fromProtein'] and r['status'] == 'optimized' for r in report.values()) and len(report) == 3
+    assert 'Back-translated' in users['PartB']['genbank']
+    cargo, _, nc = design['level1Constructs']
+    assert find_forbidden(cargo['sequence']) == [] and find_forbidden(nc['sequence']) == []
+
+
+def test_custom_shell_can_be_a_protein_too():
+    shell = 'MSNQ' * 40
+    design = _design(nanocompartment='custom', customNanocompartment={'label': 'Mine', 'seq': shell}, cargo_slots={})
+    assert design['nanocompartment']['custom'] and translate(design['nanocompartment']['sequence']) == shell
+    assert design['nanocompartment']['shellBp'] == 3 * len(shell)
+
+
+def test_validate_previews_a_protein_back_translation():
+    out = json.loads(_run_cli('validate', {'cargoSeq': PROTEIN}).stdout)['validation']
+    assert out['isProtein'] and out['codonOptimization']['fromProtein'] and out['mrnaStructure'] is not None

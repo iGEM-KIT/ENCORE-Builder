@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 """Minimaler GenBank-Flatfile-Schreiber (keine externe Abhaengigkeit noetig,
-passend zum Rest des Repos — siehe commec-service/app.py fuer dieselbe
+passend zum Rest des Repos; siehe commec-service/app.py fuer dieselbe
 Stdlib-only-Philosophie). Ersetzt den bisherigen reinen FASTA-Export: FASTA
-kennt keine Feature-Tabelle, GenBank schon — genau das war der Punkt, echte
+kennt keine Feature-Tabelle, GenBank schon; genau das war der Punkt, echte
 Annotationen (Type-Zuordnung, Quelle PLACEHOLDER/PARTS DB/REAL INPUT, bei
 Level 2 sogar die echten Backbone-Features wie HIS3/AmpR/Origins) im Export
 zu erhalten statt sie beim Speichern zu verlieren.

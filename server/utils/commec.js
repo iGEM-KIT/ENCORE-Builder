@@ -71,7 +71,7 @@ export async function screenSequences(sequences) {
   if (!base) {
     return {
       available: false,
-      reason: 'COMMEC_URL is not set — biosecurity screening is disabled. See README.md ("Biosicherheits-Screening ist immer dabei") for how to run the commec-service sidecar.',
+      reason: 'COMMEC_URL is not set: biosecurity screening is disabled. See README.md ("Biosicherheits-Screening ist immer dabei") for how to run the commec-service sidecar.',
     }
   }
   if (!Array.isArray(sequences) || sequences.length === 0) {

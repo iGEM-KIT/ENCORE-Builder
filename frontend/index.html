@@ -126,7 +126,7 @@
     font-weight:700;font-size:11px;margin-left:7px;flex:none;transition:.15s;vertical-align:middle;padding:0}
   .info:hover{background:var(--teal-deep);color:#fff}
   /* Popover */
-  .popover{position:fixed;z-index:60;max-width:340px;background:var(--card);border:1px solid var(--line);
+  .popover{position:fixed;z-index:95;max-height:calc(100vh - 24px);overflow-y:auto;max-width:340px;background:var(--card);border:1px solid var(--line);
     border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.18);padding:0;display:none}
   .popover.show{display:block}
   .popover .pop-img{height:120px;background:var(--line-soft);border-radius:12px 12px 0 0;display:grid;place-items:center;
@@ -158,13 +158,15 @@
     border-radius:11px;padding:10px 15px;font-size:13px;font-weight:600;box-shadow:var(--shadow)}
   .flowstep .dot{width:8px;height:8px;border-radius:50%;flex:none}
   .flowarrow{color:var(--line);font-size:18px}
-  .prereq{display:flex;gap:12px;align-items:flex-start;background:var(--teal-soft);border:1px dashed var(--teal-deep);
-    border-radius:12px;padding:15px 17px;margin-bottom:36px;font-size:13px;color:var(--ink-soft)}
-  .prereq svg{flex:none;margin-top:2px;color:var(--teal-deep)}
-  .prereq b{color:var(--ink)}
-  .prereq-link{color:var(--teal-deep);font-weight:700;white-space:nowrap;text-decoration:underline}
-  .prereq-list{margin:8px 0 0;padding-left:18px}
-  .prereq-list li{margin-top:4px}
+  .prereq{display:flex;gap:12px;align-items:center;background:var(--teal-soft);border:1px dashed var(--teal-deep);
+    border-radius:12px;padding:15px 17px;margin-bottom:36px;font-size:13px;color:var(--ink-soft);text-decoration:none;transition:.15s}
+  .prereq:hover{border-style:solid;box-shadow:var(--shadow)}
+  .prereq:focus-visible{outline:2px solid var(--orange);outline-offset:3px}
+  .prereq svg{flex:none;color:var(--teal-deep)}
+  .prereq b{color:var(--ink);font-size:14px}
+  .prereq-sub{display:block;margin-top:2px}
+  .prereq-go{margin-left:auto;color:var(--teal-deep);font-weight:700;white-space:nowrap}
+  @media(max-width:520px){.prereq{flex-wrap:wrap}.prereq-go{margin-left:0}}
   .start-cta{display:inline-flex;align-items:center;gap:10px;background:var(--orange);color:var(--orange-ink);border:0;
     font-family:'Space Grotesk';font-weight:600;font-size:15.5px;padding:14px 26px;border-radius:12px;
     cursor:pointer;box-shadow:0 8px 22px rgba(230,159,0,.32);transition:.15s}
@@ -469,7 +471,10 @@
   /* ============ ORDER / TO ORDER ============ */
   .oi-seq{font-family:'JetBrains Mono';font-size:11px;line-height:1.5;word-break:break-all;color:var(--ink-soft);margin-top:2px}
   .oi-seq b{font-weight:700;color:var(--ink)}
+  mark.stp{background:rgba(213,94,0,.22);color:#9a4100;font-weight:700;border-radius:3px;padding:0 1px}
+  [data-theme="dark"] mark.stp{color:#f0a883}
   .ordblock .orderlist{margin-top:10px}
+  .lvltab-head .l0m-meta{margin-left:0}
   .orderlist{display:flex;flex-direction:column;gap:9px}
   .orderitem{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:11px;padding:12px 14px;background:var(--card)}
   .orderitem .oi-sw{width:11px;height:32px;border-radius:4px;flex:none;
@@ -544,6 +549,7 @@
   .l0m-meta{font-family:'JetBrains Mono';font-weight:400;font-size:11px;color:var(--muted);margin-left:6px}
   .l0m-seq{font-family:'JetBrains Mono';font-size:11.5px;line-height:1.6;word-break:break-all;color:var(--muted);background:var(--card-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;max-height:150px;overflow:auto}
   .l0m-seq .ins,.l0m-legend .ins{color:var(--ink);font-weight:700}
+  .l0m-seq .stp{background:rgba(213,94,0,.22);color:#9a4100;border-radius:3px}
   .l0m-seq .oh,.l0m-legend .oh{background:rgba(23,128,111,.16);border-radius:3px}
   .l0m-legend{font-size:11px;color:var(--muted);margin:6px 0 0}
   .l0m-badge{font-family:'JetBrains Mono';font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;border-radius:6px;padding:2px 8px;border:1px solid var(--line)}
@@ -616,6 +622,8 @@
   .asm-parts .ph{font-family:'JetBrains Mono';font-size:10px;color:#7a4600}
   .l0bulkrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0 0}
   .l0bulkrow>span{min-width:76px;font-size:12px;font-weight:700;color:var(--muted)}
+  a.chip{text-decoration:none;display:inline-block}
+  .l0m-note a{color:var(--teal-deep);font-weight:600}
   .chip{background:var(--card);border:1px solid var(--line);color:var(--ink);font-family:inherit;font-weight:600;font-size:12.5px;padding:8px 14px;border-radius:9px;cursor:pointer;transition:.12s}
   .chip:hover{background:var(--line-soft)}
   .chip.primary-chip{background:var(--forest);color:#fff;border-color:var(--forest)}
@@ -626,7 +634,7 @@
 </style>
 
 <header>
-  <a class="brand" id="homeLink" href="/" title="Back to the start page" aria-label="ENCORE toolKIT — start page">
+  <a class="brand" id="homeLink" href="/" title="Back to the start page" aria-label="ENCORE toolKIT, start page">
     
     <svg class="brand-wordmark" viewBox="0 0 95.647057 18.346445" xmlns="http://www.w3.org/2000/svg"><g id="g1" style="display:inline" transform="translate(-2.2073634,-20.674398)"><g id="g6" transform="matrix(0,-0.26547667,0.2831383,0,-3.1845086,43.067589)" style="display:inline"><g id="g5"><path style="display:inline;fill:#43a290;fill-opacity:1;stroke-width:0.637389" d="m 38.407292,47.481723 c -0.10159,0.220732 -1.625513,1.636466 -3.194162,2.822138 -0.190739,0.144164 -0.392565,-0.123132 -0.433885,-0.219952 -1.200078,-2.810789 -1.239013,-2.797324 -1.925003,-4.527256 -0.02907,-0.07307 -0.0015,-0.304156 0.07725,-0.336296 1.975689,-0.805465 2.869763,-1.256283 4.912005,-2.07 0.128836,-0.05135 0.371464,0.124251 0.373263,0.231354 0.0235,1.411659 0.290123,3.883619 0.190518,4.099981 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0-7-3-3-9-9-4" /><path style="display:inline;fill:#43a290;fill-opacity:1;stroke-width:0.637389" d="m 38.200792,56.709225 c 0.0875,0.226687 0.04076,2.30622 -0.202145,4.257496 -0.02954,0.237259 -0.361889,0.195717 -0.460121,0.157875 -2.852122,-1.098236 -2.869599,-1.060929 -4.588304,-1.774582 -0.07266,-0.03008 -0.219173,-0.210895 -0.18734,-0.289769 0.799242,-1.978215 1.099028,-2.933586 1.938733,-4.96528 0.05296,-0.128182 0.347986,-0.179805 0.426049,-0.106454 1.028756,0.966952 2.987347,2.498485 3.073096,2.720702 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0-7-3-3-9-9-4-0" /><path style="display:inline;fill:#43a290;fill-opacity:1;stroke-width:0.637389" d="m 44.796077,62.946996 c 0.224345,0.09334 1.695584,1.563749 2.938572,3.087382 0.151135,0.185264 -0.108499,0.396858 -0.203722,0.441739 -2.764384,1.303418 -2.749484,1.341828 -4.452807,2.091456 -0.07195,0.03176 -0.303891,0.01277 -0.338927,-0.06474 -0.878129,-1.944482 -1.361771,-2.821235 -2.250613,-4.831918 -0.0561,-0.126842 0.1104,-0.375814 0.217362,-0.381581 1.409819,-0.0758 3.8702,-0.433843 4.090104,-0.342328 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0-7-3-3-9-9-4-0-1" /><path style="display:inline;fill:#43a290;fill-opacity:1;stroke-width:0.637389" d="m 54.647801,63.016498 c 0.233529,-0.06714 2.300809,0.163073 4.223004,0.577374 0.233724,0.05038 0.162994,0.377759 0.116624,0.472266 -1.345829,2.743986 -1.31021,2.764691 -2.172863,4.413655 -0.03638,0.06972 -0.229426,0.19969 -0.305184,0.161012 -1.899901,-0.970824 -2.825064,-1.353813 -4.774661,-2.369664 -0.12301,-0.06407 -0.14837,-0.362507 -0.06841,-0.433786 1.054028,-0.939342 2.752552,-2.755019 2.981471,-2.82081 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0-7-3-3-9-9-4-0-1-8" /><path style="display:inline;fill:#43a290;fill-opacity:1;stroke-width:0.637389" d="m 61.454053,56.73854 c 0.104616,-0.219315 1.647877,-1.613944 3.232706,-2.777901 0.192706,-0.141525 0.390834,0.128521 0.430819,0.225902 1.161284,2.827036 1.200403,2.814107 1.862521,4.553317 0.02806,0.07347 -0.0027,0.304147 -0.08187,0.3352 -1.986586,0.778202 -2.88678,1.216674 -4.940025,2.002211 -0.129531,0.04958 -0.36972,-0.129352 -0.370043,-0.236469 -0.0041,-1.411851 -0.23665,-3.887245 -0.134081,-4.102215 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0-7-3-3-9-9-4-0-1-8-0" /><path style="display:inline;fill:#43a290;fill-opacity:1;stroke-width:0.637389" d="m 61.674715,47.729249 c -0.08122,-0.229014 0.02288,-2.306467 0.319541,-4.250296 0.03608,-0.236354 0.36715,-0.18566 0.464302,-0.145122 2.820737,1.176501 2.839238,1.139689 4.537601,1.900487 0.07181,0.03207 0.21326,0.21687 0.179274,0.294826 -0.853511,1.955413 -1.17954,2.902151 -2.074975,4.909906 -0.05647,0.126678 -0.352815,0.170136 -0.428823,0.09466 -1.00171,-0.994946 -2.917282,-2.579951 -2.99687,-2.804446 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0-7-3-3-9-9-4-0-1-8-0-1" /><path style="display:inline;fill:#43a290;fill-opacity:1;stroke-width:0.637389" d="m 54.828862,41.345079 c -0.222234,-0.09827 -1.660629,-1.60082 -2.869646,-3.151548 -0.147001,-0.188562 0.117238,-0.394365 0.21343,-0.437132 2.792499,-1.242039 2.778451,-1.28077 4.497917,-1.992591 0.07263,-0.03016 0.304098,-0.006 0.337414,0.0722 0.834965,1.963404 1.299123,2.850627 2.143336,4.880452 0.05328,0.128051 -0.118675,0.373284 -0.225737,0.376686 -1.411151,0.04467 -3.878841,0.348252 -4.096669,0.251903 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0-7-3-3-9-9-4-0-1-8-0-1-7" /><path style="display:inline;fill:#43a290;fill-opacity:1;stroke-width:0.637389" d="m 44.958694,41.264637 c -0.232514,0.07059 -2.302967,-0.129054 -4.231075,-0.514906 -0.234442,-0.04693 -0.168558,-0.375309 -0.12359,-0.470492 1.30513,-2.763575 1.269209,-2.783751 2.107399,-4.445284 0.03534,-0.07025 0.226486,-0.203016 0.302766,-0.165511 1.914039,0.942641 2.844762,1.311915 4.809159,2.298844 0.123941,0.06225 0.153711,0.360275 0.07481,0.432727 -1.040012,0.954838 -2.711537,2.795397 -2.939459,2.864565 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0-7-3-3-9-9-4-0-1-8-0-1-7-6" /></g><g id="g4"><path style="display:inline;fill:#398174;fill-opacity:1;stroke-width:0.780607" d="m 38.076644,40.883235 c -0.221297,0.19327 -2.621557,0.984877 -4.960593,1.497615 -0.284408,0.06234 -0.381784,-0.338631 -0.38133,-0.467523 0.01319,-3.742615 -0.03713,-3.747644 0.03015,-6.024049 0.0028,-0.0962 0.145784,-0.33904 0.249959,-0.334303 2.612458,0.119251 3.836546,0.07723 6.527856,0.221458 0.169794,0.0091 0.357556,0.328991 0.307616,0.449065 -0.658025,1.582067 -1.556716,4.468273 -1.773641,4.657726 z" id="path1-2-4-62-3-5-6-9-2-9-0-4" /><path style="display:inline;fill:#398174;fill-opacity:1;stroke-width:0.780607" d="m 50.210634,36.410138 c -0.293445,-0.01469 -2.569989,-1.11252 -4.608779,-2.368435 -0.247898,-0.152713 -0.03942,-0.508799 0.05044,-0.601205 2.609217,-2.683155 2.576512,-2.721726 4.206168,-4.312565 0.06883,-0.06726 0.34038,-0.142629 0.412029,-0.06686 1.796484,1.900474 2.706243,2.720533 4.542101,4.693747 0.115823,0.124491 0.0287,0.485034 -0.09065,0.536723 -1.572312,0.681005 -4.223643,2.132993 -4.511293,2.118596 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8" /><path style="display:inline;fill:#398174;fill-opacity:1;stroke-width:0.780607" d="m 62.031048,41.093439 c -0.202434,-0.212947 -1.094613,-2.577666 -1.705584,-4.892986 -0.07429,-0.281525 0.32222,-0.395731 0.451018,-0.400716 3.739838,-0.144737 3.74274,-0.195219 6.019956,-0.224049 0.09623,-0.0013 0.34489,0.131349 0.344553,0.235629 -0.0089,2.615163 0.08472,3.836388 0.05417,6.531387 -0.0019,0.170027 -0.313602,0.371127 -0.435691,0.326286 -1.608421,-0.590687 -4.529975,-1.366798 -4.728412,-1.575538 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0" /><path style="display:inline;fill:#398174;fill-opacity:1;stroke-width:0.780607" d="m 66.691063,52.371468 c 0.0133,-0.293513 1.100287,-2.575249 2.346496,-4.619988 0.15153,-0.248624 0.508605,-0.04184 0.601438,0.04758 2.695532,2.596429 2.733944,2.563545 4.332514,4.185617 0.06761,0.06848 0.144246,0.339699 0.06882,0.411707 -1.891901,1.805511 -2.707633,2.71915 -4.672101,4.564366 -0.123918,0.116433 -0.484892,0.031 -0.537148,-0.0881 -0.688472,-1.569055 -2.153049,-4.213453 -2.14002,-4.501168 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0-7" /><path style="display:inline;fill:#398174;fill-opacity:1;stroke-width:0.780607" d="m 61.559271,63.411322 c 0.218116,-0.196856 2.605111,-1.027588 4.935456,-1.578481 0.283352,-0.06698 0.387268,0.332345 0.38892,0.46123 0.04798,3.74233 0.09837,3.746536 0.0683,6.023736 -0.0012,0.09623 -0.140224,0.341379 -0.24446,0.338346 -2.614059,-0.07653 -3.837296,-0.01452 -6.530604,-0.11475 -0.16992,-0.0063 -0.362889,-0.323099 -0.314909,-0.443985 0.632083,-1.592607 1.483487,-4.493114 1.697288,-4.686087 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0-7-3" /><path style="display:inline;fill:#398174;fill-opacity:1;stroke-width:0.780607" d="m 49.559533,68.001186 c 0.293752,0.006 2.601676,1.036255 4.676612,2.231507 0.252293,0.145339 0.05441,0.507416 -0.0327,0.602432 -2.52896,2.75893 -2.495135,2.796517 -4.077173,4.434717 -0.06681,0.06927 -0.336027,0.152603 -0.409879,0.07899 -1.85175,-1.846668 -2.785288,-2.63955 -4.678529,-4.557775 -0.11946,-0.121004 -0.04293,-0.483981 0.07479,-0.539165 1.551546,-0.727069 4.158911,-2.256605 4.446859,-2.250697 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0-7-3-3" /><path style="display:inline;fill:#398174;fill-opacity:1;stroke-width:0.780607" d="m 37.785429,63.082254 c 0.197268,0.217742 1.032201,2.603287 1.587222,4.932651 0.06748,0.283234 -0.331658,0.387859 -0.460548,0.389729 -3.742239,0.05461 -3.746356,0.105008 -6.023606,0.07897 -0.09623,-0.001 -0.341625,-0.13962 -0.338784,-0.243855 0.0719,-2.61419 0.0077,-3.837316 0.10318,-6.530796 0.006,-0.169932 0.322495,-0.363425 0.443429,-0.315694 1.593724,0.629261 4.495735,1.475526 4.689086,1.688983 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0-7-3-3-9" /><path style="display:inline;fill:#398174;fill-opacity:1;stroke-width:0.780607" d="m 33.202121,52.03983 c -0.01793,0.293265 -1.141131,2.557413 -2.419719,4.58206 -0.155473,0.246178 -0.50921,0.03374 -0.600605,-0.05716 -2.653875,-2.638993 -2.692806,-2.606724 -4.265357,-4.254032 -0.06653,-0.06954 -0.138826,-0.34195 -0.0623,-0.412745 1.920398,-1.775172 2.750547,-2.675733 4.744143,-4.489437 0.12576,-0.114442 0.485327,-0.02322 0.53568,0.09664 0.663415,1.579812 2.085724,4.247182 2.06812,4.534653 z" id="path1-2-4-62-3-5-6-9-2-9-0-4-8-0-7-3-3-9-9" /></g><g id="g3"><path style="display:inline;fill:#2e6356;fill-opacity:1" d="m 41.639417,33.191386 c -0.359059,0.151202 -3.572789,0.0096 -6.579384,-0.271874 -0.365579,-0.03422 -0.334069,-0.403541 -0.261308,-0.559616 2.041249,-4.378709 1.93465,-4.602811 3.18676,-7.373088 0.05295,-0.117058 0.345559,-0.359785 0.465348,-0.313289 3.001453,1.164389 4.165292,1.715906 7.246324,2.941697 0.194382,0.07734 0.322193,0.497718 0.201758,0.625767 -1.586833,1.687143 -3.907502,4.802179 -4.259468,4.950392 z" id="path1-2-4-62" /><path style="display:inline;fill:#2e6356;fill-opacity:1" d="m 58.692774,33.139541 c -0.358769,-0.151889 -2.498499,-2.553902 -4.39353,-4.905008 -0.230425,-0.285873 0.05624,-0.52085 0.218841,-0.577547 4.561736,-1.590706 4.648008,-1.82339 7.506656,-2.857966 0.120821,-0.04369 0.498844,-0.0032 0.54906,0.115027 1.258665,2.963155 1.675043,4.181893 2.945199,7.244902 0.08013,0.193248 -0.132019,0.578016 -0.30778,0.581001 -2.315803,0.03932 -6.166737,0.548495 -6.518418,0.399606 z" id="path1-2-4-62-3" /><path style="display:inline;fill:#2e6356;fill-opacity:1" d="m 69.94238,44.286564 c -0.136306,-0.364975 0.13736,-3.570161 0.542261,-6.562634 0.04923,-0.363863 0.41694,-0.317189 0.56989,-0.238069 4.291044,2.219621 4.519341,2.122331 7.235773,3.487326 0.114784,0.05772 0.345231,0.360099 0.293884,0.477839 -1.286857,2.951021 -1.885777,4.091191 -3.237256,7.119198 -0.08527,0.191035 -0.51055,0.301448 -0.633536,0.175849 -1.620449,-1.654883 -4.637395,-4.101715 -4.771008,-4.459479 z" id="path1-2-4-62-3-5" /><path style="display:inline;fill:#2e6356;fill-opacity:1" d="m 70.113056,59.972949 c 0.155099,-0.357393 2.576197,-2.475506 4.944195,-4.349384 0.28793,-0.227852 0.520326,0.06091 0.575562,0.224009 1.54975,4.575811 1.781652,4.664167 2.790561,7.531973 0.0426,0.121211 -0.0013,0.498853 -0.119944,0.548007 -2.974319,1.232052 -4.19674,1.637489 -7.271012,2.880137 -0.193958,0.07839 -0.57681,-0.137195 -0.578219,-0.312975 -0.01856,-2.316064 -0.493193,-6.171407 -0.341158,-6.52174 z" id="path1-2-4-62-3-5-6" /><path style="display:inline;fill:#2e6356;fill-opacity:1" d="m 58.012479,71.194393 c 0.360859,-0.146856 3.572646,0.03354 6.575622,0.351294 0.36514,0.03863 0.329171,0.407549 0.254532,0.56273 -2.093968,4.353743 -1.990084,4.579116 -3.275552,7.334072 -0.05436,0.116412 -0.349933,0.355532 -0.469095,0.307649 -2.987176,-1.200545 -4.144271,-1.766073 -7.210278,-3.028976 -0.19343,-0.07968 -0.31616,-0.501572 -0.194189,-0.628157 1.607087,-1.667863 3.965201,-4.754649 4.318931,-4.898604 z" id="path1-2-4-62-3-5-6-9" /><path style="display:inline;fill:#2e6356;fill-opacity:1" d="m 41.43854,71.106776 c 0.356114,0.158014 2.454375,2.596337 4.308846,4.979565 0.225495,0.289778 -0.06516,0.519811 -0.228704,0.573712 -4.58832,1.512315 -4.678567,1.743486 -7.554521,2.728932 -0.121554,0.04161 -0.498826,-0.0054 -0.547009,-0.124417 -1.207711,-2.984286 -1.603147,-4.209978 -2.820636,-7.2943 -0.07681,-0.194589 0.141902,-0.575669 0.317688,-0.575643 2.316138,3.63e-4 6.175231,-0.442756 6.52431,-0.287864 z" id="path1-2-4-62-3-5-6-9-2" /><path style="display:inline;fill:#2e6356;fill-opacity:1" d="m 29.8519,59.947555 c 0.150821,0.359221 0.0058,3.5728 -0.278867,6.579093 -0.03461,0.365543 -0.4039,0.333638 -0.559893,0.260712 -4.376536,-2.0459 -4.600751,-1.939541 -7.369695,-3.194596 -0.117004,-0.05307 -0.359347,-0.346014 -0.312796,-0.465679 1.167579,-3.000215 1.720332,-4.163466 2.949398,-7.243193 0.07754,-0.194299 0.49806,-0.321664 0.625981,-0.201095 1.685457,1.588625 4.798022,3.912607 4.945864,4.26473 z" id="path1-2-4-62-3-5-6-9-2-9" /><path style="display:inline;fill:#2e6356;fill-opacity:1" d="m 29.732841,44.192046 c -0.15789,0.35617 -2.595483,2.455279 -4.978063,4.310582 -0.289702,0.225593 -0.519834,-0.06498 -0.573792,-0.228505 -1.513914,-4.587792 -1.745116,-4.677958 -2.731564,-7.553569 -0.04166,-0.121536 0.0052,-0.498827 0.124226,-0.547052 2.983864,-1.208752 4.209418,-1.604615 7.293316,-2.823178 0.194561,-0.07688 0.575718,0.141701 0.575754,0.317487 4.44e-4,2.316138 0.444908,6.175076 0.290138,6.52421 z" id="path1-2-4-62-3-5-6-9-2-9-0" /></g><g id="g2-8-7-0-3" transform="rotate(-178.48117,39.699725,56.927381)"><path style="fill:#213931;fill-opacity:1" d="m 28.949595,28.771922 c 0.389393,-0.01259 3.206265,1.626787 5.912646,2.966322 0.329076,0.162876 0.348654,0.345485 0.224829,0.465152 -3.473948,3.3573 -3.502915,3.399338 -5.664059,5.537483 -0.09137,0.09032 -0.290217,0.08261 -0.385411,-0.0037 -2.385402,-2.162032 -3.739047,-3.368055 -6.176738,-5.61594 -0.153797,-0.141818 -0.138436,-0.434673 0.01987,-0.5111 2.085781,-1.006979 5.687165,-2.825908 6.068866,-2.838248 z" id="path1-2-4-6-9" /><path style="display:inline;fill:#213931;fill-opacity:1" d="m 22.203262,28.592342 c 0.264141,-0.286382 3.247701,-1.489078 6.100714,-2.478607 0.346904,-0.12032 0.471245,0.228858 0.46969,0.401054 -0.04355,4.83093 0.146315,4.990724 0.15455,8.030812 2.93e-4,0.128476 -0.165431,0.470627 -0.293719,0.477943 -3.214144,0.183852 -4.501894,0.164117 -7.813907,0.325024 -0.208956,0.01015 -0.499456,-0.319491 -0.4429,-0.485932 0.745181,-2.192988 1.566624,-5.989589 1.825548,-6.270313 z" id="path1-2-4-2" transform="rotate(-134.61007,40.091286,60.167955)" /><path style="display:inline;fill:#213931;fill-opacity:1" d="m 28.949595,28.771922 c 0.389393,-0.01259 3.339279,1.270484 6.04566,2.610019 0.329076,0.162876 0.167399,0.496413 0.04357,0.61608 -3.473948,3.3573 -3.454674,3.604713 -5.615818,5.742858 -0.09137,0.09032 -0.451485,0.212174 -0.546679,0.125864 -2.385402,-2.162032 -3.274544,-3.093759 -5.712235,-5.341644 -0.153797,-0.141818 -0.122584,-0.58009 0.03572,-0.656517 2.085781,-1.006979 5.368078,-3.084351 5.749779,-3.096691 z" id="path1-2-4" transform="rotate(-134.61007,29.267331,62.197216)" /><path style="display:inline;fill:#213931;fill-opacity:1" d="m 28.949595,28.771922 c 0.389393,-0.01259 3.206265,1.626787 5.912646,2.966322 0.329076,0.162876 0.348654,0.345485 0.224829,0.465152 -3.473948,3.3573 -3.502915,3.399338 -5.664059,5.537483 -0.09137,0.09032 -0.290217,0.08261 -0.385411,-0.0037 -2.385402,-2.162032 -3.739047,-3.368055 -6.176738,-5.61594 -0.153797,-0.141818 -0.138436,-0.434673 0.01987,-0.5111 2.085781,-1.006979 5.687165,-2.825908 6.068866,-2.838248 z" id="path1-2-4-6" transform="rotate(-92.311914,28.499955,62.08729)" /><path style="display:inline;fill:#213931;fill-opacity:1" d="m 28.949595,28.771922 c 0.389393,-0.01259 3.206265,1.626787 5.912646,2.966322 0.329076,0.162876 0.348654,0.345485 0.224829,0.465152 -3.473948,3.3573 -3.502915,3.399338 -5.664059,5.537483 -0.09137,0.09032 -0.290217,0.08261 -0.385411,-0.0037 -2.385402,-2.162032 -3.739047,-3.368055 -6.176738,-5.61594 -0.153797,-0.141818 -0.138436,-0.434673 0.01987,-0.5111 2.085781,-1.006979 5.687165,-2.825908 6.068866,-2.838248 z" id="path1-2-4-6-7" transform="rotate(-43.77976,29.605843,63.87008)" /><path style="display:inline;fill:#213931;fill-opacity:1" d="m 28.949595,28.771922 c 0.389393,-0.01259 3.206265,1.626787 5.912646,2.966322 0.329076,0.162876 0.348654,0.345485 0.224829,0.465152 -3.473948,3.3573 -3.502915,3.399338 -5.664059,5.537483 -0.09137,0.09032 -0.290217,0.08261 -0.385411,-0.0037 -2.385402,-2.162032 -3.739047,-3.368055 -6.176738,-5.61594 -0.153797,-0.141818 -0.138436,-0.434673 0.01987,-0.5111 2.085781,-1.006979 5.687165,-2.825908 6.068866,-2.838248 z" id="path1-2-4-6-6" transform="rotate(87.811689,29.820759,63.284726)" /><path style="display:inline;fill:#213931;fill-opacity:1" d="m 25.632058,28.657475 c 0.270318,-0.280559 3.432496,-1.069834 6.306391,-1.99697 0.349443,-0.112733 0.490815,0.0045 0.485511,0.176618 -0.148796,4.828834 -0.140243,4.879164 -0.198243,7.918711 -0.0025,0.128454 -0.150406,0.261588 -0.278802,0.266129 -3.217387,0.113783 -5.028608,0.193307 -8.343341,0.282018 -0.209128,0.0056 -0.402335,-0.215016 -0.342166,-0.380184 0.792782,-2.176232 2.105672,-5.991306 2.37065,-6.266322 z" id="path1" transform="rotate(178.48117,39.699725,56.927381)" /><path style="display:inline;fill:#213931;fill-opacity:1" d="m 28.949595,28.771922 c 0.389393,-0.01259 3.206265,1.626787 5.912646,2.966322 0.329076,0.162876 0.348654,0.345485 0.224829,0.465152 -3.473948,3.3573 -3.502915,3.399338 -5.664059,5.537483 -0.09137,0.09032 -0.290217,0.08261 -0.385411,-0.0037 -2.385402,-2.162032 -3.739047,-3.368055 -6.176738,-5.61594 -0.153797,-0.141818 -0.138436,-0.434673 0.01987,-0.5111 2.085781,-1.006979 5.687165,-2.825908 6.068866,-2.838248 z" id="path1-2-4-6-7-3" transform="rotate(46.10434,30.562361,62.56752)" /></g></g></g><g id="layer3" style="display:inline" transform="translate(-2.2073634,-20.674398)"><path style="display:inline;fill:currentColor;fill-opacity:1;stroke:none;stroke-width:0.935105;stroke-opacity:1" d="m 74.149433,33.57882 h 3.446173 l 0.02933,-2.361266 2.148362,0.0076 2.265667,2.361266 h 4.318719 c 0,0 -1.307703,-1.235644 -2.646952,-2.451795 1.664465,-0.06495 2.366153,-1.202821 2.374745,-2.287739 0.0083,-1.06078 -1.289818,-2.22807 -2.587555,-2.210967 -3.107768,0.04096 -9.324023,0.03108 -9.324023,0.03108 l 3.443646,1.844054 c 0,0 2.819598,0.0089 4.19883,0.04144 0.178091,0.0042 0.383783,0.1899 0.392698,0.372956 0.0099,0.202785 -0.195386,0.452216 -0.392698,0.455833 -1.415251,0.02594 -4.148485,0.03108 -4.148485,0.03108 L 77.64776,28.490335 74.168846,26.65479 Z" id="path16" /><path style="fill:currentColor;fill-opacity:1;stroke-width:0.935105" d="m 23.836697,26.618511 -0.04478,6.975633 10.783852,0.02632 0.009,-1.875142 -7.40895,0.0085 0.01656,-0.732477 6.390736,0.01704 0.04139,-1.899329 -6.382459,0.08518 0.02484,-0.740993 7.392394,-0.01703 -0.04139,-1.80564 z" id="path6" /><path style="fill:currentColor;fill-opacity:1;stroke-width:0.935105" d="m 35.25047,26.745911 3.510812,-0.01337 5.331232,3.66569 v -3.652313 l 3.419792,0.01337 0.03901,6.876514 -3.58883,0.01338 -5.253215,-3.652313 0.05201,3.58542 -3.471802,0.06689 z" id="path7" /><path style="fill:currentColor;fill-opacity:1;stroke-width:0.935105" d="m 48.292486,32.231068 c -0.04897,-1.8636 -0.09117,-2.838113 0,-4.160692 0.05334,-0.773767 1.184049,-1.389228 1.716397,-1.418113 2.553818,-0.138576 5.556544,-0.05927 8.334928,-0.06689 1.170069,-0.0032 1.578816,0.669578 1.952277,1.149682 0.286159,0.367871 0.184255,1.591509 0.184255,1.591509 -1.731965,0.01791 -1.720678,0.01737 -3.417929,-0.01514 -0.13828,-0.700787 -0.283635,-0.68023 -0.644615,-0.820112 -1.321873,-0.06285 -1.951406,-0.02247 -3.937977,0.02127 -0.267985,0.0059 -0.739559,0.306528 -0.741172,0.468245 -0.0112,1.122863 -0.0051,1.122583 0.02322,1.953092 0.05746,0.442336 0.289606,0.562608 0.612144,0.69275 1.879142,0.08118 1.867097,0.0881 3.771329,0.04793 0.711656,-0.01502 0.908024,-0.903323 0.949289,-0.90245 1.597889,0.03385 1.597848,0.02684 3.21845,0.0274 0.21792,7.5e-5 0.150165,0.05737 0.0852,1.110409 -0.03697,0.599236 -0.93308,1.574768 -1.659479,1.608745 -2.730506,0.127718 -5.506784,0.04953 -8.313828,0.07693 -1.208318,0.0118 -2.109501,-0.489805 -2.13249,-1.364593 z" id="path8" /><path style="display:inline;fill:currentColor;fill-opacity:1;stroke-width:0.935105" d="m 87.000384,26.59891 10.838742,0.04732 0.0153,1.798146 -7.374024,0.07887 v 0.662475 h 6.346872 l 0.0307,1.829693 -6.438849,0.04732 -0.0307,0.646703 7.420008,0.04732 V 33.63377 L 86.9697,33.58645 Z" id="path13" /><path style="display:inline;fill:currentColor;fill-opacity:1;stroke:none;stroke-width:0.935105;stroke-opacity:1" d="m 61.143358,28.536445 c 0.185343,-0.892973 0.69178,-1.48281 1.899608,-1.70516 2.706553,-0.06458 5.428716,-0.08029 8.121792,-0.02992 1.221591,0.02285 2.237751,0.09177 2.296974,1.595472 0.08118,2.061249 0.106833,2.201266 0.03877,3.569869 -0.06999,1.407329 -1.249788,1.693338 -2.112829,1.695189 -2.73263,0.0059 -5.465394,0.03842 -8.1979,0.01103 -1.207308,-0.175611 -2.015049,-0.811975 -2.104564,-1.91563 -0.213018,-1.406039 2.83576,0.04654 4.148122,0.09972 1.297722,0.05258 2.612821,0.02566 3.896135,0.01995 0.526034,-0.153757 0.55652,-0.198067 0.843193,-0.658132 0.02025,-0.692276 0.06644,-1.045715 0.06784,-2.014283 -0.154517,-0.33795 -0.371995,-0.477858 -0.707506,-0.608274 -1.255649,1.74e-4 -2.712094,-0.01671 -3.915519,0.01 -0.289357,0.0065 -0.689825,0.193284 -0.72689,0.488613 -0.07565,0.602767 -0.07434,1.291221 -0.05815,2.203746 0.0048,0.267936 0.317418,0.492927 0.562128,0.558415 1.341262,0.358939 -4.072304,0.721055 -4.080279,-0.09972 -0.02373,-2.442289 0.006,-2.487016 0.02908,-3.220856 z" id="path15" /></g></svg>
     <span class="brand-sub">Golden Gate tool<b>KIT</b></span>
@@ -649,10 +657,10 @@
 <!-- ============ INTRO ============ -->
 <div class="intro" id="intro">
   <span class="kicker">ENCORE&nbsp;<b>Builder</b></span>
-  <h1>From coding sequence to an assembly-ready <em>nanocompartment&ndash;cargo</em> construct.</h1>
+  <h1>From coding sequence to an assembly-ready <em>nanocompartment-cargo</em> construct.</h1>
   <p class="lead">
     The ENCORE Builder turns your gene of interest into a complete encapsulin cargo construct:
-    configure the nanocompartment site, enter your cargo with the modules around it, and choose the promoter — the builder returns the
+    configure the nanocompartment site, enter your cargo with the modules around it, and choose the promoter; the builder returns the
     standardized Golden Gate modules, cargo primers, and the final Level&nbsp;2 plasmid.
   </p>
   <div class="flowrow">
@@ -666,18 +674,14 @@
     <span class="flowarrow">→</span>
     <div class="flowstep"><span class="dot" style="background:var(--orange)"></span>Order</div>
   </div>
-  <div class="prereq">
+  <a class="prereq" href="/guide.html" aria-label="Before you start, open the guide with all rules and notes">
     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
     <div>
-      <b>Before you start:</b>
-      <ul class="prereq-list">
-        <li>Know which nanocompartment fits your use case — if you want, use the separate nanocompartment filter first — <a href="/selector/selector-alpha.html" class="prereq-link">open the filter&nbsp;→</a></li>
-        <li>Prefer parts we already have on cryo stock at KIT over ordering something new.</li>
-        <li>Codon-optimize every sequence you use for your target organism.</li>
-        <li>All toolbox sequences are codon-optimized for <i>S.&nbsp;cerevisiae</i> — the builder can't re-optimize them for you, so if you're targeting a different organism, use the "Your own sequence …" option and paste in a version optimized for it instead.</li>
-      </ul>
+      <b>Before you start</b>
+      <span class="prereq-sub">All rules and notes for using the builder, on one page.</span>
     </div>
-  </div>
+    <span class="prereq-go">Open the guide&nbsp;→</span>
+  </a>
   <button class="start-cta" id="startBtn">
     Start builder
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
@@ -691,7 +695,7 @@
     <div class="s-step" data-target="sec-1"><button class="s-node"><span class="s-dot">2</span><span class="s-text"><span class="t">Cargo Site</span><span class="sub">Cargo &amp; modules</span></span></button><span class="s-line"></span></div>
     <div class="s-step" data-target="sec-2"><button class="s-node"><span class="s-dot">3</span><span class="s-text"><span class="t">Promoter</span><span class="sub">Drives both modules</span></span></button><span class="s-line"></span></div>
     <div class="s-step" data-target="sec-3"><button class="s-node"><span class="s-dot">4</span><span class="s-text"><span class="t">Result</span><span class="sub">Modules</span></span></button><span class="s-line"></span></div>
-    <div class="s-step" data-target="sec-4"><button class="s-node"><span class="s-dot">5</span><span class="s-text"><span class="t">Order</span><span class="sub">Stock, oligos, primers, dsDNA</span></span></button></div>
+    <div class="s-step" data-target="sec-4"><button class="s-node"><span class="s-dot">5</span><span class="s-text"><span class="t">Order</span><span class="sub">Stock, oligos, primers, DNA</span></span></button></div>
   </nav>
 </aside>
 <!-- ============ TOP BAR: progress + live construct map ============ -->
@@ -722,7 +726,7 @@
         <label class="field">
           <span class="lab">Nanocompartment · Type 0.3 <span class="hint">choose from library or use your own</span></span>
           <select id="ncSelect">
-            <option value="" disabled selected>— please select —</option>
+            <option value="" disabled selected>Please select</option>
           </select>
         </label>
         <div class="nc-meta" id="ncMeta"></div>
@@ -732,14 +736,10 @@
             <input type="text" id="customNcLabel" placeholder="e.g. My encapsulin shell" maxlength="60">
           </label>
           <label class="field">
-            <span class="lab">Targeting peptide <span class="hint">fused to your cargo</span></span>
-            <select id="customNcTp"></select>
-          </label>
-          <label class="field">
             <span class="lab">Shell CDS
               <button class="info" data-info="stop">i</button>
               <span class="hint" id="shellLen">0 bp</span></span>
-            <textarea id="shellSeq" placeholder="Paste the CDS of your nanocompartment shell (A/T/G/C) — without a stop codon at the end …"></textarea>
+            <textarea id="shellSeq" placeholder="Paste the CDS of your nanocompartment shell (DNA, A/T/G/C) or its amino acid sequence; without a stop codon at the end …"></textarea>
             <div class="seqmeta" id="shellMeta"></div>
             <div id="shellMrna" class="mrna-inline"></div>
           </label>
@@ -767,7 +767,7 @@
         <div class="htext">
           <div class="eyebrow">Step 2</div>
           <h2>Cargo Site<button class="info" data-info="cargo">i</button></h2>
-          <p>Your gene-of-interest CDS — without a stop codon at the end — and the modules around it.</p>
+          <p>Your gene-of-interest CDS (without a stop codon at the end) and the modules around it.</p>
         </div>
       </div>
       <div class="card-body">
@@ -781,7 +781,7 @@
           <label class="field">
             <span class="lab">Cargo · Type 0.3 <span class="hint">choose an example or use your own</span></span>
             <select id="cargoSelect">
-              <option value="" disabled selected>— please select —</option>
+              <option value="" disabled selected>Please select</option>
             </select>
           </label>
           <label class="field" id="cargoNameField" style="display:none">
@@ -792,7 +792,7 @@
             <span class="lab">Cargo sequence (CDS) · Type 0.3
               <button class="info" data-info="stop">i</button>
               <span class="hint" id="cargoLen">0 bp</span></span>
-            <textarea id="cargoSeq" style="display:none" placeholder="Paste your own cargo CDS (A/T/G/C) — without a stop codon at the end …"></textarea>
+            <textarea id="cargoSeq" style="display:none" placeholder="Paste your own cargo CDS (DNA, A/T/G/C) or its amino acid sequence; without a stop codon at the end …"></textarea>
             <div class="seqmeta" id="cargoMeta"></div>
             <div id="cargoMrna" class="mrna-inline"></div>
           </label>
@@ -830,7 +830,7 @@
           <label class="field">
             <span class="lab">Promoter<button class="info" data-info="promoter">i</button></span>
             <select id="promoter">
-              <option value="" disabled selected>— please select —</option>
+              <option value="" disabled selected>Please select</option>
             </select>
           </label>
           <div class="nav">
@@ -875,7 +875,7 @@
                into, and an order checklist (stock / PCR / synthesize). -->
           <div class="block">
             <div class="sectitle"><h3>Golden Gate assembly<button class="info" data-info="levels">i</button></h3></div>
-            <p class="secsub">Level 0 (individual parts) → Level 1 (modules) → Level 2 (finished construct). Click a level to expand or collapse it.</p>
+            <p class="secsub">Level 0 (individual parts) → Level 1 (modules) → Level 2 (finished construct). Open a level, then click a module to see more details.</p>
 
             <div class="lvltabs" id="lvltabs">
               <div class="lvltab" data-level="0">
@@ -903,7 +903,7 @@
                   </div>
                   <div class="l0m-sec" id="l0bulk" style="display:none">
                     <div class="l0m-h">Level 0 downloads <span class="l0m-meta" id="l0bulkMeta"></span></div>
-                    <p class="l0m-note" style="margin:0">Multi-record GenBank files — no need to open every module separately: module sequences, PCR primers, and the Level 0 plasmids with the parts cloned in. Record names end in <code>_Cargo</code> or <code>_NC</code> (site).</p>
+                    <p class="l0m-note" style="margin:0">Multi-record GenBank files: no need to open every module separately: module sequences, PCR primers, and the Level 0 plasmids with the parts cloned in. Record names end in <code>_Cargo</code> or <code>_NC</code> (site).</p>
                     <div class="l0bulkrow"><span>All sites</span>
                       <button class="chip primary-chip" type="button" data-bulk="seq" data-site="all">Module sequences (.gb)</button>
                       <button class="chip primary-chip" type="button" data-bulk="prim" data-site="all">Primers (.gb)</button>
@@ -956,8 +956,8 @@
                   </div>
                   <div class="l0m-sec" id="l1bulk" style="display:none">
                     <div class="l0m-h">Level 1 downloads <span class="l0m-meta" id="l1bulkMeta"></span></div>
-                    <p class="l0m-note" style="margin:0">Multi-record GenBank files — no need to open every module separately.</p>
-                    <div class="l0bulkrow"><span>Modules</span>
+                    <p class="l0m-note" style="margin:0">Multi-record GenBank files: no need to open every module separately.</p>
+                    <div class="l0bulkrow"><span>All modules</span>
                       <button class="chip primary-chip" type="button" id="l1bulkIns">Module inserts (.gb)</button>
                       <button class="chip primary-chip" type="button" id="l1bulkPl">Level 1 plasmids (.gb)</button></div>
                   </div>
@@ -989,18 +989,18 @@
                   </div>
                   <div class="l0m-sec" id="l2bulk" style="display:none">
                     <div class="l0m-h">Level 2 downloads</div>
-                    <p class="l0m-note" style="margin:0">GenBank files of the finished construct — the assembled insert and the plasmid with the insert cloned into pESC-HIS.</p>
-                    <div class="l0bulkrow"><span>Construct</span>
+                    <p class="l0m-note" style="margin:0">GenBank files of the finished construct; the assembled insert and the plasmid with the insert cloned into pESC-HIS.</p>
+                    <div class="l0bulkrow"><span>Complete construct</span>
                       <button class="chip primary-chip" type="button" id="plat2DlIns">Insert (.gb)</button>
                       <button class="chip primary-chip" type="button" id="plat2Dl">Level 2 plasmid (.gb)</button></div>
-                  </div>
-
-                  <div class="copybar">
-                    <button class="chip primary-chip" id="dlGenbank" style="display:none">Download complete GenBank (all levels, .gb)</button>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+
+          <div class="copybar" style="justify-content:flex-start">
+            <button class="chip primary-chip" id="dlGenbank" style="display:none">Download complete GenBank (all levels, .gb)</button>
           </div>
 
           <div class="nav">
@@ -1019,7 +1019,7 @@
         <div class="htext">
           <div class="eyebrow">Step 5</div>
           <h2>Order</h2>
-          <p>What the KIT can ship, what to order as oligos or primers, and the sequences as dsDNA.</p>
+          <p>What the KIT can ship, what to order as oligos or primers, and the sequences as DNA. Your own sequences are codon-optimized for <i>S. cerevisiae</i>; the sequences below are the optimized ones.</p>
         </div>
       </div>
       <div class="card-body">
@@ -1028,28 +1028,51 @@
           Complete step 4 first.
         </div>
         <div id="body4" style="display:none">
-          <div class="l0m-sec ordblock" id="ordStock">
-            <div class="l0m-h">From the KIT <span class="l0m-meta" id="ordStockMeta"></span></div>
-            <p class="l0m-note">Toolbox parts the KIT has on stock — shipped on request as Level 0 plasmids in <i>E.&nbsp;coli</i>.</p>
-            <div class="orderlist" id="ordStockList"></div>
-          </div>
-          <div class="l0m-sec ordblock" id="ordOligo">
-            <div class="l0m-h">Oligos <span class="l0m-meta" id="ordOligoMeta"></span></div>
-            <p class="l0m-note">Parts shorter than 40 bp are too short for PCR primers: order the two oligos of a pair, anneal them and ligate the product into the Level 0 backbone — the 5′ overhangs already fit, no digest needed. Also an option for toolbox parts if you do not want to request them from the KIT.</p>
-            <div class="orderlist" id="ordOligoList"></div>
-            <div class="l0m-actions" id="ordOligoActions"></div>
-          </div>
-          <div class="l0m-sec ordblock" id="ordPrimer">
-            <div class="l0m-h">Primers <span class="l0m-meta" id="ordPrimerMeta"></span></div>
-            <p class="l0m-note">To build your own sequences into the toolbox: PCR them with these primers (annealing part plus BbsI site, overhangs and frame spacer), then clone the product into the Level 0 backbone with BbsI.</p>
-            <div class="orderlist" id="ordPrimerList"></div>
-            <div class="l0m-actions" id="ordPrimerActions"></div>
-          </div>
-          <div class="l0m-sec ordblock" id="ordDs">
-            <div class="l0m-h">dsDNA <span class="l0m-meta" id="ordDsMeta"></span></div>
-            <p class="l0m-note">Every part with a real sequence as one double-stranded fragment (adapter with BbsI sites, overhangs and frame spacer around the part). Order it as dsDNA instead of PCR with primers, or instead of requesting the plasmid from the KIT, and clone it with BbsI into the Level 0 backbone.</p>
-            <div class="orderlist" id="ordDsList"></div>
-            <div class="l0m-actions" id="ordDsActions"></div>
+          <div class="lvltabs" id="ordTabs">
+            <div class="lvltab" id="ordStock">
+              <button class="lvltab-head" type="button">
+                <span class="lvltab-title">From the KIT</span><span class="l0m-meta" id="ordStockMeta"></span>
+                <svg class="lvltab-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="lvltab-body ordblock">
+                <p class="l0m-note">Toolbox parts the KIT has on stock, shipped on request as Level 0 plasmids in <i>E.&nbsp;coli</i>. Write to <a href="mailto:igem@blt.kit.edu">igem@blt.kit.edu</a> or use the button below, which opens an e-mail with your parts already listed.</p>
+                <div class="orderlist" id="ordStockList"></div>
+                <div class="l0m-actions" id="ordStockActions"></div>
+              </div>
+            </div>
+            <div class="lvltab" id="ordOligo">
+              <button class="lvltab-head" type="button">
+                <span class="lvltab-title">Oligos</span><span class="l0m-meta" id="ordOligoMeta"></span>
+                <svg class="lvltab-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="lvltab-body ordblock">
+                <p class="l0m-note">Every part shorter than 150 bp (your own sequence or a toolbox part) is ordered as an oligo pair (toolbox parts alternatively from the KIT): order the two oligos, anneal them and ligate the product into the Level 0 backbone; the 5′ overhangs already fit, no digest needed.</p>
+                <div class="orderlist" id="ordOligoList"></div>
+              <div class="l0m-actions" id="ordOligoActions"></div>
+              </div>
+            </div>
+            <div class="lvltab" id="ordPrimer">
+              <button class="lvltab-head" type="button">
+                <span class="lvltab-title">Primers</span><span class="l0m-meta" id="ordPrimerMeta"></span>
+                <svg class="lvltab-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="lvltab-body ordblock">
+                <p class="l0m-note">To build your own sequences into the toolbox: PCR them with these primers (annealing part plus BbsI site, overhangs and frame spacer), then clone the product into the Level 0 backbone with BbsI.</p>
+                <div class="orderlist" id="ordPrimerList"></div>
+              <div class="l0m-actions" id="ordPrimerActions"></div>
+              </div>
+            </div>
+            <div class="lvltab" id="ordDs">
+              <button class="lvltab-head" type="button">
+                <span class="lvltab-title">DNA</span><span class="l0m-meta" id="ordDsMeta"></span>
+                <svg class="lvltab-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg>
+              </button>
+              <div class="lvltab-body ordblock">
+                <p class="l0m-note">Every part with a real sequence that is not ordered as oligos, as one double-stranded fragment (adapter with BbsI sites, overhangs and frame spacer around the part). Order it as DNA instead of PCR with primers, or instead of requesting the plasmid from the KIT, and clone it with BbsI into the Level 0 backbone.</p>
+                <div class="orderlist" id="ordDsList"></div>
+              <div class="l0m-actions" id="ordDsActions"></div>
+              </div>
+            </div>
           </div>
 
           <div class="nav">
@@ -1062,7 +1085,7 @@
   </section>
 </div>
 
-<footer id="pagefoot">ENCORE Builder · Frontend prototype v6 · iGEM KIT — draft, not final.</footer>
+<footer id="pagefoot">ENCORE Builder · Frontend prototype v6 · iGEM KIT · draft, not final.</footer>
 
 <!-- Info popover (positioned/populated via JS) -->
 <div class="popover" id="popover">
@@ -1138,10 +1161,15 @@
     <p class="modal-sub" id="l0mSub"></p>
     <div class="l0m-warn" id="l0mWarn" style="display:none"></div>
 
+    <div class="l0m-sec" id="l0mCodonSec" style="display:none">
+      <div class="l0m-h">Codon optimization <button class="info" type="button" data-info="codonOpt" aria-label="About the codon optimization">i</button></div>
+      <div id="l0mCodon"></div>
+    </div>
+
     <div class="l0m-sec">
       <div class="l0m-h">Part with overhangs <span class="l0m-meta" id="l0mAdapter"></span></div>
       <div class="l0m-seq" id="l0mSeq"></div>
-      <div class="l0m-legend"><span class="ins">insert</span> · <span class="oh">overhangs</span> · rest = BbsI sites / spacer bases</div>
+      <div class="l0m-legend"><span class="ins">insert</span> · <span class="oh">overhangs</span> · rest = BbsI sites / spacer bases<span id="l0mStopLegend" style="display:none"> · <span class="stp" style="padding:0 3px;font-weight:700">stop codon</span></span></div>
       <div class="l0m-actions">
         <button class="chip" type="button" id="l0mCopySeq">Copy sequence</button>
         <button class="chip primary-chip" type="button" id="l0mDlSeq">Download GenBank (.gb)</button>
@@ -1149,8 +1177,8 @@
     </div>
 
     <div class="l0m-sec" id="l0mPrimSec">
-      <div class="l0m-h">PCR primers <span class="l0m-meta" id="l0mPrimMeta"></span></div>
-      <p class="l0m-note" style="margin:0 0 8px">Make an existing sequence Level 0-compatible: PCR it with these primers, then clone the product into the Level 0 backbone with BbsI.</p>
+      <div class="l0m-h">PCR primers <button class="info" type="button" data-info="primers" aria-label="How the primers are calculated">i</button> <span class="l0m-meta" id="l0mPrimMeta"></span></div>
+      <p class="l0m-note" id="l0mPrimIntro" style="margin:0 0 8px">Make an existing sequence Level 0-compatible: PCR it with these primers, then clone the product into the Level 0 backbone with BbsI.</p>
       <div id="l0mPrimBody"></div>
     </div>
 
@@ -1180,7 +1208,13 @@ const $$ = s => Array.from(document.querySelectorAll(s));
 const esc = v => String(v??'').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
 
 /* ---------- Sequenz-Helfer ---------- */
-const clean = s => (s||'').toUpperCase().replace(/[^ATGC]/g,'');
+/* A sequence field takes DNA (CDS) or an amino acid sequence — same rule as is_protein() in Biologik/level0_design/sequence.py:
+   DNA if >= 90 % of the letters are A/C/G/T/U/N, else protein. A protein is back-translated by the builder (S. cerevisiae codon usage). */
+const isProteinText = s => { const l=(s||'').toUpperCase().replace(/^>.*$/gm,'').replace(/[^A-Z*]/g,''); return l.length>0 && l.replace(/[^ACGTUN]/g,'').length/l.length<0.9; };
+const cleanProtein = s => (s||'').toUpperCase().replace(/^>.*$/gm,'').replace(/[^ACDEFGHIKLMNPQRSTVWY*]/g,'');
+const clean = s => isProteinText(s) ? cleanProtein(s) : (s||'').toUpperCase().replace(/[^ATGC]/g,'');
+const seqBp = s => isProteinText(s) ? 3*s.replace(/\*/g,'').length : s.length;           // DNA length (a protein: after back-translation)
+const seqLenLabel = s => isProteinText(s) ? `${s.replace(/\*/g,'').length} aa → ${seqBp(s)} bp` : `${s.length} bp`;
 const gc = s => s.length ? Math.round((s.replace(/[^GC]/g,'').length/s.length)*100) : 0;
 const rc = s => s.split('').reverse().map(c => ({A:'T',T:'A',G:'C',C:'G'}[c]||'N')).join('');
 const comp = s => s.split('').map(c => ({A:'T',T:'A',G:'C',C:'G'}[c]||'N')).join('');   // same column order, NOT reversed — the antiparallel strand directly below
@@ -1232,7 +1266,7 @@ const LIB = {
   level0Backbones: [], level1Backbones: [], level2Backbones: [],   // only available once the backend serves the real parts database
 };
 
-const LIBS_KEY='encore.libs.v2';
+const LIBS_KEY='encore.libs.v3';
 function applyLibs(l){
   LIB.nanocompartments = l.nanocompartments || LIB.nanocompartments;
   LIB.cargoPresets     = l.cargoPresets     || LIB.cargoPresets;
@@ -1266,46 +1300,58 @@ async function loadLibraries(){
     if(!api.available) return;
     applyLibs(api.librariesData); store(api.librariesData);
   }catch(err){
-    console.warn('[ENCORE] /api/libraries failed — using the inline fallback', err);
+    console.warn('[ENCORE] /api/libraries failed: using the inline fallback', err);
   }
 }
 
 /* ---------- Info bubble content (placeholder graphic + theory) ---------- */
 const INFO = {
+  primers: { title:'How the PCR primers are calculated', img:'Diagram: clamp + BbsI site + overhangs + annealing part',
+    body:`<p><b>Annealing part.</b> At both ends of your part a 25-nt stretch is taken (forward = the 5′ end, reverse = the reverse complement of the 3′ end) and shortened base by base, down to 18 nt, until both primers have a melting temperature of at most 72 °C and differ by at most 2 °C. Tm is the nearest-neighbour value from <code>primer3</code>, calculated on the annealing part only.</p>
+          <p><b>Checks.</b> Heterodimers, homodimers and hairpins are evaluated by primer3 on the <i>complete</i> primer, because the 5′ extension changes the secondary structure. Anything critical is listed as a warning. The <b>Q5 annealing temperature</b> is the lower Tm of the pair minus 2 to 5 °C (the hotter the primers, the smaller the offset).</p>
+          <p><b>5′ extension.</b> Each primer carries, in front of the annealing part, the <b>TTTT clamp</b>, the adapter flank of this Type (BbsI site, the Level 0 and Level 1 overhangs, for Type 0.1/0.5 also the Level 2 overhang) and the 2-nt frame spacer. The PCR product therefore is exactly the Level 0 construct, ready for BbsI cloning into the backbone.</p>
+          <p><b>Why the TTTT clamp?</b> Restriction enzymes cut badly when their recognition site sits at the very end of a DNA fragment. The four extra bases give BbsI room to bind and cut; they are cut off again and never end up in the plasmid. A/T-only bases add no extra GC-rich structure to the primer.</p>
+          <p><b>Only when it makes sense.</b> Primers are designed for your own sequences of at least 150 bp. Shorter parts are ordered as an oligo pair, toolbox parts are requested from the KIT or ordered as DNA. If the insert already contains a BbsI or BsaI site, you get a warning; it has to be domesticated first. Without <code>primer3</code> only a rough Wallace estimate (2 °C per A/T, 4 °C per G/C) is shown.</p>` },
   level0: { title:'Level 0 · individual parts', img:'Diagram: ten parts, one plasmid each',
-    body:`<p>Level 0 parts are cloned <b>separately</b> — one plasmid each. They are not joined yet: the <b>Type number</b> alone fixes where each part ends up once BsaI assembles them into the Level 1 module.</p>` },
+    body:`<p>Level 0 parts are cloned <b>separately</b>; one plasmid each. They are not joined yet: the <b>Type number</b> alone fixes where each part ends up once BsaI assembles them into the Level 1 module.</p>` },
   level1: { title:'Level 1 · modules (BsaI)', img:'Diagram: BsaI assembly of five Level 0 parts',
-    body:`<p>The Level 0 parts are <b>joined</b> through their shared overhangs by BsaI and sit between the acceptor overhangs of the Level 1 backbone. <span class="l1oh" style="display:inline-block">grey</span> acceptor overhangs (BsaI) · <span class="l1oh l2" style="display:inline-block">orange</span> Level 2 overhangs (BbsI, cut later). Sticky ends as they pair: top strand 5′→3′ at the upper left, bottom strand at the lower right (3′→5′) — the right end of one construct matches the left end of the next. Click a module to see its sequence and the Level 1 plasmid.</p>` },
+    body:`<p>The Level 0 parts are <b>joined</b> through their shared overhangs by BsaI and sit between the acceptor overhangs of the Level 1 backbone. <span class="l1oh" style="display:inline-block">grey</span> acceptor overhangs (BsaI) · <span class="l1oh l2" style="display:inline-block">orange</span> Level 2 overhangs (BbsI, cut later). Sticky ends as they pair: top strand 5′→3′ at the upper left, bottom strand at the lower right (3′→5′); the right end of one construct matches the left end of the next. Click a module to see its sequence and the Level 1 plasmid.</p>` },
   level2: { title:'Level 2 · finished construct (BbsI)', img:'Diagram: cargo ← promoter → NC module',
-    body:`<p>Both transcripts <b>start (5′) at the central promoter</b> and run outward (3′): the NC module on the <b>sense (+) strand</b> (right), the cargo module on the <b>antisense (−) strand</b> (left). The four modules around the shell (Type 0.1, 0.2, 0.4, 0.5) can be NCS spacers, linkers, display markers — e.g. <b>SpyCatcher</b>, displayed on the encapsulin exterior — or your own sequences. A <b style="color:#A35C00">*</b> marks the part carrying the <b>stop codon</b> (each ORF's 3′ end); its position follows the C/N fusion and the modules next to the shell.</p>` },
+    body:`<p>Both transcripts <b>start (5′) at the central promoter</b> and run outward (3′): the NC module on the <b>sense (plus) strand</b> (right), the cargo module on the <b>antisense (minus) strand</b> (left). The four modules around the shell (Type 0.1, 0.2, 0.4, 0.5) can be NCS spacers, linkers, display markers (e.g. <b>SpyCatcher</b>, displayed on the encapsulin exterior) or your own sequences. A <b style="color:#A35C00">*</b> marks the part carrying the <b>stop codon</b> (each ORF's 3′ end); its position follows the C/N fusion and the modules next to the shell.</p>` },
   nc: { title:'What is a nanocompartment?', img:'Diagram: encapsulin shell with cargo',
     body:`<p>Encapsulins are hollow protein cages that self-assemble and encapsulate cargo proteins inside.</p>
           <p>The variant you choose determines the matching <b>targeting peptide (TP)</b>, which directs your cargo into the compartment.</p>
-          <p>The four modules around the shell (Type 0.1, 0.2, 0.4 and 0.5) are freely configurable: keep them as <b>NCS</b> spacers, or place a <b>linker</b>, a display marker such as <b>SpyCatcher</b> / <b>SpyTag</b>, or <b>your own sequence</b> there. A marker is presented on the <i>outside</i> of the cage — handy for attaching binders, tags or a second protein.</p>` },
+          <p>The four modules around the shell (Type 0.1, 0.2, 0.4 and 0.5) are freely configurable: keep them as <b>NCS</b> spacers, or place a <b>linker</b>, a display marker such as <b>SpyCatcher</b> / <b>SpyTag</b>, or <b>your own sequence</b> there. A marker is presented on the <i>outside</i> of the cage; handy for attaching binders, tags or a second protein.</p>` },
   cargo: { title:'Cargo / gene of interest', img:'Diagram: cargo CDS in reading frame',
-    body:`<p>The cargo is the protein that should end up inside the compartment — e.g. an enzyme or a reporter like GFP.</p>
+    body:`<p>The cargo is the protein that should end up inside the compartment, e.g. an enzyme or a reporter like GFP.</p>
           <p>You provide the coding sequence (CDS). It is directed into the compartment via the targeting peptide.</p>` },
-  stop: { title:'Why no stop codon?', img:'Diagram: TP–linker–cargo reading frame',
+  stop: { title:'Why no stop codon?', img:'Diagram: TP-linker-cargo reading frame',
     body:`<p>The cargo is fused with the linker and targeting peptide into <b>one continuous protein</b>.</p>
-          <p>A stop codon (TAA, TAG, or TGA) at the end would terminate translation early — the TP would no longer be attached and the cargo would not be encapsulated.</p>` },
+          <p>A stop codon (TAA, TAG, or TGA) at the end would terminate translation early; the TP would no longer be attached and the cargo would not be encapsulated.</p>` },
   commec: { title:'Biosecurity screening (COMMEC)', img:'Diagram: your sequence → COMMEC → curated biorisk database',
-    body:`<p><b>COMMEC</b> (<i>Common Mechanism</i>, from IBBIS — the International Biosecurity and Biosafety Initiative for Science) is an open-source tool that checks DNA for similarity to known biosecurity concerns — the same kind of check DNA synthesis providers run before they ship an order.</p>
+    body:`<p><b>COMMEC</b> (<i>Common Mechanism</i>, from IBBIS, the International Biosecurity and Biosafety Initiative for Science) is an open-source tool that checks DNA for similarity to known biosecurity concerns. It is the same kind of check DNA synthesis providers run before they ship an order.</p>
           <p><b>What is screened:</b> only sequences you typed or pasted yourself (cargo, your own shell, your own module parts). Toolkit parts are not screened.</p>
           <p><b>Against which database:</b> this installation uses COMMEC's curated <b>Biorisk + Low-concern</b> database (about 1.2&nbsp;GB): known toxins, virulence factors and regulated pathogens, plus a list of harmless related sequences so common genes are not over-flagged.</p>
-          <p><b>Not included:</b> the full protein (NR, ~530&nbsp;GB) and nucleotide (NT, ~580&nbsp;GB) taxonomy databases. So there is no best-match against arbitrary organisms — only direct hits against the curated list count, and only a real biorisk hit raises a warning here.</p>
+          <p><b>Not included:</b> the full protein (NR, ~530&nbsp;GB) and nucleotide (NT, ~580&nbsp;GB) taxonomy databases. So there is no best-match against arbitrary organisms; only direct hits against the curated list count, and only a real biorisk hit raises a warning here.</p>
           <p>A hit never blocks you silently: you review it and confirm before continuing. The screening runs locally in its own container and is a helper check, not a replacement for your institution's biosafety review.</p>` },
   promoter: { title:'Bidirectional promoter', img:'Diagram: GAL1-10 transcribing both ways',
     body:`<p><b>GAL1-10</b> is a bidirectional yeast promoter: it drives <b>two genes at once</b> in opposite directions. Both transcripts <b>start (5′) at the promoter</b> and run outward.</p>
-          <p>The nanocompartment module is read off the <b>sense (+) strand</b> (to the right), the cargo module off the <b>antisense (−) strand</b> (to the left) — that is why they point away from each other. Inducible via galactose.</p>` },
+          <p>The nanocompartment module is read off the <b>sense (plus) strand</b> (to the right), the cargo module off the <b>antisense (minus) strand</b> (to the left); that is why they point away from each other. Inducible via galactose.</p>` },
   levels: { title:'Level 0 → 1 → 2', img:'Diagram: hierarchical Golden Gate assembly',
-    body:`<p><b>Domestication (BbsI):</b> external sequences are cloned into standardized Level 0 parts using BbsI — internal sites are removed and the fixed 4 nt fusion overhangs are added.</p>
+    body:`<p><b>Domestication (BbsI):</b> external sequences are cloned into standardized Level 0 parts using BbsI; internal sites are removed and the fixed 4 nt fusion overhangs are added.</p>
           <p><b>Level 0 → 1 (BsaI):</b> several Level 0 parts are assembled via BsaI into one module (cargo module, NC module).</p>
           <p><b>Level 1 → 2 (BsaI):</b> the modules plus the promoter form the finished construct in the target vector.</p>` },
+  codonOpt: { title:'Codon optimization for <i>S. cerevisiae</i>', img:'Diagram: synonymous codons, restriction sites removed',
+    body:`<p>Every sequence you enter yourself (cargo, your own shell, your own sequence in a module) is <b>translated and back-translated</b> with the codon usage of <i>Saccharomyces cerevisiae</i> (Kazusa table). The <b>protein stays exactly the same</b>; only synonymous codons change. Library parts are toolkit sequences and are never touched.</p>
+          <p><b>How codons are chosen.</b> Each codon is drawn at random, weighted by how often yeast uses it (frequency to the power of 3, so frequent codons dominate), and codons below 10&nbsp;% of their amino acid's usage are never used. That gives a high <b>CAI</b> (codon adaptation index, 1 = only the most frequent codons) of about 0.85 to 0.9 at a natural GC content of about 35 to 40&nbsp;%; the same range the VectorBuilder optimizer gives for the same sequences. The draw is seeded with your sequence, so the same input always gives the same result.</p>
+          <p><b>What is kept out.</b> An exact search then corrects as few codons as needed so that <b>no BsaI site (GGTCTC / GAGACC) and no BbsI site (GAAGAC / GTCTTC)</b> remains (also not across the seam to the overhang adapter and the neighbouring part) and no run of 7 identical bases appears. Without that the Golden Gate digest would cut your part.</p>
+          <p>A DNA sequence that is already well adapted (CAI ≥ 0.85) and free of those sites is kept as entered.</p>
+          <p><b>Amino acid sequences.</b> Instead of DNA you can paste a protein sequence (one-letter code, no stop codon). It is detected automatically (a sequence whose letters are at least 90 % A/C/G/T is read as DNA, anything else as protein) and back-translated with the same codon choice and the same site-free rule.</p>` },
   mrnaStructure: { title:'mRNA self-fold &amp; self-dimer', img:'Diagram: mRNA hairpin and mRNA-mRNA duplex',
     body:`<p>A scanning ribosome can be blocked two ways: the mRNA <b>folds back on itself</b> (a hairpin, within one molecule), or <b>two copies of the same mRNA</b> hybridise with each other (a dimer). Either can prevent translation.</p>
-          <p>Checked for every sequence you paste yourself — cargo, your own shell, or your own sequence in a module — as a minimum free energy (ΔG, kcal/mol) via <code>ViennaRNA</code> — <code>RNAfold</code> for self-fold, <code>RNAduplex</code> for self-dimer — on its coding (sense) direction, since that is exactly the mRNA sequence (U instead of T).</p>
-          <p>ΔG alone isn't comparable between different cargos — longer/GC-richer sequences always fold more. So the real sequence's ΔG is compared against several randomly shuffled versions of the same length and base composition, giving a <b>z-score</b>: how many standard deviations more structured the real sequence is than chance. z ≤ −2 is flagged moderate, z ≤ −3 high.</p>
-          <p>This is a thermodynamic estimate, not a literal binding probability — that would need intracellular concentration and kinetics data this tool doesn't have. Skipped above a length where ViennaRNA gets too slow for a live check.</p>` },
+          <p>Checked for every sequence you paste yourself (cargo, your own shell, or your own sequence in a module) as a minimum free energy (ΔG, kcal/mol) via <code>ViennaRNA</code> (<code>RNAfold</code> for self-fold, <code>RNAduplex</code> for self-dimer) on its coding (sense) direction, since that is exactly the mRNA sequence (U instead of T).</p>
+          <p>ΔG alone isn't comparable between different cargos; longer/GC-richer sequences always fold more. So the real sequence's ΔG is compared against several randomly shuffled versions of the same length and base composition, giving a <b>z-score</b>: how many standard deviations more structured the real sequence is than chance. z ≤ −2 is flagged moderate, z ≤ −3 high.</p>
+          <p>This is a thermodynamic estimate, not a literal binding probability; that would need intracellular concentration and kinetics data this tool doesn't have. Skipped above a length where ViennaRNA gets too slow for a live check.</p>` },
 };
 
 /* ---------- Color key (CSS variables, so theme/CB take effect) ---------- */
@@ -1316,7 +1362,7 @@ const cink = k => `var(${KIND_INK[k]})`;
 
 /* ===================== State ===================== */
 const state = {
-  nc:null, customNc:{label:'', tp:'', seqRaw:'', valid:false},
+  nc:null, customNc:{label:'', seqRaw:'', valid:false},
   cargoSeq:'', cargoLabel:'Custom cargo', cargoFromPreset:null, cargoValid:false,
   promoter:'',
   ncSlots:{ 1:{kind:'none'}, 2:{kind:'none'}, 4:{kind:'none'}, 5:{kind:'none'} },
@@ -1374,7 +1420,7 @@ document.addEventListener('click', e=>{
   if(!e.target.closest('#popover')) closePopover();
 });
 $('#popClose').addEventListener('click', closePopover);
-window.addEventListener('scroll', positionPopover, {passive:true});
+document.addEventListener('scroll', positionPopover, {passive:true, capture:true});   // also follows scrolling inside a popup
 window.addEventListener('resize', positionPopover);
 
 /* ===================== Intro -> builder ===================== */
@@ -1431,13 +1477,12 @@ function initNcDropdown(){
   const sel=$('#ncSelect');
   LIB.nanocompartments.forEach(nc=>{
     const o=document.createElement('option');
-    o.value=nc.id; o.textContent=`${nc.label} — T=${nc.T}, ⌀ ${nc.dia}`;
+    o.value=nc.id; o.textContent=`${nc.label} · T=${nc.T}, ⌀ ${nc.dia}`;
     sel.appendChild(o);
   });
   const co=document.createElement('option');
-  co.value=CUSTOM_NC; co.textContent='Use your own nanocompartment …';
+  co.value=CUSTOM_NC; co.textContent='Use your own sequence …';
   sel.appendChild(co);
-  initCustomNcTp();
   sel.addEventListener('change', ()=>{
     const custom = sel.value===CUSTOM_NC;
     $('#customNc').style.display = custom ? 'block' : 'none';
@@ -1449,19 +1494,12 @@ function initNcDropdown(){
   });
 }
 const CUSTOM_NC='custom';
-function initCustomNcTp(){
-  const tps=[...new Set(LIB.nanocompartments.map(n=>n.tp))];
-  const sel=$('#customNcTp'); sel.innerHTML='';
-  tps.forEach(tp=>{ const o=document.createElement('option'); o.value=tp; o.textContent=tp; sel.appendChild(o); });
-  state.customNc.tp = state.customNc.tp || tps[0];
-  sel.value = state.customNc.tp;
-}
 /* Own nanocompartment: the shell CDS is a NEW part (like the cargo) and goes through
    the same checks. state.nc stays null until the sequence is valid. */
 function applyCustomNc(){
   const c=state.customNc, seq=clean(c.seqRaw);
   const label=(c.label||'').trim() || 'Custom shell';
-  state.nc = c.valid ? { id:CUSTOM_NC, label, T:'–', dia:'–', tp:c.tp, shell:label, shellBp:seq.length, custom:true, seq } : null;
+  state.nc = c.valid ? { id:CUSTOM_NC, label, T:'n/a', dia:'n/a', tp:null, shell:label, shellBp:seqBp(seq), custom:true, seq } : null;
   renderNcMeta();
   refreshNext0();
   updateConstructStrip();
@@ -1469,13 +1507,13 @@ function applyCustomNc(){
 function handleShellInput(){
   const raw=$('#shellSeq').value;
   state.customNc.seqRaw=raw;
-  $('#shellLen').textContent=clean(raw).length+' bp';
+  $('#shellLen').textContent=seqLenLabel(clean(raw));
   renderShellValidation(validateCargoLocal(raw,'shell'));
   scheduleServerShellCheck(clean(raw));
 }
 function renderShellValidation(v){
   $('#shellMeta').innerHTML = seqMetaHtml(v);
-  $('#shellStopArea').innerHTML = seqNotesHtml(v, 'No stop codon found — the shell sequence is ready.');
+  $('#shellStopArea').innerHTML = seqNotesHtml(v, 'No stop codon found: the shell sequence is ready.');
   $('#shellMrna').innerHTML = seqMrnaHtml(v);
   state.customNc.valid = v.ok;
   applyCustomNc();
@@ -1484,7 +1522,7 @@ function renderShellValidation(v){
    sequence, so they are cached in sessionStorage: after a page refresh the full result renders at once
    instead of ~700 ms later — which also kept inserting the mRNA panel above the restored scroll position
    and nudged it. */
-const VAL_KEY='encore.val.v1';
+const VAL_KEY='encore.val.v4';
 function valCacheGet(kind,seq){ try{ return (JSON.parse(sessionStorage.getItem(VAL_KEY)||'{}'))[(kind||'cargo')+':'+seq]||null; }catch(e){ return null; } }
 function valCachePut(kind,seq,v){
   try{
@@ -1510,21 +1548,20 @@ function scheduleServerShellCheck(seq){
       if(token!==shellCheckToken || seq!==clean(state.customNc.seqRaw)) return;
       renderShellValidation(v);
     }catch(err){
-      console.warn('[ENCORE] /api/cargo/validate (shell) failed — keeping the local check', err);
+      console.warn('[ENCORE] /api/cargo/validate (shell) failed: keeping the local check', err);
       if(token===shellCheckToken) $('#shellMrna').innerHTML = '';
     }
   }, 400);
 }
 $('#shellSeq').addEventListener('input', handleShellInput);
 $('#customNcLabel').addEventListener('input', ()=>{ state.customNc.label=$('#customNcLabel').value; applyCustomNc(); });
-$('#customNcTp').addEventListener('change', ()=>{ state.customNc.tp=$('#customNcTp').value; applyCustomNc(); });
 function renderNcMeta(){
   const n=state.nc; if(!n){ $('#ncMeta').innerHTML=''; return; }
   if(n.custom){
     $('#ncMeta').innerHTML=`
     <div class="nc-tag"><span class="sw" style="background:${cvar('t1')}"></span>Targeting peptide <b>${n.tp}</b></div>
     <div class="nc-tag"><span class="sw" style="background:${cvar('shell')}"></span>Your shell CDS <b>${esc(n.shell)}</b> · ${n.shellBp} bp</div>
-    <div class="nc-tag">New part — needs domestication and synthesis</div>`;
+    <div class="nc-tag">New part: needs domestication and synthesis</div>`;
     return;
   }
   $('#ncMeta').innerHTML=`
@@ -1543,7 +1580,7 @@ function initCargoDropdown(){
   LIB.cargoPresets.forEach(p=>{
     const o=document.createElement('option'); o.value=p.id; o.textContent=p.label; sel.appendChild(o);
   });
-  const co=document.createElement('option'); co.value=CUSTOM_CARGO; co.textContent='Your own sequence …'; sel.appendChild(co);
+  const co=document.createElement('option'); co.value=CUSTOM_CARGO; co.textContent='Use your own sequence …'; sel.appendChild(co);
   sel.addEventListener('change', ()=>setCargoChoice(sel.value));
 }
 /* Apply a dropdown choice: '' / an example id / 'custom'. `keepText` = keep what is typed (session restore). */
@@ -1566,7 +1603,7 @@ function handleCargoInput(){
   const raw=$('#cargoSeq').value, s=clean(raw);
   state.cargoSeq=s;
   if(!state.cargoFromPreset) state.cargoLabel = $('#cargoName').value.trim() || 'Custom cargo';
-  $('#cargoLen').textContent=s.length+' bp';
+  $('#cargoLen').textContent=seqLenLabel(s);
 
   renderCargoValidation(validateCargoLocal(raw));
   scheduleServerCargoCheck(s);
@@ -1577,6 +1614,7 @@ function handleCargoInput(){
    answer can be rendered by one function. The server stays the authority —
    scheduleServerCargoCheck() overwrites this result as soon as it arrives. */
 function validateCargoLocal(raw, kind='cargo'){
+  if(isProteinText(raw)) return validateProteinLocal(raw, kind);
   const seq=clean(raw), length=seq.length;
   const invalidChars=(raw||'').toUpperCase().replace(/[ATGC\s]/g,'').length;
   const notMultipleOfThree = length%3!==0;
@@ -1587,11 +1625,11 @@ function validateCargoLocal(raw, kind='cargo'){
   else{
     if(kind==='cargo' && length<30) errors.push(`Sequence too short (${length} bp, need at least 30 bp).`);
     if(trailingStop) errors.push(kind==='shell'
-      ? `Stop codon at the end (${trailingStop}). Remove it — the construct adds its own stop codon right after the shell.`
+      ? `Stop codon at the end (${trailingStop}). Remove it: the construct adds its own stop codon right after the shell.`
       : kind==='part'
-      ? `Stop codon at the end (${trailingStop}). Remove it — the construct places its own stop codon at the end of the nanocompartment site.`
-      : `Stop codon at the end (${trailingStop}). Remove it — otherwise the targeting peptide is not attached and the cargo is not encapsulated.`);
-    if(notMultipleOfThree) warnings.push('Length is not a multiple of 3 — check the reading frame.');
+      ? `Stop codon at the end (${trailingStop}). Remove it: the construct places its own stop codon at the end of the nanocompartment site.`
+      : `Stop codon at the end (${trailingStop}). Remove it: otherwise the targeting peptide is not attached and the cargo is not encapsulated.`);
+    if(notMultipleOfThree) warnings.push('Length is not a multiple of 3; check the reading frame.');
     if(internalStops.length) warnings.push(`Possible in-frame stop codon at position ${internalStops[0].pos+1} (${internalStops[0].codon}).`);
     if(invalidChars>0) warnings.push(`${invalidChars} invalid character(s) were ignored.`);
   }
@@ -1599,28 +1637,65 @@ function validateCargoLocal(raw, kind='cargo'){
            notMultipleOfThree, trailingStop, internalStops, ok:errors.length===0, errors, warnings };
 }
 
+function validateProteinLocal(raw, kind){
+  const seq=cleanProtein(raw), trailing=seq.endsWith('*'), res=trailing?seq.slice(0,-1):seq, length=3*res.length;
+  const invalidChars=(raw||'').toUpperCase().replace(/^>.*$/gm,'').replace(/[ACDEFGHIKLMNPQRSTVWY*\s]/g,'').length;
+  const internalStops=[]; res.split('').forEach((c,i)=>{ if(c==='*') internalStops.push({pos:i,codon:'*'}); });
+  const errors=[], warnings=[];
+  if(!res.length) errors.push('No valid amino acid sequence provided.');
+  else{
+    if(kind==='cargo' && length<30) errors.push(`Sequence too short (${res.length} aa, need at least 10 aa).`);
+    if(trailing) errors.push(`Stop codon at the end (*). Remove it: ` + (kind==='shell'
+      ? 'the construct adds its own stop codon right after the shell.'
+      : kind==='part' ? 'the construct places its own stop codon at the end of the nanocompartment site.'
+      : 'otherwise the targeting peptide is not attached and the cargo is not encapsulated.'));
+    if(internalStops.length) warnings.push(`Stop (*) at residue ${internalStops[0].pos+1}: translation would end there.`);
+    if(invalidChars>0) warnings.push(`${invalidChars} invalid character(s) were ignored.`);
+  }
+  return { clean:seq, length, aa:res.length, gc:null, invalidChars, notMultipleOfThree:false, trailingStop:trailing?'*':null,
+           internalStops, ok:errors.length===0, errors, warnings, isProtein:true };
+}
+
 const ICON_WARN = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>';
 const ICON_OK   = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>';
 
 function seqMetaHtml(v){
+  if(v.isProtein) return v.length
+    ? `Amino acid sequence · <b>${v.aa} aa</b> → <b>${v.length} bp</b> after back-translation`
+      + (v.invalidChars ? ` · <span class="err">${v.invalidChars} invalid characters ignored</span>` : '')
+    : '';
   return v.length
     ? `Length <b>${v.length} bp</b> · ~<b>${v.aa} aa</b> · GC <b>${v.gc}%</b>`
       + (v.invalidChars ? ` · <span class="err">${v.invalidChars} invalid characters ignored</span>` : '')
       + (v.notMultipleOfThree ? ` · <span class="err">not a multiple of 3</span>` : '')
     : '';
 }
+function codonLineHtml(c, final){
+  // c = codonOptimization summary (server): what the builder does to a sequence you entered yourself
+  if(!c) return '';
+  const info = final ? '' : `<button class="info" type="button" data-info="codonOpt" aria-label="About the codon optimization">i</button>`;
+  if(c.status==='optimized' && c.fromProtein){
+    return `<div class="stopok">${ICON_OK}<div>${final?'Back-translated':'Will be back-translated'} from your amino acid sequence with <i>S. cerevisiae</i> codon usage: <b>${c.codons}</b> codons · CAI <b>${c.caiAfter}</b> · GC ${c.gcAfter} % · no BsaI/BbsI sites ${info}</div></div>`;
+  }
+  if(c.status==='optimized'){
+    const sites = c.sitesRemoved.length ? ` · ${c.sitesRemoved.length} BsaI/BbsI site${c.sitesRemoved.length>1?'s':''} removed` : ' · no BsaI/BbsI sites';
+    return `<div class="stopok">${ICON_OK}<div>${final?'Codon-optimized':'Will be codon-optimized'} for <i>S. cerevisiae</i>: <b>${c.changed}</b> of ${c.codons} codons changed · CAI <b>${c.caiBefore} → ${c.caiAfter}</b> · GC ${c.gcBefore} → ${c.gcAfter} %${sites} ${info}</div></div>`;
+  }
+  if(c.status==='kept') return `<div class="stopok">${ICON_OK}<div>Codon usage: ${c.reason} ${info}</div></div>`;
+  return `<div class="stopwarn">${ICON_WARN}<div>Codon optimization skipped: ${c.reason} ${info}</div></div>`;
+}
 function seqNotesHtml(v, okText){
   const notes = v.errors.concat(v.warnings);
   if(!v.length) return '';
   if(notes.length) return notes.map(t=>`<div class="stopwarn">${ICON_WARN}<div>${t}</div></div>`).join('');
-  return `<div class="stopok">${ICON_OK}<div>${okText}</div></div>`;
+  return `<div class="stopok">${ICON_OK}<div>${okText}</div></div>` + codonLineHtml(v.codonOptimization, false);
 }
 /* mRNA self-fold/self-dimer for THIS field's sequence — same info as the Step 4 block, just
    compact and inline, right under the field (like the length/aa/GC line). Only ever comes from
    the server (no JS equivalent to ViennaRNA), so it's empty until the debounced check returns,
    and stays empty entirely offline or once ViennaRNA isn't installed server-side (mirrors how the
    primer3-only checks are simply absent in that case, elsewhere in this page). */
-const MRNA_LOADING_HTML = `<span class="mrna-item"><span class="mrna-spin"></span>Checking mRNA self-fold/self-dimer — can take a few seconds for longer sequences…</span>`;
+const MRNA_LOADING_HTML = `<span class="mrna-item"><span class="mrna-spin"></span>Checking mRNA self-fold/self-dimer: can take a few seconds for longer sequences…</span>`;
 function seqMrnaHtml(v){
   const st = v.mrnaStructure;
   if(!st) return '';
@@ -1633,7 +1708,7 @@ function seqMrnaHtml(v){
 function renderCargoValidation(v){
   $('#cargoMeta').innerHTML = seqMetaHtml(v);
   // The stop-codon / frame check only makes sense for a CDS the user typed in; the library examples are ours.
-  $('#cargoStopArea').innerHTML = state.cargoFromPreset ? '' : seqNotesHtml(v, 'No stop codon found — sequence is ready for fusion.');
+  $('#cargoStopArea').innerHTML = state.cargoFromPreset ? '' : seqNotesHtml(v, 'No stop codon found: sequence is ready for fusion.');
   $('#cargoMrna').innerHTML = seqMrnaHtml(v);
   state.cargoValid = v.ok;
   refreshNext1();
@@ -1657,7 +1732,7 @@ function scheduleServerCargoCheck(seq){
       if(token!==cargoCheckToken || seq!==state.cargoSeq) return;   // veraltet
       renderCargoValidation(v);
     }catch(err){
-      console.warn('[ENCORE] /api/cargo/validate failed — keeping the local check', err);
+      console.warn('[ENCORE] /api/cargo/validate failed: keeping the local check', err);
       if(token===cargoCheckToken) $('#cargoMrna').innerHTML = '';
     }
   }, 400);
@@ -1669,11 +1744,11 @@ $('#cargoName').addEventListener('input', ()=>{ if(!state.cargoFromPreset) handl
 function initPromoterDropdown(){
   const sel=$('#promoter'); sel.innerHTML='';
   const ph=document.createElement('option');
-  ph.value=''; ph.disabled=true; ph.textContent='— please select —'; ph.selected=!state.promoter;
+  ph.value=''; ph.disabled=true; ph.textContent='Please select'; ph.selected=!state.promoter;
   sel.appendChild(ph);
   LIB.promoters.forEach(p=>{
     const o=document.createElement('option');
-    o.value=p.id; o.textContent=`${p.label} — ${p.desc}`;
+    o.value=p.id; o.textContent=`${p.label}: ${p.desc}`;
     if(p.id===state.promoter) o.selected=true;
     sel.appendChild(o);
   });
@@ -1722,13 +1797,14 @@ function enforceSlotRules(mod){
     const noNcs = inner && blocksNcs(mod,n), needLnk = inner && needsLinker(mod,n), outer=LINKER_FOR[n];
     const afterStop = n===far && sl[near].kind==='ncsstop';
     const otherTp = SLOT_NUMBERS.some(m=>m!==n && sl[m].kind==='tp');
+    const noTpHere = !!(state.nc && state.nc.custom);                     // an own shell brings no targeting peptide — use "Use your own sequence"
     [...sel.options].forEach(o=>{
       const v=o.value;
       let off=false;
       if(v==='none'){ o.disabled=true; return; }                       // placeholder
       if(noNcs && v==='ncs') off=true;
       if(needLnk && (v.startsWith('marker:') || v.startsWith('intein:') || v==='tp')) off=true;
-      if(v==='tp' && (inner || otherTp)) off=true;                     // only Type 0.1 / 0.5, and only once
+      if(v==='tp' && (inner || otherTp || noTpHere)) off=true;        // only Type 0.1 / 0.5, only once, and only with a toolkit nanocompartment
       if(v==='ncsstop'){
         if(n!==near && n!==far) off=true;                              // must sit behind the central part
         if(n===near && !['ncs','none'].includes(sl[far].kind)) off=true;   // something follows it, or a second stop
@@ -1740,9 +1816,9 @@ function enforceSlotRules(mod){
     });
     const hint=el.querySelector('.slothint');
     let text='';
-    if(afterStop) text=`Type 0.${near} holds the stop codon — nothing can follow it.`;
-    else if(noNcs) text = needLnk ? `Type 0.${outer} holds a sequence — a linker is required here.`
-                                  : `Type 0.${outer} is in use — this position cannot be an NCS spacer.`;
+    if(afterStop) text=`Type 0.${near} holds the stop codon: nothing can follow it.`;
+    else if(noNcs) text = needLnk ? `Type 0.${outer} holds a sequence: a linker is required here.`
+                                  : `Type 0.${outer} is in use: this position cannot be an NCS spacer.`;
     hint.textContent=text; hint.style.display = text ? 'block' : 'none';
     let bounce=null;
     if((noNcs && kind==='ncs') || (needLnk && (kind==='marker' || kind==='intein' || kind==='tp'))) bounce=firstLinker(mod,n);
@@ -1770,15 +1846,15 @@ function slotOptionsHtml(mod, n){
   const roles = ncsRoles(mod, n);
   const tpHere = mod==='cargo' && (LIB.targetingPeptides && LIB.targetingPeptides.length ? LIB.targetingPeptides.some(t=>availableAt(t,mod,n)) : true);
   const group = (label, items, kind) => { const list = items.filter(x=>availableAt(x,mod,n));
-    return list.length ? `<optgroup label="${label}">${list.map(m=>`<option value="${kind}:${m.id}">${m.label} — ${m.aa} aa</option>`).join('')}</optgroup>` : ''; };
-  return `<option value="none" disabled selected>— please select —</option>`
+    return list.length ? `<optgroup label="${label}">${list.map(m=>`<option value="${kind}:${m.id}">${m.label}: ${m.aa} aa</option>`).join('')}</optgroup>` : ''; };
+  return `<option value="none" disabled selected>Please select</option>`
     + (roles.includes('plain') ? `<option value="ncs">NCS (spacer)</option>` : '')
     + (roles.includes('stop') ? `<option value="ncsstop">NCS with stop codon</option>` : '')
     + (tpHere ? `<option value="tp">Targeting peptide</option>` : '')
     + group('Linker', LIB.linkers, 'linker')
     + group('Surface display', LIB.surfaceMarkers, 'marker')
     + group('Intein', LIB.inteins||[], 'intein')
-    + `<option value="custom">Your own sequence …</option>`;
+    + `<option value="custom">Use your own sequence …</option>`;
 }
 function slotCardHtml(mod,n){
   const nSide=MODS[mod].nSide.includes(n);
@@ -1788,7 +1864,7 @@ function slotCardHtml(mod,n){
     <div class="slothint" style="display:none"></div>
     <div class="slotcustom" style="display:none">
       <input type="text" class="slotlabel" placeholder="Name (optional)" maxlength="60">
-      <textarea class="slotseq" placeholder="CDS of your part (A/T/G/C) — without a stop codon at the end …"></textarea>
+      <textarea class="slotseq" placeholder="CDS of your part (DNA, A/T/G/C) or its amino acid sequence; without a stop codon at the end …"></textarea>
       <div class="seqmeta slotmeta"></div>
       <div class="slotmrna mrna-inline"></div>
       <div class="slotnotes"></div>
@@ -1827,7 +1903,7 @@ function handleSlotSeq(mod,n){
 function renderSlotValidation(mod,n,v){
   const el=slotEl(mod,n);
   el.querySelector('.slotmeta').innerHTML=seqMetaHtml(v);
-  el.querySelector('.slotnotes').innerHTML=seqNotesHtml(v, 'No stop codon found — the sequence is ready.');
+  el.querySelector('.slotnotes').innerHTML=seqNotesHtml(v, 'No stop codon found: the sequence is ready.');
   el.querySelector('.slotmrna').innerHTML=seqMrnaHtml(v);
   slotsOf(mod)[n].valid=v.ok;
   updateConstructStrip(); refreshNav(mod);
@@ -1847,7 +1923,7 @@ function scheduleServerSlotCheck(mod,n,seq){
       if(token!==slotCheckTokens[id] || seq!==clean(slotsOf(mod)[n].seqRaw||'')) return;
       renderSlotValidation(mod,n,v);
     }catch(err){
-      console.warn('[ENCORE] /api/cargo/validate (part) failed — keeping the local check', err);
+      console.warn('[ENCORE] /api/cargo/validate (part) failed: keeping the local check', err);
       if(token===slotCheckTokens[id]) mrnaEl.innerHTML='';
     }
   }, 400);
@@ -1861,7 +1937,7 @@ function slotsFromState(mod){
     if(c.kind==='marker'){ const m=LIB.surfaceMarkers.find(x=>x.id===c.id); return {slot:n, kind:'marker', id:m.id, label:m.label, aa:m.aa, bp:m.bp}; }
     if(c.kind==='intein'){ const m=LIB.inteins.find(x=>x.id===c.id); return {slot:n, kind:'intein', id:m.id, label:m.label, aa:m.aa, bp:m.bp}; }
     if(c.kind==='tp') return {slot:n, kind:'tp', label:state.nc? state.nc.tp : 'TP', bp:TP_BP};
-    if(c.kind==='custom'){ const seq=clean(c.seqRaw||''); return {slot:n, kind:'custom', label:(c.label||'').trim()||('Custom part '+n), bp:seq.length, aa:Math.floor(seq.length/3), sequence:seq, isNew:true}; }
+    if(c.kind==='custom'){ const seq=clean(c.seqRaw||''); return {slot:n, kind:'custom', label:(c.label||'').trim()||('Custom part '+n), bp:seqBp(seq), aa:isProteinText(seq)?seq.replace(/\*/g,'').length:Math.floor(seq.length/3), sequence:seq, isNew:true}; }
     return {slot:n, kind:c.kind==='ncsstop'?'ncsstop':'ncs', label:'NCS', bp:NCS_BP};
   });
 }
@@ -1893,7 +1969,7 @@ function updateConstructStrip(){
   const host=$('#gsMap'); if(!host) return;
   const n=state.nc;
   // Nothing is filled in automatically: a slot fills only once it has been chosen.
-  const cargo = { kind:'t3',    label: state.cargoValid ? (state.cargoLabel!=='Custom cargo' ? state.cargoLabel : state.cargoSeq.length+' bp') : 'Cargo', filled: !!state.cargoValid };
+  const cargo = { kind:'t3',    label: state.cargoValid ? (state.cargoLabel!=='Custom cargo' ? state.cargoLabel : seqBp(state.cargoSeq)+' bp') : 'Cargo', filled: !!state.cargoValid };
   const shell = { kind:'shell', label:n? n.shell : 'Shell',      filled: !!n };
   // Module slots: empty ("–") until something is chosen, then filled — NCS included.
   const slotSeg = (mod,k) => {
@@ -1913,7 +1989,7 @@ function updateConstructStrip(){
   const promoFilled = !!state.promoter;
   const seg = (p, side) => p.filled
     ? `<div class="gs-seg ${side}" title="${esc(p.label)}" style="background:${cvar(p.kind)};color:${cink(p.kind)}"><span>${esc(p.label)}</span></div>`
-    : `<div class="gs-seg empty ${side}" title="${esc(p.label)}"><span>–</span></div>`;
+    : `<div class="gs-seg empty ${side}" title="${esc(p.label)}"><span>·</span></div>`;
   // Mirror the actual modules (incl. the NCS / surface slots), matching the Level diagrams.
   // Colour every slot by its Type position (Type 0.1..0.5), like the scheme figure.
   const byPos = arr => arr.map((p,i)=>({...p, kind:'t'+(i+1)}));
@@ -1929,7 +2005,8 @@ function updateConstructStrip(){
   host.innerHTML = `<div class="gs-arm left">${left}</div>${hub}<div class="gs-arm right">${right}</div>`;
   // The TP option shows which peptide the chosen nanocompartment brings.
   const tpOpt=document.querySelector('.slotcard[data-mod="cargo"] .slotsel option[value="tp"]');
-  if(tpOpt) document.querySelectorAll('.slotcard[data-mod="cargo"] .slotsel option[value="tp"]').forEach(o=>{ o.textContent = n ? 'Targeting peptide '+n.tp : 'Targeting peptide'; });
+  if(tpOpt) document.querySelectorAll('.slotcard[data-mod="cargo"] .slotsel option[value="tp"]').forEach(o=>{ o.textContent = n && n.tp ? 'Targeting peptide '+n.tp : 'Targeting peptide'; });
+  if(typeof enforceSlotRules==='function' && document.querySelector('.slotcard[data-mod="cargo"]')) enforceSlotRules('cargo');   // a TP choice may no longer be valid after the nanocompartment changed
 }
 const scrollToSection = id => { pushStep(+id.slice(-1)); document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'}); };
 $('#next0').addEventListener('click', ()=>{ state.unlocked[1]=true; applyLocks(); updateStepperLocks(); scrollToSection('sec-1'); });
@@ -2015,7 +2092,7 @@ function renderBiosecNote(screening, flaggedCount, items=[], persist=true){
   };
   if(!screening || !screening.available){
     set('off','Biosecurity screening was not run',
-        'Screening (<code>COMMEC</code>) is not configured for this deployment — sequences were not screened. See <code>COMMEC_URL</code> in the README.');
+        'Screening (<code>COMMEC</code>) is not configured for this deployment; sequences were not screened. See <code>COMMEC_URL</code> in the README.');
     return;
   }
   const n=screening.results.length;
@@ -2025,9 +2102,9 @@ function renderBiosecNote(screening, flaggedCount, items=[], persist=true){
     return `<span class="br-chip${flagged?' flag':''}"><i></i>${esc((items[i]&&items[i].label)||('Sequence '+(i+1)))}</span>`;
   }).join('');
   if(flaggedCount) set('flagged', `Biosecurity screening flagged ${flaggedCount} sequence${flaggedCount===1?'':'s'}`,
-      'Reviewed and continued anyway — see the warning shown before this step. Screened with <code>COMMEC</code>.', chipHtml);
+      'Reviewed and continued anyway: see the warning shown before this step. Screened with <code>COMMEC</code>.', chipHtml);
   else set('ok','Biosecurity check passed',
-      `All ${n} sequence${n===1?'':'s'} you entered ${n===1?'was':'were'} screened with <code>COMMEC</code> against known toxins, virulence factors and regulated pathogens — no match found.`, chipHtml);
+      `All ${n} sequence${n===1?'':'s'} you entered ${n===1?'was':'were'} screened with <code>COMMEC</code> against known toxins, virulence factors and regulated pathogens; no match found.`, chipHtml);
 }
 
 function showBiosecModal(flagged){
@@ -2064,7 +2141,7 @@ $('#next2').addEventListener('click', async ()=>{
     try{
       screening = await api.screenSequences(items);
     }catch(err){
-      console.warn('[ENCORE] /api/cargo/screen failed — skipping biosecurity screen', err);
+      console.warn('[ENCORE] /api/cargo/screen failed: skipping biosecurity screen', err);
       screening = {available:false};
     }
     btn.innerHTML=btnLabel;
@@ -2089,7 +2166,7 @@ $('#back4').addEventListener('click', ()=>scrollToSection('sec-3'));
 /* "New construct": wipe every input and every derived result, then start over at step 1. */
 function resetBuilder(){
   // state back to its initial shape
-  state.nc=null; state.customNc={label:'', tp:$('#customNcTp').options[0]?$('#customNcTp').options[0].value:'', seqRaw:'', valid:false};
+  state.nc=null; state.customNc={label:'', seqRaw:'', valid:false};
   state.cargoSeq=''; state.cargoLabel='Custom cargo';
   state.cargoFromPreset=null; state.cargoValid=false;
   state.promoter='';
@@ -2100,7 +2177,7 @@ function resetBuilder(){
   // form controls
   $('#ncSelect').selectedIndex=0;
   $('#customNc').style.display='none';
-  $('#customNcLabel').value=''; $('#customNcTp').selectedIndex=0; $('#shellSeq').value='';
+  $('#customNcLabel').value=''; $('#shellSeq').value='';
   $('#shellLen').textContent='0 bp';
   $('#cargoSeq').value=''; $('#cargoSeq').style.display='none'; $('#cargoSelect').selectedIndex=0; $('#cargoSeqField').style.display='none';
   $('#cargoName').value=''; $('#cargoNameField').style.display='none';
@@ -2183,7 +2260,7 @@ function l0Box(p){
 function l0Frag(p, module){
   const isNew = p.isCargo || p.isNew;
   const slot = (String(p.type||'').match(/(\d)$/)||[])[1] || '';
-  return `<div class="l0frag ${isNew?'l0new':'l0stock'}" data-module="${module}" data-slot="${slot}" role="button" tabindex="0" aria-label="${esc(p.label)} — show sequence">${l0Box(p)}</div>`;
+  return `<div class="l0frag ${isNew?'l0new':'l0stock'}" data-module="${module}" data-slot="${slot}" role="button" tabindex="0" aria-label="${esc(p.label)}: show sequence">${l0Box(p)}</div>`;
 }
 function l0ModuleRow(parts, antisense){
   // antisense (cargo): rotate the whole construct by 180 degrees (see comment above)
@@ -2223,12 +2300,12 @@ function renderLevel2(elId, m, api){
   const col = (seq, title, pos) => !j ? '' : `<div class="l2ohcol ${pos}" title="${title}">` +
     (pos!=='right' ? `<span class="l1oh l2">${seq}</span>` : '') + (pos!=='left' ? `<span class="l1oh l2">${comp(seq)}</span>` : '') + `</div>`;
   el.innerHTML = `
-    <div class="l2-row${j?' clickable':''}"${j?' data-l2="1" role="button" tabindex="0" aria-label="Finished construct — show sequence and plasmid"':''}>
-      ${col(j&&j.n,'BbLvl2N — Level 2 backbone overhang','left')}
+    <div class="l2-row${j?' clickable':''}"${j?' data-l2="1" role="button" tabindex="0" aria-label="Finished construct; show sequence and plasmid"':''}>
+      ${col(j&&j.n,'BbLvl2N: Level 2 backbone overhang','left')}
       <div class="l2-side l2-left">
         <div class="l2-dir ph">&nbsp;</div>
         <div class="partsrow sep l2grid">${cargoHtml}</div>
-        <div class="l2-dir"><span>3′ ${TRI_L} Cargo module <span class="l2-strandtag anti">antisense (−)</span></span><span>5′</span></div>
+        <div class="l2-dir"><span>3′ ${TRI_L} Cargo module <span class="l2-strandtag anti">antisense (minus)</span></span><span>5′</span></div>
       </div>
       ${col(j&&j.cargoPromoter,'Lvl2 junction cargo module | promoter','mid')}
       <div class="l2-hub">
@@ -2238,16 +2315,20 @@ function renderLevel2(elId, m, api){
       </div>
       ${col(j&&j.promoterNc,'Lvl2 junction promoter | NC module','mid')}
       <div class="l2-side l2-right">
-        <div class="l2-dir"><span>5′</span><span>NC module <span class="l2-strandtag sense">sense (+)</span> ${TRI_R} 3′</span></div>
+        <div class="l2-dir"><span>5′</span><span>NC module <span class="l2-strandtag sense">sense (plus)</span> ${TRI_R} 3′</span></div>
         <div class="partsrow sep l2grid">${ncHtml}</div>
         <div class="l2-dir ph">&nbsp;</div>
       </div>
-      ${col(j&&j.c,'BbLvl2C — Level 2 backbone overhang','right')}
+      ${col(j&&j.c,'BbLvl2C: Level 2 backbone overhang','right')}
     </div>`;
 }
 
 /* ===================== Level 0/1/2 tabs: accordion, plasmid chips, order lists ===================== */
 $('#lvltabs').addEventListener('click', e=>{
+  const head = e.target.closest('.lvltab-head');
+  if(head) head.closest('.lvltab').classList.toggle('open');
+});
+$('#ordTabs').addEventListener('click', e=>{
   const head = e.target.closest('.lvltab-head');
   if(head) head.closest('.lvltab').classList.toggle('open');
 });
@@ -2288,13 +2369,13 @@ function renderLevel0Plasmid(res){
   $('#plat0actions').style.display = (bb && bb.genbank) ? '' : 'none';
   if(!ring){
     svg.innerHTML=''; $('#plat0title').textContent='Level 0 acceptor plasmid';
-    $('#plat0explain').textContent='Backend not connected — the real Level 0 backbone (pAGM9121) is only available with the server running.';
+    $('#plat0explain').textContent='Backend not connected: the real Level 0 backbone (pAGM9121) is only available with the server running.';
     $('#plat0feats').innerHTML=''; return;
   }
   const name = bb.id.split('-')[0];
   const sum = drawPlasmidRing(svg, ring.segs, name, 'SmR · Level 0 acceptor');
   $('#plat0title').textContent = `${name} · ${sum.toLocaleString('en-US')} bp`;
-  $('#plat0explain').textContent = `Real Level 0 acceptor backbone as delivered, with its ${(o3[1]-o5[0]+1).toLocaleString('en-US')} bp lacZα stuffer between the NLvl0/CLvl0 overhangs. Each Level 0 part replaces that stuffer, one part per plasmid — click a module above to see it cloned in. Segment sizes are read from the backbone's real GenBank annotation.`;
+  $('#plat0explain').textContent = `Real Level 0 acceptor backbone as delivered, with its ${(o3[1]-o5[0]+1).toLocaleString('en-US')} bp lacZα stuffer between the NLvl0/CLvl0 overhangs. Each Level 0 part replaces that stuffer, one part per plasmid; click a module above to see it cloned in. Segment sizes are read from the backbone's real GenBank annotation.`;
   $('#plat0feats').innerHTML = ringLegendHtml(ring);
 }
 
@@ -2328,14 +2409,15 @@ function copyText(btn, text){
   else legacy();
 }
 /* Sequence with the insert bold and the overhang bases tinted (positions are 1-based, from the backend). */
-function l0SeqHtml(seq, insertLoc, overhangs){
+function l0SeqHtml(seq, insertLoc, overhangs, stopLoc){
   const [i0,i1] = insertLoc.split('..').map(Number);
+  const stop = stopLoc ? (stopLoc.match(/\d+/g)||[]).map(Number) : null;       // stop codon of an NCS* (1-based)
   const tint = new Array(seq.length).fill(false);
   overhangs.forEach(o=>{ const n=(o.location.match(/\d+/g)||[]).map(Number); for(let k=Math.min(...n);k<=Math.max(...n);k++) tint[k-1]=true; });
   let html='', run='', cls=null;
   const flush=()=>{ if(run) html += cls ? `<span class="${cls}">${run}</span>` : run; run=''; };
   for(let k=0;k<seq.length;k++){
-    const c = (k+1>=i0 && k+1<=i1) ? 'ins' : tint[k] ? 'oh' : '';
+    const c = (stop && k+1>=stop[0] && k+1<=stop[1]) ? 'ins stp' : (k+1>=i0 && k+1<=i1) ? 'ins' : tint[k] ? 'oh' : '';
     if(c!==cls){ flush(); cls=c; }
     run += seq[k];
   }
@@ -2349,20 +2431,17 @@ function primerHtml(p, clamp){
 }
 function renderL0Primers(c){
   const pr=c.primers, sec=$('#l0mPrimSec'), body=$('#l0mPrimBody');
+  // Primers only exist for your own sequences that are long enough for PCR — otherwise the section just says so.
   sec.style.display = pr ? '' : 'none';
-  if(!pr) return;
-  if(!pr.possible){
-    $('#l0mPrimMeta').textContent='';
-    body.innerHTML=`<p class="l0m-note">${esc(pr.reason)}</p>`;
-    return;
-  }
+  $('#l0mPrimIntro').style.display = pr && pr.possible ? '' : 'none';
+  if(!pr || !pr.possible){ $('#l0mPrimMeta').textContent=''; body.innerHTML = pr ? '<p class="l0m-note" style="margin:0">No primers available.</p>' : ''; return; }
   const f=pr.forward, r=pr.reverse;
   $('#l0mPrimMeta').textContent = `PCR product ${pr.productLength} bp`;
   const notes=[];
   if(pr.q5AnnealingTemp) notes.push(`Q5 annealing temperature ≈ ${pr.q5AnnealingTemp} °C`);
-  notes.push(pr.tmMethod==='primer3-nn' ? 'Tm: primer3 nearest-neighbour, annealing part only' : 'Tm: rough Wallace estimate (primer3 unavailable) — preview only');
+  notes.push(pr.tmMethod==='primer3-nn' ? 'Tm: primer3 nearest-neighbour, annealing part only' : 'Tm: rough Wallace estimate (primer3 unavailable); preview only');
   let warn='';
-  if(pr.internalSites.length) warn+=`<div class="l0m-warn">The insert contains ${esc(pr.internalSites.join(', '))} — domesticate (mutate silently) before cloning, otherwise the enzyme also cuts inside the part.</div>`;
+  if(pr.internalSites.length) warn+=`<div class="l0m-warn">The insert contains ${esc(pr.internalSites.join(', '))}: domesticate (mutate silently) before cloning, otherwise the enzyme also cuts inside the part.</div>`;
   if(pr.issues.length) warn+=`<div class="l0m-warn">${pr.issues.map(esc).join('<br>')}</div>`;
   body.innerHTML = `<div class="l0m-prim">${primerHtml(f,pr.clamp)}${primerHtml(r,pr.clamp)}</div>`+
     `<div class="l0m-legend"><span style="color:var(--muted)">${pr.clamp}</span> clamp · <span class="oh">BbsI site + overhangs (adapter ${esc(c.adapter)})</span> · <span class="ins">annealing part</span></div>`+
@@ -2376,9 +2455,12 @@ function openLevel0Modal(c){
   $('#l0mSub').textContent = `${c.type} · ${c.module==='cargo_site'?'cargo site':'nanocompartment site'} · ${c.what}`;
   const warn=$('#l0mWarn');
   warn.style.display = c.isReal ? 'none' : '';
-  warn.textContent = 'Placeholder sequence — the real sequence of this toolkit part is not in the parts database yet, so the insert shown (and downloaded) is a stand-in.';
+  warn.textContent = 'Placeholder sequence: the real sequence of this toolkit part is not in the parts database yet, so the insert shown (and downloaded) is a stand-in.';
   $('#l0mAdapter').textContent = `adapter ${c.adapter} · ${c.length} bp`;
-  $('#l0mSeq').innerHTML = `<span class="l0m-end">5′ </span>${l0SeqHtml(c.sequence, c.insert.location, c.overhangs)}<span class="l0m-end"> 3′</span>`;
+  $('#l0mCodonSec').style.display = c.codon ? '' : 'none';
+  if(c.codon) $('#l0mCodon').innerHTML = codonLineHtml(c.codon, true);
+  $('#l0mSeq').innerHTML = `<span class="l0m-end">5′ </span>${l0SeqHtml(c.sequence, c.insert.location, c.overhangs, c.stopLocation)}<span class="l0m-end"> 3′</span>`;
+  $('#l0mStopLegend').style.display = c.stopLocation ? '' : 'none';
   $('#l0mCopySeq').onclick = e=>copyText(e.currentTarget, c.sequence);
   $('#l0mDlSeq').onclick = ()=>downloadText(`${fileSlug(c.label)}_${fileSlug(c.type)}_${c.adapter}.gb`, c.genbank);
 
@@ -2390,7 +2472,7 @@ function openLevel0Modal(c){
   if(ring){
     drawPlasmidRing($('#l0mSvg'), ring.segs, pl.name, 'SmR · Level 0 acceptor');
     $('#l0mPlName').textContent = `${pl.name} · ${pl.length.toLocaleString('en-US')} bp`;
-    $('#l0mExplain').textContent = `BbsI cuts the lacZα stuffer out of the backbone and the adapter's BbsI sites off the part. The freed 4-nt overhangs (0N / 0C) are identical on both fragments and ligate, so the part sits exactly between NLvl0 and CLvl0 and every BbsI site is gone. At the seams the BsaI sites for Level 1 are re-formed. The GenBank file carries every backbone annotation that survives the cut, plus the part's overhangs and the insert. Plasmid sequence = top strand 5′→3′; on it the insert is on the ${c.plasmidStrand} strand${c.plasmidStrand==='antisense'?' (reverse complement of your input — the cargo module is antisense)':''}.`;
+    $('#l0mExplain').textContent = `BbsI cuts the lacZα stuffer out of the backbone and the adapter's BbsI sites off the part. The freed 4-nt overhangs (0N / 0C) are identical on both fragments and ligate, so the part sits exactly between NLvl0 and CLvl0 and every BbsI site is gone. At the seams the BsaI sites for Level 1 are re-formed. The GenBank file carries every backbone annotation that survives the cut, plus the part's overhangs and the insert. Plasmid sequence = top strand 5′→3′; on it the insert is on the ${c.plasmidStrand} strand${c.plasmidStrand==='antisense'?' (reverse complement of your input; the cargo module is antisense)':''}.`;
     $('#l0mFeats').innerHTML = ringLegendHtml(ring);
     $('#l0mCopyPl').onclick = e=>copyText(e.currentTarget, pl.sequence);
     $('#l0mDlPl').onclick = ()=>downloadText(`${fileSlug(pl.name)}.gb`, pl.genbank);
@@ -2434,7 +2516,7 @@ function renderLevel0Bulk(){
   $$('#l0bulk button[data-bulk="prim"]').forEach(b=>{
     const n = level0Bulk(b.dataset.site).withPrimers.length;
     b.disabled = !n;
-    b.title = n ? '' : 'Primers exist only for modules with a real sequence of at least 40 bp (your own cargo or parts).';
+    b.title = n ? '' : 'Primers exist only for your own sequences that are at least 150 bp long.';
   });
 }
 function renderLevel0Extras(res){
@@ -2537,12 +2619,12 @@ function renderLevel2Plasmid(res){
 function renderLevel2Backbone(){
   const bb=(LIB.level2Backbones||[])[0], svg=$('#plasmid2b');
   $('#plat2bactions').style.display = (bb && bb.genbank) ? '' : 'none';
-  if(!bb){ svg.innerHTML=''; $('#plat2btitle').textContent='Level 2 destination backbone'; $('#plat2bexplain').textContent='Backend not connected — the real Level 2 backbone (pESC-HIS) is only available with the server running.'; $('#plat2bfeats').innerHTML=''; return; }
+  if(!bb){ svg.innerHTML=''; $('#plat2btitle').textContent='Level 2 destination backbone'; $('#plat2bexplain').textContent='Backend not connected: the real Level 2 backbone (pESC-HIS) is only available with the server running.'; $('#plat2bfeats').innerHTML=''; return; }
   const o5=locRange(bb.receiver_overhangs['5_prime'].location), o3=locRange(bb.receiver_overhangs['3_prime'].location), cassette=o3[1]-o5[0]+1;
   const segs = level2Segs(bb, cassette, 'Test cassette', false);
   const sum = drawPlasmidRing(svg, segs, l2Name(bb), 'HIS3 · Level 2 acceptor');
   $('#plat2btitle').textContent = `${l2Name(bb)} · ${sum.toLocaleString('en-US')} bp`;
-  $('#plat2bexplain').textContent = `Real Level 2 acceptor backbone as delivered, with its ${cassette.toLocaleString('en-US')} bp test cassette between BbLvl2N (${bb.sequence.slice(o5[0]-1,o5[0]+3)}) and BbLvl2C. BbsI replaces that cassette with the assembled insert — click the finished construct above to see it.`;
+  $('#plat2bexplain').textContent = `Real Level 2 acceptor backbone as delivered, with its ${cassette.toLocaleString('en-US')} bp test cassette between BbLvl2N (${bb.sequence.slice(o5[0]-1,o5[0]+3)}) and BbLvl2C. BbsI replaces that cassette with the assembled insert; click the finished construct above to see it.`;
   $('#plat2bfeats').innerHTML = segLegendHtml(segs);
 }
 function downloadGenbank(){
@@ -2570,7 +2652,7 @@ function l1Row(kind, c, parts){
   parts.forEach(p=>cells.push(l0Box(p)));
   cells.push(bot(v.level2Overhangs.c,'l2','Level 2 overhang (BbsI)'), bot(seq.slice(-4),'','Level 1 acceptor overhang (BsaI)'));
   return `<div class="strand-dir"><span>5′</span><span>3′</span></div>` +
-         `<div class="partsrow sep l1grid${parts.length===1?' single':''} clickable" data-l1="${kind}" role="button" tabindex="0" aria-label="${esc(c.label)} — show sequence and plasmid">${cells.join('')}</div>`;
+         `<div class="partsrow sep l1grid${parts.length===1?' single':''} clickable" data-l1="${kind}" role="button" tabindex="0" aria-label="${esc(c.label)}: show sequence and plasmid">${cells.join('')}</div>`;
 }
 function renderLevel1(res){
   const m=res.model, list=(res.api && res.api.level1Constructs) || [];
@@ -2599,13 +2681,13 @@ function renderLevel1Backbone(list){
   const ring = bb && o5 && o3 && level0RingSegs(bb, { name:'lacZα stuffer', from:o5[0], to:o3[1], total:bb.length_bp }, L1_MARKERS);
   if(!ring){
     svg.innerHTML=''; $('#plat1title').textContent='Level 1 acceptor plasmid';
-    $('#plat1explain').textContent='Backend not connected — the real Level 1 backbone (pAGM1311) is only available with the server running.';
+    $('#plat1explain').textContent='Backend not connected: the real Level 1 backbone (pAGM1311) is only available with the server running.';
     $('#plat1feats').innerHTML=''; return;
   }
   const name = bb.id.split('-')[0];
   const sum = drawPlasmidRing(svg, ring.segs, name, 'KanR · Level 1 acceptor');
   $('#plat1title').textContent = `${name} · ${sum.toLocaleString('en-US')} bp`;
-  $('#plat1explain').textContent = `Real Level 1 acceptor backbone as delivered, with its ${(o3[1]-o5[0]+1).toLocaleString('en-US')} bp lacZα stuffer between the NLvl1/CLvl1 overhangs. BsaI replaces that stuffer with an assembled module (cargo module, NC module or promoter) — click a module above to see it cloned in. Segment sizes are read from the backbone's real GenBank annotation.`;
+  $('#plat1explain').textContent = `Real Level 1 acceptor backbone as delivered, with its ${(o3[1]-o5[0]+1).toLocaleString('en-US')} bp lacZα stuffer between the NLvl1/CLvl1 overhangs. BsaI replaces that stuffer with an assembled module (cargo module, NC module or promoter); click a module above to see it cloned in. Segment sizes are read from the backbone's real GenBank annotation.`;
   $('#plat1feats').innerHTML = ringLegendHtml(ring);
 }
 $('#plat1Copy').addEventListener('click', e=>{ const bb=(LIB.level1Backbones||[])[0]; if(bb) copyText(e.currentTarget, bb.sequence); });
@@ -2665,9 +2747,9 @@ function openLevel1Modal(c){
   const isCargo=c.site==='cargo_site', isPromo=c.site==='promoter', v=c.shown||c;
   const ringBase = pl && bb && level0RingSegs(bb, { name:`Insert: ${c.label}`, from:pl.insertStart, to:pl.insertEnd, total:pl.length }, L1_MARKERS);
   const junctions = c.overhangs.filter(o=>o.role==='level1_C' || o.role==='level1_N').map(o=>o.sequence);
-  const strandLine = isPromo ? 'bidirectional — the same on both strands'
+  const strandLine = isPromo ? 'bidirectional: the same on both strands'
     : isCargo ? 'antisense strand' : 'sense strand';
-  const notes = c.notes.concat(c.internalSites.length ? [`Internal restriction site${c.internalSites.length>1?'s':''} — ${c.internalSites.join('; ')}. Domesticate (silent mutation) before assembling, otherwise the enzyme also cuts inside the part.`] : []);
+  const notes = c.notes.concat(c.internalSites.length ? [`Internal restriction site${c.internalSites.length>1?'s':''}: ${c.internalSites.join('; ')}. Domesticate (silent mutation) before assembling, otherwise the enzyme also cuts inside the part.`] : []);
   openAsmModal({
     title: c.label,
     sub: `${c.what} · ${strandLine}`,
@@ -2683,7 +2765,7 @@ function openLevel1Modal(c){
     plasmid: pl, plasmidHeading: 'Cloned into the Level 1 backbone', ringSub: 'KanR · Level 1 acceptor',
     explain: isPromo
       ? `The promoter is a toolkit part, not assembled from Level 0 pieces: it is flanked by the Level 1 acceptor overhangs (ACAT … TTGT) and carries the two Level 2 overhangs ${c.level2Overhangs.n} / ${c.level2Overhangs.c} that join it to the cargo module and the NC module. BsaI replaces the lacZα stuffer of ${bb ? bb.id.split('-')[0] : 'the backbone'} with it; both BsaI sites are cut away with the stuffer, the two BbsI sites of the backbone stay for Level 2. Plasmid sequence = top strand 5′→3′.`
-      : `BsaI releases each Level 0 part together with its two 4-nt Level 1 overhangs. The five fragments ligate through the shared overhangs (${junctions.join(' · ')}) and fit between NLvl1 and CLvl1 of ${bb ? bb.id.split('-')[0] : 'the backbone'}: the lacZα stuffer and both BsaI sites are cut away, so this plasmid can no longer be cut by BsaI. The two BbsI sites of the backbone stay — BbsI later releases the module at its Level 2 overhangs (${c.level2Overhangs.n} … ${c.level2Overhangs.c}). Plasmid sequence = top strand 5′→3′${isCargo ? '; the cargo module sits on it as the reverse complement (antisense strand) — the module above is shown rotated by 180°, the plasmid stays in backbone orientation' : ''}.`,
+      : `BsaI releases each Level 0 part together with its two 4-nt Level 1 overhangs. The five fragments ligate through the shared overhangs (${junctions.join(' · ')}) and fit between NLvl1 and CLvl1 of ${bb ? bb.id.split('-')[0] : 'the backbone'}: the lacZα stuffer and both BsaI sites are cut away, so this plasmid can no longer be cut by BsaI. The two BbsI sites of the backbone stay; BbsI later releases the module at its Level 2 overhangs (${c.level2Overhangs.n} … ${c.level2Overhangs.c}). Plasmid sequence = top strand 5′→3′${isCargo ? '; the cargo module sits on it as the reverse complement (antisense strand); the module above is shown rotated by 180°, the plasmid stays in backbone orientation' : ''}.`,
   });
   scrollAsmSeqTop();
 }
@@ -2723,72 +2805,90 @@ function orderRow(name, sub, status, seqHtml){
   const badge = status==='stock' ? '<span class="oi-badge fixed">in stock · E. coli</span>'
     : status==='oligo' ? '<span class="oi-badge synth">oligo pair</span>'
     : status==='primer' ? '<span class="oi-badge pcr">primer pair</span>'
-    : '<span class="oi-badge assemble">dsDNA</span>';
+    : '<span class="oi-badge assemble">DNA</span>';
   const sw = status==='stock' ? 'ncs' : status==='oligo' ? 't3' : status==='primer' ? 'shell' : 'promo';
   return `<div class="orderitem"><span class="oi-sw" style="background:${cvar(sw)}"></span>
     <div class="oi-main"><div class="oi-name">${esc(name)}</div><div class="oi-sub">${esc(sub)}</div>${seqHtml||''}</div>${badge}</div>`;
 }
+const orderName = c => c.stopCodon ? `${c.label}*` : c.label;     // NCS spacers that carry the ORF's stop codon are marked with * (as in the selection)
 const orderSite = c => c.module==='cargo_site' ? 'cargo site' : 'nanocompartment site';
 const orderWhere = c => `${c.type} · ${orderSite(c)}`;
 const recName = c => (c.genbank.match(/^LOCUS\s+(\S+)/)||[])[1] || `${c.type}_${c.label}`;
-const seqLine = (n, seq) => `<div class="oi-seq"><b>${esc(n)}</b> 5′-${esc(seq)}-3′ <span style="color:var(--muted)">(${seq.length} nt)</span></div>`;
-function listActions(el, text, csv, file){
-  el.innerHTML = `<button class="chip" type="button" data-act="copy">Copy list</button><button class="chip primary-chip" type="button" data-act="csv">Download list (.csv)</button>`;
+const seqLine = (n, seq, stop) => {
+  const body = stop ? `${esc(seq.slice(0,stop[0]))}<mark class="stp" title="stop codon">${esc(seq.slice(stop[0],stop[1]+1))}</mark>${esc(seq.slice(stop[1]+1))}` : esc(seq);
+  return `<div class="oi-seq"><b>${esc(n)}</b> 5′-${body}-3′ <span style="color:var(--muted)">(${seq.length} nt)</span></div>`;
+};
+const KIT_EMAIL = 'igem@blt.kit.edu';
+/* mailto link that asks the KIT team for plasmids; only part names go into the mail, never a sequence. */
+function kitRequestMailto(stock){
+  const lines = stock.map(c=>`- ${orderName(c)} (${c.type}, ${orderSite(c)}${c.plasmid_source?', plasmid '+c.plasmid_source.name:''})`);
+  const body = `Hello KIT iGEM team,\n\nI would like to request the following Level 0 plasmids from the ENCORE toolKIT:\n\n${lines.join('\n')}\n\nThank you!\n`;
+  return `mailto:${KIT_EMAIL}?subject=${encodeURIComponent('ENCORE toolKIT: plasmid request')}&body=${encodeURIComponent(body)}`;
+}
+function listActions(el, text, csv, file, gb, mail){
+  el.innerHTML = `<button class="chip" type="button" data-act="copy">Copy list</button><button class="chip primary-chip" type="button" data-act="csv">Download list (.csv)</button>` +
+    (gb ? `<button class="chip primary-chip" type="button" data-act="gb">Download GenBank (.gb)</button>` : '') +
+    (mail ? `<a class="chip primary-chip" href="${mail}">Request by e-mail</a>` : '');
   el.onclick = e=>{ const b=e.target.closest('button[data-act]'); if(!b) return;
-    if(b.dataset.act==='copy') copyText(b, text); else downloadText(file, csv); };
+    if(b.dataset.act==='copy') copyText(b, text); else if(b.dataset.act==='gb') downloadText(gb.file, gb.text); else downloadText(file, csv); };
 }
 function renderOrder(res){
   const list = (res.api && res.api.level0Constructs) || [];
   const empty = (id, msg) => { $(id).innerHTML = `<p class="l0m-note" style="margin:0">${msg}</p>`; };
   $('#ordStockMeta').textContent=$('#ordOligoMeta').textContent=$('#ordPrimerMeta').textContent=$('#ordDsMeta').textContent='';
-  ['#ordOligoActions','#ordPrimerActions','#ordDsActions'].forEach(id=>{ $(id).innerHTML=''; $(id).onclick=null; });
+  ['#ordStockActions','#ordOligoActions','#ordPrimerActions','#ordDsActions'].forEach(id=>{ $(id).innerHTML=''; $(id).onclick=null; });
   if(!list.length){
-    ['#ordStockList','#ordOligoList','#ordPrimerList','#ordDsList'].forEach(id=>empty(id,'Backend not connected — the order lists are only available with the server running.'));
+    ['#ordStockList','#ordOligoList','#ordPrimerList','#ordDsList'].forEach(id=>empty(id,'Backend not connected: the order lists are only available with the server running.'));
     return;
   }
 
   // 1 — toolbox parts the KIT has on stock
   const stock = list.filter(c=>c.onStock===true);
   $('#ordStockMeta').textContent = stock.length ? `${stock.length} part${stock.length>1?'s':''}` : '';
-  if(stock.length) $('#ordStockList').innerHTML = stock.map(c=>orderRow(c.label, `${orderWhere(c)} · toolbox part — Level 0 plasmid, shipped on request`, 'stock')).join('');
-  else empty('#ordStockList','None of the toolbox parts in this design is marked as on stock yet — the stock status comes with the part sequences.');
+  if(stock.length){
+    $('#ordStockList').innerHTML = stock.map(c=>orderRow(orderName(c), `${orderWhere(c)} · toolbox part: Level 0 plasmid${c.plasmid_source ? ' '+c.plasmid_source.name : ''}, shipped on request`, 'stock')).join('');
+    const cell = v => `"${String(v==null?'':v).replace(/"/g,'""')}"`, row = c=>[orderName(c), c.type, orderSite(c), c.plasmid_source?c.plasmid_source.id:'', c.plasmid_source?c.plasmid_source.name:''];
+    listActions($('#ordStockActions'), stock.map(c=>row(c).join('\t')).join('\n'),
+      'name,type,site,plasmid_id,plasmid_name\n'+stock.map(c=>row(c).map(cell).join(',')).join('\n')+'\n', 'level0_kit_stock_request.csv', null, kitRequestMailto(stock));
+  }
+  else empty('#ordStockList','None of the toolbox parts in this design is marked as on stock yet; the stock status comes with the part sequences.');
 
-  // 2 — oligo pairs (parts too short for PCR)
+  // 2 — oligo pairs (every part shorter than 150 bp)
   const oligo = list.filter(c=>c.oligos);
   $('#ordOligoMeta').textContent = oligo.length ? `${oligo.length} pair${oligo.length>1?'s':''} · ${oligo.length*2} oligos` : '';
   if(oligo.length){
-    $('#ordOligoList').innerHTML = oligo.map(c=>orderRow(c.label, `${orderWhere(c)} · ${c.insert.sequence.length} bp part · anneals to ${c.oligos.annealedLength} bp with 5′ overhangs ${c.oligos.overhangs.left} / ${c.oligos.overhangs.right}`, 'oligo',
-      seqLine(c.oligos.top.name, c.oligos.top.sequence)+seqLine(c.oligos.bottom.name, c.oligos.bottom.sequence))).join('');
+    $('#ordOligoList').innerHTML = oligo.map(c=>orderRow(orderName(c), `${orderWhere(c)} · ${c.insert.sequence.length} bp part · anneals to ${c.oligos.annealedLength} bp with 5′ overhangs ${c.oligos.overhangs.left} / ${c.oligos.overhangs.right}`, 'oligo',
+      seqLine(c.oligos.top.name, c.oligos.top.sequence, c.oligos.stop && c.oligos.stop.top)+seqLine(c.oligos.bottom.name, c.oligos.bottom.sequence, c.oligos.stop && c.oligos.stop.bottom))).join('');
     const rows = oligo.flatMap(c=>[c.oligos.top, c.oligos.bottom]);
     listActions($('#ordOligoActions'), rows.map(o=>`${o.name}\t${o.sequence}`).join('\n'),
-      'name,sequence,length\n'+rows.map(o=>`${o.name},${o.sequence},${o.length}`).join('\n')+'\n', 'level0_oligos.csv');
-  } else empty('#ordOligoList','No oligos needed — every part with a real sequence is long enough for PCR primers.');
+      'name,sequence,length\n'+rows.map(o=>`${o.name},${o.sequence},${o.length}`).join('\n')+'\n', 'level0_oligos.csv',
+      { file:'level0_oligos.gb', text: joinGb(oligo.map(c=>c.oligos.genbank)) });
+  } else empty('#ordOligoList','No oligos needed: every part with a real sequence is long enough for PCR primers.');
 
   // 3 — primer pairs for your own sequences
   const primer = list.filter(c=>c.isUser && c.primers && c.primers.possible);
   $('#ordPrimerMeta').textContent = primer.length ? `${primer.length} pair${primer.length>1?'s':''} · ${primer.length*2} primers` : '';
   if(primer.length){
     $('#ordPrimerList').innerHTML = primer.map(c=>{ const p=c.primers;
-      return orderRow(c.label, `${orderWhere(c)} · your own sequence · PCR product ${p.productLength} bp${p.q5AnnealingTemp ? ` · Q5 annealing ≈ ${p.q5AnnealingTemp} °C` : ''}`, 'primer',
+      return orderRow(orderName(c), `${orderWhere(c)} · your own sequence · PCR product ${p.productLength} bp${p.q5AnnealingTemp ? ` · Q5 annealing ≈ ${p.q5AnnealingTemp} °C` : ''}`, 'primer',
         seqLine(p.forward.name, p.forward.sequence)+seqLine(p.reverse.name, p.reverse.sequence)); }).join('');
     const rows = primer.flatMap(c=>[c.primers.forward, c.primers.reverse]);
     listActions($('#ordPrimerActions'), rows.map(o=>`${o.name}\t${o.sequence}`).join('\n'),
       'name,sequence,length\n'+rows.map(o=>`${o.name},${o.sequence},${o.length}`).join('\n')+'\n', 'level0_primers.csv');
-  } else empty('#ordPrimerList','No primers needed — your own sequences are too short for PCR (see the oligos above) or none is part of this design.');
+  } else empty('#ordPrimerList','No primers needed: your own sequences are shorter than 150 bp (see the oligos above) or none is part of this design.');
 
-  // 4 — dsDNA: every part with a real sequence
-  const ds = list.filter(c=>c.isReal);
+  // 4 — DNA: every part with a real sequence
+  const ds = list.filter(c=>c.isReal && !c.oligos);          // parts that are ordered as oligos are not listed again
   $('#ordDsMeta').textContent = ds.length ? `${ds.length} fragment${ds.length>1?'s':''}` : '';
   if(ds.length){
-    $('#ordDsList').innerHTML = ds.map(c=>orderRow(c.label, `${orderWhere(c)} · ${c.length} bp fragment (part ${c.insert.sequence.length} bp)${c.isUser ? ' · your own sequence' : c.onStock ? ' · toolbox part, also on stock' : ' · toolbox part'}`, 'dsdna')).join('');
+    $('#ordDsList').innerHTML = ds.map(c=>orderRow(orderName(c), `${orderWhere(c)} · ${c.length} bp fragment (part ${c.insert.sequence.length} bp)${c.isUser ? ' · your own sequence' : c.onStock ? ' · toolbox part, also on stock' : ' · toolbox part'}`, 'dsdna')).join('');
     const names = ds.map(recName);
-    const fasta = ds.map((c,i)=>`>${names[i]}\n${c.sequence}`).join('\n')+'\n';
-    $('#ordDsActions').innerHTML = `<button class="chip" type="button" data-act="copy">Copy FASTA</button><button class="chip primary-chip" type="button" data-act="fasta">Download FASTA (.fasta)</button><button class="chip primary-chip" type="button" data-act="gb">Download GenBank (.gb)</button>`;
+    $('#ordDsActions').innerHTML = `<button class="chip" type="button" data-act="copy">Copy list</button><button class="chip primary-chip" type="button" data-act="csv">Download list (.csv)</button><button class="chip primary-chip" type="button" data-act="gb">Download GenBank (.gb)</button>`;
     $('#ordDsActions').onclick = e=>{ const b=e.target.closest('button[data-act]'); if(!b) return;
-      if(b.dataset.act==='copy') copyText(b, fasta);
-      else if(b.dataset.act==='fasta') downloadText('level0_dsdna.fasta', fasta);
-      else downloadText('level0_dsdna.gb', joinGb(ds.map(c=>c.genbank))); };
-  } else empty('#ordDsList','No part with a real sequence in this design yet — placeholder parts cannot be ordered.');
+      if(b.dataset.act==='copy') copyText(b, ds.map((c,i)=>`${names[i]}\t${c.sequence}`).join('\n'));
+      else if(b.dataset.act==='csv') downloadText('level0_dna.csv', 'name,type,site,length,sequence\n'+ds.map((c,i)=>[names[i],c.type,orderSite(c),c.length,c.sequence].join(',')).join('\n')+'\n');
+      else downloadText('level0_dna.gb', joinGb(ds.map(c=>c.genbank))); };
+  } else empty('#ordDsList', list.some(c=>c.oligos) ? 'Nothing to order as DNA; every part with a real sequence is ordered as oligos.' : 'No part with a real sequence in this design yet; placeholder parts cannot be ordered.');
   const ph = list.filter(c=>!c.isReal).length;
   if(ph) $('#ordDsList').insertAdjacentHTML('beforeend', `<p class="l0m-note" style="margin:6px 0 0">${ph} part${ph>1?'s':''} still ha${ph>1?'ve':'s'} a placeholder sequence in the parts database and cannot be ordered yet.</p>`);
 }
@@ -2814,7 +2914,7 @@ function moduleParts(entries, middle){
 }
 function buildModel(){
   const n=state.nc;
-  const cargoBp = state.cargoSeq.length;
+  const cargoBp = seqBp(state.cargoSeq);
   const cargoLabel = state.cargoLabel;
   // isCargo mirrors the same field in Biologik/level0_design/design.py, so the
   // renderer never has to guess which of the five parts is the user's own.
@@ -2901,7 +3001,7 @@ function primersFromApi(primers){
   }));
 }
 
-const DESIGN_KEY='encore.design.v20';
+const DESIGN_KEY='encore.design.v29';
 let renderedFromCache=false;
 const resultFromApi = d => ({ model:modelFromApi(d), primers:primersFromApi(d.primers), api:d });
 async function compute(){
@@ -2920,7 +3020,7 @@ async function compute(){
       renderAll(lastResult);
       return;
     }catch(err){
-      console.warn('[ENCORE] /api/design failed — falling back to the inline model', err);
+      console.warn('[ENCORE] /api/design failed: falling back to the inline model', err);
     }
   }
   const m=buildModel();
@@ -2977,7 +3077,7 @@ function saveSession(){
     sessionStorage.setItem(SESSION_KEY, JSON.stringify({
       started:builderStarted,
       nc:state.nc?state.nc.id:($('#ncSelect').value===CUSTOM_NC?CUSTOM_NC:null),
-      customNc:{ label:state.customNc.label, tp:state.customNc.tp, seqRaw:$('#shellSeq').value },
+      customNc:{ label:state.customNc.label, seqRaw:$('#shellSeq').value },
       cargoRaw:$('#cargoSeq').value, cargoFromPreset:state.cargoFromPreset, cargoLabel:state.cargoLabel,
       promoter:$('#promoter').value,
       ncSlots:packSlots('nc'), cargoSlots:packSlots('cargo'),
@@ -2994,7 +3094,6 @@ async function restoreSession(){
 
   if(s.customNc){
     $('#customNcLabel').value=s.customNc.label||''; state.customNc.label=s.customNc.label||'';
-    if(s.customNc.tp){ $('#customNcTp').value=s.customNc.tp; state.customNc.tp=$('#customNcTp').value; }
     $('#shellSeq').value=s.customNc.seqRaw||'';
   }
   if(s.nc){
@@ -3034,6 +3133,7 @@ async function restoreSession(){
 
   state.unlocked=s.unlocked||state.unlocked;
   while(state.unlocked.length<5) state.unlocked.push(!!state.unlocked[3]);     // sessions saved before step 5 existed
+  if(state.unlocked[3] && !state.nc) state.unlocked=[true,false,false,false,false];   // a result without its inputs cannot be recomputed
   applyLocks(); updateStepperLocks();
   // Step 4 was already computed before the refresh: show that result right away (cached in sessionStorage)
   // so the saved scroll position below is valid immediately, then refresh it silently in the background.
@@ -3085,11 +3185,11 @@ async function refreshCommecStatus(){
     if(s.available){
       badge.classList.add('on');
       label.textContent='Biosecurity screening: on';
-      badge.title='COMMEC is reachable and its databases are ready — cargo/module sequences are screened before Step 4.';
+      badge.title='COMMEC is reachable and its databases are ready; cargo/module sequences are screened before Step 4.';
     } else {
       badge.classList.add('off');
       label.textContent='Biosecurity screening: off';
-      badge.title=s.reason || 'COMMEC is not configured for this deployment — sequences are not screened. See README.md.';
+      badge.title=s.reason || 'COMMEC is not configured for this deployment; sequences are not screened. See README.md.';
     }
   }catch(err){
     badge.classList.remove('on','off','checking');
@@ -3159,7 +3259,7 @@ window.ENCORE_API = (function(){
     // Convenience: translate the prototype's `state` object into a design request.
     designFromState: (s) => post('/design', {
       nanocompartment: s.nc && s.nc.id,
-      customNanocompartment: s.nc && s.nc.custom ? { label:s.nc.shell, tp:s.nc.tp, seq:s.nc.seq } : undefined,
+      customNanocompartment: s.nc && s.nc.custom ? { label:s.nc.shell, seq:s.nc.seq } : undefined,
       cargoSeq: s.cargoSeq, cargoLabel: s.cargoLabel,
       promoter: s.promoter,
       ncSlots: slotsPayload('nc'), cargoSlots: slotsPayload('cargo'), genbank: true,
@@ -3168,8 +3268,8 @@ window.ENCORE_API = (function(){
   // Passive health check. `ready` resolves either way, so the app can await it
   // once and then look at `available` instead of racing the check.
   api.ready = api.libraries()
-    .then(l=>{ api.librariesData = l; api.available = true; console.info('[ENCORE] backend connected — window.ENCORE_API ready'); })
-    .catch(()=>{ api.available = false; console.info('[ENCORE] backend not reachable — prototype running standalone (inline logic)'); });
+    .then(l=>{ api.librariesData = l; api.available = true; console.info('[ENCORE] backend connected: window.ENCORE_API ready'); })
+    .catch(()=>{ api.available = false; console.info('[ENCORE] backend not reachable: prototype running standalone (inline logic)'); });
   return api;
 })();
 </script>

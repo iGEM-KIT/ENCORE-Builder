@@ -11,7 +11,7 @@
   "level2_overhang": null,
   "stored_orientation": "sense",
   "frame_spacer_in_plasmid": {"sequence": "AT", "side": "5' side of the sense strand"},
-  "sequence": "ONLY THE PART — sense strand, no overhangs, no frame spacer",
+  "sequence": "ONLY THE PART: sense strand, no overhangs, no frame spacer",
   "sequence_status": "real",
   "on_stock": true,
   "length_bp": 0,

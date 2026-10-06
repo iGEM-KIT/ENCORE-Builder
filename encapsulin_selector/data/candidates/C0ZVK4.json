@@ -20,7 +20,7 @@
   "needs_review_flag": false,
   "entry_warning": null,
   "reference_assembly_id": null,
-  "loading_info": "DyP-type peroxidase - C-terminal targeting-peptide-mediated; 37-aa C-terminal DyP sequence successfully loads heterologous EGFP and firefly luciferase.",
+  "loading_info": "DyP-type peroxidase: C-terminal targeting-peptide-mediated; 37-aa C-terminal DyP sequence successfully loads heterologous EGFP and firefly luciferase.",
   "source_uniprot": "https://www.uniprot.org/uniprotkb/C0ZVK4/entry",
   "source_pdb": null,
   "source_emdb": null,

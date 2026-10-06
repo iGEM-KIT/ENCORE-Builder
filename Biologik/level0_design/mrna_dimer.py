@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""mRNA-Selbststruktur (optional, braucht ViennaRNA) — nicht nur fuer die Cargo,
+"""mRNA-Selbststruktur (optional, braucht ViennaRNA): nicht nur fuer die Cargo,
 sondern fuer JEDE vom Nutzer selbst eingegebene Sequenz (Cargo, eigene Shell,
 eigenes Modul), siehe cli.py cmd_validate().
 
@@ -12,22 +12,22 @@ Translation verhindern können:
   - selfDimer: zwei Kopien derselben mRNA lagern sich aneinander an
                (intermolekularer Duplex ZWISCHEN zwei Kopien).
 
-Beide brauchen ViennaRNA (``pip install ViennaRNA`` — siehe
+Beide brauchen ViennaRNA (``pip install ViennaRNA``: siehe
 Biologik/requirements.txt). Fehlt es, ist das kein Fehler: der Check wird
 einfach ausgelassen, genau wie primer3 an anderer Stelle auf die
-Wallace-Schaetzung zurueckfaellt — design_construct() liefert trotzdem ein
+Wallace-Schaetzung zurueckfaellt: design_construct() liefert trotzdem ein
 Ergebnis.
 
 Eine rohe minimale freie Energie (MFE) allein ist zwischen Sequenzen nicht fair
 vergleichbar: jede RNA hat allein durch Laenge und GC-Gehalt eine gewisse
 Baseline-Faltungsenergie. Deshalb wird die MFE der echten Sequenz gegen den
 Hintergrund mehrerer zufaellig durchmischter (basenzusammensetzungsgleicher)
-Varianten derselben Sequenz verglichen — ein Z-Score, wie viele
+Varianten derselben Sequenz verglichen: ein Z-Score, wie viele
 Standardabweichungen die echte Sequenz staerker faltet/dimerisiert, als es
 fuer eine zufaellige Sequenz derselben Zusammensetzung zu erwarten waere.
 Deutlich negativer Z-Score = staerker strukturiert/selbstkomplementaer als
 Zufall. Das Mischen ist ein einfaches Basen-Shuffle (nicht Dinukleotid-
-erhaltend) — eine bewusste Vereinfachung.
+erhaltend): eine bewusste Vereinfachung.
 
 Das ist eine thermodynamische MFE-Abschaetzung, KEINE Bindungswahrscheinlichkeit
 im kinetischen/Konzentrations-Sinn (dafuer fehlen intrazellulaere
@@ -123,7 +123,7 @@ def check_mrna_structure(sense_seq: str) -> dict:
     if len(seq) > MAX_LEN:
         return {
             "available": False,
-            "reason": f"Sequence longer than {MAX_LEN} bp — mRNA structure check skipped for performance.",
+            "reason": f"Sequence longer than {MAX_LEN} bp: mRNA structure check skipped for performance.",
         }
 
     try:
@@ -132,7 +132,7 @@ def check_mrna_structure(sense_seq: str) -> dict:
         return {
             "available": False,
             "reason": (
-                "ViennaRNA is not installed — mRNA self-fold/self-dimer check skipped. "
+                "ViennaRNA is not installed: mRNA self-fold/self-dimer check skipped. "
                 "Install it with `pip install ViennaRNA` (see Biologik/requirements.txt)."
             ),
         }

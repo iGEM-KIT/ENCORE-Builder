@@ -8,6 +8,6 @@
   "length_bp": 39,
   "organism": null,
   "source": "Extrahiert aus Level 2 Destination HIS3.gb (pESC-HIS-Backbone), GenBank-Location 2901..2939.",
-  "notes": "Noch kein eigener Slot in der Level-0/1/2-Design-Engine \u2014 aktuell rein informationell.",
+  "notes": "Noch kein eigener Slot in der Level-0/1/2-Design-Engine; aktuell rein informationell.",
   "used_by": []
 }

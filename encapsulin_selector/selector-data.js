@@ -2,7 +2,7 @@
 // Neue Encapsuline hinzufuegen: siehe encapsulin_selector/data/README.md
 window.ENCAPSULIN_SELECTOR_DATA = {
   "meta": {
-    "title": "Open Encapsulin Selector — Alpha",
+    "title": "Open Encapsulin Selector: Alpha",
     "source_file": "open_encapsulin_databank_08_09.xlsx",
     "status_note": "This selector is based on a continuously curated experimental encapsulin dataset. Some properties, particularly pore and evidence annotations, are still being expanded.",
     "alpha_policy": "Physical filtering uses the assemblies sheet. Candidate-level search uses databank. Incomplete pore/evidence/audit sheets are not used for hard filtering.",
@@ -1801,7 +1801,7 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "needs_review_flag": false,
       "entry_warning": null,
       "reference_assembly_id": null,
-      "loading_info": "Flp / ferritin-like protein - C-terminal extension-mediated.",
+      "loading_info": "Flp / ferritin-like protein: C-terminal extension-mediated.",
       "source_uniprot": "https://www.uniprot.org/uniprotkb/A5IJ00/entry",
       "source_pdb": null,
       "source_emdb": null,
@@ -1835,7 +1835,7 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "needs_review_flag": false,
       "entry_warning": null,
       "reference_assembly_id": null,
-      "loading_info": "Flp / ferritin-like protein - C-terminal extension-mediated.",
+      "loading_info": "Flp / ferritin-like protein: C-terminal extension-mediated.",
       "source_uniprot": "https://www.uniprot.org/uniprotkb/B1L7S2/entry",
       "source_pdb": null,
       "source_emdb": null,
@@ -1869,7 +1869,7 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "needs_review_flag": false,
       "entry_warning": null,
       "reference_assembly_id": null,
-      "loading_info": "DyP-type peroxidase - C-terminal targeting-peptide-mediated; 37-aa C-terminal DyP sequence successfully loads heterologous EGFP and firefly luciferase.",
+      "loading_info": "DyP-type peroxidase: C-terminal targeting-peptide-mediated; 37-aa C-terminal DyP sequence successfully loads heterologous EGFP and firefly luciferase.",
       "source_uniprot": "https://www.uniprot.org/uniprotkb/C0ZVK4/entry",
       "source_pdb": null,
       "source_emdb": null,
@@ -1903,7 +1903,7 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "needs_review_flag": false,
       "entry_warning": null,
       "reference_assembly_id": "D0LZ74_ref",
-      "loading_info": "Cargo: ferritin-like protein (EncFtn) - 4 decamers in tetrahedral arrangement (symmetry mismatch with shell). Mechanism: cargo C-terminal TP (GSLGIGSLR).",
+      "loading_info": "Cargo: ferritin-like protein (EncFtn), 4 decamers in tetrahedral arrangement (symmetry mismatch with shell). Mechanism: cargo C-terminal TP (GSLGIGSLR).",
       "source_uniprot": "https://www.uniprot.org/uniprotkb/D0LZ74/entry",
       "source_pdb": "7ODW;7OE2;7OEU",
       "source_emdb": "EMD-12853; EMD-12859;\nEMD-12864",
@@ -2285,7 +2285,7 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "pore_record_count": 0,
       "evidence_record_count": 5,
       "curation_source": "UniProt Q1Q6L7; Giessen & Silver 2017; Tracey et al. 2026",
-      "curator_notes": "Reviewed experimentally characterized Type 1 encapsulin from Kuenenia stuttgartiensis. Unusual N-terminal diheme-cytochrome–encapsulin fusion; full-length cEnc forms ~33 nm capsids and NIR-domain loading was demonstrated. A construct lacking the cytochrome domain forms ~29 nm capsids.",
+      "curator_notes": "Reviewed experimentally characterized Type 1 encapsulin from Kuenenia stuttgartiensis. Unusual N-terminal diheme-cytochrome-encapsulin fusion; full-length cEnc forms ~33 nm capsids and NIR-domain loading was demonstrated. A construct lacking the cytochrome domain forms ~29 nm capsids.",
       "missing_fields_for_curation": "pore_data",
       "assembly_count": 2
     },
@@ -3054,7 +3054,7 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "method": "cryo-EM; X-ray crystallography",
       "structure_id": "6I9G",
       "source": "Loncar et al. 2020",
-      "notes": "Canonical recombinant cargo-free WT T=1 EncMh assembly. Loncar et al. 2020 directly reported a 60-subunit icosahedral \ncapsid; cryo-EM particles were ~22 nm and the 2.5 Å crystal structure 6I9G measured 23 nm with a 2.0–2.5 nm protein layer. The oligomeric shell remained stable up to 50 °C, but this is not a Tm. Heterologous cargo-loaded preparations and later EncMh fusion/loading applications are not treated as separate assemblies because no distinct shell architecture was demonstrated.",
+      "notes": "Canonical recombinant cargo-free WT T=1 EncMh assembly. Loncar et al. 2020 directly reported a 60-subunit icosahedral \ncapsid; cryo-EM particles were ~22 nm and the 2.5 Å crystal structure 6I9G measured 23 nm with a 2.0 to 2.5 nm protein layer. The oligomeric shell remained stable up to 50 °C, but this is not a Tm. Heterologous cargo-loaded preparations and later EncMh fusion/loading applications are not treated as separate assemblies because no distinct shell architecture was demonstrated.",
       "_shell_diameter": {
         "min": 23,
         "max": 23,
@@ -3270,7 +3270,7 @@ window.ENCAPSULIN_SELECTOR_DATA = {
     {
       "assembly_id": "Q1D6H4_pmut_T1",
       "candidate_id": "Q1D6H4",
-      "construct": "Mx_pmut (ΔI195–L202 + GG)",
+      "construct": "Mx_pmut (ΔI195-L202 + GG)",
       "variant_status": "engineered",
       "assembly_symmetry": "icosahedral",
       "T_number": 1,
@@ -3285,7 +3285,7 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "method": "cryo-EM / negative-stain TEM",
       "structure_id": "9B9I",
       "source": "Kwon et al. 2024",
-      "notes": "Pore-engineered EncA lacking the I195–L202 pore loop, with two Gly residues introduced to form the shortened loop. Without cargo co-expression, Mx_pmut exclusively formed ~20 nm T=1 shells.",
+      "notes": "Pore-engineered EncA lacking the I195-L202 pore loop, with two Gly residues introduced to form the shortened loop. Without cargo co-expression, Mx_pmut exclusively formed ~20 nm T=1 shells.",
       "_shell_diameter": {
         "min": 20,
         "max": 20,
@@ -3297,7 +3297,7 @@ window.ENCAPSULIN_SELECTOR_DATA = {
     {
       "assembly_id": "Q1D6H4_pmut_T3",
       "candidate_id": "Q1D6H4",
-      "construct": "Mx_pmut (ΔI195–L202 + GG)",
+      "construct": "Mx_pmut (ΔI195-L202 + GG)",
       "variant_status": "engineered",
       "assembly_symmetry": "icosahedral",
       "T_number": 3,
@@ -3324,7 +3324,7 @@ window.ENCAPSULIN_SELECTOR_DATA = {
     {
       "assembly_id": "Q1D6H4_pmut_T4",
       "candidate_id": "Q1D6H4",
-      "construct": "Mx_pmut (ΔI195–L202 + GG)",
+      "construct": "Mx_pmut (ΔI195-L202 + GG)",
       "variant_status": "engineered",
       "assembly_symmetry": "icosahedral",
       "T_number": 4,
@@ -3549,7 +3549,7 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "method": "cryo-EM; negative-stain TEM",
       "structure_id": "6X8M",
       "source": "Nichols/LaFrance et al. 2021",
-      "notes": "Canonical WT CyD-loaded T=1 SrpI assembly. Nichols/LaFrance et al. 2021 directly reported the SrpI nanocompartment as a 24.5 nm T=1 icosahedral capsid formed by 60 SrpI subunits. Holo-SrpI was generated by denaturing recombinant SrpI in 6 M GuHCl and refolding it in vitro in the presence of separately purified cognate full-length CyD. Negative-stain TEM showed internal cargo density corresponding to approximately 1–2 CyD copies, and focused classification of the holo cryo-EM map detected weak cargo-associated density near a threefold axis; most CyD was not resolved in the atomic model because of low occupancy and/or flexibility. PDB 6X8M / EMD-22094 represents the holo shell. Native sulfate-starved S. elongatus lysates contained a high-molecular-weight complex enriched in SrpI and CyD by LC-MS, supporting the biological relevance of the cargo-loaded state. The C-terminal expression tag present in the structural construct is not treated as a separate assembly.",
+      "notes": "Canonical WT CyD-loaded T=1 SrpI assembly. Nichols/LaFrance et al. 2021 directly reported the SrpI nanocompartment as a 24.5 nm T=1 icosahedral capsid formed by 60 SrpI subunits. Holo-SrpI was generated by denaturing recombinant SrpI in 6 M GuHCl and refolding it in vitro in the presence of separately purified cognate full-length CyD. Negative-stain TEM showed internal cargo density corresponding to approximately 1 to 2 CyD copies, and focused classification of the holo cryo-EM map detected weak cargo-associated density near a threefold axis; most CyD was not resolved in the atomic model because of low occupancy and/or flexibility. PDB 6X8M / EMD-22094 represents the holo shell. Native sulfate-starved S. elongatus lysates contained a high-molecular-weight complex enriched in SrpI and CyD by LC-MS, supporting the biological relevance of the cargo-loaded state. The C-terminal expression tag present in the structural construct is not treated as a separate assembly.",
       "_shell_diameter": {
         "min": 24.5,
         "max": 24.5,
@@ -3561,7 +3561,7 @@ window.ENCAPSULIN_SELECTOR_DATA = {
     {
       "assembly_id": "Q8U1L4_ref",
       "candidate_id": "Q8U1L4",
-      "construct": "full-length ferritin-like–encapsulin fusion protein",
+      "construct": "full-length ferritin-like-encapsulin fusion protein",
       "variant_status": "wild_type",
       "assembly_symmetry": "icosahedral",
       "T_number": 3,
@@ -3576,7 +3576,7 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "method": "negative-stain EM; X-ray \ncrystallography; VUVCD spectroscopy",
       "structure_id": "2E0Z",
       "source": "Namba et al. 2005; Akita et al. 2007; \nKumamoto et al. 2024",
-      "notes": "Canonical WT T=3 assembly of the naturally occurring full-length ferritin-like–encapsulin fusion protein from Pyrococcus \nfuriosus. Namba et al. 2005 reported endogenous spherical particles approximately 30 nm in diameter and showed that recombinant full-length protein expressed in E. coli forms morphologically similar particles. Akita et al. 2007 subsequently determined PDB 2E0Z and directly reported an icosahedral T=3 capsid composed of 180 subunits. The N-terminal ferritin-like domain (approximately residues 1–109) is covalently fused to each encapsulin shell subunit and is therefore part of the native WT protein architecture rather than a separately loaded cargo; this internal domain was not resolved in 2E0Z, consistent with conformational mobility within the shell. PDB 5N5E represents only an isolated N-terminal ferritin-like domain construct forming a D5 decamer and is not treated as a distinct encapsulin assembly. Kumamoto et al. 2024 experimentally characterized recombinant full-length Pf-enc expressed in E. coli, denatured and refolded in vitro; negative-stain TEM showed spherical particles measuring 39 ± 2 nm, which the authors considered similar to the previously reported T=3 particles. This condition-specific recombinant measurement is retained here as supporting information and does not replace the approximately 30 nm diameter reported for the canonical native particles. VUVCD analysis further indicated that the N-terminal ferritin-like domain adopts a substantially different secondary structure within full-length Pf-enc than when studied as the isolated truncated domain, supporting the interpretation that the 5N5E decamer may reflect truncation-dependent oligomerization rather than the organization of the domain inside the intact T=3 cage. No alternative T-number, symmetry, stable assembly intermediate, expanded/contracted shell architecture, or structurally distinct engineered shell has been experimentally demonstrated for Q8U1L4.",
+      "notes": "Canonical WT T=3 assembly of the naturally occurring full-length ferritin-like-encapsulin fusion protein from Pyrococcus \nfuriosus. Namba et al. 2005 reported endogenous spherical particles approximately 30 nm in diameter and showed that recombinant full-length protein expressed in E. coli forms morphologically similar particles. Akita et al. 2007 subsequently determined PDB 2E0Z and directly reported an icosahedral T=3 capsid composed of 180 subunits. The N-terminal ferritin-like domain (approximately residues 1 to 109) is covalently fused to each encapsulin shell subunit and is therefore part of the native WT protein architecture rather than a separately loaded cargo; this internal domain was not resolved in 2E0Z, consistent with conformational mobility within the shell. PDB 5N5E represents only an isolated N-terminal ferritin-like domain construct forming a D5 decamer and is not treated as a distinct encapsulin assembly. Kumamoto et al. 2024 experimentally characterized recombinant full-length Pf-enc expressed in E. coli, denatured and refolded in vitro; negative-stain TEM showed spherical particles measuring 39 ± 2 nm, which the authors considered similar to the previously reported T=3 particles. This condition-specific recombinant measurement is retained here as supporting information and does not replace the approximately 30 nm diameter reported for the canonical native particles. VUVCD analysis further indicated that the N-terminal ferritin-like domain adopts a substantially different secondary structure within full-length Pf-enc than when studied as the isolated truncated domain, supporting the interpretation that the 5N5E decamer may reflect truncation-dependent oligomerization rather than the organization of the domain inside the intact T=3 cage. No alternative T-number, symmetry, stable assembly intermediate, expanded/contracted shell architecture, or structurally distinct engineered shell has been experimentally demonstrated for Q8U1L4.",
       "_shell_diameter": {
         "min": 30,
         "max": 30,

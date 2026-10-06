@@ -22,7 +22,7 @@ import json
 import sys
 
 from .data import get_libraries
-from .design import build_genbank, design_construct
+from .design import build_genbank, codon_optimize_part, codon_summary, design_construct
 from .mrna_dimer import check_mrna_structure
 from .sequence import validate_cargo
 
@@ -59,15 +59,21 @@ def cmd_validate(payload: dict) -> dict:
     Sequenz in einem Modul-Slot. Eine ungueltige Sequenz ist KEIN Fehler, sondern
     eine gueltige Antwort mit ``ok: false`` im Validierungsobjekt.
 
-    Nur wenn die Sequenz fusionsbereit ist (``ok: True``), kommt zusaetzlich der
-    mRNA-Selbststruktur-Check dazu (braucht ViennaRNA, siehe mrna_dimer.py) —
+    Nur wenn die Sequenz fusionsbereit ist (``ok: True``), kommt zusaetzlich die Vorschau der
+    Codon-Optimierung (``codonOptimization``) und der mRNA-Selbststruktur-Check dazu (braucht ViennaRNA, siehe mrna_dimer.py) —
     eine nicht fusionsbereite Sequenz aendert sich ohnehin noch, das Falten waere
     verschwendete Rechenzeit.
     """
     kind = payload.get("kind") if payload.get("kind") in ("shell", "part") else "cargo"
     validation = validate_cargo(payload.get("cargoSeq", ""), kind=kind)
     if validation["ok"]:
-        validation = {**validation, "mrnaStructure": check_mrna_structure(validation["clean"])}
+        # Jede eingegebene Sequenz wird beim Bauen codon-optimiert (S. cerevisiae, ohne BsaI/BbsI-Stellen). Hier die Vorschau
+        # (Kontext: Cargo -> Type 0.3 des Cargo-Moduls, Shell -> Type 0.3 des NC-Moduls, eigenes Teil -> Slot 4 des NC-Moduls);
+        # die mRNA-Struktur wird an der optimierten Sequenz geprueft, denn die wird gebaut.
+        module, slot = {"cargo": ("cargo", 3), "shell": ("nc", 3)}.get(kind, ("nc", 4))
+        optimized = codon_optimize_part(validation["clean"], module, slot, validation["isProtein"])
+        validation = {**validation, "codonOptimization": codon_summary(optimized),
+                      "mrnaStructure": check_mrna_structure(optimized["sequence"])}
     return {"validation": validation}
 
 

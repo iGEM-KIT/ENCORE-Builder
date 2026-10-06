@@ -16,5 +16,5 @@
   "method": "cryo-EM; X-ray crystallography",
   "structure_id": "6I9G",
   "source": "Loncar et al. 2020",
-  "notes": "Canonical recombinant cargo-free WT T=1 EncMh assembly. Loncar et al. 2020 directly reported a 60-subunit icosahedral \ncapsid; cryo-EM particles were ~22 nm and the 2.5 Å crystal structure 6I9G measured 23 nm with a 2.0–2.5 nm protein layer. The oligomeric shell remained stable up to 50 °C, but this is not a Tm. Heterologous cargo-loaded preparations and later EncMh fusion/loading applications are not treated as separate assemblies because no distinct shell architecture was demonstrated."
+  "notes": "Canonical recombinant cargo-free WT T=1 EncMh assembly. Loncar et al. 2020 directly reported a 60-subunit icosahedral \ncapsid; cryo-EM particles were ~22 nm and the 2.5 Å crystal structure 6I9G measured 23 nm with a 2.0 to 2.5 nm protein layer. The oligomeric shell remained stable up to 50 °C, but this is not a Tm. Heterologous cargo-loaded preparations and later EncMh fusion/loading applications are not treated as separate assemblies because no distinct shell architecture was demonstrated."
 }

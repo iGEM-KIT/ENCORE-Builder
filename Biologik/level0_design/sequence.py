@@ -28,6 +28,23 @@ def clean_seq(sequence: str) -> str:
     return re.sub(r"[^ATGC]", "", (sequence or "").upper())
          
 
+AMINO_ACIDS = "ACDEFGHIKLMNPQRSTVWY"
+
+
+def is_protein(raw: str) -> bool:
+    """Aminosaeure statt DNA? Eine DNA besteht (bis auf Leerzeichen/Ziffern) fast nur aus A/T/G/C (auch U/N); ein Protein hat
+    nur etwa ein Viertel solche Buchstaben. Ab 90 % A/C/G/T/U/N gilt die Eingabe als DNA. FASTA-Kopfzeilen (">...") zaehlen nicht."""
+    letters = re.sub(r"[^A-Z*]", "", re.sub(r"^>.*$", "", (raw or "").upper(), flags=re.M))
+    if not letters:
+        return False
+    return sum(1 for c in letters if c in "ACGTUN") / len(letters) < 0.9
+
+
+def clean_protein(raw: str) -> str:
+    """Nur die 20 Aminosaeuren (und ein Stern fuer ein Stopcodon) bleiben; FASTA-Kopfzeilen, Leerzeichen und Ziffern fallen weg."""
+    return re.sub(r"[^ACDEFGHIKLMNPQRSTVWY*]", "", re.sub(r"^>.*$", "", (raw or "").upper(), flags=re.M))
+
+
 def gc_content(sequence: str) -> int:
     # Zählt GC-Gehalt: die drei Wasserstoffbrücken der G–C-Paarung ist Hauptfaktor für die Stabilität,
     # relevant für Primer-Schmelztemperaturen, die Wahl der Fusion Sites und die Synthetisierbarkeit einer CDS.
@@ -76,6 +93,10 @@ def ends_with_stop(sequence: str):
 def validate_cargo(raw: str, min_bp: int = 30, kind: str = "cargo") -> dict:
     # ``kind`` waehlt nur den Wortlaut der Stopcodon-Meldung: "cargo" (Standard), "shell" fuer eine
     # eigene Nanocompartment-Shell oder "part" fuer eine eigene Sequenz in einem Slot. Die Regeln sind identisch.
+    # Die Eingabe darf DNA (CDS) oder eine Aminosaeuresequenz sein (``isProtein``); ein Protein wird beim Bauen mit der
+    # Codon-Nutzung von S. cerevisiae in DNA uebersetzt (codon.py), ``length`` ist dann die Laenge dieser DNA (3 pro Aminosaeure).
+    if is_protein(raw):
+        return _validate_protein(raw, min_bp, kind)
     # clean_seq() macht die Eingabe für die weitere Analyse brauchbar.
     clean = clean_seq(raw)
     length = len(clean)
@@ -97,18 +118,18 @@ def validate_cargo(raw: str, min_bp: int = 30, kind: str = "cargo") -> dict:
         if trailing_stop:
             if kind == "shell":
                 errors.append(
-                    f"Stop codon at the end ({trailing_stop}). Remove it — the construct adds its own stop codon right after the shell."
+                    f"Stop codon at the end ({trailing_stop}). Remove it: the construct adds its own stop codon right after the shell."
                 )
             elif kind == "part":
                 errors.append(
-                    f"Stop codon at the end ({trailing_stop}). Remove it — the construct places its own stop codon at the end of the nanocompartment site."
+                    f"Stop codon at the end ({trailing_stop}). Remove it: the construct places its own stop codon at the end of the nanocompartment site."
                 )
             else:
                 errors.append(
-                    f"Stop codon at the end ({trailing_stop}). Remove it — otherwise the targeting peptide is not attached and the cargo is not encapsulated."
+                    f"Stop codon at the end ({trailing_stop}). Remove it: otherwise the targeting peptide is not attached and the cargo is not encapsulated."
                 )
         if not_multiple_of_three:
-            warnings.append("Length is not a multiple of 3 — check the reading frame.")
+            warnings.append("Length is not a multiple of 3; check the reading frame.")
         if internal_stops:
             first = internal_stops[0]
             warnings.append(f"Possible in-frame stop codon at position {first['pos'] + 1} ({first['codon']}).")
@@ -127,4 +148,42 @@ def validate_cargo(raw: str, min_bp: int = 30, kind: str = "cargo") -> dict:
         "ok": not errors,
         "errors": errors,
         "warnings": warnings,
+        "isProtein": False,
+    }
+
+
+def _stop_message(stop: str, kind: str) -> str:
+    where = {"shell": "the construct adds its own stop codon right after the shell.",
+             "part": "the construct places its own stop codon at the end of the nanocompartment site."}.get(
+        kind, "otherwise the targeting peptide is not attached and the cargo is not encapsulated.")
+    return f"Stop codon at the end ({stop}). Remove it: {where}"
+
+
+def _validate_protein(raw: str, min_bp: int, kind: str) -> dict:
+    """Wie validate_cargo, fuer eine Aminosaeuresequenz: ``clean`` ist die Aminosaeurefolge, ``length`` die Laenge der DNA nach der
+    Rueckuebersetzung. Ein Stern am Ende ist ein Stopcodon (Fehler wie bei DNA), ein Stern mitten drin eine Warnung."""
+    text = re.sub(r"^>.*$", "", (raw or "").upper(), flags=re.M)
+    clean = clean_protein(raw)
+    invalid_chars = len(re.sub(r"[ACDEFGHIKLMNPQRSTVWY*\s]", "", text))
+    trailing_stop = "*" if clean.endswith("*") else None
+    residues = clean[:-1] if trailing_stop else clean
+    length = 3 * len(residues)
+    internal_stops = [{"pos": i, "codon": "*"} for i, c in enumerate(residues) if c == "*"]
+
+    errors, warnings = [], []
+    if not residues:
+        errors.append("No valid amino acid sequence provided.")
+    else:
+        if kind == "cargo" and length < min_bp:
+            errors.append(f"Sequence too short ({len(residues)} aa, need at least {min_bp // 3} aa).")
+        if trailing_stop:
+            errors.append(_stop_message("*", kind))
+        if internal_stops:
+            warnings.append(f"Stop (*) at residue {internal_stops[0]['pos'] + 1}: translation would end there.")
+        if invalid_chars > 0:
+            warnings.append(f"{invalid_chars} invalid character(s) were ignored.")
+    return {
+        "clean": clean, "length": length, "aa": len(residues), "gc": None, "invalidChars": invalid_chars,
+        "notMultipleOfThree": False, "trailingStop": trailing_stop, "internalStops": internal_stops,
+        "ok": not errors, "errors": errors, "warnings": warnings, "isProtein": True,
     }

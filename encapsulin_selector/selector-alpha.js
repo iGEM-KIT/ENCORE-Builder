@@ -166,7 +166,7 @@
       <article class="candidate-card">
         <div class="candidate-head">
           <div>
-            <h2 class="candidate-title"><i>${esc(c.organism)}</i> — ${idDisplay}</h2>
+            <h2 class="candidate-title"><i>${esc(c.organism)}</i>: ${idDisplay}</h2>
             <p class="candidate-sub">${esc(c.protein_name)}</p>
             <div class="chips">
               ${c.strain ? `<span class="chip">${esc(c.strain)}</span>` : ""}
@@ -378,7 +378,7 @@
   document.addEventListener("visibilitychange", () => { if (document.visibilityState === "hidden") saveSession(); });
 
   const sanity = assemblies.filter(a => String(a.T_number) === "1" && a._shell_diameter && a._shell_diameter.max >= 0.1 && a._shell_diameter.min <= 40);
-  console.info(`Selector sanity check: expected 26 current matches for 0.1–40 nm + T=1; found ${sanity.length}.`);
+  console.info(`Selector sanity check: expected 26 current matches for 0.1 to 40 nm + T=1; found ${sanity.length}.`);
 })();
 
 

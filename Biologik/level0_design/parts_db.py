@@ -1,15 +1,14 @@
 from __future__ import annotations
 
-"""Loader fuer Biologik/level0_design/parts/ — die Sequenz-Datenbank fuer
+"""Loader fuer Biologik/level0_design/parts/: die Sequenz-Datenbank fuer
 Golden-Gate-Standardteile (Level-0-Inserts: Shells, Cargos, Linker, Marker, TPs, NCS-Spacer;
 Promotoren, Terminatoren, Level-0/1/2-Ziel-Backbones, Type-Overhang-Adapter).
 
 Gleiches Prinzip wie encapsulin_selector/data/ (eine JSON-Datei pro Eintrag,
-gruppiert nach Art in Unterordnern) — siehe parts/README.md. Anders als beim
+gruppiert nach Art in Unterordnern); siehe parts/README.md. Anders als beim
 Selector gibt es hier KEINEN Build-Schritt zu einem generierten JS-Bundle:
 das laeuft serverseitig in Python (cli.py wird pro Request neu gestartet),
-daher werden die JSON-Dateien bei jedem Aufruf frisch von der Platte gelesen
-— eine neue/geaenderte Datei wirkt sofort, ohne Neustart oder Build.
+daher werden die JSON-Dateien bei jedem Aufruf frisch von der Platte gelesen; eine neue/geaenderte Datei wirkt sofort, ohne Neustart oder Build.
 """
 
 import json

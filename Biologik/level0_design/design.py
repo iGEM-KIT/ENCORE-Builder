@@ -18,6 +18,7 @@ from .data import (
 # Sequence-py enthält Funktionen für die Verarbeitung von DNA-Sequenzen
 # Z.B. zum Bilden von Komplementären DNA-Sequenzen, zur Berechnung der Schmelztemperatur
 from .sequence import reverse_complement, validate_cargo, wallace_tm
+from .codon import find_forbidden, optimize_cds
 from .parts_db import find_inserts, find_part, find_real_sequence, load_parts
 from .assembly import assemble_level1_module, assemble_level1_promoter, assemble_level2, finish_level1, level1_fragment
 from .genbank_writer import format_genbank_record, location_span, make_feature as _feat, shift_location
@@ -30,22 +31,18 @@ def build_custom_nanocompartment(custom) -> dict:
     """Eigene Shell-CDS des Nutzers als Nanocompartment-Eintrag.
 
     Die Sequenz laeuft durch dieselbe Pruefung wie das Cargo (Laenge, kein
-    Stopcodon am Ende, Leseraster). Das Targeting-Peptid haengt nicht an der
-    Shell, deshalb waehlt der Nutzer eines der vorhandenen.
+    Stopcodon am Ende, Leseraster). Eine eigene Shell bringt kein Targeting-Peptid
+    mit (tp = None); im Cargo-Modul geht dann nur noch eine eigene Sequenz.
     """
     custom = custom if isinstance(custom, dict) else {}
-    tps = sorted({nc["tp"] for nc in NANOCOMPARTMENTS})
-    tp = custom.get("tp") or tps[0]
-    if tp not in tps:
-        raise ValueError(f"Unknown targeting peptide \"{tp}\".")
     validation = validate_cargo(custom.get("seq", ""), kind="shell")
     if not validation["ok"]:
         raise ValueError("Custom nanocompartment shell is not fusion-ready: " + " ".join(validation["errors"]))
     label = (custom.get("label") or "").strip() or "Custom shell"
     return {
-        "id": CUSTOM_NC_ID, "label": label, "T": None, "dia": None, "tp": tp,
+        "id": CUSTOM_NC_ID, "label": label, "T": None, "dia": None, "tp": None,
         "shell": label, "shellBp": validation["length"], "custom": True,
-        "seq": validation["clean"], "validation": validation,
+        "seq": validation["clean"], "isProtein": validation["isProtein"], "validation": validation,
     }
 
 
@@ -98,7 +95,7 @@ def resolve_slots(raw, module: str = "nc") -> dict:
                 raise ValueError(f"Type 0.{n}: your sequence is not fusion-ready. " + " ".join(validation["errors"]))
             label = (cfg.get("label") or "").strip() or f"Custom part {n}"
             slots[n] = {"kind": "custom", "label": label, "seq": validation["clean"], "bp": validation["length"],
-                        "aa": validation["aa"], "validation": validation}
+                        "aa": validation["aa"], "isProtein": validation["isProtein"], "validation": validation}
         else:
             raise ValueError(f"Type 0.{n}: unknown kind \"{kind}\".")
 
@@ -134,6 +131,50 @@ def resolve_slots(raw, module: str = "nc") -> dict:
                 f"(choose a linker or your own linker sequence, not a marker)."
             )
     return slots
+
+
+def _adapter_contexts(adapter_id: str, antisense: bool) -> tuple:
+    """Nachbarkontext einer Teilsequenz im Sense-Strang des Teils: (Links-Varianten, Rechts-Varianten). Gebraucht, damit die
+    Codon-Optimierung keine BsaI/BbsI-Stelle ueber die Naht zum Adapter erzeugt. Rechts gibt es zwei Varianten: der Adapter selbst
+    (Level 0) und der Overhang mit dem GC-Spacer des naechsten Teils (Level 1). Im Cargo-Modul liegt das Teil als Reverse
+    Complement im Adapter, links und rechts tauschen dann die Seiten."""
+    entry = find_part("type_overhangs", adapter_id)
+    start, end = location_span(entry["insert"]["location"])
+    left = entry["sequence"][:start - 1]
+    right = entry["sequence"][end:]
+    rights = [right, right[:4] + "GC"]
+    if antisense:
+        return [reverse_complement(r) for r in rights], [reverse_complement(left)]
+    return [left], rights
+
+
+def codon_optimize_part(sequence: str, module: str, slot: int, protein: bool = False) -> dict:
+    """Codon-Optimierung (S. cerevisiae, ohne BsaI/BbsI-Stellen) einer vom Nutzer eingegebenen Sense-Sequenz, die in `module`
+    ("cargo"/"nc") an Type 0.<slot> eingebaut wird. Siehe codon.optimize_cds. Mit `protein=True` ist `sequence` eine Aminosaeurefolge."""
+    lefts, rights = _adapter_contexts(adapter_id_for(module, slot), module == "cargo")
+    return optimize_cds(sequence, lefts, rights, protein)
+
+
+def codon_summary(result: dict) -> dict:
+    """Was Design-Antwort und GenBank von einer Optimierung brauchen (ohne die Sequenzen)."""
+    return {"status": result["status"], "fromProtein": result["fromProtein"], "optimized": result["optimized"], "reason": result.get("reason"), "changed": result["changed"],
+            "codons": result["codons"], "caiBefore": result["caiBefore"], "caiAfter": result["caiAfter"],
+            "gcBefore": result["gcBefore"], "gcAfter": result["gcAfter"],
+            "sitesRemoved": [f"{h['enzyme']} ({h['site']})" for h in result["forbiddenBefore"]],
+            "sitesLeft": [f"{h['enzyme']} ({h['site']})" for h in result["forbiddenAfter"]]}
+
+
+def codon_note(summary: dict | None) -> str:
+    if not summary:
+        return ""
+    if summary["status"] != "optimized":
+        return f"Codon optimization: {summary['reason']}"
+    if summary.get("fromProtein"):
+        return (f"Back-translated from the amino acid sequence with S. cerevisiae codon usage: {summary['codons']} codons, "
+                f"CAI {summary['caiAfter']}, GC {summary['gcAfter']}%; no BsaI/BbsI sites")
+    removed = (f"; removed {len(summary['sitesRemoved'])} BsaI/BbsI site(s)" if summary["sitesRemoved"] else "; no BsaI/BbsI sites")
+    return (f"Codon-optimized for S. cerevisiae: {summary['changed']}/{summary['codons']} codons changed, "
+            f"CAI {summary['caiBefore']}->{summary['caiAfter']}, GC {summary['gcBefore']}->{summary['gcAfter']}%{removed}")
 
 
 def _slot_part(n: int, cfg: dict, tp_label: str = "TP") -> dict:
@@ -321,24 +362,33 @@ def make_primer_pair(sequence: str, oh_f: str, oh_r: str, use_primer3: bool = Tr
 # 5'-Polster vor der BbsI-Erkennungsstelle: Restriktionsenzyme schneiden am Ende eines PCR-Produkts
 # schlecht, wenn die Erkennungsstelle direkt am Rand liegt.
 PCR_CLAMP = "TTTT"
-# Unterhalb dieser Laenge ist PCR unpraktisch (Primer ueberlappen) -> als annealte Oligos bestellen.
-MIN_PCR_INSERT_BP = 40
+# Teile (eigene wie aus der Datenbank) unter dieser Laenge werden als annealte Oligo-Paare bestellt, ab dieser Laenge gibt
+# es fuer eigene Sequenzen Primer (PCR) bzw. fuer Toolbox-Teile die DNA-Bestellung (fertige Fragmente gibt es erst ab ~125 bp).
+MIN_PCR_INSERT_BP = 150
 _INTERNAL_SITES = {"BbsI": ("GAAGAC", "GTCTTC"), "BsaI": ("GGTCTC", "GAGACC")}
 
 
 def resolve_insert(category: str, part: str, site: str, slot: int, seed: str, length: int, **extra) -> tuple:
-    """(Teilsequenz in Sense-Richtung, ist_echt, Lagerstatus) eines Toolkit-Teils fuer eine Site ("nc_site"/"cargo_site") und
+    """(Teilsequenz in Sense-Richtung, ist_echt, Lagerstatus, Eintrag des Level-0-Plasmids oder None) eines Toolkit-Teils fuer eine Site ("nc_site"/"cargo_site") und
     einen Type-Slot aus der Datenbank parts/level0_inserts/. Gibt es genau dort ein Level-0-Plasmid, kommt dessen Insert und
     sein Lagerstatus (on_stock). Sonst die Sequenz desselben Teils von einer anderen Site/einem anderen Slot (Lagerstatus
     False: an dieser Stelle gibt es kein Plasmid), und ohne jeden Treffer eine deterministische Platzhalter-Sequenz."""
     exact = find_inserts(category, part, site, slot, **extra)
     if exact:
-        return exact[0]["sequence"], True, exact[0].get("on_stock")
+        return exact[0]["sequence"], True, exact[0].get("on_stock"), exact[0]
     other = (find_inserts(category, part, site, **extra) or find_inserts(category, part, **extra)
              or (find_inserts(category, part, site) or find_inserts(category, part) if "variant" not in extra else []))
     if other:
-        return other[0]["sequence"], True, False
-    return placeholder_seq(seed, length), False, None
+        return other[0]["sequence"], True, False, None
+    return placeholder_seq(seed, length), False, None, None
+
+
+def first_stop_offset(sense: str):
+    """Offset (0-basiert) des ersten Stopcodons (TAA/TAG/TGA) im Leseraster einer Sense-Sequenz, sonst None."""
+    for i in range(0, len(sense) - 2, 3):
+        if sense[i:i + 3] in ("TAA", "TAG", "TGA"):
+            return i
+    return None
 
 
 def design_level0_oligos(built: dict, label: str, slot: int, module: str) -> dict:
@@ -351,7 +401,34 @@ def design_level0_oligos(built: dict, label: str, slot: int, module: str) -> dic
     seq = built["sequence"]
     top, bottom = seq[n0 - 1:c0 - 1], reverse_complement(seq[n1:c1])
     base = level0_record_name(label, slot, module, "Oligo")
+    stop = None
+    if built.get("stops"):
+        a0, b0 = (v - 1 for v in location_span(built["stops"][0]["location"]))      # 0-basiert, Top-Strand des Plasmids
+        t = (a0 - (n0 - 1), b0 - (n0 - 1))
+        u = (c1 - 1 - b0, c1 - 1 - a0)
+        stop = {"top": list(t) if 0 <= t[0] and t[1] < len(top) else None,
+                "bottom": list(u) if a0 >= n1 and 0 <= u[0] and u[1] < len(bottom) else None}
+    # GenBank-Record des annealten Fragments (Top-Strand des Level-0-Plasmids, 0N-Overhang bis 0C-Overhang) mit beiden Oligos
+    shift = n0 - 1
+    rel = lambda loc: shift_location(loc, -shift)
+    feats = [_feat("primer_bind", f"1..{len(top)}", f"{base}_F", f"oligo {base}_F 5'-{top}-3'"),
+             _feat("primer_bind", f"complement({n1 - n0 + 2}..{c1 - n0 + 1})", f"{base}_R", f"oligo {base}_R 5'-{bottom}-3'")]
+    feats += [_feat("overhang", rel(o["location"]), o["label"], f"{o['role']} · top strand {o['sequence_top_strand']}")
+              for o in built["overhangs"]]
+    feats += [_feat("misc_feature", rel(sp["location"]), "Frame spacer", sp["note"]) for sp in built.get("spacers", [])]
+    feats += [_feat("misc_feature", rel(st["location"]), "Stop codon", st["note"]) for st in built.get("stops", [])]
+    antisense = module.startswith("cargo")
+    insert_loc = rel(built["insert"]["location"])
+    feats.append(_feat("CDS", f"complement({insert_loc})" if antisense else insert_loc, label,
+                       "part" + (", antisense: the ORF reads on the complement strand" if antisense else "")))
+    feats.sort(key=lambda f: location_span(f["location"])[0])
+    fragment = seq[n0 - 1:c1]
+    definition = (f"Annealed oligo pair for {label} (Type 0.{slot}, {'cargo' if antisense else 'nanocompartment'} site): "
+                  f"5' overhangs {seq[n0 - 1:n1]} / {reverse_complement(seq[c0 - 1:c1])} fit the Level 0 backbone, no digest needed. "
+                  "Sequence = top strand of the Level 0 plasmid, 5'->3' left to right.")
     return {
+        "genbank": format_genbank_record(level0_record_name(label, slot, module, "Oligos"), fragment, feats, False, definition),
+        "stop": stop,
         "possible": True,
         "top": {"name": f"{base}_F", "sequence": top, "length": len(top)},
         "bottom": {"name": f"{base}_R", "sequence": bottom, "length": len(bottom)},
@@ -378,8 +455,8 @@ def design_level0_primers(shown: dict, label: str, slot: int, module: str):
     insert = shown["insert"]["sequence"]
     if len(insert) < MIN_PCR_INSERT_BP:
         return {"possible": False,
-                "reason": f"Insert is only {len(insert)} bp — too short for PCR. Order it as two annealed oligos "
-                          f"carrying the same overhangs instead."}
+                "reason": f"Insert is only {len(insert)} bp: below {MIN_PCR_INSERT_BP} bp parts are ordered as two annealed oligos "
+                          f"carrying the same overhangs instead of PCR."}
     start, end = location_span(shown["insert"]["location"])
     ext_f = PCR_CLAMP + shown["sequence"][:start - 1]
     ext_r = PCR_CLAMP + reverse_complement(shown["sequence"][end:])
@@ -494,6 +571,29 @@ def design_construct(decisions: dict = None):
             cfg["label"] = nc["tp"]
             cfg["bp"] = NOMINAL_BP["TP"]
     nc_slots = resolve_slots(decisions.get("ncSlots"), "nc")
+    if nc.get("custom") and any(cfg["kind"] == "tp" for cfg in cargo_slots.values()):
+        raise ValueError("A custom nanocompartment has no targeting peptide; use your own sequence in that slot.")
+
+    # Jede vom Nutzer eingegebene Sequenz wird fuer S. cerevisiae codon-optimiert (Protein bleibt gleich, keine BsaI/BbsI-Stellen).
+    # Ein Cargo aus der Bibliothek ist ein Toolkit-Teil und bleibt, wie es ist.
+    codon_report = []
+
+    def optimize(role: str, label: str, module: str, slot: int, sequence: str, protein: bool) -> tuple:
+        result = codon_optimize_part(sequence, module, slot, protein)
+        summary = codon_summary(result)
+        codon_report.append({"role": role, "label": label, "module": module, "slot": slot, **summary})
+        return result["sequence"], summary
+
+    cargo_from_library = not cargo["isProtein"] and any(e["sequence"] == cargo["clean"] for e in find_inserts("cargo"))
+    cargo_codon = None
+    if not cargo_from_library:
+        cargo["clean"], cargo_codon = optimize("cargo", cargo_label, "cargo", 3, cargo["clean"], cargo["isProtein"])
+    if nc.get("custom"):
+        nc["seq"], nc["codon"] = optimize("shell", nc["label"], "nc", 3, nc["seq"], nc["isProtein"])
+    for module, slots in (("cargo", cargo_slots), ("nc", nc_slots)):
+        for n, cfg in slots.items():
+            if cfg["kind"] == "custom":
+                cfg["seq"], cfg["codon"] = optimize("part", cfg["label"], module, n, cfg["seq"], cfg["isProtein"])
     # Das Cargo sitzt im pESC (MCS1) auf dem Antisense-Strang. Deshalb wird gleich
     # hier das Reverse Complement gebildet und ab da nur noch damit gearbeitet:
     # Primer, Bestellsequenz und FASTA beziehen sich auf den Antisense-Strang.
@@ -508,7 +608,7 @@ def design_construct(decisions: dict = None):
     primers = make_primer_pair(cargo_antisense, CARGO_L1_FLANK[0], CARGO_L1_FLANK[1])
 
     fragments: list = []
-    level0_constructs = build_level0_constructs(nc, cargo_label, cargo_antisense, cargo_slots, nc_slots, fragments)
+    level0_constructs = build_level0_constructs(nc, cargo_label, cargo_antisense, cargo_slots, nc_slots, fragments, cargo_codon)
     level1_constructs, level2_construct = build_level1_and_2(fragments, promoter_entry, nc)
 
     return {
@@ -522,6 +622,7 @@ def design_construct(decisions: dict = None):
         "cargoSlots": _slot_summary(cargo_slots),
         "ncSlots": _slot_summary(nc_slots),
         "primers": primers,
+        "codonOptimization": codon_report,
         "level0Constructs": level0_constructs,
         "level1Constructs": level1_constructs,
         "level2Construct": level2_construct,
@@ -678,6 +779,8 @@ def clone_into_level0_backbone(built: dict, label: str, backbone: dict, antisens
                               f"{o['role']} · top strand {o['sequence_top_strand']}"))
     for sp in built.get("spacers", []):
         features.append(_feat("misc_feature", shift_location(sp["location"], adapter_to_plasmid), "Frame spacer", sp["note"]))
+    for st in built.get("stops", []):
+        features.append(_feat("misc_feature", shift_location(st["location"], adapter_to_plasmid), "Stop codon", st["note"]))
     insert_loc = shift_location(built["insert"]["location"], adapter_to_plasmid)
     features.append(_feat("CDS", f"complement({insert_loc})" if antisense else insert_loc, label,
                           f"Insert cloned via BbsI into {backbone['id']} · adapter {built['adapter']} · "
@@ -742,11 +845,12 @@ def _rotate_built(built: dict) -> dict:
         "overhangs": [flipped(o) for o in built["overhangs"]],
         "bbsiSites": [flipped(b) for b in built["bbsiSites"]],
         "spacers": [{**sp, "location": _flip_location(sp["location"], length)} for sp in built.get("spacers", [])],
+        "stops": [{**st, "location": _flip_location(st["location"], length)} for st in built.get("stops", [])],
     }
 
 
 def build_level0_constructs(nc: dict, cargo_label: str, cargo_antisense: str, cargo_slots: dict, nc_slots: dict,
-                            fragments: list | None = None) -> list:
+                            fragments: list | None = None, cargo_codon: dict | None = None) -> list:
     """Das Level-0-Konstrukt jedes der zehn Module (Cargo Site + NC Site, Type 0.1-0.5): die Teilsequenz im
     Overhang-Adapter ihres Type-Slots (attach_adapter) und, wenn das Level-0-Backbone in der Datenbank liegt,
     das daraus per BbsI klonierte Plasmid (clone_into_level0_backbone), jeweils mit fertigem GenBank-Text.
@@ -759,32 +863,32 @@ def build_level0_constructs(nc: dict, cargo_label: str, cargo_antisense: str, ca
     def slot_part(cfg: dict, site: str, n: int):
         kind = cfg["kind"]
         if kind == "custom":
-            return cfg["label"], cfg["seq"], True, True, "your own part", None
+            return cfg["label"], cfg["seq"], True, True, "your own part", None, None
         if kind == "tp":
-            seq, real, stock = resolve_insert("tp", nc["tp"], site, n, "TP" + nc["tp"], NOMINAL_BP["TP"],
+            seq, real, stock, entry = resolve_insert("tp", nc["tp"], site, n, "TP" + nc["tp"], NOMINAL_BP["TP"],
                                               variant="c_term" if n == 1 else "n_term")
-            return nc["tp"], seq, real, False, "targeting peptide (toolkit part)", stock
+            return nc["tp"], seq, real, False, "targeting peptide (toolkit part)", stock, entry
         if kind == "linker":
-            seq, real, stock = resolve_insert("linker", cfg["id"], site, n, "LINK" + cfg["id"], cfg["bp"])
-            return cfg["label"], seq, real, False, "linker (toolkit part)", stock
+            seq, real, stock, entry = resolve_insert("linker", cfg["id"], site, n, "LINK" + cfg["id"], cfg["bp"])
+            return cfg["label"], seq, real, False, "linker (toolkit part)", stock, entry
         if kind == "marker":
-            seq, real, stock = resolve_insert("marker", cfg["id"], site, n, "MARK" + cfg["id"], cfg["bp"])
-            return cfg["label"], seq, real, False, "surface marker (toolkit part)", stock
+            seq, real, stock, entry = resolve_insert("marker", cfg["id"], site, n, "MARK" + cfg["id"], cfg["bp"])
+            return cfg["label"], seq, real, False, "surface marker (toolkit part)", stock, entry
         if kind == "intein":
-            seq, real, stock = resolve_insert("intein", cfg["id"], site, n, "INT" + cfg["id"], cfg["bp"])
-            return cfg["label"], seq, real, False, "intein (toolkit part)", stock
-        seq, real, stock = resolve_insert("ncs", "ncs", site, n, "NCS", 30, ncs_role="stop" if kind == "ncsstop" else "plain")
-        return "NCS", seq, real, False, "NCS spacer (toolkit part)", stock
+            seq, real, stock, entry = resolve_insert("intein", cfg["id"], site, n, "INT" + cfg["id"], cfg["bp"])
+            return cfg["label"], seq, real, False, "intein (toolkit part)", stock, entry
+        seq, real, stock, entry = resolve_insert("ncs", "ncs", site, n, "NCS", 30, ncs_role="stop" if kind == "ncsstop" else "plain")
+        return "NCS", seq, real, False, ("NCS spacer with stop codon (toolkit part)" if kind == "ncsstop" else "NCS spacer (toolkit part)"), stock, entry
 
     if nc.get("custom"):
-        shell = (nc["shell"], nc["seq"], True, True, "your own nanocompartment shell", None)
+        shell = (nc["shell"], nc["seq"], True, True, "your own nanocompartment shell", None, None)
     else:
-        shell_seq, shell_real, shell_stock = resolve_insert("shell", nc["shell"], "nc_site", 3, "SHELL" + nc["shell"], nc["shellBp"])
-        shell = (nc["shell"], shell_seq, shell_real, False, "nanocompartment shell (toolkit part)", shell_stock)
+        shell_seq, shell_real, shell_stock, shell_entry = resolve_insert("shell", nc["shell"], "nc_site", 3, "SHELL" + nc["shell"], nc["shellBp"])
+        shell = (nc["shell"], shell_seq, shell_real, False, "nanocompartment shell (toolkit part)", shell_stock, shell_entry)
     # Stammt das Cargo unveraendert aus der Cargo-Bibliothek (Datenbank), ist es ein Toolkit-Teil mit Lagerstatus, keine Nutzereingabe.
     preset = next((e for e in find_inserts("cargo") if e["sequence"] == reverse_complement(cargo_antisense)), None)
     cargo = (cargo_label, None, True, preset is None, "cargo gene of interest" if preset is None else "cargo (toolkit part)",
-             preset.get("on_stock") if preset else None)
+             preset.get("on_stock") if preset else None, preset)
 
     backbone = next(iter(load_parts()["level0_backbones"]), None)
     if backbone and not backbone.get("sequence"):
@@ -793,11 +897,20 @@ def build_level0_constructs(nc: dict, cargo_label: str, cargo_antisense: str, ca
     constructs = []
     for module, slots, middle in (("cargo", cargo_slots, cargo), ("nc", nc_slots, shell)):
         for n in (1, 2, 3, 4, 5):
-            label, seq, is_real, is_user, what, on_stock = middle if n == 3 else slot_part(slots[n], "cargo_site" if module == "cargo" else "nc_site", n)
+            label, seq, is_real, is_user, what, on_stock, source = middle if n == 3 else slot_part(slots[n], "cargo_site" if module == "cargo" else "nc_site", n)
             if module == "cargo":
                 seq = cargo_antisense if n == 3 else reverse_complement(seq)
+            codon = (cargo_codon if module == "cargo" else nc.get("codon")) if n == 3 else slots[n].get("codon")
             adapter_id = adapter_id_for(module, n)
             built = attach_adapter(adapter_id, seq)      # Top-Strand des Level-0-Plasmids, 5' links -> 3' rechts
+            built["stops"] = []
+            if "stop codon" in what:                     # NCS mit Stopcodon: das Stopcodon im Raster markieren
+                sense = reverse_complement(seq) if module == "cargo" else seq
+                off = first_stop_offset(sense)
+                if off is not None:
+                    ia, ib = location_span(built["insert"]["location"])
+                    a = ia + off if module == "nc" else ib - off - 2
+                    built["stops"].append({"location": f"{a}..{a + 2}", "note": f"stop codon {sense[off:off + 3]} in the reading frame of the ORF"})
             antisense = module == "cargo"                # Cargo-Modul sitzt dort auf dem Antisense-Strang
             plasmid = clone_into_level0_backbone(
                 built, label, backbone, antisense,
@@ -812,16 +925,24 @@ def build_level0_constructs(nc: dict, cargo_label: str, cargo_antisense: str, ca
             construct_features = [_feat("misc_feature", b["location"], "BbsI rec site") for b in shown["bbsiSites"]]
             construct_features += [_feat("overhang", o["location"], o["label"], f"{o['role']} · top strand {o['sequence_top_strand']}")
                                    for o in shown["overhangs"]]
-            orientation = ("antisense strand (cargo module) — shown 5'->3' left to right, rotated 180° vs. the Level 0 plasmid top strand"
-                           if antisense else "sense strand — as entered")
+            orientation = ("antisense strand (cargo module): shown 5'->3' left to right, rotated 180° vs. the Level 0 plasmid top strand"
+                           if antisense else "sense strand: as entered")
             construct_features += [_feat("misc_feature", sp["location"], "Frame spacer", sp["note"]) for sp in shown["spacers"]]
+            construct_features += [_feat("misc_feature", st["location"], "Stop codon", st["note"]) for st in shown["stops"]]
             construct_features.append(_feat("CDS", shown["insert"]["location"], label,
-                                            f"Type 0.{n} · {what} · {orientation} · adapter {adapter_id}"))
-            primers = design_level0_primers(shown, label, n, module) if is_real else {
-                "possible": False, "reason": "No real sequence in the parts database yet — primers can only be designed for a real sequence."}
-            oligos = None
-            if is_real and not primers["possible"]:
-                oligos = design_level0_oligos(built, label, n, module)
+                                            f"Type 0.{n} · {what} · {orientation} · adapter {adapter_id}"
+                                            + (f" · {codon_note(codon)}" if codon else "")))
+            # Primer gibt es nur fuer eigene Sequenzen (die man in die Toolbox einbauen will) und nur, wenn sie lang genug fuer
+            # PCR sind. Toolkit-Teile bestellt man als DNA/Oligos oder fragt das Plasmid beim KIT an.
+            if not is_real:
+                primers = {"possible": False, "reason": "No real sequence in the parts database yet; primers can only be designed for a real sequence."}
+            elif not is_user:
+                primers = {"possible": False, "reason": "Toolbox part: request the plasmid from the KIT (igem@blt.kit.edu) or order it as DNA; primers are only designed for your own sequences."}
+            else:
+                primers = design_level0_primers(shown, label, n, module)
+            # Oligo-Paar: jedes Teil mit echter Sequenz unter MIN_PCR_INSERT_BP, egal ob eigene Eingabe oder Toolbox-Teil
+            oligos = (design_level0_oligos(built, label, n, module)
+                      if is_real and len(built["insert"]["sequence"]) < MIN_PCR_INSERT_BP else None)
             product_features = list(construct_features)
             if primers["possible"]:
                 primers["genbank"] = pcr_product_genbank(shown, primers, label, n, module, adapter_id, product_features)
@@ -834,7 +955,7 @@ def build_level0_constructs(nc: dict, cargo_label: str, cargo_antisense: str, ca
             definition = (f"Level 0 construct for the {'cargo' if module == 'cargo' else 'nanocompartment'} site: {label} in adapter "
                           f"{adapter_id} (BbsI). Sequence 5'->3' left to right, {'antisense strand (cargo module); shown rotated 180 degrees relative to the Level 0 plasmid top strand' if antisense else 'sense strand'}.")
             if not is_real:
-                definition += " PLACEHOLDER insert — the real sequence is not in the parts database yet."
+                definition += " PLACEHOLDER insert: the real sequence is not in the parts database yet."
             record_name = level0_record_name(label, n, module)
             constructs.append({
                 "label": label, "what": what, "module": "cargo_site" if module == "cargo" else "nc_site",
@@ -846,6 +967,9 @@ def build_level0_constructs(nc: dict, cargo_label: str, cargo_antisense: str, ca
                 "sequence": shown["sequence"], "length": shown["length"], "insert": shown["insert"],
                 "overhangs": shown["overhangs"], "bbsiSites": shown["bbsiSites"],
                 "primers": primers, "oligos": oligos, "onStock": None if is_user else on_stock,
+                "codon": codon if is_user else None,
+                "plasmid_source": {"id": source["id"], "name": source["label"]} if source and not is_user else None,
+                "stopCodon": "stop codon" in what, "stopLocation": shown["stops"][0]["location"] if shown["stops"] else None,
                 "genbank": format_genbank_record(record_name, shown["sequence"], construct_features, False, definition),
                 "plasmid": plasmid,
             })

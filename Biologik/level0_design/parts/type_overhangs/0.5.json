@@ -1,7 +1,7 @@
 {
   "id": "0.5",
   "kind": "type_overhang",
-  "label": "Type 0.5 overhang adapter (0.5) — nanocompartment (NC) site",
+  "label": "Type 0.5 overhang adapter (0.5); nanocompartment (NC) site",
   "sequence": "GAAGACAACTCATGGCGCAAAAAATGTTGTCGAGAAGTCTTC",
   "sequence_status": "real",
   "on_stock": null,

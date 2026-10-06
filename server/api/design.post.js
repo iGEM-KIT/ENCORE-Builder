@@ -4,7 +4,7 @@
  *   nanocompartment: string,   // decision 1 (id from /api/libraries, or 'custom')
  *   customNanocompartment?: { label?: string, tp?: string, seq: string },
  *                              // shell CDS + targeting peptide when nanocompartment is 'custom'
- *   cargoSeq: string,          // decision 2 (raw CDS, no trailing stop codon)
+ *   cargoSeq: string,          // decision 2 (raw CDS (DNA) or amino acid sequence, no trailing stop codon)
  *   cargoLabel?: string,
  *   promoter?: string,         // promoter id (default: GAL1-10)
  *   cargoSlots?: Slots,        // what sits around the cargo (Type 0.1/0.2 behind it, 0.4/0.5 in front)
