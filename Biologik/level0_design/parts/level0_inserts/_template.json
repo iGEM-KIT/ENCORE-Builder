@@ -1,0 +1,23 @@
+{
+  "id": "Lvl0.<type>_<x>_<nnn>",
+  "kind": "level0_insert",
+  "label": "0.2L3",
+  "plasmid_name": "0.2L3",
+  "category": "linker",
+  "part": "GSSS3",
+  "part_label": "3×(GSSS)",
+  "type_slot": 2,
+  "site": "nc_site",
+  "level2_overhang": null,
+  "stored_orientation": "sense",
+  "frame_spacer_in_plasmid": {"sequence": "AT", "side": "5' side of the sense strand"},
+  "sequence": "ONLY THE PART — sense strand, no overhangs, no frame spacer",
+  "sequence_status": "real",
+  "on_stock": true,
+  "length_bp": 0,
+  "organism": null,
+  "source": "where the sequence comes from",
+  "checks": {},
+  "notes": null,
+  "used_by": []
+}

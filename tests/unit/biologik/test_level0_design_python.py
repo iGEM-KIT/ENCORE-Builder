@@ -85,7 +85,7 @@ def test_make_primer_pair_and_genbank_export():
     assert 'LOCUS       Level1_Cargo ' in genbank
     assert 'LOCUS       Level1_NC ' in genbank
     assert 'LOCUS       pESC-HIS_Level2_ENCORE-tmari ' in genbank
-    assert 'LOCUS       Cargo_GFP ' in genbank
+    assert 'LOCUS       Level0.3_GFP_Cargo ' in genbank
     assert '/label="GFP"' in genbank
     assert genbank.count('//') == genbank.count('LOCUS')
 
@@ -129,8 +129,8 @@ def test_json_cli_serves_libraries():
     assert response['ok'] is True
     libraries = response['libraries']
     assert sorted(libraries) == [
-        'cargoPresets', 'level0Backbones', 'level1Backbones', 'level2Backbones', 'linkers',
-        'nanocompartments', 'promoters', 'surfaceMarkers',
+        'cargoPresets', 'inteins', 'level0Backbones', 'level1Backbones', 'level2Backbones', 'linkers',
+        'nanocompartments', 'ncs', 'promoters', 'surfaceMarkers', 'targetingPeptides',
     ]
     assert [m['id'] for m in libraries['surfaceMarkers']] == ['spycatcher', 'spytag']
     assert [nc['id'] for nc in libraries['nanocompartments']] == ['tmari', 'mxan', 'qther']
@@ -288,8 +288,8 @@ def test_every_module_gets_a_level0_construct_and_only_user_input_is_flagged():
         [('cargo_site', n) for n in range(1, 6)] + [('nc_site', n) for n in range(1, 6)]
     assert [c['adapter'] for c in constructs] == ['0.1rc', '0.2', '0.3', '0.4', '0.5rc', '0.1', '0.2', '0.3', '0.4', '0.5']
     assert [c['label'] for c in constructs if c['isUser']] == ['GFP']
-    # toolkit parts without a real sequence in the parts database are flagged as placeholders
-    assert all(not c['isReal'] for c in constructs if not c['isUser'])
+    # every toolkit part used here has a real insert in the parts database
+    assert all(c['isReal'] for c in constructs)
 
 
 def _backbone_orientation(c):
@@ -416,12 +416,15 @@ def test_level0_primers_carry_the_adapter_flanks_and_anneal_to_the_insert():
     assert 'primer_bind' in construct['genbank']
 
 
-def test_level0_primers_need_a_real_long_enough_insert():
+def test_level0_primers_need_a_real_long_enough_insert(monkeypatch):
+    import Biologik.level0_design.design as design_module
+    monkeypatch.setattr(design_module, 'find_inserts', lambda *args, **kwargs: [])          # no inserts -> placeholders
     design = _design(cargoSeq=_long_cargo())
     placeholder = next(c for c in design['level0Constructs'] if not c['isReal'])
     assert placeholder['primers']['possible'] is False
     assert 'real sequence' in placeholder['primers']['reason']
 
+    monkeypatch.undo()
     short = next(c for c in _design()['level0Constructs'] if c['module'] == 'cargo_site' and c['slot'] == 3)
     assert short['primers']['possible'] is False and 'too short' in short['primers']['reason']
 
@@ -568,7 +571,6 @@ def test_internal_restriction_sites_are_reported_on_level1():
     cds = cds[:60] + 'GGTCTC' + cds[66:]
     cargo = _design(cargoSeq=cds)['level1Constructs'][0]
     assert any('BsaI' in s and 'GFP' in s for s in cargo['internalSites'])
-    assert any('PLACEHOLDER' in n for n in cargo['notes'])
 
 
 def test_libraries_ship_level1_and_level2_backbones_with_a_ready_genbank_text():
@@ -718,14 +720,77 @@ def test_short_real_parts_get_an_oligo_pair_that_anneals_to_the_bbsi_cut_fragmen
     assert all(c['oligos'] is None for c in design['level0Constructs'] if not c['isReal'])
 
 
-def test_constructs_carry_the_stock_flag_of_toolkit_parts(monkeypatch):
-    import Biologik.level0_design.design as design_module
-    design = _design(cargoSeq=_long_cargo())
-    assert all(c['onStock'] is None for c in design['level0Constructs'])            # nothing entered in the DB yet
-
-    monkeypatch.setattr(design_module, '_stock', lambda kind, part_id: kind == 'nanocompartment_shells')
-    design = _design(cargoSeq=_long_cargo(), nc_slots={'4': {'kind': 'custom', 'label': 'Mine', 'seq': 'ATG' + 'GCT' * 20}})
+def test_constructs_carry_the_stock_flag_of_toolkit_parts():
+    design = _design(cargoSeq=_long_cargo(), cargo_slots={'4': {'kind': 'linker', 'id': 'GSSS3'}, '5': {'kind': 'tp'}},
+                     nc_slots={'4': {'kind': 'custom', 'label': 'Mine', 'seq': 'ATG' + 'GCT' * 20}})
     flags = {(c['module'], c['slot']): c['onStock'] for c in design['level0Constructs']}
-    assert flags[('nc_site', 3)] is True                                           # toolkit shell
-    assert flags[('nc_site', 1)] is False                                          # toolkit NCS, flagged "not on stock"
+    assert flags[('nc_site', 3)] is True                                           # toolkit shell E-Tm (glycerol stock: yes)
+    assert flags[('cargo_site', 4)] is False                                       # 0.4 L3rc: glycerol stock "nein"
+    assert flags[('cargo_site', 5)] is True                                        # TP, N-terminal, Type 0.5
     assert flags[('nc_site', 4)] is None and flags[('cargo_site', 3)] is None      # own sequences have no stock status
+
+
+# ---------------------------------------------------------------------------------------------------------
+# Level-0-Inserts-Datenbank (parts/level0_inserts/): reine Teilsequenzen aus den Level-0-Plasmiden
+
+def test_insert_database_is_consistent():
+    from Biologik.level0_design.parts_db import inserts
+    entries = inserts()
+    assert len(entries) == 37
+    for e in entries:
+        assert set(e['sequence']) <= set('ACGT') and e['length_bp'] == len(e['sequence'])
+        assert e['site'] in ('nc_site', 'cargo_site') and e['stored_orientation'] in ('sense', 'antisense')
+        # no overhang / spacer bases and no domestication problems left in the stored part
+        assert e['checks']['bsai_sites'] == [] and e['checks']['bbsi_sites'] == []
+        # the site follows the Level 2 overhang (Type 0.1 / 0.5) or the strand the part is stored on (Types 0.2-0.4)
+        if e['level2_overhang'] in ('TGAT', 'AATG'):
+            assert e['site'] == 'nc_site' and e['stored_orientation'] == 'sense'
+        elif e['level2_overhang'] in ('CCAA', 'CGTT'):
+            assert e['site'] == 'cargo_site' and e['stored_orientation'] == 'antisense'
+        if e['category'] == 'shell':
+            assert e['site'] == 'nc_site' and e['type_slot'] == 3 and e['sequence'].startswith('ATG')
+        if e['category'] == 'cargo':
+            assert e['site'] == 'cargo_site' and e['type_slot'] == 3 and e['sequence'].startswith('ATG')
+    # coding parts must be a multiple of 3 for the fusions to stay in frame — one known exception in the supplied plasmids
+    coding = [e for e in entries if e['category'] in ('shell', 'cargo', 'linker', 'tp', 'marker', 'intein')]
+    assert [e['id'] for e in coding if len(e['sequence']) % 3] == ['Lvl0.5_a_026']
+
+
+def test_libraries_offer_each_part_only_where_a_level0_plasmid_exists():
+    from Biologik.level0_design.data import get_libraries
+    libs = get_libraries()
+    linkers = {l['id']: l['slots'] for l in libs['linkers']}
+    assert linkers == {'GGS2': {'nc': [], 'cargo': [2, 4]}, 'GSSS2': {'nc': [2], 'cargo': [2]},
+                       'GSSS3': {'nc': [2], 'cargo': [2, 4]}, 'GSSS4': {'nc': [2], 'cargo': []}}
+    assert {m['id']: m['slots'] for m in libs['surfaceMarkers']} == {'spycatcher': {'nc': [1], 'cargo': []}, 'spytag': {'nc': [], 'cargo': [1]}}
+    assert libs['inteins'][0]['slots'] == {'nc': [], 'cargo': [1]}
+    assert all(t['slots'] == {'nc': [], 'cargo': [1, 5]} for t in libs['targetingPeptides'])
+    # NCS: the stop variant sits behind the central part (NC: Type 0.4, cargo: Type 0.2), plain NCS elsewhere
+    assert libs['ncs'] == {'nc': {'1': ['plain'], '2': ['plain'], '4': ['stop'], '5': ['plain']},
+                           'cargo': {'1': ['plain'], '2': ['stop'], '4': ['plain'], '5': ['plain']}}
+    assert [c['id'] for c in libs['cargoPresets']] == ['yegfp', 'lgb4', 'nlucp', 'civcpo', 'mvp', 'pabp', 'pabp-rrm1-4', 'pabp-rrm1-2']
+    assert [n['shellBp'] for n in libs['nanocompartments']] == [798, 864, 849]
+
+
+def test_a_cargo_taken_unchanged_from_the_library_is_a_toolkit_part_with_a_stock_flag():
+    from Biologik.level0_design.data import get_libraries
+    yegfp = next(c for c in get_libraries()['cargoPresets'] if c['id'] == 'yegfp')
+    design = _design(cargoSeq=yegfp['seq'], cargoLabel='yeGFP')
+    cargo = next(c for c in design['level0Constructs'] if c['module'] == 'cargo_site' and c['slot'] == 3)
+    assert cargo['isUser'] is False and cargo['onStock'] is True and cargo['what'] == 'cargo (toolkit part)'
+    edited = _design(cargoSeq=yegfp['seq'][:-3] + 'GCT', cargoLabel='yeGFP')
+    mine = next(c for c in edited['level0Constructs'] if c['module'] == 'cargo_site' and c['slot'] == 3)
+    assert mine['isUser'] is True and mine['onStock'] is None
+
+
+def test_toolkit_parts_use_the_inserts_of_their_own_site_and_slot():
+    design = _design(cargoSeq=_long_cargo(), cargo_slots={'1': {'kind': 'ncs'}, '2': {'kind': 'ncsstop'}, '4': {'kind': 'linker', 'id': 'GSSS3'}, '5': {'kind': 'tp'}},
+                     nc_slots={'1': {'kind': 'marker', 'id': 'spycatcher'}, '2': {'kind': 'linker', 'id': 'GSSS2'}, '4': {'kind': 'ncsstop'}})
+    by = {(c['module'], c['slot']): c for c in design['level0Constructs']}
+    # the cargo module sits antisense: its linker is the reverse complement of the sense insert in the DB
+    from Biologik.level0_design.parts_db import find_inserts
+    gsss3 = find_inserts('linker', 'GSSS3', 'cargo_site', 4)[0]['sequence']
+    assert by[('cargo_site', 4)]['insert']['sequence'] == gsss3                       # shown rotated -> sense again
+    assert by[('nc_site', 1)]['insert']['sequence'] == find_inserts('marker', 'spycatcher')[0]['sequence']
+    assert by[('nc_site', 4)]['insert']['sequence'] == find_inserts('ncs', 'ncs', 'nc_site', 4, ncs_role='stop')[0]['sequence']
+    assert by[('cargo_site', 5)]['insert']['sequence'] == find_inserts('tp', 'TP-Tm', 'cargo_site', 5, variant='n_term')[0]['sequence']

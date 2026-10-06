@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 """Loader fuer Biologik/level0_design/parts/ — die Sequenz-Datenbank fuer
-Golden-Gate-Standardteile (Shells, Targeting-Peptide, Promotoren, Linker,
-Marker, NCS-Spacer, Terminatoren, Level-0/1/2-Ziel-Backbones, Type-Overhang-Adapter,
-Cargo-Presets).
+Golden-Gate-Standardteile (Level-0-Inserts: Shells, Cargos, Linker, Marker, TPs, NCS-Spacer;
+Promotoren, Terminatoren, Level-0/1/2-Ziel-Backbones, Type-Overhang-Adapter).
 
 Gleiches Prinzip wie encapsulin_selector/data/ (eine JSON-Datei pro Eintrag,
 gruppiert nach Art in Unterordnern) — siehe parts/README.md. Anders als beim
@@ -19,18 +18,13 @@ from pathlib import Path
 PARTS_ROOT = Path(__file__).parent / "parts"
 
 KINDS = [
-    "nanocompartment_shells",
-    "targeting_peptides",
+    "level0_inserts",
     "promoters",
-    "linkers",
-    "surface_markers",
-    "ncs_spacers",
     "terminators",
     "level0_backbones",
     "level1_backbones",
     "level2_backbones",
     "type_overhangs",
-    "cargo_presets",
 ]
 
 
@@ -77,3 +71,28 @@ def find_real_sequence(kind: str, part_id: str) -> str | None:
     if not seq or entry.get("sequence_status") != "real":
         return None
     return seq
+
+
+def inserts() -> list[dict]:
+    """Alle Level-0-Inserts (parts/level0_inserts/): die reine Teilsequenz je Level-0-Plasmid, ohne Overhangs und ohne Frame-Spacer."""
+    return _read_kind("level0_inserts")
+
+
+def find_inserts(category: str, part: str | None = None, site: str | None = None, slot: int | None = None,
+                 **extra) -> list[dict]:
+    """Inserts einer Kategorie (shell, cargo, linker, marker, intein, tp, ncs), optional gefiltert nach Teil-ID,
+    Site ("nc_site"/"cargo_site"), Type-Slot und weiteren Feldern (variant="c_term", ncs_role="stop", ...)."""
+    out = []
+    for entry in inserts():
+        if entry.get("category") != category:
+            continue
+        if part is not None and entry.get("part") != part:
+            continue
+        if site is not None and entry.get("site") != site:
+            continue
+        if slot is not None and entry.get("type_slot") != slot:
+            continue
+        if any(entry.get(key) != value for key, value in extra.items()):
+            continue
+        out.append(entry)
+    return out

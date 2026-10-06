@@ -1,75 +1,49 @@
 # Sequenz-Datenbank fuer Golden-Gate-Standardteile
 
-Jedes Teil (Nanocompartment-Shell, Targeting-Peptid, Promotor, Linker,
-Oberflaechen-Marker, NCS-Spacer, Terminator, Level-0/1/2-Ziel-Backbone,
-Type-Overhang-Adapter oder Cargo-Preset) ist eine eigene JSON-Datei, gruppiert nach Art in einem
-Unterordner — genau wie bei `encapsulin_selector/data/` fuer die Encapsuline.
-Um eine neue oder fehlende Sequenz einzutragen, sind KEINE Kenntnisse ueber
-den Rest der Codebase noetig:
+Jeder Eintrag ist eine eigene JSON-Datei, gruppiert nach Art in einem Unterordner — genau wie bei
+`encapsulin_selector/data/` fuer die Encapsuline. Eine neue oder geaenderte Datei wirkt sofort (kein Build, kein Neustart):
+`cli.py` wird pro Anfrage neu gestartet und liest die Dateien jedes Mal frisch von der Platte.
 
-1. Die passende `_template.json` im jeweiligen Unterordner kopieren nach
-   `<id>.json` (die `id` muss zum bestehenden Eintrag in
-   `Biologik/level0_design/data.py` passen, z.B. `E-Tm` fuer die
-   Thermotoga-maritima-Shell — siehe "Wie IDs zusammenhaengen" unten).
-2. `sequence` ausfuellen, `sequence_status` von `"missing"` auf `"real"`
-   setzen, `source` (woher die Sequenz stammt) ergaenzen.
-3. Fertig — kein Python-Code aendern, kein Neustart noetig. `cli.py` wird pro
-   Anfrage neu gestartet und liest die JSON-Dateien jedes Mal frisch von der
-   Platte (anders als beim Selector gibt es hier keinen Build-Schritt zu
-   einem generierten Bundle, weil das hier serverseitig in Python laeuft).
+| Ordner              | Inhalt |
+|---------------------|--------|
+| `level0_inserts/`   | die reine Teilsequenz je Level-0-Plasmid: Shells, Cargos, Linker, Marker, Intein, Targeting-Peptide, NCS (siehe unten) |
+| `promoters/`        | Promotoren (Sequenz noch nicht hinterlegt -> Platzhalter) |
+| `terminators/`      | Terminatoren, rein informativ |
+| `level0_backbones/`, `level1_backbones/`, `level2_backbones/` | die Ziel-Backbones pAGM9121, pAGM1311, pESC-HIS |
+| `type_overhangs/`   | die sieben Overhang-Adapter (Quelle der Overhangs und des Frame-Spacers) |
 
-Sobald eine Sequenz auf `"real"` steht, verwendet `design.py` (`build_genbank`)
-sie automatisch anstelle der bisherigen deterministischen Platzhalter-Sequenz
-— die Source-Notiz im GenBank-Export wechselt dann von "deterministic
-placeholder" zu "parts database (real sequence)".
+Die Dropdowns der Software (Katalog-Metadaten wie Labels, T-Zahl, Beschreibung) stehen in `data.py`; welche Teile es an
+welcher Site und welchem Slot wirklich gibt und welche Sequenz sie haben, kommt aus `level0_inserts/`.
 
-## Wie IDs zusammenhaengen
+## `level0_inserts/<id>.json`
 
-Die "Katalog"-Listen in `data.py` (`NANOCOMPARTMENTS`, `LINKERS`,
-`PROMOTERS`, `SURFACE_MARKERS`) bleiben die Quelle fuer IDs/Labels/UI-Metadaten
-— nichts davon aendert sich. Diese Datenbank hier liefert nur, WENN vorhanden,
-die zugehoerige echte Sequenz, nachgeschlagen ueber dieselbe ID:
+Pro Level-0-Plasmid eine Datei, `id` = Beschreibung im GenBank-File (z.B. `Lvl0.2_b_034`). Gespeichert ist NUR das Insert —
+nicht das Plasmid, ohne Type-Overhangs und ohne den Frame-Spacer des Plasmids; beides setzt die Software aus
+`type_overhangs/` wieder an. `sequence` ist immer die Sense-Sequenz des Teils (wie es abgelesen wird); liegt es im Plasmid
+revers-komplementiert (Cargo Site), ist das hier schon zurueckgedreht — die Software dreht das Cargo-Modul beim Bauen wieder.
 
-| Katalog (`data.py`)                  | Feld            | Datenbank-Ordner            |
-|---------------------------------------|-----------------|------------------------------|
-| `NANOCOMPARTMENTS[i]`                 | `shell`         | `nanocompartment_shells/`   |
-| `NANOCOMPARTMENTS[i]`                 | `tp`            | `targeting_peptides/`       |
-| `LINKERS[i]`                          | `id`            | `linkers/`                  |
-| `PROMOTERS[i]`                        | `id`            | `promoters/`                |
-| `SURFACE_MARKERS[i]`                  | `id`            | `surface_markers/`          |
-| (kein Katalog — ein generischer Spacer, siehe `design.py: placeholder_seq("NCS", 30)`) | — | `ncs_spacers/` (feste ID `standard`) |
+- `plasmid_name`, `label` — Name im GenBank-File bzw. in `Level 0 constructs.xlsx`.
+- `category` — `shell`, `cargo`, `linker`, `marker`, `intein`, `tp` oder `ncs`; `part` / `part_label` — die Teil-ID und das
+  Label in den Dropdowns (z.B. Linker `L3` = `GSSS3`).
+- `type_slot` (1-5) und `site` (`nc_site` / `cargo_site`). Die Site folgt bei Type 0.1/0.5 aus dem Level-2-Overhang
+  (`level2_overhang`: TGAT/AATG = NC Site, CCAA/CGTT = Cargo Site), bei Type 0.2-0.4 aus dem Strang, auf dem das Teil im
+  Plasmid liegt (`stored_orientation`: sense = NC Site, antisense = Cargo Site; die "rc"-Plasmide).
+- `variant` (`tp`: `c_term` = Type 0.1 mit Stopcodon, `n_term` = Type 0.5 mit Startcodon) und `ncs_role` (`plain` / `stop`;
+  `stop` nur an den Slots hinter dem Mittelteil: NC Site 0.4/0.5, Cargo Site 0.2/0.1).
+- `frame_spacer_in_plasmid` — die 2 Basen, die das Plasmid vor dem ORF traegt (nur zur Nachvollziehbarkeit; sie sind hier
+  NICHT in `sequence` enthalten, die Software setzt ihren eigenen Spacer aus den Adaptern).
+- `on_stock` — `true` = Glycerinstock vorhanden (Spalte "Glycerol" in `Level 0 constructs.xlsx`: ja), `false` = nein.
+- `checks` — Laenge durch 3 teilbar, Start-/Stopcodon, BsaI-/BbsI-Stellen im Teil.
+- `notes` — Auffaelligkeiten, die beim Import aufgefallen sind (zu pruefen).
 
-`terminators/` und `type_overhangs/` haben keinen Katalog in `data.py` — `terminators/` ist rein informationell
-(noch nicht verdrahtet), `type_overhangs/` ist die Quelle der Overhangs (siehe unten). Die drei Backbone-Ordner sind
-verdrahtet: Level 0 (BbsI-Klonierung jedes Teils, `design.py`), Level 1 (BsaI-Assemblierung der Module in pAGM1311,
-`assembly.py`) und Level 2 (BbsI-Assemblierung der drei Level-1-Inserts in pESC-HIS, `assembly.py`).
+Die Dropdowns bieten ein Teil nur dort an, wo es ein Level-0-Plasmid dafuer gibt (`slots` je Bibliothek in
+`get_libraries()`); die Teile selbst sind unabhaengig davon verwendbar (Fallback auf die Sequenz derselben Teil-ID von einem
+anderen Slot, Lagerstatus dann `false`).
 
-`cargo_presets/` ist die einzige Kategorie, die KEINE eigene Katalog-Liste in
-`data.py` mehr hat — `CARGO_PRESETS` wird direkt aus dieser Datenbank gebaut
-(siehe `data.py`).
+## Gemeinsame Felder (promoters/, terminators/)
 
-## Gemeinsame Felder (fuer alle Ordner ausser den `level*_backbones/`-Ordnern)
-
-- `id` — muss zum Katalog-Feld in `data.py` passen (siehe Tabelle oben).
-- `kind` — Art des Teils, nur zur Selbstdokumentation.
-- `label` — Anzeigename.
-- `sequence` — die DNA-Sequenz, oder `null` solange sie fehlt.
-- `sequence_status` — `"real"` oder `"missing"`. Nur bei `"real"` wird die
-  Sequenz tatsaechlich verwendet (siehe oben).
-- `on_stock` — `true`, `false` oder `null`, unabhaengig von `sequence_status`.
-  Ein Teil kann fertig designt/sequenziert sein (`sequence_status: "real"`)
-  und trotzdem physisch noch nicht im Kryo-Lager bei KIT liegen — z.B. ein
-  selbst entworfener Linker oder Marker, der erst noch bestellt/synthetisiert
-  werden muss. `true` = physisch auf Lager, `false` = designt, aber (noch)
-  nicht auf Lager (muss bestellt/synthetisiert werden), `null` = noch nicht
-  angegeben. Rein informativ fuer die Bestell-Checkliste in Schritt 4 — die
-  Werte aller aktuellen Eintraege sind `null` und muessen noch nachgetragen
-  werden (siehe PROJECT_TODO.txt).
-- `length_bp` — bekannte/nominale Laenge in bp (aus `data.py`, z.B.
-  `NOMINAL_BP`), auch wenn `sequence` noch `null` ist.
-- `organism`, `source`, `notes` — Herkunft/Kontext, `null` falls unbekannt.
-- `used_by` — welche `data.py`-Katalog-IDs auf diesen Eintrag verweisen (rein
-  informativ, fuer Nachvollziehbarkeit).
+- `id`, `kind`, `label`, `sequence` (oder `null`), `sequence_status` (`real`/`missing`), `on_stock`, `length_bp`,
+  `organism`, `source`, `notes`, `used_by`.
 
 ## `level0_backbones/`, `level1_backbones/`, `level2_backbones/<id>.json`
 

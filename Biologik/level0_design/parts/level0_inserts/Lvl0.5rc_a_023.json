@@ -1,0 +1,33 @@
+{
+  "id": "Lvl0.5rc_a_023",
+  "kind": "level0_insert",
+  "label": "0.5NCSrc",
+  "plasmid_name": "0.5NCSrc",
+  "category": "ncs",
+  "part": "ncs",
+  "part_label": "NCS",
+  "ncs_role": "plain",
+  "type_slot": 5,
+  "site": "cargo_site",
+  "level2_overhang": "CGTT",
+  "stored_orientation": "antisense",
+  "frame_spacer_in_plasmid": {
+    "sequence": "TT",
+    "side": "right end of the top strand (5' side of the sense strand)"
+  },
+  "sequence": "CCCCGACACCCGCCAACACCCGCTGACGCGCCCTGACGG",
+  "sequence_status": "real",
+  "on_stock": true,
+  "length_bp": 39,
+  "organism": null,
+  "source": "Level 0 plasmid '0.5NCSrc' (Lvl0.5rc_a_023) from the user-supplied GenBank file 'documents from Level 0'; only the insert was taken — the type overhangs and the frame spacer of the plasmid were cut off. Stock: glycerol stock column of 'Level 0 constructs.xlsx'.",
+  "checks": {
+    "length_multiple_of_3": true,
+    "starts_with_atg": false,
+    "ends_with_stop": false,
+    "bsai_sites": [],
+    "bbsi_sites": []
+  },
+  "notes": null,
+  "used_by": []
+}

@@ -1,0 +1,32 @@
+{
+  "id": "Lvl0.2_b_034",
+  "kind": "level0_insert",
+  "label": "0.2L3",
+  "plasmid_name": "0.2L3",
+  "category": "linker",
+  "part": "GSSS3",
+  "part_label": "3×(GSSS)",
+  "type_slot": 2,
+  "site": "nc_site",
+  "level2_overhang": null,
+  "stored_orientation": "sense",
+  "frame_spacer_in_plasmid": {
+    "sequence": "AT",
+    "side": "5' side of the sense strand"
+  },
+  "sequence": "GGTTCCTCTTCTGGTTCCTCTTCTGGTTCCTCTTCT",
+  "sequence_status": "real",
+  "on_stock": true,
+  "length_bp": 36,
+  "organism": null,
+  "source": "Level 0 plasmid '0.2L3' (Lvl0.2_b_034) from the user-supplied GenBank file 'documents from Level 0'; only the insert was taken — the type overhangs and the frame spacer of the plasmid were cut off. Stock: glycerol stock column of 'Level 0 constructs.xlsx'.",
+  "checks": {
+    "length_multiple_of_3": true,
+    "starts_with_atg": false,
+    "ends_with_stop": false,
+    "bsai_sites": [],
+    "bbsi_sites": []
+  },
+  "notes": null,
+  "used_by": []
+}

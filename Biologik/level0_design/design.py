@@ -9,6 +9,7 @@ from .data import (
     BSAI_PRIMER_PREFIX,
     CARGO_L1_FLANK,
     NOMINAL_BP,
+    find_intein,
     find_linker,
     find_nanocompartment,
     find_promoter,
@@ -17,7 +18,7 @@ from .data import (
 # Sequence-py enthält Funktionen für die Verarbeitung von DNA-Sequenzen
 # Z.B. zum Bilden von Komplementären DNA-Sequenzen, zur Berechnung der Schmelztemperatur
 from .sequence import reverse_complement, validate_cargo, wallace_tm
-from .parts_db import find_part, find_real_sequence, load_parts
+from .parts_db import find_inserts, find_part, find_real_sequence, load_parts
 from .assembly import assemble_level1_module, assemble_level1_promoter, assemble_level2, finish_level1, level1_fragment
 from .genbank_writer import format_genbank_record, location_span, make_feature as _feat, shift_location
 
@@ -86,6 +87,11 @@ def resolve_slots(raw, module: str = "nc") -> dict:
             if not item:
                 raise ValueError(f"Type 0.{n}: unknown surface marker \"{cfg.get('id')}\".")
             slots[n] = {"kind": "marker", "id": item["id"], "label": item["label"], "aa": item["aa"], "bp": item["bp"]}
+        elif kind == "intein":
+            item = find_intein(cfg.get("id"))
+            if not item:
+                raise ValueError(f"Type 0.{n}: unknown intein \"{cfg.get('id')}\".")
+            slots[n] = {"kind": "intein", "id": item["id"], "label": item["label"], "aa": item["aa"], "bp": item["bp"]}
         elif kind == "custom":
             validation = validate_cargo(cfg.get("seq", ""), kind="part")
             if not validation["ok"]:
@@ -122,7 +128,7 @@ def resolve_slots(raw, module: str = "nc") -> dict:
     for outer, inner in ((1, 2), (5, 4)):
         if slots[outer]["kind"] not in ("ncs", "ncsstop") and slots[inner]["kind"] == "ncs":
             raise ValueError(f"Type 0.{inner}: cannot be an NCS spacer while Type 0.{outer} is in use.")
-        if slots[outer]["kind"] in ("marker", "tp", "custom") and slots[inner]["kind"] == "marker":
+        if slots[outer]["kind"] in ("marker", "tp", "custom", "intein") and slots[inner]["kind"] in ("marker", "intein"):
             raise ValueError(
                 f"Type 0.{inner}: a linker is required next to the sequence in Type 0.{outer} "
                 f"(choose a linker or your own linker sequence, not a marker)."
@@ -139,6 +145,8 @@ def _slot_part(n: int, cfg: dict, tp_label: str = "TP") -> dict:
     if kind == "marker":
         return {"role": "surface-marker", "label": cfg["label"], "kind": "mark",
                 "note": "Surface marker", "bp": cfg["bp"], "surface": True}
+    if kind == "intein":
+        return {"role": "intein", "label": cfg["label"], "kind": f"t{n}", "note": "Intein", "bp": cfg["bp"]}
     if kind == "custom":
         return {"role": "custom-part", "label": cfg["label"], "kind": f"t{n}", "note": "Your sequence",
                 "bp": cfg["bp"], "isNew": True}
@@ -318,10 +326,19 @@ MIN_PCR_INSERT_BP = 40
 _INTERNAL_SITES = {"BbsI": ("GAAGAC", "GTCTTC"), "BsaI": ("GGTCTC", "GAGACC")}
 
 
-def _stock(kind: str, part_id: str):
-    """on_stock-Angabe eines Toolkit-Teils aus der Parts-Datenbank (True / False / None = noch nicht eingetragen)."""
-    entry = find_part(kind, part_id)
-    return entry.get("on_stock") if entry else None
+def resolve_insert(category: str, part: str, site: str, slot: int, seed: str, length: int, **extra) -> tuple:
+    """(Teilsequenz in Sense-Richtung, ist_echt, Lagerstatus) eines Toolkit-Teils fuer eine Site ("nc_site"/"cargo_site") und
+    einen Type-Slot aus der Datenbank parts/level0_inserts/. Gibt es genau dort ein Level-0-Plasmid, kommt dessen Insert und
+    sein Lagerstatus (on_stock). Sonst die Sequenz desselben Teils von einer anderen Site/einem anderen Slot (Lagerstatus
+    False: an dieser Stelle gibt es kein Plasmid), und ohne jeden Treffer eine deterministische Platzhalter-Sequenz."""
+    exact = find_inserts(category, part, site, slot, **extra)
+    if exact:
+        return exact[0]["sequence"], True, exact[0].get("on_stock")
+    other = (find_inserts(category, part, site, **extra) or find_inserts(category, part, **extra)
+             or (find_inserts(category, part, site) or find_inserts(category, part) if "variant" not in extra else []))
+    if other:
+        return other[0]["sequence"], True, False
+    return placeholder_seq(seed, length), False, None
 
 
 def design_level0_oligos(built: dict, label: str, slot: int, module: str) -> dict:
@@ -739,30 +756,35 @@ def build_level0_constructs(nc: dict, cargo_label: str, cargo_antisense: str, ca
     Orientierung wie im restlichen Design: Teile des Cargo-Moduls liegen auf dem Antisense-Strang, werden
     also als Reverse Complement eingesetzt (das Cargo ist bereits reverse-komplementiert), Teile der NC Site
     unveraendert."""
-    ncs_seq, ncs_real = resolve_seq("ncs_spacers", "standard", "NCS", 30)
-
-    def slot_part(cfg: dict):
+    def slot_part(cfg: dict, site: str, n: int):
         kind = cfg["kind"]
         if kind == "custom":
             return cfg["label"], cfg["seq"], True, True, "your own part", None
         if kind == "tp":
-            seq, real = resolve_seq("targeting_peptides", nc["tp"], "TP" + nc["tp"], 36)
-            return nc["tp"], seq, real, False, "targeting peptide (toolkit part)", _stock("targeting_peptides", nc["tp"])
+            seq, real, stock = resolve_insert("tp", nc["tp"], site, n, "TP" + nc["tp"], NOMINAL_BP["TP"],
+                                              variant="c_term" if n == 1 else "n_term")
+            return nc["tp"], seq, real, False, "targeting peptide (toolkit part)", stock
         if kind == "linker":
-            seq, real = resolve_seq("linkers", cfg["id"], "LINK" + cfg["id"], cfg["bp"])
-            return cfg["label"], seq, real, False, "linker (toolkit part)", _stock("linkers", cfg["id"])
+            seq, real, stock = resolve_insert("linker", cfg["id"], site, n, "LINK" + cfg["id"], cfg["bp"])
+            return cfg["label"], seq, real, False, "linker (toolkit part)", stock
         if kind == "marker":
-            seq, real = resolve_seq("surface_markers", cfg["id"], "MARK" + cfg["id"], cfg["bp"])
-            return cfg["label"], seq, real, False, "surface marker (toolkit part)", _stock("surface_markers", cfg["id"])
-        return "NCS", ncs_seq, ncs_real, False, "NCS spacer (toolkit part)", _stock("ncs_spacers", "standard")
+            seq, real, stock = resolve_insert("marker", cfg["id"], site, n, "MARK" + cfg["id"], cfg["bp"])
+            return cfg["label"], seq, real, False, "surface marker (toolkit part)", stock
+        if kind == "intein":
+            seq, real, stock = resolve_insert("intein", cfg["id"], site, n, "INT" + cfg["id"], cfg["bp"])
+            return cfg["label"], seq, real, False, "intein (toolkit part)", stock
+        seq, real, stock = resolve_insert("ncs", "ncs", site, n, "NCS", 30, ncs_role="stop" if kind == "ncsstop" else "plain")
+        return "NCS", seq, real, False, "NCS spacer (toolkit part)", stock
 
     if nc.get("custom"):
         shell = (nc["shell"], nc["seq"], True, True, "your own nanocompartment shell", None)
     else:
-        shell_seq, shell_real = resolve_seq("nanocompartment_shells", nc["shell"], "SHELL" + nc["shell"], nc["shellBp"])
-        shell = (nc["shell"], shell_seq, shell_real, False, "nanocompartment shell (toolkit part)",
-                 _stock("nanocompartment_shells", nc["shell"]))
-    cargo = (cargo_label, None, True, True, "cargo gene of interest", None)
+        shell_seq, shell_real, shell_stock = resolve_insert("shell", nc["shell"], "nc_site", 3, "SHELL" + nc["shell"], nc["shellBp"])
+        shell = (nc["shell"], shell_seq, shell_real, False, "nanocompartment shell (toolkit part)", shell_stock)
+    # Stammt das Cargo unveraendert aus der Cargo-Bibliothek (Datenbank), ist es ein Toolkit-Teil mit Lagerstatus, keine Nutzereingabe.
+    preset = next((e for e in find_inserts("cargo") if e["sequence"] == reverse_complement(cargo_antisense)), None)
+    cargo = (cargo_label, None, True, preset is None, "cargo gene of interest" if preset is None else "cargo (toolkit part)",
+             preset.get("on_stock") if preset else None)
 
     backbone = next(iter(load_parts()["level0_backbones"]), None)
     if backbone and not backbone.get("sequence"):
@@ -771,7 +793,7 @@ def build_level0_constructs(nc: dict, cargo_label: str, cargo_antisense: str, ca
     constructs = []
     for module, slots, middle in (("cargo", cargo_slots, cargo), ("nc", nc_slots, shell)):
         for n in (1, 2, 3, 4, 5):
-            label, seq, is_real, is_user, what, on_stock = middle if n == 3 else slot_part(slots[n])
+            label, seq, is_real, is_user, what, on_stock = middle if n == 3 else slot_part(slots[n], "cargo_site" if module == "cargo" else "nc_site", n)
             if module == "cargo":
                 seq = cargo_antisense if n == 3 else reverse_complement(seq)
             adapter_id = adapter_id_for(module, n)
@@ -831,101 +853,18 @@ def build_level0_constructs(nc: dict, cargo_label: str, cargo_antisense: str, ca
 
 
 def build_genbank(design: dict) -> str:
-    """GenBank-Export statt FASTA: dieselben Sequenzen wie zuvor, aber jetzt mit
-    echter Feature-Tabelle (Type-Zuordnung, Quelle PLACEHOLDER/PARTS DB/REAL
-    INPUT) statt nur einem Kommentar-Header — siehe genbank_writer.py. Der
-    Level-2-COMPLETE-Record verwendet, falls vorhanden, das echte importierte
-    Backbone (Biologik/level0_design/parts/level2_backbones/) samt seiner
-    echten Annotationen (HIS3, AmpR, Origins, ...), nicht nur die reine
-    Insert-Sequenz."""
+    """Gesamt-GenBank-Export: die Level-0-Konstrukte der Nutzereingaben (mit PCR-Produkt/Primern), die drei Level-1-Inserts
+    und das fertige Level-2-Plasmid (mit den echten Annotationen von pESC-HIS) — siehe assembly.py."""
     records: list[str] = []
 
     def add_record(name: str, sequence: str, features: list[dict] | None = None,
                     circular: bool = False, definition: str = ""):
         records.append(format_genbank_record(name, sequence, features, circular, definition))
 
-    nc = design["nanocompartment"]
-    cargo_sense = design["cargo"]["sequence"]
-    cargo_seq = design["cargo"]["sequenceAntisense"]
-    cargo_name = design["cargo"]["label"].replace(" ", "-")
-
-    shell_seq, shell_is_real = (nc["sequence"], True) if nc.get("custom") else \
-        resolve_seq("nanocompartment_shells", nc["shell"], "SHELL" + nc["shell"], nc["shellBp"])
-    promo_seq, promo_is_real = resolve_seq(
-        "promoters", design["level2"]["promoter"]["id"], "PROMO" + design["level2"]["promoter"]["id"], 600)
-    ncs_seq, ncs_is_real = resolve_seq("ncs_spacers", "standard", "NCS", 30)
-    tp_seq, tp_is_real = resolve_seq(
-        "targeting_peptides", design["targetingPeptide"], "TP" + design["targetingPeptide"], 36)
-    cargo_slots = {entry["slot"]: entry for entry in design["cargoSlots"]}
-    nc_slots = {entry["slot"]: entry for entry in design["ncSlots"]}
-
-    def slot_seq(entry: dict) -> tuple[str, bool]:
-        if entry["kind"] == "custom":
-            return entry["sequence"], True
-        if entry["kind"] == "tp":
-            return tp_seq, tp_is_real
-        if entry["kind"] == "linker":
-            return resolve_seq("linkers", entry["id"], "LINK" + entry["id"], entry["bp"])
-        if entry["kind"] == "marker":
-            return resolve_seq("surface_markers", entry["id"], "MARK" + entry["id"], entry["bp"])
-        return ncs_seq, ncs_is_real
-
-    def source_note(is_real: bool) -> str:
-        return "Source: parts database (real sequence)." if is_real else "Source: deterministic placeholder — no real sequence in the parts database yet."
-
-    def add_slot_records(slots: dict, where: str, antisense: bool):
-        for n in (1, 2, 4, 5):
-            entry = slots[n]
-            tag = f"Type0.{n}"
-            seq, is_real = slot_seq(entry)
-            if entry["kind"] == "tp":
-                add_record(f"Targeting-Peptide_{design['targetingPeptide']}_{tag}",
-                           seq, [_feat("CDS", f"1..{len(seq)}", f"TP_{design['targetingPeptide']}",
-                                       f"{tag} · {where}. {source_note(is_real)}")])
-            elif entry["kind"] == "linker":
-                add_record(f"Linker_{entry['id']}_{tag}",
-                           seq, [_feat("misc_feature", f"1..{len(seq)}", f"Linker_{entry['id']}",
-                                       f"{tag} · {where}. {source_note(is_real)}")])
-            elif entry["kind"] == "marker":
-                add_record(f"Surface-Marker_{entry['label']}_{tag}",
-                           seq, [_feat("CDS", f"1..{len(seq)}", entry["label"],
-                                       f"{tag} · {where} · surface display. {source_note(is_real)}")])
-            elif entry["kind"] == "custom":
-                label = entry["label"].replace(" ", "-")
-                seq = reverse_complement(entry["sequence"]) if antisense else entry["sequence"]
-                note = " SENSE = reverse complement of the input." if antisense else ""
-                add_record(f"Custom-Part_{label}_{tag}", seq,
-                           [_feat("CDS", f"1..{len(seq)}", label, f"{tag} · {where} · real user input.{note}")])
-
-    add_record(f"Cargo_{cargo_name}", cargo_seq,
-               [_feat("CDS", f"1..{len(cargo_seq)}", cargo_name,
-                      "Type0.3 · real user input · SENSE = reverse complement of the input CDS")])
-    add_record(f"Cargo_{cargo_name}_input-CDS", cargo_sense,
-               [_feat("CDS", f"1..{len(cargo_sense)}", cargo_name, "Reference only — the input CDS as typed, before reverse-complementing")])
-    add_slot_records(cargo_slots, "cargo module", antisense=True)
-    if nc.get("custom"):
-        name = nc["shell"].replace(" ", "-")
-        add_record(f"Nanocompartment-Shell_{name}", shell_seq,
-                   [_feat("CDS", f"1..{len(shell_seq)}", name, "Type0.3 · nanocompartment site · real user input")])
-    else:
-        add_record(f"Nanocompartment-Shell_{nc['shell']}", shell_seq,
-                   [_feat("CDS", f"1..{len(shell_seq)}", nc["shell"], f"Type0.3 · nanocompartment site. {source_note(shell_is_real)}")])
-    add_record(f"Promoter_{design['level2']['promoter']['label']}", promo_seq,
-               [_feat("promoter", f"1..{len(promo_seq)}", design["level2"]["promoter"]["label"],
-                      f"Bidirectional. {source_note(promo_is_real)}")])
-    add_record("NCS-Spacer", ncs_seq, [_feat("misc_feature", f"1..{len(ncs_seq)}", "NCS spacer", source_note(ncs_is_real))])
-    add_slot_records(nc_slots, "nanocompartment site", antisense=False)
-    # Level-0-Konstrukte der Nutzereingaben (Cargo, eigene Shell/Teile): Sequenz im Type-Adapter, mit
-    # den echten BbsI-Stellen und Level-0/1/2-Overhangs aus parts/type_overhangs/ (siehe attach_adapter).
+    # Level-0-Konstrukte der Nutzereingaben (Cargo, eigene Shell/Teile): Teilsequenz im Type-Adapter mit allen Annotationen
+    # (BbsI-Stellen, Overhangs, Frame-Spacer, Insert), plus ggf. das PCR-Produkt mit den Primern.
     for c in (c for c in design.get("level0Constructs", []) if c["isUser"]):
-        feats = [_feat("misc_feature", b["location"], "BbsI rec site") for b in c["bbsiSites"]]
-        feats += [_feat("overhang", o["location"], o["label"], f"{o['role']} · top strand {o['sequence_top_strand']}")
-                  for o in c["overhangs"]]
-        feats.append(_feat("CDS", c["insert"]["location"], c["label"],
-                           f"{c['type']} · {c['what']} · {c['orientation']} · adapter {c['adapter']}"))
-        add_record(level0_record_name(c["label"], c["slot"], c["module"]),
-                   c["sequence"], feats,
-                   definition=f"Level 0 construct for the {c['module'].replace('_', ' ')}: {c['label']} in adapter {c['adapter']} (BbsI).")
+        records.append(c["genbank"])
         if c["primers"]["possible"]:
             records.append(c["primers"]["genbank"])
 

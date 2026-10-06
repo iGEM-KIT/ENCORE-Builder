@@ -1228,16 +1228,20 @@ const LIB = {
   linkers: LINKERS,
   promoters: [{ id:'GAL110', label:'GAL1-10', desc:'bidirectional, inducible' }],
   surfaceMarkers: SURFACE_MARKERS,
+  inteins: [], targetingPeptides: [], ncs: null,            // slot availability per site only comes with the backend's parts database
   level0Backbones: [], level1Backbones: [], level2Backbones: [],   // only available once the backend serves the real parts database
 };
 
-const LIBS_KEY='encore.libs.v1';
+const LIBS_KEY='encore.libs.v2';
 function applyLibs(l){
   LIB.nanocompartments = l.nanocompartments || LIB.nanocompartments;
   LIB.cargoPresets     = l.cargoPresets     || LIB.cargoPresets;
   LIB.linkers          = l.linkers          || LIB.linkers;
   LIB.promoters        = l.promoters        || LIB.promoters;
   LIB.surfaceMarkers   = l.surfaceMarkers   || LIB.surfaceMarkers;
+  LIB.inteins          = l.inteins          || LIB.inteins;
+  LIB.targetingPeptides = l.targetingPeptides || LIB.targetingPeptides;
+  LIB.ncs              = l.ncs              || LIB.ncs;
   LIB.level0Backbones  = l.level0Backbones  || LIB.level0Backbones;
   LIB.level1Backbones  = l.level1Backbones  || LIB.level1Backbones;
   LIB.level2Backbones  = l.level2Backbones  || LIB.level2Backbones;
@@ -1698,7 +1702,7 @@ function slotsValid(mod){ const sl=slotsOf(mod); return SLOT_NUMBERS.every(n=>sl
      once, and nothing may follow it.
    - The targeting peptide only exists in the cargo module, in Type 0.1 or 0.5, at most once. */
 const LINKER_FOR={ 2:1, 4:5 };
-const isCds=c=>['marker','custom','tp'].includes(c.kind);
+const isCds=c=>['marker','intein','custom','tp'].includes(c.kind);
 const blocksNcs=(mod,n)=>!['none','ncs','ncsstop'].includes(slotsOf(mod)[LINKER_FOR[n]].kind);
 const needsLinker=(mod,n)=>isCds(slotsOf(mod)[LINKER_FOR[n]]);
 function slotRulesOk(mod){
@@ -1723,7 +1727,7 @@ function enforceSlotRules(mod){
       let off=false;
       if(v==='none'){ o.disabled=true; return; }                       // placeholder
       if(noNcs && v==='ncs') off=true;
-      if(needLnk && (v.startsWith('marker:') || v==='tp')) off=true;
+      if(needLnk && (v.startsWith('marker:') || v.startsWith('intein:') || v==='tp')) off=true;
       if(v==='tp' && (inner || otherTp)) off=true;                     // only Type 0.1 / 0.5, and only once
       if(v==='ncsstop'){
         if(n!==near && n!==far) off=true;                              // must sit behind the central part
@@ -1741,31 +1745,46 @@ function enforceSlotRules(mod){
                                   : `Type 0.${outer} is in use — this position cannot be an NCS spacer.`;
     hint.textContent=text; hint.style.display = text ? 'block' : 'none';
     let bounce=null;
-    if((noNcs && kind==='ncs') || (needLnk && (kind==='marker' || kind==='tp'))) bounce={kind:'linker', id:LIB.linkers[0].id};
-    else if((kind==='ncsstop' || kind==='tp') && [...sel.options].find(o=>o.value===kind).disabled) bounce={kind:'ncs'};
+    if((noNcs && kind==='ncs') || (needLnk && (kind==='marker' || kind==='intein' || kind==='tp'))) bounce=firstLinker(mod,n);
+    else if((kind==='ncsstop' || kind==='tp') && [...sel.options].find(o=>o.value===kind)?.disabled) bounce={kind:'ncs'};
     else if(afterStop && !['ncs','none'].includes(kind)) bounce={kind:'ncs'};
     if(bounce){
       sl[n]=bounce;
-      sel.value = bounce.kind==='linker' ? 'linker:'+bounce.id : 'ncs';
-      el.querySelector('.slotcustom').style.display='none';
+      sel.value = bounce.kind==='linker' ? 'linker:'+bounce.id : bounce.kind==='custom' ? 'custom' : 'ncs';
+      el.querySelector('.slotcustom').style.display = bounce.kind==='custom' ? 'flex' : 'none';
+      if(bounce.kind==='custom') handleSlotSeq(mod,n);
     }
   });
 }
 function refreshNext0(){ $('#next0').disabled = !(state.nc && slotsValid('nc') && slotRulesOk('nc')); }
 function refreshNext1(){ $('#next1').disabled = !(state.cargoValid && slotsValid('cargo') && slotRulesOk('cargo')); }
 const refreshNav=mod=>mod==='nc' ? refreshNext0() : refreshNext1();
-function slotOptionsHtml(mod){
-  return `<option value="none" disabled selected>— please select —</option><option value="ncs">NCS (spacer)</option><option value="ncsstop">NCS with stop codon</option>`
-    + (mod==='cargo' ? `<option value="tp">Targeting peptide</option>` : '')
-    + `<optgroup label="Linker">${LIB.linkers.map(l=>`<option value="linker:${l.id}">${l.label} — ${l.aa} aa</option>`).join('')}</optgroup>`
-    + `<optgroup label="Surface display">${LIB.surfaceMarkers.map(m=>`<option value="marker:${m.id}">${m.label} — ${m.aa} aa</option>`).join('')}</optgroup>`
+/* Which parts exist at which site and slot comes from the parts database ("slots" in every library entry — a part is
+   offered only where a Level 0 plasmid for it exists; for NC site vs. cargo site this follows the overhangs / the
+   orientation of the plasmid). Without the backend (no "slots") everything is offered everywhere, as before. */
+const availableAt = (item, mod, n) => !item.slots || (item.slots[mod]||[]).includes(n);
+const linkersAt = (mod, n) => LIB.linkers.filter(l=>availableAt(l,mod,n));
+function firstLinker(mod, n){ const l=linkersAt(mod,n)[0]; return l ? {kind:'linker', id:l.id} : {kind:'custom', label:'', seqRaw:'', valid:false}; }
+function ncsRoles(mod, n){ return LIB.ncs ? ((LIB.ncs[mod]||{})[n] || []) : ['plain','stop']; }
+function slotOptionsHtml(mod, n){
+  const roles = ncsRoles(mod, n);
+  const tpHere = mod==='cargo' && (LIB.targetingPeptides && LIB.targetingPeptides.length ? LIB.targetingPeptides.some(t=>availableAt(t,mod,n)) : true);
+  const group = (label, items, kind) => { const list = items.filter(x=>availableAt(x,mod,n));
+    return list.length ? `<optgroup label="${label}">${list.map(m=>`<option value="${kind}:${m.id}">${m.label} — ${m.aa} aa</option>`).join('')}</optgroup>` : ''; };
+  return `<option value="none" disabled selected>— please select —</option>`
+    + (roles.includes('plain') ? `<option value="ncs">NCS (spacer)</option>` : '')
+    + (roles.includes('stop') ? `<option value="ncsstop">NCS with stop codon</option>` : '')
+    + (tpHere ? `<option value="tp">Targeting peptide</option>` : '')
+    + group('Linker', LIB.linkers, 'linker')
+    + group('Surface display', LIB.surfaceMarkers, 'marker')
+    + group('Intein', LIB.inteins||[], 'intein')
     + `<option value="custom">Your own sequence …</option>`;
 }
 function slotCardHtml(mod,n){
   const nSide=MODS[mod].nSide.includes(n);
   return `<div class="slotcard" data-mod="${mod}" data-slot="${n}">
     <div class="slothead"><span class="stype">Type 0.${n}</span><span class="sterm">${nSide?'N-terminal':'C-terminal'}</span></div>
-    <select class="slotsel" aria-label="Type 0.${n}">${slotOptionsHtml(mod)}</select>
+    <select class="slotsel" aria-label="Type 0.${n}">${slotOptionsHtml(mod,n)}</select>
     <div class="slothint" style="display:none"></div>
     <div class="slotcustom" style="display:none">
       <input type="text" class="slotlabel" placeholder="Name (optional)" maxlength="60">
@@ -1840,6 +1859,7 @@ function slotsFromState(mod){
     const c=sl[n];
     if(c.kind==='linker'){ const l=LIB.linkers.find(x=>x.id===c.id); return {slot:n, kind:'linker', id:l.id, label:l.label, aa:l.aa, bp:l.bp}; }
     if(c.kind==='marker'){ const m=LIB.surfaceMarkers.find(x=>x.id===c.id); return {slot:n, kind:'marker', id:m.id, label:m.label, aa:m.aa, bp:m.bp}; }
+    if(c.kind==='intein'){ const m=LIB.inteins.find(x=>x.id===c.id); return {slot:n, kind:'intein', id:m.id, label:m.label, aa:m.aa, bp:m.bp}; }
     if(c.kind==='tp') return {slot:n, kind:'tp', label:state.nc? state.nc.tp : 'TP', bp:TP_BP};
     if(c.kind==='custom'){ const seq=clean(c.seqRaw||''); return {slot:n, kind:'custom', label:(c.label||'').trim()||('Custom part '+n), bp:seq.length, aa:Math.floor(seq.length/3), sequence:seq, isNew:true}; }
     return {slot:n, kind:c.kind==='ncsstop'?'ncsstop':'ncs', label:'NCS', bp:NCS_BP};
@@ -1880,6 +1900,7 @@ function updateConstructStrip(){
     const c=slotsOf(mod)[k];
     if(c.kind==='linker'){ const l=LIB.linkers.find(x=>x.id===c.id); return { kind:'t2', label:l? l.label : 'Linker', filled:true }; }
     if(c.kind==='marker'){ const m=LIB.surfaceMarkers.find(x=>x.id===c.id); return { kind:'mark', label:m? m.label : 'Marker', filled:true }; }
+    if(c.kind==='intein'){ const m=LIB.inteins.find(x=>x.id===c.id); return { kind:'t'+k, label:m? m.label : 'INT', filled:true }; }
     if(c.kind==='tp') return { kind:'t'+k, label:n? n.tp : 'TP', filled:true };
     // Filled as soon as "own sequence" is chosen — same as every other kind (linker/marker/NCS/TP)
     // shows immediately on selection. The typed name appears live; whether the sequence itself is
@@ -2780,6 +2801,7 @@ const TP_BP=54, PROMO_BP=680, NCS_BP=15;
 function moduleParts(entries, middle){
   const part = e => e.kind==='linker' ? { label:e.label, kind:'t2', note:'Linker', bp:e.bp }
     : e.kind==='marker' ? { label:e.label, kind:'mark', note:'Surface marker', bp:e.bp }
+    : e.kind==='intein' ? { label:e.label, kind:'t'+e.slot, note:'Intein', bp:e.bp }
     : e.kind==='tp' ? { label:e.label, kind:'t'+e.slot, note:'Targeting peptide', bp:e.bp, mapnote:'TP' }
     : e.kind==='custom' ? { label:e.label, kind:'t'+e.slot, note:'Your sequence', bp:e.bp, isNew:true }
     : e.kind==='ncsstop' ? { label:'NCS', dummy:true, note:'Spacer · stop codon', bp:NCS_BP, stop:true }
@@ -2879,7 +2901,7 @@ function primersFromApi(primers){
   }));
 }
 
-const DESIGN_KEY='encore.design.v19';
+const DESIGN_KEY='encore.design.v20';
 let renderedFromCache=false;
 const resultFromApi = d => ({ model:modelFromApi(d), primers:primersFromApi(d.primers), api:d });
 async function compute(){

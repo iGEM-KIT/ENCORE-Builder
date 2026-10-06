@@ -1,0 +1,33 @@
+{
+  "id": "Lvl0.1_a_009",
+  "kind": "level0_insert",
+  "label": "0.1TPTm*",
+  "plasmid_name": "0.1TP_Tm*",
+  "category": "tp",
+  "part": "TP-Tm",
+  "part_label": "TP-Tm",
+  "variant": "c_term",
+  "type_slot": 1,
+  "site": "cargo_site",
+  "level2_overhang": "CCAA",
+  "stored_orientation": "antisense",
+  "frame_spacer_in_plasmid": {
+    "sequence": "AT",
+    "side": "right end of the top strand (5' side of the sense strand)"
+  },
+  "sequence": "GGGGGGGATCTGGGCATTCGGAAGCTGTAA",
+  "sequence_status": "real",
+  "on_stock": true,
+  "length_bp": 30,
+  "organism": null,
+  "source": "Level 0 plasmid '0.1TP_Tm*' (Lvl0.1_a_009) from the user-supplied GenBank file 'documents from Level 0'; only the insert was taken — the type overhangs and the frame spacer of the plasmid were cut off. Stock: glycerol stock column of 'Level 0 constructs.xlsx'.",
+  "checks": {
+    "length_multiple_of_3": true,
+    "starts_with_atg": false,
+    "ends_with_stop": true,
+    "bsai_sites": [],
+    "bbsi_sites": []
+  },
+  "notes": null,
+  "used_by": []
+}

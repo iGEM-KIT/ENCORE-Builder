@@ -1,0 +1,32 @@
+{
+  "id": "Lvl0.3_a_018",
+  "kind": "level0_insert",
+  "label": "0.3E-Mx",
+  "plasmid_name": "0.3Enc_Mx",
+  "category": "shell",
+  "part": "E-Mx",
+  "part_label": "E-Mx",
+  "type_slot": 3,
+  "site": "nc_site",
+  "level2_overhang": null,
+  "stored_orientation": "sense",
+  "frame_spacer_in_plasmid": {
+    "sequence": "TA",
+    "side": "5' side of the sense strand"
+  },
+  "sequence": "ATGCCTGACTTCTTGGGCCATGCCGAGAATCCTTTACGTGAGGAAGAGTGGGCAAGGTTAAACGAGACTGTGATTCAGGTAGCGAGGCGTTCCTTAGTAGGGCGTCGTATCTTAGACATTTACGGGCCACTAGGCGCTGGGGTACAGACAGTACCATACGATGAGTTCCAGGGTGTGTCACCTGGCGCAGTCGACATAGTAGGAGAGCAGGAGACTGCAATGGTATTCACCGACGCCCGTAAGTTCAAAACTATACCTATCATCTATAAGGACTTCTTGTTACACTGGAGAGACATAGAGGCGGCACGTACGCACAATATGCCCCTAGATGTAAGTGCTGCAGCCGGGGCAGCTGCCTTATGTGCCCAGCAGGAAGATGAGCTTATTTTCTACGGGGACGCAAGGTTAGGCTACGAGGGGCTAATGACAGCAAACGGCAGGTTAACGGTGCCTTTAGGAGACTGGACTTCTCCTGGTGGCGGATTCCAGGCAATTGTCGAGGCTACGAGGAAACTGAACGAGCAGGGCCATTTCGGACCATACGCAGTGGTACTATCCCCGAGGCTTTACTCTCAGTTGCACAGGATCTATGAGAAAACTGGAGTGCTGGAGATTGAGACTATAAGGCAGCTGGCCTCTGACGGAGTGTACCAGAGTAACCGTCTAAGGGGAGAGTCGGGTGTAGTGGTATCCACAGGCAGGGAGAACATGGACCTTGCTGTCTCAATGGATATGGTGGCCGCATATTTAGGGGCCAGCAGGATGAACCACCCTTTCCGTGTGTTGGAAGCACTTCTGCTGAGGATCAAGCACCCTGACGCAATATGCACTCTGGAAGGCGCAGGAGCCACGGAGAGGAGATAA",
+  "sequence_status": "real",
+  "on_stock": true,
+  "length_bp": 864,
+  "organism": null,
+  "source": "Level 0 plasmid '0.3Enc_Mx' (Lvl0.3_a_018) from the user-supplied GenBank file 'documents from Level 0'; only the insert was taken — the type overhangs and the frame spacer of the plasmid were cut off. Stock: glycerol stock column of 'Level 0 constructs.xlsx'.",
+  "checks": {
+    "length_multiple_of_3": true,
+    "starts_with_atg": true,
+    "ends_with_stop": true,
+    "bsai_sites": [],
+    "bbsi_sites": []
+  },
+  "notes": null,
+  "used_by": []
+}

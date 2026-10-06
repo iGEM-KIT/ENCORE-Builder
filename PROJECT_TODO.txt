@@ -263,6 +263,19 @@ Erkennungsstellen/Akzeptor-Overhangs vorliegen, waere eine echte Restriktions-
 /Ligations-Simulation möglich, nicht nur das Verketten ueber schon bekannte
 Overhang-Konstanten:
 
+[x] Level-0-Inserts aus den echten Plasmiden (parts/level0_inserts/, 37 Teile aus "Level 0.gb" + "0.2L4.gb" + "Level 0
+    constructs.xlsx"): nur die Teilsequenz, ohne Overhangs/Spacer; Site/Slot aus Overhang bzw. Orientierung, Lagerstatus aus
+    der Glycerol-Spalte; die Dropdowns bieten Teile nur an ihrer Site/ihrem Slot an. Beim Import aufgefallen (zu pruefen):
+      - 0.5 TP-TmSt (Lvl0.5_a_026): 28 nt, nicht durch 3 teilbar -> Frameshift im Raster
+      - 0.3 MVP: Plasmid hat nur 1 nt vor dem ATG und liegt auf dem Sense-Strang (die anderen Cargos antisense);
+        0.3 CiVCPO: Plasmid hat gar keinen Frame-Spacer
+      - Cargos NlucP und MVP enden auf einem Stopcodon (nicht fusionsfaehig: der Builder lehnt sie als Cargo ab);
+        die Shells E-Tm/Qt/Mx/Mxpe enden ebenfalls auf einem Stopcodon (kein C-terminaler Fusionspartner moeglich)
+      - 0.4NCS* (Lvl0.4_a_022) steht in der Datei doppelt (auch als "0.4NCSrc") und hat dasselbe Insert wie Lvl0.4_a_021,
+        nur mit dem Spacer auf der anderen Seite; 0.4NCSrc (a_021) ist trotz "rc" auf dem Sense-Strang gespeichert
+      - E-Mxpe ist als Shell hinterlegt, aber noch kein Nanocompartment-Eintrag in data.py (T-Zahl/Durchmesser/TP fehlen)
+      - die Plasmide setzen den Frame-Spacer (2 nt, teils AT/TA/TT/AA je Teil) auf der 5'-Seite des ORFs (bei Cargo-Teilen
+        am rechten Ende des Top-Strangs); die Software setzt GC immer direkt vor das Insert
 [x] Leseraster: jeder Adapter traegt einen 2-nt-Frame-Spacer (GC) direkt vor dem Insert (parts/type_overhangs/,
     Feld `frame_spacer`). Overhang (4) + Spacer (2) = 6 nt zwischen zwei fusionierten Teilen, damit bleibt der ORF ueber
     alle Naehte im Raster (Level 0 -> 1 -> 2, Sense- und Antisense-Modul). Offen/zu klaeren: ob die echten Toolkit-Teile

@@ -1,0 +1,33 @@
+{
+  "id": "Lvl0.4_a_021",
+  "kind": "level0_insert",
+  "label": "0.4NCSrc",
+  "plasmid_name": "0.4NCSrc",
+  "category": "ncs",
+  "part": "ncs",
+  "part_label": "NCS",
+  "ncs_role": "stop",
+  "type_slot": 4,
+  "site": "nc_site",
+  "level2_overhang": null,
+  "stored_orientation": "sense",
+  "frame_spacer_in_plasmid": {
+    "sequence": "TA",
+    "side": "5' side of the sense strand"
+  },
+  "sequence": "TGAAATACCGCACAGATGCGTACGGAGAAAATACCGCAT",
+  "sequence_status": "real",
+  "on_stock": true,
+  "length_bp": 39,
+  "organism": null,
+  "source": "Level 0 plasmid '0.4NCSrc' (Lvl0.4_a_021) from the user-supplied GenBank file 'documents from Level 0'; only the insert was taken — the type overhangs and the frame spacer of the plasmid were cut off. Stock: glycerol stock column of 'Level 0 constructs.xlsx'.",
+  "checks": {
+    "length_multiple_of_3": true,
+    "starts_with_atg": false,
+    "ends_with_stop": false,
+    "bsai_sites": [],
+    "bbsi_sites": []
+  },
+  "notes": "named 'rc' in the file but stored on the sense strand (spacer on the left); identical insert to Lvl0.4_a_022; NCS carrying a stop codon (marked * in the name or starting with a stop codon)",
+  "used_by": []
+}
