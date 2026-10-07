@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """Codon-Optimierung fuer Saccharomyces cerevisiae.
 
 Jede vom Nutzer eingegebene Sequenz (Cargo, eigene Shell, eigene Teile in den Slots) wird hier uebersetzt und mit der
@@ -21,9 +19,11 @@ Codon-Nutzung: Kazusa-Tabelle fuer S. cerevisiae (Haeufigkeit pro 1000 Codons). 
 w = Haeufigkeit / Haeufigkeit des haeufigsten synonymen Codons.
 """
 
+from __future__ import annotations
+
 import hashlib
 import random
-from collections import defaultdict
+from itertools import product
 from math import exp, log
 
 # Haeufigkeit pro 1000 Codons, S. cerevisiae (Kazusa, Codon Usage Database).
@@ -48,13 +48,11 @@ CODON_USAGE = {
 
 _BASES = "TCAG"
 _AMINO = "FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
-CODON_TABLE = {a + b + c: _AMINO[i] for i, (a, b, c) in enumerate((a, b, c) for a in _BASES for b in _BASES for c in _BASES)}
+CODON_TABLE = {"".join(c): aa for c, aa in zip(product(_BASES, repeat=3), _AMINO)}
 
-SYNONYMS: dict = defaultdict(list)
+SYNONYMS: dict = {}
 for _codon, _aa in CODON_TABLE.items():
-    SYNONYMS[_aa].append(_codon)
-# w = relative Adaptiertheit (haeufigstes synonymes Codon = 1)
-W = {c: CODON_USAGE[c] / max(CODON_USAGE[s] for s in SYNONYMS[CODON_TABLE[c]]) for c in CODON_TABLE}
+    SYNONYMS.setdefault(_aa, []).append(_codon)
 
 # Restriktionsstellen, die nie entstehen duerfen (beide Straenge).
 FORBIDDEN_SITES = {"BsaI": ("GGTCTC", "GAGACC"), "BbsI": ("GAAGAC", "GTCTTC")}
@@ -64,17 +62,17 @@ SHARPEN = 3.0                    # Exponent auf die Haeufigkeit bei der Zufallsw
 ALREADY_ADAPTED_CAI = 0.85       # ab diesem CAI bleibt eine Sequenz, die sonst keine Stelle/Wiederholung hat, unveraendert (wie bei VectorBuilder)
 MIN_SHARE = 0.10                 # Codons mit weniger als 10 % der synonymen Nutzung werden nie gewaehlt
 
-
-def _usable(aa: str) -> list:
-    """Synonyme Codons einer Aminosaeure ohne die seltenen (unter MIN_SHARE der Gesamtnutzung der Aminosaeure)."""
-    total = sum(CODON_USAGE[c] for c in SYNONYMS[aa])
-    return [c for c in SYNONYMS[aa] if CODON_USAGE[c] / total >= MIN_SHARE]
+# w = relative Adaptiertheit (haeufigstes synonymes Codon = 1)
+W = {c: CODON_USAGE[c] / max(CODON_USAGE[s] for s in SYNONYMS[CODON_TABLE[c]]) for c in CODON_TABLE}
+BEST_CODON = {aa: max(codons, key=CODON_USAGE.get) for aa, codons in SYNONYMS.items()}
+# Synonyme Codons je Aminosaeure ohne die seltenen (unter MIN_SHARE der Gesamtnutzung der Aminosaeure)
+_USABLE = {aa: [c for c in codons if CODON_USAGE[c] / sum(CODON_USAGE[s] for s in codons) >= MIN_SHARE]
+           for aa, codons in SYNONYMS.items()}
 
 
 def back_translate(protein: str) -> str:
     """Aminosaeurefolge -> DNA mit dem jeweils haeufigsten Hefe-Codon (Ausgangspunkt fuer die Optimierung; ein '*' wird TAA)."""
-    best = {aa: max(SYNONYMS[aa], key=CODON_USAGE.get) for aa in SYNONYMS}
-    return "".join(best[aa] for aa in protein)
+    return "".join(BEST_CODON[aa] for aa in protein)
 
 
 def translate(dna: str) -> str:
@@ -104,6 +102,10 @@ def find_forbidden(dna: str) -> list:
     return sorted(hits, key=lambda h: h["pos"])
 
 
+def _has_run(dna: str) -> bool:
+    return any(len(set(dna[i:i + MAX_RUN + 1])) == 1 for i in range(len(dna) - MAX_RUN))
+
+
 def _bad(window: str, tail_len: int) -> bool:
     """Enthaelt `window` (Kontext + neues Codon; die letzten `tail_len` Basen sind neu) ein verbotenes Motiv, das
     mindestens eine neue Base beruehrt?"""
@@ -119,16 +121,6 @@ def _bad(window: str, tail_len: int) -> bool:
     return False
 
 
-def _cost(codon: str, target: str) -> float:
-    """Kosten, vom Wunsch-Codon abzuweichen: 0 beim Wunsch-Codon, sonst 1 (bei gleicher Anzahl Abweichungen gewinnt das haeufigere
-    Codon); ein seltenes Codon (unter MIN_SHARE) kostet zusaetzlich 5, wird also nur gewaehlt, wenn es nicht anders geht."""
-    if codon == target:
-        return 0.0
-    aa = CODON_TABLE[codon]
-    rare = aa != "*" and codon not in _usable(aa)
-    return 1.0 + 0.1 * (1.0 - W[codon]) + (5.0 if rare else 0.0)
-
-
 def _crosses(window: str, split: int) -> bool:
     """Enthaelt `window` eine verbotene Stelle, die die Position `split` ueberspannt (Basen auf beiden Seiten)?"""
     for site in _FORBIDDEN:
@@ -136,6 +128,15 @@ def _crosses(window: str, split: int) -> bool:
             if window[start:start + len(site)] == site:
                 return True
     return False
+
+
+def _cost(codon: str, target: str) -> float:
+    """Kosten, vom Wunsch-Codon abzuweichen: 0 beim Wunsch-Codon, sonst 1 (bei gleicher Anzahl Abweichungen gewinnt das haeufigere
+    Codon); ein seltenes Codon (unter MIN_SHARE) kostet zusaetzlich 5, wird also nur gewaehlt, wenn es nicht anders geht."""
+    if codon == target:
+        return 0.0
+    rare = codon not in _USABLE[CODON_TABLE[codon]]
+    return 1.0 + 0.1 * (1.0 - W[codon]) + (5.0 if rare else 0.0)
 
 
 def _as_list(value) -> list:
@@ -155,6 +156,58 @@ def _sites_in_context(seq: str, lefts: list, rights: list) -> list:
     return sorted(hits, key=lambda h: h["pos"])
 
 
+def _draw_targets(dna: str) -> list:
+    """Pro Position das zufaellig gezogene Wunsch-Codon (Seed = Eingabe, also reproduzierbar); Stopcodons bleiben, wie eingegeben."""
+    rng = random.Random(hashlib.sha256(dna.encode()).digest())
+    targets = []
+    for i in range(0, len(dna), 3):
+        codon = dna[i:i + 3]
+        aa = CODON_TABLE[codon]
+        if aa == "*":
+            targets.append(codon)
+        else:
+            pool = _USABLE[aa]
+            targets.append(rng.choices(pool, weights=[CODON_USAGE[c] ** SHARPEN for c in pool])[0])
+    return targets
+
+
+def _search(dna: str, targets: list, lefts: list, rights: list) -> tuple:
+    """Exakte Suche (Dynamic Programming) nach den Codons, die so wenig wie moeglich von den Wunsch-Codons abweichen und
+    keine verbotene Stelle bilden. Zustand = die letzten 6 Basen je Kontextvariante. Gibt (Sequenz, None) oder (None, Grund)."""
+    layers = []                                  # je Position: Zustand -> (Score, Vorgaenger-Zustand, Codon) fuer die Rueckverfolgung
+    states = {tuple(left[-6:] for left in lefts): 0.0}
+    for i, target in enumerate(targets):
+        original = dna[3 * i:3 * i + 3]
+        options = SYNONYMS[CODON_TABLE[original]] if CODON_TABLE[original] != "*" else [original]
+        nxt = {}
+        for state, score in states.items():
+            for codon in options:
+                windows = tuple(w + codon for w in state)
+                if any(_bad(w, 3) for w in windows):
+                    continue
+                key = tuple(w[-6:] for w in windows)
+                s = score - _cost(codon, target)
+                if key not in nxt or s > nxt[key][0]:
+                    nxt[key] = (s, state, codon)
+        if not nxt:                              # nichts erlaubt (kann in der Praxis nicht passieren)
+            return None, "No codon combination avoids all restriction sites."
+        layers.append(nxt)
+        states = {k: v[0] for k, v in nxt.items()}
+
+    # Rechter Kontext: auch ueber die Naht zum Adapter darf keine Stelle entstehen.
+    finals = [(score, key) for key, score in states.items()
+              if not any(_crosses(w[-5:] + r[:5], len(w[-5:])) for w in key for r in rights)]
+    if not finals:
+        return None, "No codon combination avoids all restriction sites at the right junction."
+    key = max(finals)[1]
+    codons = []
+    for layer in reversed(layers):
+        _, prev, codon = layer[key]
+        codons.append(codon)
+        key = prev
+    return "".join(reversed(codons)), None
+
+
 def optimize_cds(dna: str, left="", right="", protein: bool = False) -> dict:
     """Codon-optimiert eine CDS (Sense-Strang, 5'->3', ohne Stopcodon am Ende) fuer S. cerevisiae.
 
@@ -166,72 +219,30 @@ def optimize_cds(dna: str, left="", right="", protein: bool = False) -> dict:
     Mit `protein=True` ist `dna` eine Aminosaeurefolge: sie wird mit der Codon-Tabelle in DNA uebersetzt (gleiche Wahl und gleiche
     Regeln wie sonst); "vorher"-Werte (CAI, GC, Stellen) gibt es dann nicht, und `fromProtein` ist True.
 
-    Ergebnis: dict mit `sequence`, `changed` (Anzahl geaenderter Codons), `codons`, CAI/GC vorher/nachher, `forbiddenBefore`
-    (verbotene Stellen in der Eingabe), `forbiddenAfter` (mit Kontext, sollte leer sein) und `optimized` (False, wenn die
-    Sequenz nicht optimiert werden konnte, mit `reason`)."""
+    Ergebnis: dict mit `status` ("optimized", "kept" oder "skipped", dann mit `reason`), `sequence`, `changed` (Anzahl geaenderter
+    Codons), `codons`, CAI/GC vorher/nachher, `forbiddenBefore` (verbotene Stellen in der Eingabe) und `forbiddenAfter` (mit
+    Kontext, sollte leer sein)."""
     dna = (dna or "").upper()
     if protein:
         dna = back_translate(dna)
     lefts, rights = _as_list(left), _as_list(right)
-    before = {"cai": cai(dna) if len(dna) >= 3 else 1.0, "gc": gc_percent(dna)}
-    base = {"status": "skipped", "fromProtein": protein, "original": None if protein else dna, "sequence": dna, "optimized": False, "changed": 0, "codons": len(dna) // 3,
-            "protein": translate(dna), "caiBefore": round(before["cai"], 3), "gcBefore": round(before["gc"], 1),
-            "caiAfter": round(before["cai"], 3), "gcAfter": round(before["gc"], 1),
-            "forbiddenBefore": [] if protein else (_sites_in_context(dna, lefts, rights) if dna else []), "forbiddenAfter": []}
-    if protein:
-        base.update({"caiBefore": None, "gcBefore": None})
+    cai_before = cai(dna) if len(dna) >= 3 else 1.0
+    gc_before = gc_percent(dna)
+    sites_before = [] if protein or not dna else _sites_in_context(dna, lefts, rights)
+    result = {"status": "skipped", "fromProtein": protein, "sequence": dna, "optimized": False, "changed": 0,
+              "codons": len(dna) // 3, "caiBefore": None if protein else round(cai_before, 3),
+              "gcBefore": None if protein else round(gc_before, 1), "caiAfter": round(cai_before, 3),
+              "gcAfter": round(gc_before, 1), "forbiddenBefore": sites_before, "forbiddenAfter": []}
     if len(dna) < 3 or len(dna) % 3:
-        return {**base, "reason": "Length is not a multiple of 3; the sequence was kept as entered."}
+        return {**result, "reason": "Length is not a multiple of 3; the sequence was kept as entered."}
+    if not protein and cai_before >= ALREADY_ADAPTED_CAI and not sites_before and not _has_run(dna):
+        return {**result, "status": "kept", "optimized": True,
+                "reason": f"Already well adapted to S. cerevisiae (CAI {result['caiBefore']}) and free of BsaI/BbsI sites; kept as entered."}
 
-    n = len(dna) // 3
-    has_run = any(len(set(dna[i:i + MAX_RUN + 1])) == 1 for i in range(len(dna) - MAX_RUN))
-    if not protein and before["cai"] >= ALREADY_ADAPTED_CAI and not base["forbiddenBefore"] and not has_run:
-        return {**base, "status": "kept", "optimized": True,
-                "reason": f"Already well adapted to S. cerevisiae (CAI {base['caiBefore']}) and free of BsaI/BbsI sites; kept as entered."}
-    rng = random.Random(hashlib.sha256(dna.encode()).digest())      # Seed = Eingabe -> reproduzierbar
-    targets = []                                                    # pro Position das zufaellig gezogene Wunsch-Codon
-    for i in range(n):
-        aa = CODON_TABLE[dna[3 * i:3 * i + 3]]
-        if aa == "*":
-            targets.append(dna[3 * i:3 * i + 3])
-        else:
-            pool = _usable(aa)
-            targets.append(rng.choices(pool, weights=[CODON_USAGE[c] ** SHARPEN for c in pool])[0])
-
-    # Zustand = die letzten 6 Basen je Kontextvariante. Pro Schritt: Zustand -> (Score, Vorgaenger-Zustand, Codon) fuer die Rueckverfolgung.
-    layers = []
-    states = {tuple(l[-6:] for l in lefts): 0.0}
-    for i in range(n):
-        original = dna[3 * i:3 * i + 3]
-        options = SYNONYMS[CODON_TABLE[original]] if CODON_TABLE[original] != "*" else [original]
-        nxt = {}
-        for state, score in states.items():
-            for codon in options:
-                windows = tuple(w + codon for w in state)
-                if any(_bad(w, 3) for w in windows):
-                    continue
-                key = tuple(w[-6:] for w in windows)
-                s = score - _cost(codon, targets[i])
-                if key not in nxt or s > nxt[key][0]:
-                    nxt[key] = (s, state, codon)
-        if not nxt:                                 # nichts erlaubt (kann in der Praxis nicht passieren)
-            return {**base, "reason": "No codon combination avoids all restriction sites."}
-        layers.append(nxt)
-        states = {k: v[0] for k, v in nxt.items()}
-
-    # Rechter Kontext: auch ueber die Naht zum Adapter darf keine Stelle entstehen.
-    finals = [(score, key) for key, score in states.items()
-              if not any(_crosses(w[-5:] + r[:5], len(w[-5:])) for w in key for r in rights)]
-    if not finals:
-        return {**base, "reason": "No codon combination avoids all restriction sites at the right junction."}
-    key = max(finals)[1]
-    codons = []
-    for layer in reversed(layers):
-        _, prev, codon = layer[key]
-        codons.append(codon)
-        key = prev
-    out = "".join(reversed(codons))
-    changed = 0 if protein else sum(1 for i in range(n) if out[3 * i:3 * i + 3] != dna[3 * i:3 * i + 3])
-    return {**base, "sequence": out, "status": "optimized", "optimized": True, "changed": changed,
+    out, reason = _search(dna, _draw_targets(dna), lefts, rights)
+    if out is None:
+        return {**result, "reason": reason}
+    changed = 0 if protein else sum(1 for i in range(0, len(dna), 3) if out[i:i + 3] != dna[i:i + 3])
+    return {**result, "sequence": out, "status": "optimized", "optimized": True, "changed": changed,
             "caiAfter": round(cai(out), 3), "gcAfter": round(gc_percent(out), 1),
             "forbiddenAfter": _sites_in_context(out, lefts, rights)}

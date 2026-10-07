@@ -5,7 +5,6 @@ from __future__ import annotations
 import re
 
 from .data import (
-    NANOCOMPARTMENTS,
     BSAI_PRIMER_PREFIX,
     CARGO_L1_FLANK,
     NOMINAL_BP,
@@ -18,7 +17,7 @@ from .data import (
 # Sequence-py enthält Funktionen für die Verarbeitung von DNA-Sequenzen
 # Z.B. zum Bilden von Komplementären DNA-Sequenzen, zur Berechnung der Schmelztemperatur
 from .sequence import reverse_complement, validate_cargo, wallace_tm
-from .codon import find_forbidden, optimize_cds
+from .codon import FORBIDDEN_SITES, optimize_cds
 from .parts_db import find_inserts, find_part, find_real_sequence, load_parts
 from .assembly import assemble_level1_module, assemble_level1_promoter, assemble_level2, finish_level1, level1_fragment
 from .genbank_writer import format_genbank_record, location_span, make_feature as _feat, shift_location
@@ -157,8 +156,9 @@ def codon_optimize_part(sequence: str, module: str, slot: int, protein: bool = F
 
 def codon_summary(result: dict) -> dict:
     """Was Design-Antwort und GenBank von einer Optimierung brauchen (ohne die Sequenzen)."""
-    return {"status": result["status"], "fromProtein": result["fromProtein"], "optimized": result["optimized"], "reason": result.get("reason"), "changed": result["changed"],
-            "codons": result["codons"], "caiBefore": result["caiBefore"], "caiAfter": result["caiAfter"],
+    return {"status": result["status"], "fromProtein": result["fromProtein"], "optimized": result["optimized"],
+            "reason": result.get("reason"), "changed": result["changed"], "codons": result["codons"],
+            "caiBefore": result["caiBefore"], "caiAfter": result["caiAfter"],
             "gcBefore": result["gcBefore"], "gcAfter": result["gcAfter"],
             "sitesRemoved": [f"{h['enzyme']} ({h['site']})" for h in result["forbiddenBefore"]],
             "sitesLeft": [f"{h['enzyme']} ({h['site']})" for h in result["forbiddenAfter"]]}
@@ -365,7 +365,6 @@ PCR_CLAMP = "TTTT"
 # Teile (eigene wie aus der Datenbank) unter dieser Laenge werden als annealte Oligo-Paare bestellt, ab dieser Laenge gibt
 # es fuer eigene Sequenzen Primer (PCR) bzw. fuer Toolbox-Teile die DNA-Bestellung (fertige Fragmente gibt es erst ab ~125 bp).
 MIN_PCR_INSERT_BP = 150
-_INTERNAL_SITES = {"BbsI": ("GAAGAC", "GTCTTC"), "BsaI": ("GGTCTC", "GAGACC")}
 
 
 def resolve_insert(category: str, part: str, site: str, slot: int, seed: str, length: int, **extra) -> tuple:
@@ -482,7 +481,7 @@ def design_level0_primers(shown: dict, label: str, slot: int, module: str):
                 "length": len(ext) + len(anneal), "annealLength": len(anneal), "tm": tm}
 
     base = level0_record_name(label, slot, module)
-    sites = [f"{enzyme} site ({site})" for enzyme, pair in _INTERNAL_SITES.items()
+    sites = [f"{enzyme} site ({site})" for enzyme, pair in FORBIDDEN_SITES.items()
              for site in pair if site in insert]
     return {
         "possible": True,
@@ -980,10 +979,6 @@ def build_genbank(design: dict) -> str:
     """Gesamt-GenBank-Export: die Level-0-Konstrukte der Nutzereingaben (mit PCR-Produkt/Primern), die drei Level-1-Inserts
     und das fertige Level-2-Plasmid (mit den echten Annotationen von pESC-HIS) — siehe assembly.py."""
     records: list[str] = []
-
-    def add_record(name: str, sequence: str, features: list[dict] | None = None,
-                    circular: bool = False, definition: str = ""):
-        records.append(format_genbank_record(name, sequence, features, circular, definition))
 
     # Level-0-Konstrukte der Nutzereingaben (Cargo, eigene Shell/Teile): Teilsequenz im Type-Adapter mit allen Annotationen
     # (BbsI-Stellen, Overhangs, Frame-Spacer, Insert), plus ggf. das PCR-Produkt mit den Primern.

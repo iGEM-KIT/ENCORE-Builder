@@ -208,7 +208,6 @@
   @media(min-width:1000px){
     .side-steps.show{display:block}
     .shell.show{margin-left:var(--side-w)}
-    #pagefoot.show{margin-left:var(--side-w)}
   }
 
   /* top construct map — selected modules appear in place, then fuse (bidirectional) */
@@ -629,8 +628,6 @@
   .chip.primary-chip{background:var(--forest);color:#fff;border-color:var(--forest)}
   [data-theme="dark"] .chip.primary-chip{background:var(--teal);color:#062019;border-color:var(--teal)}
 
-  footer{max-width:1080px;margin:0 auto;padding:0 24px 40px;color:var(--muted);font-size:11.5px;display:none}
-  footer.show{display:block}
 </style>
 
 <header>
@@ -1085,7 +1082,6 @@
   </section>
 </div>
 
-<footer id="pagefoot">ENCORE Builder · Frontend prototype v6 · iGEM KIT · draft, not final.</footer>
 
 <!-- Info popover (positioned/populated via JS) -->
 <div class="popover" id="popover">
@@ -1431,7 +1427,6 @@ function showBuilder(){
   $('#sideSteps').classList.add('show');
   $('#stepperWrap').classList.add('show');
   $('#shell').classList.add('show');
-  $('#pagefoot').classList.add('show');
   $('#tabBuilder').classList.add('on');
   // Only relevant once you're actually in the builder (it gates Step 3->4) —
   // no point showing it on the intro or on the separate selector page.
@@ -1440,7 +1435,7 @@ function showBuilder(){
 function showIntro(){
   builderStarted=false;
   $('#intro').style.display='';
-  ['#sideSteps','#stepperWrap','#shell','#pagefoot'].forEach(sel=>$(sel).classList.remove('show'));
+  ['#sideSteps','#stepperWrap','#shell'].forEach(sel=>$(sel).classList.remove('show'));
   $('#tabBuilder').classList.remove('on');
   $('#commecStatus').style.display='none';
   window.scrollTo({top:0,behavior:'instant'});
@@ -1613,6 +1608,11 @@ function handleCargoInput(){
    Biologik/level0_design/sequence.py, so the local preview and the server
    answer can be rendered by one function. The server stays the authority —
    scheduleServerCargoCheck() overwrites this result as soon as it arrives. */
+/* Same wording as _stop_message() in sequence.py. */
+const stopMessage = (stop, kind) => `Stop codon at the end (${stop}). Remove it: ` + (kind==='shell'
+  ? 'the construct adds its own stop codon right after the shell.'
+  : kind==='part' ? 'the construct places its own stop codon at the end of the nanocompartment site.'
+  : 'otherwise the targeting peptide is not attached and the cargo is not encapsulated.');
 function validateCargoLocal(raw, kind='cargo'){
   if(isProteinText(raw)) return validateProteinLocal(raw, kind);
   const seq=clean(raw), length=seq.length;
@@ -1624,11 +1624,7 @@ function validateCargoLocal(raw, kind='cargo'){
   if(length===0){ errors.push('No valid A/T/G/C sequence provided.'); }
   else{
     if(kind==='cargo' && length<30) errors.push(`Sequence too short (${length} bp, need at least 30 bp).`);
-    if(trailingStop) errors.push(kind==='shell'
-      ? `Stop codon at the end (${trailingStop}). Remove it: the construct adds its own stop codon right after the shell.`
-      : kind==='part'
-      ? `Stop codon at the end (${trailingStop}). Remove it: the construct places its own stop codon at the end of the nanocompartment site.`
-      : `Stop codon at the end (${trailingStop}). Remove it: otherwise the targeting peptide is not attached and the cargo is not encapsulated.`);
+    if(trailingStop) errors.push(stopMessage(trailingStop, kind));
     if(notMultipleOfThree) warnings.push('Length is not a multiple of 3; check the reading frame.');
     if(internalStops.length) warnings.push(`Possible in-frame stop codon at position ${internalStops[0].pos+1} (${internalStops[0].codon}).`);
     if(invalidChars>0) warnings.push(`${invalidChars} invalid character(s) were ignored.`);
@@ -1645,10 +1641,7 @@ function validateProteinLocal(raw, kind){
   if(!res.length) errors.push('No valid amino acid sequence provided.');
   else{
     if(kind==='cargo' && length<30) errors.push(`Sequence too short (${res.length} aa, need at least 10 aa).`);
-    if(trailing) errors.push(`Stop codon at the end (*). Remove it: ` + (kind==='shell'
-      ? 'the construct adds its own stop codon right after the shell.'
-      : kind==='part' ? 'the construct places its own stop codon at the end of the nanocompartment site.'
-      : 'otherwise the targeting peptide is not attached and the cargo is not encapsulated.'));
+    if(trailing) errors.push(stopMessage('*', kind));
     if(internalStops.length) warnings.push(`Stop (*) at residue ${internalStops[0].pos+1}: translation would end there.`);
     if(invalidChars>0) warnings.push(`${invalidChars} invalid character(s) were ignored.`);
   }

@@ -16,6 +16,9 @@ Fassung beschreibt den TATSAECHLICHEN Stand.
 Design-Logik komplett in Python:  Biologik/level0_design/
   - data.py         Libraries + Golden-Gate-Konstanten (Single Source of Truth)
   - sequence.py      DNA-Helfer + Cargo-Validierung (Stopcodon-Erkennung)
+                      (DNA oder Aminosaeuren als Eingabe)
+  - codon.py         Codon-Optimierung fuer S. cerevisiae (eigene Sequenzen, ohne
+                      BsaI/BbsI-Stellen), Rueckuebersetzung von Proteinen
   - design.py        Engine: Level 0/1/2, Slots (NCS/Linker/Marker/TP/eigene
                       Sequenz), Plate-Plan, Order-Liste, GenBank-Export
   - genbank_writer.py GenBank-Flatfile-Schreiber (keine externe Abhaengigkeit)

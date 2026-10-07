@@ -1,14 +1,17 @@
 import json
+import random
+import re
 import subprocess
 import sys
 
 import pytest
 
 from Biologik.level0_design.codon import cai, find_forbidden, optimize_cds, translate
-from Biologik.level0_design.design import attach_adapter, build_genbank, design_construct, make_primer_pair
+from Biologik.level0_design.design import (attach_adapter, build_genbank, codon_optimize_part, design_construct,
+                                           make_primer_pair)
 from Biologik.level0_design.genbank_writer import location_span
 from Biologik.level0_design.parts_db import load_parts
-from Biologik.level0_design.sequence import reverse_complement, validate_cargo
+from Biologik.level0_design.sequence import is_protein, reverse_complement, validate_cargo
 
 
 def test_validate_cargo_rejects_a_trailing_stop_codon():
@@ -891,7 +894,6 @@ def test_codon_optimization_keeps_the_protein_and_removes_every_bsai_and_bbsi_si
     assert translate(result['sequence']) == translate(SITE_CDS) and len(result['sequence']) == len(SITE_CDS)
     assert find_forbidden(result['sequence']) == [] and result['forbiddenAfter'] == []
     assert len(result['forbiddenBefore']) >= 8
-    import re
     assert max(len(m) for m in re.findall(r'A+|C+|G+|T+', result['sequence'])) <= 6
 
 
@@ -929,13 +931,11 @@ def test_codon_optimization_keeps_an_internal_stop_codon_as_entered():
 
 
 def test_no_site_can_appear_across_the_seam_to_the_adapter():
-    from Biologik.level0_design.design import codon_optimize_part
     # every user sequence is optimized against the real flanks of the slot it ends up in: Level 0 adapter, and the
     # neighbour in the Level 1 module (overhang + GC spacer); in the cargo module the part sits as reverse complement
     for module in ('cargo', 'nc'):
         for slot in (1, 2, 3, 4, 5):
             for seed in range(8):
-                import random
                 rng = random.Random(seed)
                 cds = 'ATG' + ''.join(rng.choice(['GAA', 'GAC', 'GGT', 'CTC', 'GAG', 'ACC', 'GTC', 'TTC', 'AAG']) for _ in range(60))
                 result = codon_optimize_part(cds, module, slot)
@@ -944,7 +944,9 @@ def test_no_site_can_appear_across_the_seam_to_the_adapter():
 
 
 def test_every_user_sequence_in_a_full_design_is_site_free_from_level0_to_the_level1_modules():
-    seq = lambda i: 'ATG' + ('GAAGACGGTCTCGAGACCGTCTTC' + 'AAGGAAGACGGTCTC') * i
+    def seq(i):
+        return 'ATG' + ('GAAGACGGTCTCGAGACCGTCTTC' + 'AAGGAAGACGGTCTC') * i
+
     design = _design(
         cargoSeq=_long_cargo()[:90] + 'GGTCTCGAAGACGAGACCGTCTTC' + _long_cargo()[90:],
         cargo_slots={'1': {'kind': 'custom', 'label': 'PartA', 'seq': seq(2)}, '2': {'kind': 'linker', 'id': 'GSSS2'},
@@ -993,7 +995,6 @@ PROTEIN = 'MSKGEELFTGVVPILVELDGDVNGHKFSVSGEGEGDATYGKLTLKFICTTGKLPVPWPTLVTTFGYGVQ
 
 
 def test_dna_and_protein_input_are_told_apart():
-    from Biologik.level0_design.sequence import is_protein
     assert not is_protein('ATGAAATTTGGTCTCGAAGAC') and not is_protein('atg aaa ttt\n ggt ctc') and not is_protein('AUGAAAUUUGGUCUC')
     assert is_protein(PROTEIN) and is_protein('>sp|P42212 GFP\nMSKGEELFTGVV') and is_protein('MKV*')
     assert not is_protein('') and not is_protein('>header only')

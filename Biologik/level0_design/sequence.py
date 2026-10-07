@@ -31,10 +31,15 @@ def clean_seq(sequence: str) -> str:
 AMINO_ACIDS = "ACDEFGHIKLMNPQRSTVWY"
 
 
+def _without_fasta_header(raw: str) -> str:
+    """Grossgeschrieben, ohne FASTA-Kopfzeilen (">name")."""
+    return re.sub(r"^>.*$", "", (raw or "").upper(), flags=re.M)
+
+
 def is_protein(raw: str) -> bool:
     """Aminosaeure statt DNA? Eine DNA besteht (bis auf Leerzeichen/Ziffern) fast nur aus A/T/G/C (auch U/N); ein Protein hat
     nur etwa ein Viertel solche Buchstaben. Ab 90 % A/C/G/T/U/N gilt die Eingabe als DNA. FASTA-Kopfzeilen (">...") zaehlen nicht."""
-    letters = re.sub(r"[^A-Z*]", "", re.sub(r"^>.*$", "", (raw or "").upper(), flags=re.M))
+    letters = re.sub(r"[^A-Z*]", "", _without_fasta_header(raw))
     if not letters:
         return False
     return sum(1 for c in letters if c in "ACGTUN") / len(letters) < 0.9
@@ -42,7 +47,7 @@ def is_protein(raw: str) -> bool:
 
 def clean_protein(raw: str) -> str:
     """Nur die 20 Aminosaeuren (und ein Stern fuer ein Stopcodon) bleiben; FASTA-Kopfzeilen, Leerzeichen und Ziffern fallen weg."""
-    return re.sub(r"[^ACDEFGHIKLMNPQRSTVWY*]", "", re.sub(r"^>.*$", "", (raw or "").upper(), flags=re.M))
+    return re.sub(rf"[^{AMINO_ACIDS}*]", "", _without_fasta_header(raw))
 
 
 def gc_content(sequence: str) -> int:
@@ -116,18 +121,7 @@ def validate_cargo(raw: str, min_bp: int = 30, kind: str = "cargo") -> dict:
         if kind == "cargo" and length < min_bp:
             errors.append(f"Sequence too short ({length} bp, need at least {min_bp} bp).")
         if trailing_stop:
-            if kind == "shell":
-                errors.append(
-                    f"Stop codon at the end ({trailing_stop}). Remove it: the construct adds its own stop codon right after the shell."
-                )
-            elif kind == "part":
-                errors.append(
-                    f"Stop codon at the end ({trailing_stop}). Remove it: the construct places its own stop codon at the end of the nanocompartment site."
-                )
-            else:
-                errors.append(
-                    f"Stop codon at the end ({trailing_stop}). Remove it: otherwise the targeting peptide is not attached and the cargo is not encapsulated."
-                )
+            errors.append(_stop_message(trailing_stop, kind))
         if not_multiple_of_three:
             warnings.append("Length is not a multiple of 3; check the reading frame.")
         if internal_stops:
@@ -162,9 +156,8 @@ def _stop_message(stop: str, kind: str) -> str:
 def _validate_protein(raw: str, min_bp: int, kind: str) -> dict:
     """Wie validate_cargo, fuer eine Aminosaeuresequenz: ``clean`` ist die Aminosaeurefolge, ``length`` die Laenge der DNA nach der
     Rueckuebersetzung. Ein Stern am Ende ist ein Stopcodon (Fehler wie bei DNA), ein Stern mitten drin eine Warnung."""
-    text = re.sub(r"^>.*$", "", (raw or "").upper(), flags=re.M)
     clean = clean_protein(raw)
-    invalid_chars = len(re.sub(r"[ACDEFGHIKLMNPQRSTVWY*\s]", "", text))
+    invalid_chars = len(re.sub(rf"[{AMINO_ACIDS}*\s]", "", _without_fasta_header(raw)))
     trailing_stop = "*" if clean.endswith("*") else None
     residues = clean[:-1] if trailing_stop else clean
     length = 3 * len(residues)
