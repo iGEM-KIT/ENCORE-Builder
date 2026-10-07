@@ -62,8 +62,8 @@ def design_construct(decisions: dict = None):
             cfg["label"] = nc["tp"]
             cfg["bp"] = NOMINAL_BP["TP"]
     nc_slots = resolve_slots(decisions.get("ncSlots"), "nc")
-    if nc.get("custom") and any(cfg["kind"] == "tp" for cfg in cargo_slots.values()):
-        raise ValueError("A custom nanocompartment has no targeting peptide; use your own sequence in that slot.")
+    if not nc.get("tp") and any(cfg["kind"] == "tp" for cfg in cargo_slots.values()):
+        raise ValueError(f"{'A custom' if nc.get('custom') else 'This'} nanocompartment has no targeting peptide; use your own sequence in that slot.")
 
     codon_report, cargo_codon = optimize_user_sequences(cargo, cargo_label, nc, cargo_slots, nc_slots)
     # The cargo sits in pESC (MCS1) on the antisense strand. So the reverse complement is formed right

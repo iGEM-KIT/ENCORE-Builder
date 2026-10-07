@@ -367,6 +367,8 @@
   .orderitem .oi-main{min-width:0;flex:1}
   .orderitem .oi-name{font-weight:600;font-size:13.5px}
   .orderitem .oi-sub{font-size:11.5px;color:var(--muted)}
+  .oi-badge.notbuilt{background:rgba(213,94,0,.12);color:#9a4100}
+  [data-theme="dark"] .oi-badge.notbuilt{background:rgba(240,168,131,.16);color:#f0a883}
   .orderitem .oi-badge{font-family:'JetBrains Mono';font-size:10.5px;font-weight:700;padding:4px 9px;border-radius:6px;white-space:nowrap}
   .orderitem .oi-kind{margin:5px 0 3px}
   .oi-badge.reg{background:var(--card-2);color:var(--teal-deep);border:1px solid var(--line);text-decoration:none}
@@ -624,7 +626,7 @@
             <span class="lab">Shell CDS
               <button class="info" data-info="stop">i</button>
               <span class="hint" id="shellLen">0 bp</span></span>
-            <textarea id="shellSeq" placeholder="Paste the CDS of your nanocompartment shell (DNA, A/T/G/C) or its amino acid sequence; without a stop codon at the end …"></textarea>
+            <textarea id="shellSeq" placeholder="Paste the CDS of your nanocompartment shell (DNA, A/T/G/C) or its amino acid sequence; start and stop codon optional, the builder adds them …"></textarea>
             <div class="seqmeta" id="shellMeta"></div>
             <div id="shellMrna" class="mrna-inline"></div>
           </label>
@@ -652,7 +654,7 @@
         <div class="htext">
           <div class="eyebrow">Step 2</div>
           <h2>Cargo Site<button class="info" data-info="cargo">i</button></h2>
-          <p>Your gene-of-interest CDS (without a stop codon at the end) and the modules around it.</p>
+          <p>Your gene-of-interest CDS (start and stop codon are added by the builder) and the modules around it.</p>
         </div>
       </div>
       <div class="card-body">
@@ -677,7 +679,7 @@
             <span class="lab">Cargo sequence (CDS) · Type 0.3
               <button class="info" data-info="stop">i</button>
               <span class="hint" id="cargoLen">0 bp</span></span>
-            <textarea id="cargoSeq" style="display:none" placeholder="Paste your own cargo CDS (DNA, A/T/G/C) or its amino acid sequence; without a stop codon at the end …"></textarea>
+            <textarea id="cargoSeq" style="display:none" placeholder="Paste your own cargo CDS (DNA, A/T/G/C) or its amino acid sequence; start and stop codon optional, the builder adds them …"></textarea>
             <div class="seqmeta" id="cargoMeta"></div>
             <div id="cargoMrna" class="mrna-inline"></div>
           </label>
@@ -1176,9 +1178,9 @@ const INFO = {
   cargo: { title:'Cargo / gene of interest', img:'Diagram: cargo CDS in reading frame',
     body:`<p>The cargo is the protein that should end up inside the compartment, e.g. an enzyme or a reporter like GFP.</p>
           <p>You provide the coding sequence (CDS). It is directed into the compartment via the targeting peptide.</p>` },
-  stop: { title:'Why no stop codon?', img:'Diagram: TP-linker-cargo reading frame',
+  stop: { title:'Start and stop codon', img:'Diagram: TP-linker-cargo reading frame',
     body:`<p>The cargo is fused with the linker and targeting peptide into <b>one continuous protein</b>.</p>
-          <p>A stop codon (TAA, TAG, or TGA) at the end would terminate translation early; the TP would no longer be attached and the cargo would not be encapsulated.</p>` },
+          <p>You do not have to add a start or stop codon: the builder puts an <b>ATG</b> in front of the first coding part of each ORF and a <b>stop codon</b> behind the last one in the outer slot (Type 0.5 of the NC module, Type 0.1 of the cargo module). Behind the shell or the cargo the stop stays in the <b>NCS with stop codon</b> (Type 0.4 or 0.2). A stop codon you enter at the end is removed; an ATG you enter is kept (not doubled).</p>` },
   commec: { title:'Biosecurity screening (COMMEC)', img:'Diagram: your sequence → COMMEC → curated biorisk database',
     body:`<p><b>COMMEC</b> (<i>Common Mechanism</i>, from IBBIS, the International Biosecurity and Biosafety Initiative for Science) is an open-source tool that checks DNA for similarity to known biosecurity concerns. It is the same kind of check DNA synthesis providers run before they ship an order.</p>
           <p><b>What is screened:</b> only sequences you typed or pasted yourself (cargo, your own shell, your own module parts). Toolkit parts are not screened.</p>
@@ -1326,7 +1328,7 @@ function initNcDropdown(){
   const sel=$('#ncSelect');
   LIB.nanocompartments.forEach(nc=>{
     const o=document.createElement('option');
-    o.value=nc.id; o.textContent=`${nc.label} · T=${nc.T}, ⌀ ${nc.dia}`;
+    o.value=nc.id; o.textContent=`${nc.label} · ${nc.T ? `T=${nc.T}, ` : ''}⌀ ${nc.dia}${statusHint(nc.status)}`;
     sel.appendChild(o);
   });
   const co=document.createElement('option');
@@ -1408,15 +1410,14 @@ function renderNcMeta(){
   const n=state.nc; if(!n){ $('#ncMeta').innerHTML=''; return; }
   if(n.custom){
     $('#ncMeta').innerHTML=`
-    <div class="nc-tag"><span class="sw" style="background:${cvar('t1')}"></span>Targeting peptide <b>${n.tp}</b></div>
     <div class="nc-tag"><span class="sw" style="background:${cvar('shell')}"></span>Your shell CDS <b>${esc(n.shell)}</b> · ${n.shellBp} bp</div>
     <div class="nc-tag">New part: needs domestication and synthesis</div>`;
     return;
   }
   $('#ncMeta').innerHTML=`
-    <div class="nc-tag"><span class="sw" style="background:${cvar('t1')}"></span>Targeting peptide <b>${n.tp}</b></div>
+    ${n.tp ? `<div class="nc-tag"><span class="sw" style="background:${cvar('t1')}"></span>Targeting peptide <b>${n.tp}</b></div>` : ''}
     <div class="nc-tag"><span class="sw" style="background:${cvar('shell')}"></span>Shell CDS <b>${n.shell}</b> · ${n.shellBp} bp</div>
-    <div class="nc-tag">Triangulation number <b>T=${n.T}</b></div>
+    ${n.T ? `<div class="nc-tag">Triangulation number <b>T=${n.T}</b></div>` : ''}
     <div class="nc-tag">Diameter <b>${n.dia}</b></div>`;
 }
 
@@ -1426,7 +1427,7 @@ const CUSTOM_CARGO='custom';
 function initCargoDropdown(){
   const sel=$('#cargoSelect');
   LIB.cargoPresets.forEach(p=>{
-    const o=document.createElement('option'); o.value=p.id; o.textContent=p.label; sel.appendChild(o);
+    const o=document.createElement('option'); o.value=p.id; o.textContent=p.label + statusHint(p.status); sel.appendChild(o);
   });
   const co=document.createElement('option'); co.value=CUSTOM_CARGO; co.textContent='Use your own sequence …'; sel.appendChild(co);
   sel.addEventListener('change', ()=>setCargoChoice(sel.value));
@@ -1461,42 +1462,41 @@ function handleCargoInput(){
    Biologik/level0_design/sequence.py, so the local preview and the server
    answer can be rendered by one function. The server stays the authority;    scheduleServerCargoCheck() overwrites this result as soon as it arrives. */
 /* Same wording as _stop_message() in sequence.py. */
-const stopMessage = (stop, kind) => `Stop codon at the end (${stop}). Remove it: ` + (kind==='shell'
-  ? 'the construct adds its own stop codon right after the shell.'
-  : kind==='part' ? 'the construct places its own stop codon at the end of the nanocompartment site.'
-  : 'otherwise the targeting peptide is not attached and the cargo is not encapsulated.');
+const stopMessage = stop => `Stop codon at the end (${stop}) was removed: the builder adds start and stop codon itself where the ORF begins and ends.`;
 function validateCargoLocal(raw, kind='cargo'){
   if(isProteinText(raw)) return validateProteinLocal(raw, kind);
-  const seq=clean(raw), length=seq.length;
+  let seq=clean(raw);
   const invalidChars=(raw||'').toUpperCase().replace(/[ATGC\s]/g,'').length;
-  const notMultipleOfThree = length%3!==0;
   const trailingStop = endsWithStop(seq);
-  const internalStops = length>=3 ? findInternalStops(seq.slice(0,length-3)) : [];
+  if(trailingStop) seq=seq.slice(0,-3);          // the builder adds the stop codon itself
+  const length=seq.length;
+  const notMultipleOfThree = length%3!==0;
+  const internalStops = length>=3 ? findInternalStops(seq) : [];
   const errors=[], warnings=[];
   if(length===0){ errors.push('No valid A/T/G/C sequence provided.'); }
   else{
     if(kind==='cargo' && length<30) errors.push(`Sequence too short (${length} bp, need at least 30 bp).`);
-    if(trailingStop) errors.push(stopMessage(trailingStop, kind));
     if(notMultipleOfThree) warnings.push('Length is not a multiple of 3; check the reading frame.');
     if(internalStops.length) warnings.push(`Possible in-frame stop codon at position ${internalStops[0].pos+1} (${internalStops[0].codon}).`);
     if(invalidChars>0) warnings.push(`${invalidChars} invalid character(s) were ignored.`);
   }
+  if(trailingStop) warnings.push(stopMessage(trailingStop));
   return { clean:seq, length, aa:Math.floor(length/3), gc:gc(seq), invalidChars,
            notMultipleOfThree, trailingStop, internalStops, ok:errors.length===0, errors, warnings };
 }
 
 function validateProteinLocal(raw, kind){
-  const seq=cleanProtein(raw), trailing=seq.endsWith('*'), res=trailing?seq.slice(0,-1):seq, length=3*res.length;
+  const full=cleanProtein(raw), trailing=full.endsWith('*'), res=trailing?full.slice(0,-1):full, seq=res, length=3*res.length;
   const invalidChars=(raw||'').toUpperCase().replace(/^>.*$/gm,'').replace(/[ACDEFGHIKLMNPQRSTVWY*\s]/g,'').length;
   const internalStops=[]; res.split('').forEach((c,i)=>{ if(c==='*') internalStops.push({pos:i,codon:'*'}); });
   const errors=[], warnings=[];
   if(!res.length) errors.push('No valid amino acid sequence provided.');
   else{
     if(kind==='cargo' && length<30) errors.push(`Sequence too short (${res.length} aa, need at least 10 aa).`);
-    if(trailing) errors.push(stopMessage('*', kind));
     if(internalStops.length) warnings.push(`Stop (*) at residue ${internalStops[0].pos+1}: translation would end there.`);
     if(invalidChars>0) warnings.push(`${invalidChars} invalid character(s) were ignored.`);
   }
+  if(trailing) warnings.push(stopMessage('*'));
   return { clean:seq, length, aa:res.length, gc:null, invalidChars, notMultipleOfThree:false, trailingStop:trailing?'*':null,
            internalStops, ok:errors.length===0, errors, warnings, isProtein:true };
 }
@@ -1642,7 +1642,7 @@ function enforceSlotRules(mod){
     const noNcs = inner && blocksNcs(mod,n), needLnk = inner && needsLinker(mod,n), outer=LINKER_FOR[n];
     const afterStop = n===far && sl[near].kind==='ncsstop';
     const otherTp = SLOT_NUMBERS.some(m=>m!==n && sl[m].kind==='tp');
-    const noTpHere = !!(state.nc && state.nc.custom);                     // an own shell brings no targeting peptide; use "Use your own sequence"
+    const noTpHere = !!(state.nc && !state.nc.tp);                         // an own shell or the vault brings no targeting peptide; use "Use your own sequence"
     [...sel.options].forEach(o=>{
       const v=o.value;
       let off=false;
@@ -1687,15 +1687,19 @@ const availableAt = (item, mod, n) => !item.slots || (item.slots[mod]||[]).inclu
 const linkersAt = (mod, n) => LIB.linkers.filter(l=>availableAt(l,mod,n));
 function firstLinker(mod, n){ const l=linkersAt(mod,n)[0]; return l ? {kind:'linker', id:l.id} : {kind:'custom', label:'', seqRaw:'', valid:false}; }
 function ncsRoles(mod, n){ return LIB.ncs ? ((LIB.ncs[mod]||{})[n] || []) : ['plain','stop']; }
+const STATUS_HINT = { not_built:' (not built)', no_stock:' (not in stock)' };
+const statusHint = s => STATUS_HINT[s] || '';
 function slotOptionsHtml(mod, n){
   const roles = ncsRoles(mod, n);
+  const ncsSt = role => statusHint((((LIB.ncsStatus||{})[mod]||{})[n]||{})[role]);
+  const tpSt = statusHint(((LIB.targetingPeptides||[]).find(t=>availableAt(t,mod,n))||{}).status?.[mod]?.[n]);
   const tpHere = mod==='cargo' && (LIB.targetingPeptides && LIB.targetingPeptides.length ? LIB.targetingPeptides.some(t=>availableAt(t,mod,n)) : true);
   const group = (label, items, kind) => { const list = items.filter(x=>availableAt(x,mod,n));
-    return list.length ? `<optgroup label="${label}">${list.map(m=>`<option value="${kind}:${m.id}">${m.label}: ${m.aa} aa</option>`).join('')}</optgroup>` : ''; };
+    return list.length ? `<optgroup label="${label}">${list.map(m=>`<option value="${kind}:${m.id}">${m.label}: ${m.aa} aa${statusHint(m.status && m.status[mod] && m.status[mod][n])}</option>`).join('')}</optgroup>` : ''; };
   return `<option value="none" disabled selected>Please select</option>`
-    + (roles.includes('plain') ? `<option value="ncs">NCS (spacer)</option>` : '')
-    + (roles.includes('stop') ? `<option value="ncsstop">NCS with stop codon</option>` : '')
-    + (tpHere ? `<option value="tp">Targeting peptide</option>` : '')
+    + (roles.includes('plain') ? `<option value="ncs">NCS (spacer)${ncsSt('plain')}</option>` : '')
+    + (roles.includes('stop') ? `<option value="ncsstop">NCS with stop codon${ncsSt('stop')}</option>` : '')
+    + (tpHere ? `<option value="tp">Targeting peptide${tpSt}</option>` : '')
     + group('Linker', LIB.linkers, 'linker')
     + group('Surface display', LIB.surfaceMarkers, 'marker')
     + group('Intein', LIB.inteins||[], 'intein')
@@ -1709,7 +1713,7 @@ function slotCardHtml(mod,n){
     <div class="slothint" style="display:none"></div>
     <div class="slotcustom" style="display:none">
       <input type="text" class="slotlabel" placeholder="Name (optional)" maxlength="60">
-      <textarea class="slotseq" placeholder="CDS of your part (DNA, A/T/G/C) or its amino acid sequence; without a stop codon at the end …"></textarea>
+      <textarea class="slotseq" placeholder="CDS of your part (DNA, A/T/G/C) or its amino acid sequence; start and stop codon optional, the builder adds them …"></textarea>
       <div class="seqmeta slotmeta"></div>
       <div class="slotmrna mrna-inline"></div>
       <div class="slotnotes"></div>
@@ -2657,9 +2661,11 @@ function orderRow(name, sub, status, seqHtml, construct){
   const badge = status==='oligo' ? '<span class="oi-badge synth">oligo pair</span>'
     : status==='primer' ? '<span class="oi-badge pcr">primer pair</span>'
     : '<span class="oi-badge assemble">DNA</span>';
+  const built = construct && !construct.isUser && STATUS_HINT[construct.plasmidStatus]
+    ? `<span class="oi-badge notbuilt" title="${construct.plasmidStatus==='not_built' ? 'This plasmid is not built and not in the lab system yet' : 'No glycerol stock of this plasmid'}">${STATUS_HINT[construct.plasmidStatus].trim().slice(1,-1)}</span>` : '';
   const sw = status==='oligo' ? 't3' : status==='primer' ? 'shell' : 'promo';
   return `<div class="orderitem"><span class="oi-sw" style="background:${cvar(sw)}"></span>
-    <div class="oi-main"><div class="oi-name">${esc(name)}</div><div class="oi-sub">${esc(sub)}</div><div class="oi-kind">${badge}</div>${seqHtml||''}</div>${construct && !construct.isUser ? registryLinkHtml(construct) : ''}</div>`;
+    <div class="oi-main"><div class="oi-name">${esc(name)}</div><div class="oi-sub">${esc(sub)}</div><div class="oi-kind">${badge} ${built}</div>${seqHtml||''}</div>${construct && !construct.isUser ? registryLinkHtml(construct) : ''}</div>`;
 }
 const orderName = c => c.stopCodon ? `${c.label}*` : c.label;     // NCS spacers that carry the ORF's stop codon are marked with * (as in the selection)
 const orderSite = c => c.module==='cargo_site' ? 'cargo site' : 'nanocompartment site';

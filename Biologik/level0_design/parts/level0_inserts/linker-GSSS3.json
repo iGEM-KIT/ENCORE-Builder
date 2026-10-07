@@ -1,0 +1,81 @@
+{
+  "id": "linker-GSSS3",
+  "kind": "level0_insert",
+  "category": "linker",
+  "part": "GSSS3",
+  "part_label": "3×(GSSS)",
+  "sequence": "GGTTCCTCTTCTGGTTCCTCTTCTGGTTCCTCTTCT",
+  "sequence_status": "real",
+  "length_bp": 36,
+  "checks": {
+    "bsai_sites": [],
+    "bbsi_sites": []
+  },
+  "organism": null,
+  "source": "Level 0 plasmid '0.2L3' (Lvl0.2_b_034) from the user-supplied GenBank file 'documents from Level 0'; only the insert was taken; the type overhangs and the frame spacer of the plasmid were cut off. Stock: glycerol stock column of 'Level 0 constructs.xlsx'.",
+  "notes": null,
+  "used_by": [],
+  "plasmids": [
+    {
+      "id": "Lvl0.2_b_034",
+      "label": "0.2L3",
+      "plasmid_name": "0.2L3",
+      "type_slot": 2,
+      "site": "nc_site",
+      "level2_overhang": null,
+      "stored_orientation": "sense",
+      "frame_spacer_in_plasmid": {
+        "sequence": "AT",
+        "side": "5' side of the sense strand"
+      },
+      "on_stock": true,
+      "registry_url": null,
+      "notes": null
+    },
+    {
+      "id": "Lvl0.2_b_035",
+      "label": "0.2L3rc",
+      "plasmid_name": "0.2L3rc",
+      "type_slot": 2,
+      "site": "cargo_site",
+      "level2_overhang": null,
+      "stored_orientation": "antisense",
+      "frame_spacer_in_plasmid": {
+        "sequence": "AT",
+        "side": "right end of the top strand (5' side of the sense strand)"
+      },
+      "on_stock": true,
+      "registry_url": null,
+      "notes": null
+    },
+    {
+      "id": "Lvl0.4_b_066",
+      "label": "0.4 L3rc",
+      "plasmid_name": "0.4L3rc",
+      "type_slot": 4,
+      "site": "cargo_site",
+      "level2_overhang": null,
+      "stored_orientation": "antisense",
+      "frame_spacer_in_plasmid": {
+        "sequence": "AT",
+        "side": "right end of the top strand (5' side of the sense strand)"
+      },
+      "on_stock": false,
+      "registry_url": null,
+      "notes": null
+    },
+    {
+      "id": null,
+      "label": "0.4 L3",
+      "plasmid_name": "0.4 L3",
+      "type_slot": 4,
+      "site": "nc_site",
+      "level2_overhang": null,
+      "stored_orientation": "sense",
+      "frame_spacer_in_plasmid": null,
+      "on_stock": false,
+      "registry_url": null,
+      "notes": "No internal id: this plasmid is not built and not in the lab system. Listed in \"Level 0 constructs.xlsx\" for completeness only."
+    }
+  ]
+}

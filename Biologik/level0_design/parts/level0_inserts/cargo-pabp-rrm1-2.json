@@ -1,0 +1,37 @@
+{
+  "id": "cargo-pabp-rrm1-2",
+  "kind": "level0_insert",
+  "category": "cargo",
+  "part": "pabp-rrm1-2",
+  "part_label": "PABP RRM1-2",
+  "sequence": "GCAGATATAACCGACAAGACGGCCGAGCAGCTAGAGAATCTTAACATACAGGACGACCAGAAACAGGCCGCCACGGGATCCGAGAGTCAGAGTGTAGAGAACTCCTCTGCGTCCTTATACGTAGGGGACTTAGAACCGAGTGTCTCGGAAGCTCACCTTTACGATATCTTCTCCCCCATCGGATCAGTATCTAGTATAAGAGTCTGCAGGGACGCCATCACGAAAACAAGCTTGGGATACGCCTACGTGAACTTTAATGACCACGAGGCTGGTCGTAAGGCGATTGAGCAGCTAAATTATACTCCCATAAAAGGAAGATTGTGCAGGATCATGTGGTCACAGAGGGACCCAAGCCTTAGAAAGAAGGGAAGTGGTAACATATTCATAAAGAACCTACATCCAGACATTGACAACAAAGCTCTATATGACACTTTCTCAGTCTTTGGCGACATACTATCGTCAAAGATAGCAACCGACGAGAACGGAAAGAGTAAAGGATTTGGCTTCGTGCACTTCGAGGAAGAGGGAGCTGCTAAAGAGGCTATTGACGCCCTGAATGGAATGCTTCTAAACGGCCAAGAGATTTATGTAGCGCCACATCTTTCA",
+  "sequence_status": "real",
+  "length_bp": 606,
+  "checks": {
+    "length_multiple_of_3": true,
+    "bsai_sites": [],
+    "bbsi_sites": []
+  },
+  "organism": null,
+  "source": "Level 0 plasmid '0.3PABP_RRM1-2' (Lvl0.3_c_060) from the user-supplied GenBank file 'documents from Level 0'; only the insert was taken; the type overhangs and the frame spacer of the plasmid were cut off. Stock: glycerol stock column of 'Level 0 constructs.xlsx'.",
+  "notes": null,
+  "used_by": [],
+  "plasmids": [
+    {
+      "id": "Lvl0.3_c_060",
+      "label": "0.3 PABP RRM1-2",
+      "plasmid_name": "0.3PABP_RRM1-2",
+      "type_slot": 3,
+      "site": "cargo_site",
+      "level2_overhang": null,
+      "stored_orientation": "antisense",
+      "frame_spacer_in_plasmid": {
+        "sequence": "AA",
+        "side": "right end of the top strand (5' side of the sense strand)"
+      },
+      "on_stock": true,
+      "registry_url": null,
+      "notes": null
+    }
+  ]
+}

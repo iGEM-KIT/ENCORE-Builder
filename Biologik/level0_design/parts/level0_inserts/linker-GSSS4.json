@@ -1,0 +1,75 @@
+{
+  "id": "linker-GSSS4",
+  "kind": "level0_insert",
+  "category": "linker",
+  "part": "GSSS4",
+  "part_label": "4×(GSSS)",
+  "sequence": "GGTTCCTCTTCTGGTTCCTCTTCTGGTTCCTCTTCTGGTTCCTCTTCT",
+  "sequence_status": "real",
+  "length_bp": 48,
+  "checks": {
+    "bsai_sites": [],
+    "bbsi_sites": []
+  },
+  "organism": null,
+  "source": "Level 0 plasmid '0.2L4' (Lvl0.2_b_067) from the user-supplied GenBank file 'documents from Level 0'; only the insert was taken; the type overhangs and the frame spacer of the plasmid were cut off (file 0.2L4.gb). Stock: glycerol stock column of 'Level 0 constructs.xlsx'.",
+  "notes": null,
+  "used_by": [],
+  "plasmids": [
+    {
+      "id": "Lvl0.2_b_067",
+      "label": "0.2 L4",
+      "plasmid_name": "0.2L4",
+      "type_slot": 2,
+      "site": "nc_site",
+      "level2_overhang": null,
+      "stored_orientation": "sense",
+      "frame_spacer_in_plasmid": {
+        "sequence": "AT",
+        "side": "5' side of the sense strand"
+      },
+      "on_stock": true,
+      "registry_url": null,
+      "notes": null
+    },
+    {
+      "id": null,
+      "label": "0.4 L4",
+      "plasmid_name": "0.4 L4",
+      "type_slot": 4,
+      "site": "nc_site",
+      "level2_overhang": null,
+      "stored_orientation": "sense",
+      "frame_spacer_in_plasmid": null,
+      "on_stock": false,
+      "registry_url": null,
+      "notes": "No internal id: this plasmid is not built and not in the lab system. Listed in \"Level 0 constructs.xlsx\" for completeness only."
+    },
+    {
+      "id": null,
+      "label": "0.2 4×(GSSS) (Cargo)",
+      "plasmid_name": "0.2 4×(GSSS) (Cargo)",
+      "type_slot": 2,
+      "site": "cargo_site",
+      "level2_overhang": null,
+      "stored_orientation": "antisense",
+      "frame_spacer_in_plasmid": null,
+      "on_stock": false,
+      "registry_url": null,
+      "notes": "No internal id: this plasmid is not built and not in the lab system. Added so that every part exists at both sites and both slots of its pair (0.2/0.4, 0.1/0.5)."
+    },
+    {
+      "id": null,
+      "label": "0.4 4×(GSSS) (Cargo)",
+      "plasmid_name": "0.4 4×(GSSS) (Cargo)",
+      "type_slot": 4,
+      "site": "cargo_site",
+      "level2_overhang": null,
+      "stored_orientation": "antisense",
+      "frame_spacer_in_plasmid": null,
+      "on_stock": false,
+      "registry_url": null,
+      "notes": "No internal id: this plasmid is not built and not in the lab system. Added so that every part exists at both sites and both slots of its pair (0.2/0.4, 0.1/0.5)."
+    }
+  ]
+}

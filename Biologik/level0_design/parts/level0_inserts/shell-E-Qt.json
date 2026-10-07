@@ -1,0 +1,37 @@
+{
+  "id": "shell-E-Qt",
+  "kind": "level0_insert",
+  "category": "shell",
+  "part": "E-Qt",
+  "part_label": "E-Qt",
+  "sequence": "AATAAGTCACAGCTTTATCCTGACTCGCCCTTAACGGACCAGGACTTCAACCAGCTAGACCAGACTGTCATAGAGGCCGCGAGGAGACAGCTGGTTGGACGTAGGTTCATAGAGCTATACGGGCCACTTGGACGTGGGATGCAGTCGGTGTTCAATGACATCTTCATGGAGTCACACGAGGCGAAAATGGATTTCCAGGGATCTTTCGACACTGAGGTGGAGAGCTCACGTAGGGTAAATTACACTATACCTATGCTGTACAAGGACTTCGTGCTTTATTGGCGTGACCTTGAGCAGTCAAAGGCCTTGGACATCCCGATTGACTTCTCGGTAGCGGCAAACGCTGCACGTGACGTTGCATTTCTTGAGGACCAGATGATTTTCCACGGGAGTAAAGAGTTCGACATTCCGGGTCTGATGAATGTCAAAGGAAGGTTAACACACCTGATAGGAAATTGGTATGAGTCAGGAAACGCCTTTCAGGACATCGTAGAGGCACGTAACAAGTTATTAGAGATGAACCACAACGGACCCTATGCTTTAGTGTTGTCTCCGGAGCTATATTCACTATTGCACAGAGTACATAAAGACACCAATGTGTTAGAGATAGAGCACGTGAGGGAGTTAATAACGGCAGGAGTGTTTCAGTCACCAGTGCTAAAGGGAAAGTCGGGCGTGATCGTTAACACTGGGCGTAACAACCTTGACTTGGCAATTAGCGAGGACTTCGAGACTGCCTACTTGGGAGAAGAGGGGATGAACCACCCCTTCCGTGTTTACGAGACTGTGGTCTTAAGGATAAAGCGTCCTGCCGCTATCTGTACCCTTATAGATCCCGAGGAG",
+  "sequence_status": "real",
+  "length_bp": 843,
+  "checks": {
+    "length_multiple_of_3": true,
+    "bsai_sites": [],
+    "bbsi_sites": []
+  },
+  "organism": null,
+  "source": "Level 0 plasmid '0.3Enc_Qt' (Lvl0.3_a_017) from the user-supplied GenBank file 'documents from Level 0'; only the insert was taken; the type overhangs and the frame spacer of the plasmid were cut off. Stock: glycerol stock column of 'Level 0 constructs.xlsx'.",
+  "notes": null,
+  "used_by": [],
+  "plasmids": [
+    {
+      "id": "Lvl0.3_a_017",
+      "label": "0.3E-Qt",
+      "plasmid_name": "0.3Enc_Qt",
+      "type_slot": 3,
+      "site": "nc_site",
+      "level2_overhang": null,
+      "stored_orientation": "sense",
+      "frame_spacer_in_plasmid": {
+        "sequence": "TA",
+        "side": "5' side of the sense strand"
+      },
+      "on_stock": true,
+      "registry_url": null,
+      "notes": null
+    }
+  ]
+}

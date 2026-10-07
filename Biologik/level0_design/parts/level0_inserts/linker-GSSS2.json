@@ -1,0 +1,78 @@
+{
+  "id": "linker-GSSS2",
+  "kind": "level0_insert",
+  "category": "linker",
+  "part": "GSSS2",
+  "part_label": "2×(GSSS)",
+  "sequence": "GGTTCCTCTTCTGGTTCCTCTTCT",
+  "sequence_status": "real",
+  "length_bp": 24,
+  "checks": {
+    "bsai_sites": [],
+    "bbsi_sites": []
+  },
+  "organism": null,
+  "source": "Level 0 plasmid '0.2L2' (Lvl0.2_b_032) from the user-supplied GenBank file 'documents from Level 0'; only the insert was taken; the type overhangs and the frame spacer of the plasmid were cut off. Stock: glycerol stock column of 'Level 0 constructs.xlsx'.",
+  "notes": null,
+  "used_by": [],
+  "plasmids": [
+    {
+      "id": "Lvl0.2_b_032",
+      "label": "0.2L2",
+      "plasmid_name": "0.2L2",
+      "type_slot": 2,
+      "site": "nc_site",
+      "level2_overhang": null,
+      "stored_orientation": "sense",
+      "frame_spacer_in_plasmid": {
+        "sequence": "AT",
+        "side": "5' side of the sense strand"
+      },
+      "on_stock": true,
+      "registry_url": null,
+      "notes": null
+    },
+    {
+      "id": "Lvl0.2_b_033",
+      "label": "0.2L2rc",
+      "plasmid_name": "0.2L2rc",
+      "type_slot": 2,
+      "site": "cargo_site",
+      "level2_overhang": null,
+      "stored_orientation": "antisense",
+      "frame_spacer_in_plasmid": {
+        "sequence": "AT",
+        "side": "right end of the top strand (5' side of the sense strand)"
+      },
+      "on_stock": true,
+      "registry_url": null,
+      "notes": null
+    },
+    {
+      "id": null,
+      "label": "0.4 L2",
+      "plasmid_name": "0.4 L2",
+      "type_slot": 4,
+      "site": "nc_site",
+      "level2_overhang": null,
+      "stored_orientation": "sense",
+      "frame_spacer_in_plasmid": null,
+      "on_stock": false,
+      "registry_url": null,
+      "notes": "No internal id: this plasmid is not built and not in the lab system. Listed in \"Level 0 constructs.xlsx\" for completeness only."
+    },
+    {
+      "id": null,
+      "label": "0.4L2",
+      "plasmid_name": "0.4L2",
+      "type_slot": 4,
+      "site": "cargo_site",
+      "level2_overhang": null,
+      "stored_orientation": "antisense",
+      "frame_spacer_in_plasmid": null,
+      "on_stock": false,
+      "registry_url": null,
+      "notes": "No internal id: this plasmid is not built and not in the lab system. Listed in \"Level 0 constructs.xlsx\" for completeness only."
+    }
+  ]
+}

@@ -10,7 +10,7 @@ from .cloning import clone_into_level0_backbone
 from .data import NOMINAL_BP, STOP_CODONS
 from .genbank_writer import format_genbank_record, level0_record_name, location_span, make_feature as _feat
 from .oligos import design_level0_oligos
-from .parts_db import find_inserts, find_library_cargo, find_real_sequence, load_parts
+from .parts_db import plasmid_status, bare_cds, find_inserts, find_library_cargo, find_real_sequence, load_parts
 from .primers import MIN_PCR_INSERT_BP, design_level0_primers, pcr_product_genbank
 from .sequence import reverse_complement
 from .user_codons import codon_note
@@ -48,8 +48,7 @@ def resolve_insert(category: str, part: str, site: str, slot: int, seed: str, le
     exact = find_inserts(category, part, site, slot, **extra)
     if exact:
         return exact[0]["sequence"], True, exact[0]
-    other = (find_inserts(category, part, site, **extra) or find_inserts(category, part, **extra)
-             or (find_inserts(category, part, site) or find_inserts(category, part) if "variant" not in extra else []))
+    other = find_inserts(category, part, site, **extra) or find_inserts(category, part, **extra)
     if other:
         return other[0]["sequence"], True, None
     return placeholder_seq(seed, length), False, None
@@ -81,7 +80,7 @@ def _toolkit_part(cfg: dict, nc: dict, site: str, n: int) -> Part:
     if kind == "custom":
         return Part(cfg["label"], cfg["seq"], True, True, "your own part", None)
     if kind == "tp":
-        found = resolve_insert("tp", nc["tp"], site, n, "TP" + nc["tp"], NOMINAL_BP["TP"], variant="c_term" if n == 1 else "n_term")
+        found = resolve_insert("tp", nc["tp"], site, n, "TP" + nc["tp"], NOMINAL_BP["TP"])
         return Part(nc["tp"], found[0], found[1], False, "targeting peptide (toolkit part)", found[2])
     if kind == "linker":
         found = resolve_insert("linker", cfg["id"], site, n, "LINK" + cfg["id"], cfg["bp"])
@@ -110,6 +109,27 @@ def _middle_parts(nc: dict, cargo_label: str, cargo_antisense: str) -> tuple:
     cargo = Part(cargo_label, None, True, preset is None, "cargo gene of interest" if preset is None else "cargo (toolkit part)",
                  preset)
     return shell, cargo
+
+
+def _orf_flags(slots: dict, module: str) -> dict:
+    """{slot: (start, stop)} for the coding parts of a module: the first coding part in reading direction gets the start codon (ATG),
+    the last one a stop codon, unless an NCS with stop codon provides the stop. NCS spacers get neither. The central part (Type 0.3)
+    never gets a stop codon: behind it the stop stays at Type 0.4 (NC module) / Type 0.2 (cargo module), the "NCS with stop codon".
+    Reading direction: NC module Type 0.1 -> 0.5, cargo module (antisense) Type 0.5 -> 0.1; the central part (Type 0.3) is always coding."""
+    order = (1, 2, 3, 4, 5) if module == "nc" else (5, 4, 3, 2, 1)
+    coding = [n for n in order if n == 3 or slots[n]["kind"] not in ("ncs", "ncsstop")]
+    has_stop = any(cfg["kind"] == "ncsstop" for cfg in slots.values())
+    return {n: (n == coding[0], n == coding[-1] and n != 3 and not has_stop) for n in coding}
+
+
+def _add_start_stop(seq: str, start: bool, stop: bool, is_user: bool) -> str:
+    """Start codon in front and stop codon behind a sense CDS. A toolkit part is stored bare, so it always gets them; an own
+    sequence may already carry an ATG or a stop codon, then nothing is doubled."""
+    if start and not (is_user and seq.startswith("ATG")):
+        seq = "ATG" + seq
+    if stop and not (is_user and seq[-3:] in STOP_CODONS):
+        seq += "TAA"
+    return seq
 
 
 def _mark_stop(built: dict, seq: str, module: str) -> None:
@@ -167,15 +187,21 @@ def _definition(label: str, adapter_id: str, antisense: bool, is_real: bool) -> 
     return text if is_real else text + " PLACEHOLDER insert: the real sequence is not in the parts database yet."
 
 
-def _build_construct(part: Part, module: str, n: int, codon: dict | None, backbone: dict | None, cargo_antisense: str) -> tuple:
+def _build_construct(part: Part, module: str, n: int, codon: dict | None, backbone: dict | None, cargo_antisense: str,
+                     start: bool = False, stop: bool = False) -> tuple:
     """The Level 0 construct of Type 0.`n` of module `module` and the BsaI fragment of this part for Level 1.
-    Cargo module parts sit on the antisense strand and are inserted as a reverse complement (the cargo is already
-    reverse-complemented); the cargo site is displayed rotated by 180 degrees so that the cargo reads in its own
+    Start and stop codon are added here per slot (`start`/`stop`, see `_orf_flags`). Cargo module parts sit on the antisense
+    strand and are inserted as a reverse complement; the cargo site is displayed rotated by 180 degrees so that the cargo reads in its own
     reading direction (5' left -> 3' right)."""
     antisense = module == "cargo"
-    seq = part.seq
+    sense = part.seq
+    if antisense and n == 3:
+        sense = reverse_complement(cargo_antisense)
+        if not part.is_user:
+            sense = bare_cds(sense)  # a library cargo entered with its ATG / stop codon: the start and stop are added below
+    seq = _add_start_stop(sense, start, stop, part.is_user)
     if antisense:
-        seq = cargo_antisense if n == 3 else reverse_complement(seq)
+        seq = reverse_complement(seq)
     adapter_id = adapter_id_for(module, n)
     built = attach_adapter(adapter_id, seq)  # top strand of the Level 0 plasmid, 5' left -> 3' right
     built["stops"] = []
@@ -207,6 +233,8 @@ def _build_construct(part: Part, module: str, n: int, codon: dict | None, backbo
         "primers": primers, "oligos": oligos,
         # link to the part in the iGEM Registry (parts database field `registry_url`); None until it is filled in, and for own parts
         "registryUrl": None if part.is_user or not part.source else part.source.get("registry_url"),
+        # state of the Level 0 plasmid of a toolkit part: "stock", "no_stock" or "not_built" (None for your own sequences)
+        "plasmidStatus": None if part.is_user else plasmid_status(part.source),
         "codon": codon if part.is_user else None,
         "stopCodon": "stop codon" in part.what, "stopLocation": shown["stops"][0]["location"] if shown["stops"] else None,
         "genbank": format_genbank_record(record_name, shown["sequence"], features, False,
@@ -233,10 +261,11 @@ def build_level0_constructs(nc: dict, cargo_label: str, cargo_antisense: str, ca
     constructs = []
     for module, slots, middle in (("cargo", cargo_slots, cargo), ("nc", nc_slots, shell)):
         site = "cargo_site" if module == "cargo" else "nc_site"
+        flags = _orf_flags(slots, module)
         for n in (1, 2, 3, 4, 5):
             part = middle if n == 3 else _toolkit_part(slots[n], nc, site, n)
             codon = (cargo_codon if module == "cargo" else nc.get("codon")) if n == 3 else slots[n].get("codon")
-            construct, fragment = _build_construct(part, module, n, codon, backbone, cargo_antisense)
+            construct, fragment = _build_construct(part, module, n, codon, backbone, cargo_antisense, *flags.get(n, (False, False)))
             constructs.append(construct)
             if fragments is not None:
                 fragments.append(fragment)

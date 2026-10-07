@@ -1,0 +1,37 @@
+{
+  "id": "cargo-lgb4",
+  "kind": "level0_insert",
+  "category": "cargo",
+  "part": "lgb4",
+  "part_label": "LGB4",
+  "sequence": "GGTGCTTTCACGGAAAAGCAAGAGGCTCTAGTTAGTTCTTCATTTGAGGCTTTCAAGGCAAATATTCCTCAGTATTCAGTAGTTTTCTATACATCAATTCTAGAAAAGGCACCCGCGGCGAAGGACCTATTTAGCTTCTTATCAAACGGAGTCGACCCCTCAAACCCAAAGCTTACTGGTCACGCAGAGAAATTATTCGGATTAGTACGTGACAGTGCTGGGCAGTTAAAAGCTAATGGCACGGTCGTCGCAGACGCCGCTCTTGGAAGTATACACGCACAGAAGGCAATTACTGACCCACAGTTCGTAGTGGTAAAAGAGGCGCTATTAAAGACCATAAAGGAAGCTGTAGGGGATAAGTGGTCGGATGAGTTATCGTCCGCATGGGAAGTAGCATACGACGAGTTGGCGGCGGCCATAAAGAAAGCCTTC",
+  "sequence_status": "real",
+  "length_bp": 432,
+  "checks": {
+    "length_multiple_of_3": true,
+    "bsai_sites": [],
+    "bbsi_sites": []
+  },
+  "organism": null,
+  "source": "Level 0 plasmid '0.3LGB4' (Lvl0.3_b_031) from the user-supplied GenBank file 'documents from Level 0'; only the insert was taken; the type overhangs and the frame spacer of the plasmid were cut off. Stock: glycerol stock column of 'Level 0 constructs.xlsx'.",
+  "notes": null,
+  "used_by": [],
+  "plasmids": [
+    {
+      "id": "Lvl0.3_b_031",
+      "label": "0.3LGB4",
+      "plasmid_name": "0.3LGB4",
+      "type_slot": 3,
+      "site": "cargo_site",
+      "level2_overhang": null,
+      "stored_orientation": "antisense",
+      "frame_spacer_in_plasmid": {
+        "sequence": "AT",
+        "side": "right end of the top strand (5' side of the sense strand)"
+      },
+      "on_stock": true,
+      "registry_url": null,
+      "notes": null
+    }
+  ]
+}

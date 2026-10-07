@@ -73,9 +73,33 @@ def find_real_sequence(kind: str, part_id: str) -> str | None:
     return seq
 
 
+STOP_CODONS = ("TAA", "TAG", "TGA")
+# Categories whose bare sequence carries neither start nor stop codon: the software adds ATG / a stop codon per slot (constructs.py)
+CODING_CATEGORIES = ("shell", "cargo", "marker", "intein", "tp")
+
+
+def bare_cds(sequence: str) -> str:
+    """A coding sequence without start codon (ATG) and without stop codon at the end."""
+    sequence = (sequence or "").upper()
+    if sequence.startswith("ATG"):
+        sequence = sequence[3:]
+    if sequence[-3:] in STOP_CODONS:
+        sequence = sequence[:-3]
+    return sequence
+
+
 def inserts() -> list[dict]:
-    """All Level 0 inserts (parts/level0_inserts/): the bare part sequence of each Level 0 plasmid, without overhangs and without frame spacer."""
-    return _read_kind("level0_inserts")
+    """All Level 0 plasmids (parts/level0_inserts/), one entry per plasmid. The files are stored per part (sequence once, plus the list of
+    its `plasmids`); here they are expanded: part fields + plasmid fields, `sequence` = the bare part sequence of this plasmid
+    (no start/stop codon, no overhangs, no frame spacer). `id` is the plasmid id (None for a plasmid that is not built)."""
+    out = []
+    for part in _read_kind("level0_inserts"):
+        shared = {k: v for k, v in part.items() if k not in ("plasmids", "sequence", "length_bp", "checks")}
+        for plasmid in part.get("plasmids", []):
+            sequence = plasmid.get("sequence", part.get("sequence"))
+            out.append({**shared, "checks": part.get("checks", {}), **plasmid, "part_file_id": part["id"],
+                        "sequence": sequence, "length_bp": len(sequence)})
+    return sorted(out, key=lambda e: e["id"] or "~")  # plasmids without an id (not built) come last
 
 
 def find_inserts(category: str, part: str | None = None, site: str | None = None, slot: int | None = None,
@@ -98,6 +122,16 @@ def find_inserts(category: str, part: str | None = None, site: str | None = None
     return out
 
 
+def plasmid_status(entry: dict | None) -> str:
+    """State of a Level 0 plasmid entry: "stock" (built, glycerol stock), "no_stock" (has an internal id but no stock) or
+    "not_built" (no internal id: not built and not in the lab system, listed only for completeness). No entry at all (a part used at a
+    slot where no plasmid exists) counts as not built."""
+    if not entry or not entry.get("id"):
+        return "not_built"
+    return "stock" if entry.get("on_stock") else "no_stock"
+
+
 def find_library_cargo(sequence: str) -> dict | None:
-    """The cargo entry of the library whose sense sequence is exactly `sequence` (a toolkit part, not a user input), otherwise None."""
-    return next((e for e in find_inserts("cargo") if e["sequence"] == sequence), None)
+    """The cargo entry of the library whose sense sequence is `sequence` (a toolkit part, not a user input), otherwise None.
+    A start codon in front or a stop codon at the end of `sequence` does not matter."""
+    return next((e for e in find_inserts("cargo") if e["sequence"] == bare_cds(sequence)), None)

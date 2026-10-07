@@ -1,0 +1,37 @@
+{
+  "id": "cargo-yegfp",
+  "kind": "level0_insert",
+  "category": "cargo",
+  "part": "yegfp",
+  "part_label": "yeGFP",
+  "sequence": "AGTAAAGGTGAAGAGTTGTTTACTGGAGTTGTTCCAATTTTGGTTGAATTAGATGGTGATGTTAACGGTCACAAGTTCTCAGTAAGTGGGGAAGGTGAAGGTGATGCAACCTACGGTAAGTTGACACTTAAGTTCATTTGTACGACTGGTAAATTACCAGTCCCATGGCCTACTCTTGTCACTACCTTCGGTTACGGTGTTCAATGTTTCGCTAGGTATCCAGATCATATGAAGCAGCATGATTTTTTCAAATCTGCAATGCCTGAAGGTTATGTTCAAGAGAGAACAATTTTTTTTAAGGATGATGGAAATTATAAAACAAGAGCTGAAGTTAAGTTTGAGGGTGATACATTGGTAAACAGAATCGAATTAAAAGGTATTGATTTTAAAGAAGATGGTAATATCTTGGGTCATAAATTGGAATACAACTATAACTCACACAATGTTTACATTATGGCTGATAAACAAAAAAACGGTATTAAGGTTAATTTTAAGATTAGACATAATATTGAAGATGGTTCTGTTCAATTAGCTGATCACTACCAACAAAATACCCCTATCGGTGATGGTCCAGTTTTACTACCAGATAATCACTACCTGTCTACTCAATCTGCTCTTTCAAAAGATCCAAATGAAAAAAGAGATCATATGGTTCTGTTGGAATTTGTCACCGCTGCTGGTATAACACACGGTATGGATGAATTGTACAAATAT",
+  "sequence_status": "real",
+  "length_bp": 714,
+  "checks": {
+    "length_multiple_of_3": true,
+    "bsai_sites": [],
+    "bbsi_sites": []
+  },
+  "organism": null,
+  "source": "Level 0 plasmid '0.3yeGFP' (Lvl0.3_a_013) from the user-supplied GenBank file 'documents from Level 0'; only the insert was taken; the type overhangs and the frame spacer of the plasmid were cut off. Stock: glycerol stock column of 'Level 0 constructs.xlsx'.",
+  "notes": null,
+  "used_by": [],
+  "plasmids": [
+    {
+      "id": "Lvl0.3_a_013",
+      "label": "0.3yeGFP",
+      "plasmid_name": "0.3yeGFP",
+      "type_slot": 3,
+      "site": "cargo_site",
+      "level2_overhang": null,
+      "stored_orientation": "antisense",
+      "frame_spacer_in_plasmid": {
+        "sequence": "AT",
+        "side": "right end of the top strand (5' side of the sense strand)"
+      },
+      "on_stock": true,
+      "registry_url": null,
+      "notes": null
+    }
+  ]
+}

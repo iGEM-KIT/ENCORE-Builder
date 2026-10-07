@@ -1,0 +1,53 @@
+{
+  "id": "tp-TP-Tm",
+  "kind": "level0_insert",
+  "category": "tp",
+  "part": "TP-Tm",
+  "part_label": "TP-Tm",
+  "sequence": "GGGGGGATCTGGGCATTCGGAAGC",
+  "sequence_status": "real",
+  "length_bp": 24,
+  "checks": {
+    "length_multiple_of_3": true,
+    "bsai_sites": [],
+    "bbsi_sites": []
+  },
+  "organism": null,
+  "source": "Level 0 plasmid '0.1TP_Tm*' (Lvl0.1_a_009) from the user-supplied GenBank file 'documents from Level 0'; only the insert was taken; the type overhangs and the frame spacer of the plasmid were cut off. Stock: glycerol stock column of 'Level 0 constructs.xlsx'.",
+  "notes": "Bare sequence taken from 'Level 0 constructs.xlsx' (0.5TP-TmSt without ATG, 24 nt). The GenBank import of the N-terminal plasmid had 28 nt (ATG + ...GCT) and the C-terminal plasmid Lvl0.1_a_009 has 'GGGGGGGATCTGGGCATTCGGAAGCTG' (one extra G in front, TG at the end). Both differ from this sequence and should be checked against the plasmids.",
+  "used_by": [],
+  "plasmids": [
+    {
+      "id": "Lvl0.1_a_009",
+      "label": "0.1TPTm*",
+      "plasmid_name": "0.1TP_Tm*",
+      "type_slot": 1,
+      "site": "cargo_site",
+      "level2_overhang": "CCAA",
+      "stored_orientation": "antisense",
+      "frame_spacer_in_plasmid": {
+        "sequence": "AT",
+        "side": "right end of the top strand (5' side of the sense strand)"
+      },
+      "on_stock": true,
+      "registry_url": null,
+      "notes": null
+    },
+    {
+      "id": "Lvl0.5_a_026",
+      "label": "0.5TP-TmSt",
+      "plasmid_name": "0.5TP_Tm_Start",
+      "type_slot": 5,
+      "site": "cargo_site",
+      "level2_overhang": "CGTT",
+      "stored_orientation": "antisense",
+      "frame_spacer_in_plasmid": {
+        "sequence": "AT",
+        "side": "right end of the top strand (5' side of the sense strand)"
+      },
+      "on_stock": true,
+      "registry_url": null,
+      "notes": "length 28 nt is not a multiple of 3; fused parts will be out of frame"
+    }
+  ]
+}

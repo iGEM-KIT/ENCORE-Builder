@@ -15,31 +15,49 @@ Every entry is a JSON file of its own, grouped by kind in a subfolder, exactly l
 The dropdowns of the software (catalogue metadata such as labels, T number, description) live in `data.py`; which parts really exist at
 which site and slot and what sequence they have comes from `level0_inserts/`.
 
-## `level0_inserts/<id>.json`
+## `level0_inserts/<category>-<part>.json`
 
-One file per Level 0 plasmid, `id` = description in the GenBank file (e.g. `Lvl0.2_b_034`). ONLY the insert is stored,
-not the plasmid, without the Type overhangs and without the frame spacer of the plasmid; the software attaches both again from
-`type_overhangs/`. `sequence` is always the sense sequence of the part (as it is read); if it lies in the plasmid
-as a reverse complement (cargo site), it has already been turned back here; the software turns the cargo module again when building.
+One file per PART (not per plasmid), e.g. `shell-E-Tm.json`, `linker-GSSS3.json`, `tp-TP-Mx.json`; all NCS spacers together in
+`ncs.json`. The part sequence is stored ONCE in `sequence`, plus the list of the Level 0 plasmids that carry it in `plasmids`.
+`parts_db.inserts()` expands every file into one entry per plasmid (part fields + plasmid fields), so the rest of the software
+still sees one entry per Level 0 plasmid (`id` = plasmid id, e.g. `Lvl0.2_b_034`).
 
-- `plasmid_name`, `label`: name in the GenBank file or in `Level 0 constructs.xlsx`.
-- `category`: `shell`, `cargo`, `linker`, `marker`, `intein`, `tp` or `ncs`; `part` / `part_label`: the part id and the
-  label in the dropdowns (e.g. linker `L3` = `GSSS3`).
+`sequence` is the BARE part: sense strand (as it is read; a part that lies in the plasmid as a reverse complement, cargo site, has
+already been turned back here), **without start codon, without stop codon, without overhangs and without the frame spacer**.
+The software adds ATG and the stop codon per slot when it builds the construct (`constructs._orf_flags`, `_add_start_stop`):
+the first coding part of an ORF gets ATG, the last one a stop codon (TAA) unless an NCS with stop codon provides it; the NC module
+is read Type 0.1 -> 0.5, the cargo module Type 0.5 -> 0.1; the central part (0.3) counts as coding for the start codon but never gets a
+stop codon: behind it the stop stays at Type 0.4 (NC) / Type 0.2 (cargo), the "NCS with stop codon". So one sequence serves every slot
+(a targeting peptide at Type 0.5 gets ATG, at Type 0.1 a stop codon). Overhangs and the frame spacer come from `type_overhangs/`.
+Own sequences of the user are treated the same way, but an ATG or stop codon they already carry is not doubled.
+Linkers and NCS spacers are stored as they are (no start/stop logic for NCS; linkers carry none).
+
+Part fields: `id`, `category` (`shell`, `cargo`, `linker`, `marker`, `intein`, `tp`, `ncs`), `part` / `part_label` (part id and label
+in the dropdowns, e.g. linker `GSSS3`), `sequence` (missing in `ncs.json`: there every plasmid carries its own `sequence`),
+`sequence_status`, `length_bp`, `checks` (length divisible by 3, BsaI/BbsI sites in the part), `organism`, `source`, `notes`, `used_by`.
+
+Plasmid fields (`plasmids` list):
+
+- `id`, `label`, `plasmid_name`: internal id (`null` if not built), name in the Level 0 constructs table and name in the GenBank file.
 - `type_slot` (1-5) and `site` (`nc_site` / `cargo_site`). For Type 0.1/0.5 the site follows from the Level 2 overhang
   (`level2_overhang`: TGAT/AATG = NC site, CCAA/CGTT = cargo site), for Type 0.2-0.4 from the strand on which the part lies in the
   plasmid (`stored_orientation`: sense = NC site, antisense = cargo site; the "rc" plasmids).
-- `variant` (`tp`: `c_term` = Type 0.1 with stop codon, `n_term` = Type 0.5 with start codon) and `ncs_role` (`plain` / `stop`;
-  `stop` only at the slots behind the central part: NC site 0.4/0.5, cargo site 0.2/0.1).
-- `frame_spacer_in_plasmid`: the 2 bases the plasmid carries before the ORF (only for traceability; they are
-  NOT contained in `sequence` here, the software attaches its own spacer from the adapters).
-- `on_stock`: `true` = glycerol stock available (column "Glycerol" in `Level 0 constructs.xlsx`: yes), `false` = no. The builder does not use it at the moment (there is no order from the KIT any more).
+- `ncs_role` (NCS only: `plain` / `stop`; `stop` only at the slots behind the central part: NC site 0.4/0.5, cargo site 0.2/0.1).
+- `frame_spacer_in_plasmid`: the 2 bases the plasmid carries before the ORF (only for traceability).
+- `on_stock`: `true` = glycerol stock available, `false` = no. The builder does not use it at the moment.
 - `registry_url`: link to the part in the iGEM Registry, `null` until it is known. The builder shows it for every toolbox part in the order lists of step 5 (a placeholder while it is `null`).
-- `checks`: length divisible by 3, start/stop codon, BsaI/BbsI sites in the part.
 - `notes`: oddities noticed during the import (to be checked).
+- `covers_slots` (combined NCS only, e.g. `0.12 NCS` = `[1, 2]`, `0.45 NCS` = `[4, 5]`): the spacer covers two slots at once; `type_slot` is then
+  `null`. They are stored but not offered in the dropdowns yet.
 
-The dropdowns only offer a part where there is a Level 0 plasmid for it (`slots` per library in
-`get_libraries()`); the parts themselves can be used independently of that (fallback to the sequence of the same part id from another
-slot, without a Level 0 plasmid entry of its own, so without a registry link).
+Plasmids with `id: null` are listed in `Level 0 constructs.xlsx` (id "-") but are not built and not in the lab system; they are in the database
+only for completeness and so that the part can be chosen at that slot. They have no internal id, `on_stock` is `false` and `registry_url` is `null`.
+The site of a plasmid follows the table where it disagreed with the GenBank orientation (L1 linkers at 0.2/0.4, MVP).
+
+To add a plasmid of an existing part (e.g. the same linker at another slot): append an entry to its `plasmids` list. To add a new
+part: copy `_template.json`. A part can be used at any slot (the sequence of the same part from another slot is used then, without a
+plasmid entry of its own, so without a registry link); the dropdowns only offer a part where a plasmid exists (`slots` per library
+in `get_libraries()`).
 
 ## Common fields (promoters/, terminators/)
 

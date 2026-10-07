@@ -1,0 +1,34 @@
+{
+  "id": "shell-E-Mxpe",
+  "kind": "level0_insert",
+  "category": "shell",
+  "part": "E-Mxpe",
+  "part_label": "E-Mxpe",
+  "sequence": "CCTGATTTTTTAGGTCATGCTGAAAATCCATTGAGAGAAGAAGAATGGGCTAGATTAAATGAAACTGTAATCCAAGTTGCTAGAAGATCATTGGTTGGTAGAAGAATTTTGGATATTTATGGTCCACTAGGTGCAGGTGTTCAAACAGTGCCTTACGATGAATTTCAAGGCGTTTCTCCTGGTGCTGTGGATATTGTTGGTGAACAAGAAACTGCTATGGTTTTTACAGATGCAAGAAAATTTAAGACAATTCCTATCATCTACAAAGATTTTTTGTTGCATTGGAGAGATATCGAAGCTGCTAGAACACATAATATGCCATTAGATGTTTCAGCTGCTGCAGGTGCTGCCGCTTTGTGTGCTCAACAAGAGGACGAGTTAATTTTTTATGGTGATGCCAGATTAGGTTATGAAGGGTTGATGACTGCTAATGGTAGATTAACTGTGCCTCTAGGTGATTGGACATCACCTGGTGGAGGTTTCCAAGCTATTGTTGAAGCAACTAGAAAGCTTAATGAACAAGGTCATTTTGGTCCATATGCTGTCGTGTTATCACCAAGATTGTATTCACAATTACATAGAGGTGGTGAAATAGAAACAATTAGACAATTAGCCTCTGATGGAGTTTACCAATCTAATAGATTGAGAGGTGAATCTGGTGTTGTCGTTTCTACTGGTAGAGAAAATATGGATTTAGCAGTTTCAATGGATATGGTAGCTGCTTATTTGGGTGCTTCTAGAATGAACCATCCATTCAGAGTTTTGGAAGCTTTATTGTTGAGAATCAAACATCCAGATGCTATTTGTACATTGGAAGGTGCTGGGGCAACCGAAAGAAGA",
+  "sequence_status": "real",
+  "length_bp": 840,
+  "checks": {
+    "length_multiple_of_3": true,
+    "bsai_sites": [],
+    "bbsi_sites": []
+  },
+  "organism": null,
+  "source": "Corrected 'E-Mxpe (richtig)' from 'Level 0 constructs.xlsx', codon-optimized for S. cerevisiae by the builder's optimizer.",
+  "notes": "Sequence from the corrected 'E-Mxpe (richtig)' in 'Level 0 constructs.xlsx', codon-optimized for S. cerevisiae with the builder's optimizer (BsaI/BbsI sites removed). The earlier plasmid Lvl0.3_a_019 carried a wrong sequence and was removed.",
+  "used_by": [],
+  "plasmids": [
+    {
+      "id": null,
+      "label": "0.3E-Mxpe",
+      "plasmid_name": "0.3E-Mxpe",
+      "type_slot": 3,
+      "site": "nc_site",
+      "level2_overhang": null,
+      "stored_orientation": "sense",
+      "frame_spacer_in_plasmid": null,
+      "on_stock": false,
+      "registry_url": null,
+      "notes": "No internal id: this plasmid is not built and not in the lab system. Listed in \"Level 0 constructs.xlsx\" for completeness only."
+    }
+  ]
+}

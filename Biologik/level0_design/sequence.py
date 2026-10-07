@@ -97,19 +97,22 @@ def ends_with_stop(sequence: str):
 
 
 def validate_cargo(raw: str, min_bp: int = 30, kind: str = "cargo") -> dict:
-    # ``kind`` only selects the wording of the stop codon message: "cargo" (default), "shell" for an
-    # own nanocompartment shell or "part" for an own sequence in a slot. The rules are identical.
+    # ``kind`` is "cargo" (default), "shell" for an own nanocompartment shell or "part" for an own sequence in a slot;
+    # only the cargo has a minimum length. A start codon is optional (the builder adds ATG where the ORF begins).
     # The input may be DNA (CDS) or an amino acid sequence (``isProtein``); a protein is translated into DNA when building, using the
     # codon usage of S. cerevisiae (codon.py), ``length`` is then the length of this DNA (3 per amino acid).
     if is_protein(raw):
         return _validate_protein(raw, min_bp, kind)
     # clean_seq() makes the input usable for further analysis.
     clean = clean_seq(raw)
-    length = len(clean)
     invalid_chars = len(re.sub(r"[ATGC\s]", "", (raw or "").upper()))
-    not_multiple_of_three = length % 3 != 0
+    # A stop codon at the end is taken off: the builder adds the stop codon itself where the ORF ends (constructs.py).
     trailing_stop = ends_with_stop(clean)
-    internal_stops = find_internal_stops(clean[:-3]) if length >= 3 else []
+    if trailing_stop:
+        clean = clean[:-3]
+    length = len(clean)
+    not_multiple_of_three = length % 3 != 0
+    internal_stops = find_internal_stops(clean) if length >= 3 else []
 
     errors = []
     warnings = []
@@ -121,8 +124,6 @@ def validate_cargo(raw: str, min_bp: int = 30, kind: str = "cargo") -> dict:
         # own modules are ordered as synthesis and may be arbitrarily short.
         if kind == "cargo" and length < min_bp:
             errors.append(f"Sequence too short ({length} bp, need at least {min_bp} bp).")
-        if trailing_stop:
-            errors.append(_stop_message(trailing_stop, kind))
         if not_multiple_of_three:
             warnings.append("Length is not a multiple of 3; check the reading frame.")
         if internal_stops:
@@ -130,6 +131,8 @@ def validate_cargo(raw: str, min_bp: int = 30, kind: str = "cargo") -> dict:
             warnings.append(f"Possible in-frame stop codon at position {first['pos'] + 1} ({first['codon']}).")
         if invalid_chars > 0:
             warnings.append(f"{invalid_chars} invalid character(s) were ignored.")
+    if trailing_stop:
+        warnings.append(_stop_message(trailing_stop))
 
     return {
         "clean": clean,
@@ -147,20 +150,18 @@ def validate_cargo(raw: str, min_bp: int = 30, kind: str = "cargo") -> dict:
     }
 
 
-def _stop_message(stop: str, kind: str) -> str:
-    where = {"shell": "the construct adds its own stop codon right after the shell.",
-             "part": "the construct places its own stop codon at the end of the nanocompartment site."}.get(
-        kind, "otherwise the targeting peptide is not attached and the cargo is not encapsulated.")
-    return f"Stop codon at the end ({stop}). Remove it: {where}"
+def _stop_message(stop: str) -> str:
+    return f"Stop codon at the end ({stop}) was removed: the builder adds start and stop codon itself where the ORF begins and ends."
 
 
 def _validate_protein(raw: str, min_bp: int, kind: str) -> dict:
     """Like validate_cargo, for an amino acid sequence: ``clean`` is the amino acid sequence, ``length`` the length of the DNA after
-        back-translation. A trailing asterisk is a stop codon (error as for DNA), an asterisk in the middle is a warning."""
+        back-translation. A trailing asterisk is a stop codon (taken off with a warning, as for DNA), an asterisk in the middle is a warning."""
     clean = clean_protein(raw)
     invalid_chars = len(re.sub(rf"[{AMINO_ACIDS}*\s]", "", _without_fasta_header(raw)))
     trailing_stop = "*" if clean.endswith("*") else None
     residues = clean[:-1] if trailing_stop else clean
+    clean = residues
     length = 3 * len(residues)
     internal_stops = [{"pos": i, "codon": "*"} for i, c in enumerate(residues) if c == "*"]
 
@@ -170,12 +171,12 @@ def _validate_protein(raw: str, min_bp: int, kind: str) -> dict:
     else:
         if kind == "cargo" and length < min_bp:
             errors.append(f"Sequence too short ({len(residues)} aa, need at least {min_bp // 3} aa).")
-        if trailing_stop:
-            errors.append(_stop_message("*", kind))
         if internal_stops:
             warnings.append(f"Stop (*) at residue {internal_stops[0]['pos'] + 1}: translation would end there.")
         if invalid_chars > 0:
             warnings.append(f"{invalid_chars} invalid character(s) were ignored.")
+    if trailing_stop:
+        warnings.append(_stop_message("*"))
     return {
         "clean": clean, "length": length, "aa": len(residues), "gc": None, "invalidChars": invalid_chars,
         "notMultipleOfThree": False, "trailingStop": trailing_stop, "internalStops": internal_stops,

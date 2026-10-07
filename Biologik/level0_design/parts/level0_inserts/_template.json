@@ -1,24 +1,30 @@
 {
-  "id": "Lvl0.<type>_<x>_<nnn>",
+  "id": "<category>-<part>",
   "kind": "level0_insert",
-  "label": "0.2L3",
-  "plasmid_name": "0.2L3",
-  "category": "linker",
-  "part": "GSSS3",
-  "part_label": "3×(GSSS)",
-  "type_slot": 2,
-  "site": "nc_site",
-  "level2_overhang": null,
-  "stored_orientation": "sense",
-  "frame_spacer_in_plasmid": {"sequence": "AT", "side": "5' side of the sense strand"},
-  "sequence": "ONLY THE PART: sense strand, no overhangs, no frame spacer",
+  "category": "shell | cargo | linker | marker | intein | tp | ncs",
+  "part": "part id used by the software (e.g. GSSS3)",
+  "part_label": "label in the dropdowns",
+  "sequence": "ONLY THE BARE PART: sense strand, no start codon, no stop codon, no overhangs, no frame spacer",
   "sequence_status": "real",
-  "on_stock": true,
-  "registry_url": null,
   "length_bp": 0,
+  "checks": {},
   "organism": null,
   "source": "where the sequence comes from",
-  "checks": {},
   "notes": null,
-  "used_by": []
+  "used_by": [],
+  "plasmids": [
+    {
+      "id": "Lvl0.<type>_<x>_<nnn>",
+      "label": "0.2L3",
+      "plasmid_name": "0.2L3",
+      "type_slot": 2,
+      "site": "nc_site",
+      "level2_overhang": null,
+      "stored_orientation": "sense",
+      "frame_spacer_in_plasmid": {"sequence": "AT", "side": "5' side of the sense strand"},
+      "on_stock": true,
+      "registry_url": null,
+      "notes": null
+    }
+  ]
 }

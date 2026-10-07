@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 
-from .parts_db import find_inserts, load_parts
+from .parts_db import find_inserts, load_parts, plasmid_status
 from .genbank_writer import format_backbone_record
 
 # Stop codons: these triplets mark the end of a protein coding sequence; STOP_CODONS is a variable
@@ -42,15 +42,27 @@ def _slots(category: str, part: str, **extra) -> dict:
     """{"nc": [slots...], "cargo": [slots...]}: where a Level 0 plasmid exists for this part."""
     out = {"nc": [], "cargo": []}
     for entry in find_inserts(category, part, **extra):
+        if entry.get("type_slot") is None:
+            continue  # combined spacers (covers_slots) are not offered in the slot dropdowns yet
         key = SITE_KEY[entry["site"]]
         if entry["type_slot"] not in out[key]:
             out[key].append(entry["type_slot"])
     return {key: sorted(value) for key, value in out.items()}
 
 
+def _status(category: str, part: str, **extra) -> dict:
+    """{"nc": {"2": "stock", ...}, "cargo": {...}}: state of the Level 0 plasmid of this part per site and slot (see plasmid_status)."""
+    out = {"nc": {}, "cargo": {}}
+    for entry in find_inserts(category, part, **extra):
+        if entry.get("type_slot") is not None:
+            out[SITE_KEY[entry["site"]]][str(entry["type_slot"])] = plasmid_status(entry)
+    return out
+
+
 def _length(category: str, part: str):
+    """Length of a part as it sits in the ORF: the bare sequence, plus start and stop codon for a shell (always a complete ORF)."""
     entry = next(iter(find_inserts(category, part)), None)
-    return len(entry["sequence"]) if entry else None
+    return len(entry["sequence"]) + (6 if category == "shell" else 0) if entry else None
 
 
 # Libraries for nanocompartments
@@ -61,9 +73,13 @@ NANOCOMPARTMENTS = [
     {"id": "tmari", "label": "Thermotoga maritima", "T": 1, "dia": "24 nm", "tp": "TP-Tm", "shell": "E-Tm"},
     {"id": "mxan", "label": "Myxococcus xanthus", "T": 3, "dia": "32 nm", "tp": "TP-Mx", "shell": "E-Mx"},
     {"id": "qther", "label": "Quasibacillus thermotolerans", "T": 4, "dia": "42 nm", "tp": "TP-Qt", "shell": "E-Qt"},
+    # The human vault is no encapsulin: no triangulation number and no targeting peptide of the toolkit (tp None), barrel of about 41 x 73 nm.
+    {"id": "mvp", "label": "Major vault protein (vault)", "T": None, "dia": "41 x 73 nm", "tp": None, "shell": "mvp"},
 ]
 for _nc in NANOCOMPARTMENTS:
     _nc["shellBp"] = _length("shell", _nc["shell"]) or 0
+    _shell = next(iter(find_inserts("shell", _nc["shell"])), None)
+    _nc["status"] = plasmid_status(_shell)
 
 
 # Cargo templates = the cargo inserts of the database (Type 0.3, cargo site). Adding a new cargo now only means
@@ -71,7 +87,8 @@ for _nc in NANOCOMPARTMENTS:
 
 def _load_cargo_presets() -> list[dict]:
     return [
-        {"id": entry["part"], "label": entry["part_label"], "seq": entry["sequence"], "notes": entry.get("notes")}
+        {"id": entry["part"], "label": entry["part_label"], "seq": entry["sequence"], "notes": entry.get("notes"),
+         "status": plasmid_status(entry)}
         for entry in find_inserts("cargo")
         if entry.get("sequence")
     ]
@@ -89,7 +106,7 @@ _LINKER_META = [
 ]
 LINKERS = [
     {"id": pid, "label": label, "aa": (_length("linker", pid) or 0) // 3, "bp": _length("linker", pid) or 0, "desc": desc,
-     "repeat": repeat, "n": n, "type": "flexible", "slots": _slots("linker", pid)}
+     "repeat": repeat, "n": n, "type": "flexible", "slots": _slots("linker", pid), "status": _status("linker", pid)}
     for pid, label, desc, repeat, n in _LINKER_META
     if _length("linker", pid)
 ]
@@ -106,7 +123,7 @@ _MARKER_META = [
 ]
 SURFACE_MARKERS = [
     {"id": pid, "label": label, "aa": (_length("marker", pid) or 0) // 3, "bp": _length("marker", pid) or 0, "desc": desc,
-     "slots": _slots("marker", pid)}
+     "slots": _slots("marker", pid), "status": _status("marker", pid)}
     for pid, label, desc in _MARKER_META
     if _length("marker", pid)
 ]
@@ -115,10 +132,10 @@ SURFACE_MARKERS = [
 # in Type 0.5 with start codon), each with the slots where a Level 0 plasmid exists.
 INTEINS = [
     {"id": "int", "label": "INT", "aa": (_length("intein", "int") or 0) // 3, "bp": _length("intein", "int") or 0,
-     "desc": "INT", "slots": _slots("intein", "int")}
+     "desc": "INT", "slots": _slots("intein", "int"), "status": _status("intein", "int")}
 ] if _length("intein", "int") else []
 TARGETING_PEPTIDES = [
-    {"id": nc["tp"], "label": f"Targeting peptide {nc['tp']}", "slots": _slots("tp", nc["tp"])} for nc in NANOCOMPARTMENTS
+    {"id": nc["tp"], "label": f"Targeting peptide {nc['tp']}", "slots": _slots("tp", nc["tp"]), "status": _status("tp", nc["tp"])} for nc in NANOCOMPARTMENTS if nc["tp"]
 ]
 
 
@@ -126,9 +143,20 @@ def _ncs_slots() -> dict:
     """Which NCS variants ("plain" / "stop") exist per site and slot: {"nc": {"1": ["plain"], ...}, "cargo": {...}}."""
     out = {"nc": {}, "cargo": {}}
     for entry in find_inserts("ncs"):
+        if entry.get("type_slot") is None:
+            continue  # combined spacers (covers_slots) are not offered in the slot dropdowns yet
         roles = out[SITE_KEY[entry["site"]]].setdefault(str(entry["type_slot"]), [])
         if entry.get("ncs_role") not in roles:
             roles.append(entry.get("ncs_role"))
+    return out
+
+
+def _ncs_status() -> dict:
+    """State of the NCS plasmids: {"nc": {"1": {"plain": "stock"}, ...}, "cargo": {...}}."""
+    out = {"nc": {}, "cargo": {}}
+    for entry in find_inserts("ncs"):
+        if entry.get("type_slot") is not None:
+            out[SITE_KEY[entry["site"]]].setdefault(str(entry["type_slot"]), {})[entry.get("ncs_role")] = plasmid_status(entry)
     return out
 
 
@@ -147,6 +175,7 @@ def get_libraries() -> dict:
         "inteins": INTEINS,
         "targetingPeptides": TARGETING_PEPTIDES,
         "ncs": _ncs_slots(),
+        "ncsStatus": _ncs_status(),
         # The backbones come from the parts database (Biologik/level0_design/parts/README.md); the Level 0 backbone
         # with its finished GenBank text (copy/download in the frontend, step 4 / Level 0).
         "level0Backbones": [{**b, "genbank": format_backbone_record(b)} for b in parts["level0_backbones"] if b.get("sequence")],
