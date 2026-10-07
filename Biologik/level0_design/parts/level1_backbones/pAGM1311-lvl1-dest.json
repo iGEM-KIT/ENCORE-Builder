@@ -29,8 +29,8 @@
       "location": "200..256"
     }
   },
-  "source": "Level 1 Destination.gb (vom Nutzer bereitgestellt), pAGM1311 aus Weber E, Engler C, Gruetzner R, Werner S, Marillonnet S. \"A modular cloning system for standardized assembly of multigene constructs.\" PLoS One. 2011 Feb 18;6(2):e16765. PMID 21364738. Importiert 2026-09-30.",
-  "notes": "Vier BsaI/BbsI-Erkennungsstellen in der Original-GenBank-Datei fehlte das Feature-Typ-Schluesselwort (nur die Location-Zeile war vorhanden); beim Import als eigenstaendige misc_feature-Eintraege rekonstruiert, da Position und Label (BsaI/BbsI rec site) eindeutig waren. Noch nicht in die Level-0/1/2-Design-Engine oder die Frontend-Plasmidkarte verdrahtet.",
+  "source": "Level 1 Destination.gb (provided by the user), pAGM1311 from Weber E, Engler C, Gruetzner R, Werner S, Marillonnet S. \"A modular cloning system for standardized assembly of multigene constructs.\" PLoS One. 2011 Feb 18;6(2):e16765. PMID 21364738. Imported 2026-09-30.",
+  "notes": "Four BsaI/BbsI recognition sites in the original GenBank file were missing the feature type keyword (only the location line was present); reconstructed on import as standalone misc_feature entries, since position and label (BsaI/BbsI rec site) were unambiguous.",
   "features": [
     {
       "type": "source",

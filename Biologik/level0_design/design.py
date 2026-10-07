@@ -1,7 +1,7 @@
-"""Level-0/1/2-Design-Logik: aus den Eingaben des Nutzers ein kompletter Golden-Gate-Entwurf samt GenBank-Export.
+"""Level 0/1/2 design logic: turns the user's inputs into a complete Golden Gate design including the GenBank export.
 
-Die Teilaufgaben liegen in eigenen Modulen: slots (Belegung der Module), user_codons (Codon-Optimierung der Eingaben),
-constructs (Level-0-Konstrukte), adapters, cloning, primers, oligos und assembly (Level 1/2)."""
+The subtasks live in their own modules: slots (assignment of the modules), user_codons (codon optimization of the inputs),
+constructs (Level 0 constructs), adapters, cloning, primers, oligos and assembly (Level 1/2)."""
 
 from __future__ import annotations
 
@@ -21,8 +21,8 @@ def _first_backbone(kind: str):
 
 
 def build_level1_and_2(fragments: list, promoter_entry: dict, nc: dict):
-    """Level 1: Cargo-Modul, NC-Modul und Promotor je als Insert (+ Plasmid) im Level-1-Backbone (BsaI);
-    Level 2: die drei Inserts im Level-2-Backbone (BbsI). Ohne Level-1-Backbone in der Datenbank: ([], None)."""
+    """Level 1: cargo module, NC module and promoter, each as an insert (+ plasmid) in the Level 1 backbone (BsaI);
+    Level 2: the three inserts in the Level 2 backbone (BbsI). Without a Level 1 backbone in the database: ([], None)."""
     backbone1 = _first_backbone("level1_backbones")
     if not backbone1:
         return [], None
@@ -37,7 +37,7 @@ def build_level1_and_2(fragments: list, promoter_entry: dict, nc: dict):
 
 
 def design_construct(decisions: dict = None):
-    # Der Hauptaufbau: Aus den Eingaben wird ein kompletter Design-Plan erzeugt.
+    # The main flow: a complete design plan is created from the inputs.
     decisions = decisions or {}
     if decisions.get("nanocompartment") == CUSTOM_NC_ID:
         nc = build_custom_nanocompartment(decisions.get("customNanocompartment"))
@@ -55,7 +55,7 @@ def design_construct(decisions: dict = None):
     cargo_label = (decisions.get("cargoLabel") or "").strip() or "Custom cargo"
     cargo_bp = cargo["length"]
 
-    # Belegung der Slots neben Cargo und Shell (NCS, Linker, Marker, TP oder eigene Sequenz).
+    # Assignment of the slots next to cargo and shell (NCS, linker, marker, TP or own sequence).
     cargo_slots = resolve_slots(decisions.get("cargoSlots"), "cargo")
     for cfg in cargo_slots.values():
         if cfg["kind"] == "tp":
@@ -66,14 +66,14 @@ def design_construct(decisions: dict = None):
         raise ValueError("A custom nanocompartment has no targeting peptide; use your own sequence in that slot.")
 
     codon_report, cargo_codon = optimize_user_sequences(cargo, cargo_label, nc, cargo_slots, nc_slots)
-    # Das Cargo sitzt im pESC (MCS1) auf dem Antisense-Strang. Deshalb wird gleich
-    # hier das Reverse Complement gebildet und ab da nur noch damit gearbeitet:
-    # Primer, Bestellsequenz und FASTA beziehen sich auf den Antisense-Strang.
-    # Die eingegebene (Sense-)Sequenz bleibt nur fuer Validierung und Anzeige.
-    # HINWEIS Benennung: intern/im Code heisst dieser Wert "antisense" (Gen-bezogen: er ist das
-    # Reverse Complement der eingegebenen CDS). In der Anzeige (Bestellbox, Bestellliste, FASTA)
-    # heisst er "sense", weil pESC selbst diesen Strang so nennt — die Cargo sitzt ja gerade deshalb
-    # auf dem Antisense-Strang von MCS1. Nur das Wort in der Anzeige dreht sich um, der Wert nicht.
+    # The cargo sits in pESC (MCS1) on the antisense strand. So the reverse complement is formed right
+    # here and only that is used from now on:
+    # primers, order sequence and GenBank refer to the antisense strand.
+    # The entered (sense) sequence is only kept for validation and display.
+    # NOTE on naming: internally (in the code) this value is called "antisense" (gene-related: it is the
+    # reverse complement of the entered CDS). In the display (order box, order list) it is
+    # called "sense", because pESC itself names this strand that way: the cargo sits on the
+    # antisense strand of MCS1 for exactly that reason. Only the word in the display flips, not the value.
     cargo_antisense = reverse_complement(cargo["clean"])
 
     cargo_module, nc_module = build_modules(nc, cargo_label, cargo_bp, cargo_slots, nc_slots)
@@ -102,18 +102,18 @@ def design_construct(decisions: dict = None):
 
 
 def build_genbank(design: dict) -> str:
-    """Gesamt-GenBank-Export: die Level-0-Konstrukte der Nutzereingaben (mit PCR-Produkt/Primern), die drei Level-1-Inserts
-    und das fertige Level-2-Plasmid (mit den echten Annotationen von pESC-HIS) — siehe assembly.py."""
+    """Complete GenBank export: the Level 0 constructs of the user inputs (with PCR product/primers), the three Level 1 inserts
+    and the finished Level 2 plasmid (with the real annotations of pESC-HIS); see assembly.py."""
     records: list[str] = []
 
-    # Level-0-Konstrukte der Nutzereingaben (Cargo, eigene Shell/Teile): Teilsequenz im Type-Adapter mit allen Annotationen
-    # (BbsI-Stellen, Overhangs, Frame-Spacer, Insert), plus ggf. das PCR-Produkt mit den Primern.
+    # Level 0 constructs of the user inputs (cargo, own shell/parts): part sequence in the Type adapter with all annotations
+    # (BbsI sites, overhangs, frame spacer, insert), plus the PCR product with the primers where there is one.
     for c in (c for c in design.get("level0Constructs", []) if c["isUser"]):
         records.append(c["genbank"])
         if c["primers"]["possible"]:
             records.append(c["primers"]["genbank"])
 
-    # Level 1 (BsaI) und Level 2 (BbsI): die tatsaechlichen Assemblies samt Overhangs (siehe assembly.py).
+    # Level 1 (BsaI) and Level 2 (BbsI): the actual assemblies including overhangs (see assembly.py).
     for module in design.get("level1Constructs", []):
         records.append(module["shown"]["genbank"] if module.get("shown") else module["genbank"])
     level2 = design.get("level2Construct")

@@ -1,4 +1,4 @@
-"""Statische Daten und Konstanten für das Level-0-Design."""
+"""Static data and constants for the Level 0 design."""
 
 from __future__ import annotations
 
@@ -6,22 +6,22 @@ from __future__ import annotations
 from .parts_db import find_inserts, load_parts
 from .genbank_writer import format_backbone_record
 
-# Stop-Codons: Diese Tripletts markieren das Ende einer Proteinkodierung, STOP_CODONS ist eine Variable
+# Stop codons: these triplets mark the end of a protein coding sequence; STOP_CODONS is a variable
 STOP_CODONS = ["TAA", "TAG", "TGA"]
 
-# Definition des Anfangsteils eines Primers, der für Assemblierung benötigt wird. 
-# Dieser ist beim Golden Gate Assembly für alle Primer gleich und wird hier als Konstante gespeichert.
+# Definition of the first part of a primer that is needed for assembly.
+# It is the same for all primers in Golden Gate assembly and is stored here as a constant.
 
 BSAI_PRIMER_PREFIX = "GGTCTCN"
 
-# BsaI-Flanken des Cargo-Moduls (Level 1) — von der Primer-Berechnung genutzt. Entsprechen den Level-2-Overhangs
-# der Adapter 0.1rc/0.5rc (parts/type_overhangs/): links CCAA, rechts GCAA (= Komplement von CGTT).
+# BsaI flanks of the cargo module (Level 1), used by the primer calculation. They correspond to the Level 2 overhangs
+# of the adapters 0.1rc/0.5rc (parts/type_overhangs/): CCAA on the left, GCAA on the right (= complement of CGTT).
 CARGO_L1_FLANK = ["CCAA", "GCAA"]
 
-# Näherungswerte für die Länge einzelner Bausteine in Basenpaaren (bp), nicht echte biologische Länge
-# Wenn ein Modul gebaut wird, weiß das Programm ungefähr, wie viele Basenpaare es hat, und kann die
-# Gesamtzahl der Basenpaare einfacher berechnen.
-# Auch für die Anzeige des Plasmids in der Benutzeroberfläche ist es praktisch.
+# Approximate lengths of the individual building blocks in base pairs (bp), not the real biological length.
+# When a module is built, the program knows roughly how many base pairs it has and can compute the
+# total number of base pairs more easily.
+# It is also handy for displaying the plasmid in the user interface.
 
 NOMINAL_BP = {
     "TP": 54,
@@ -29,17 +29,17 @@ NOMINAL_BP = {
     "NCS": 15,
 }
 
-# Die Teilsequenzen (Shells, Cargos, Linker, Marker, TPs, NCS) kommen aus der Sequenz-Datenbank parts/level0_inserts/:
-# je Level-0-Plasmid ein Eintrag mit der reinen Teilsequenz (ohne Overhangs und Frame-Spacer), dem Type-Slot, der Site
-# (nc_site / cargo_site — aus den Level-2-Overhangs bzw. der Orientierung im Plasmid) und dem Lagerstatus. Die Listen
-# unten liefern nur noch IDs/Labels/Metadaten fuer die Dropdowns; welches Teil an welchem Slot welcher Site wirklich
-# existiert, steht in der Datenbank ("slots" in jeder Bibliothek).
+# The part sequences (shells, cargos, linkers, markers, TPs, NCS) come from the sequence database parts/level0_inserts/:
+# one entry per Level 0 plasmid with the bare part sequence (without overhangs and frame spacer), the Type slot, the site
+# (nc_site / cargo_site, derived from the Level 2 overhangs and the orientation in the plasmid). The lists
+# below only supply ids/labels/metadata for the dropdowns; which part really exists at which slot of which site
+# is recorded in the database ("slots" in each library).
 
 SITE_KEY = {"nc_site": "nc", "cargo_site": "cargo"}
 
 
 def _slots(category: str, part: str, **extra) -> dict:
-    """{"nc": [Slots...], "cargo": [Slots...]} — wo es fuer dieses Teil ein Level-0-Plasmid gibt."""
+    """{"nc": [slots...], "cargo": [slots...]}: where a Level 0 plasmid exists for this part."""
     out = {"nc": [], "cargo": []}
     for entry in find_inserts(category, part, **extra):
         key = SITE_KEY[entry["site"]]
@@ -53,9 +53,9 @@ def _length(category: str, part: str):
     return len(entry["sequence"]) if entry else None
 
 
-# Bibliotheken für Nanokompartimente
-# Jedes vordefinierte Nanokompartment hat: ID (interne Kommunikation); Label (angezeigt in der Benutzeroberfäche);
-# Temperatur T; Durchmesser dia; Targeting Peptide tp; Protein, aus dem Nanokompartment Hülle besteht Shell
+# Libraries for nanocompartments
+# Each predefined nanocompartment has: ID (internal communication); label (shown in the user interface);
+# temperature T; diameter dia; targeting peptide tp; protein the nanocompartment shell consists of (shell)
 
 NANOCOMPARTMENTS = [
     {"id": "tmari", "label": "Thermotoga maritima", "T": 1, "dia": "24 nm", "tp": "TP-Tm", "shell": "E-Tm"},
@@ -66,13 +66,12 @@ for _nc in NANOCOMPARTMENTS:
     _nc["shellBp"] = _length("shell", _nc["shell"]) or 0
 
 
-# Cargo-Vorlagen = die Cargo-Inserts der Datenbank (Type 0.3, Cargo Site). Ein neues Cargo hinzufuegen heisst nur noch:
-# eine JSON-Datei in parts/level0_inserts/ anlegen, kein Python aendern.
+# Cargo templates = the cargo inserts of the database (Type 0.3, cargo site). Adding a new cargo now only means
+# creating a JSON file in parts/level0_inserts/, no Python change.
 
 def _load_cargo_presets() -> list[dict]:
     return [
-        {"id": entry["part"], "label": entry["part_label"], "seq": entry["sequence"], "onStock": entry.get("on_stock"),
-         "notes": entry.get("notes")}
+        {"id": entry["part"], "label": entry["part_label"], "seq": entry["sequence"], "notes": entry.get("notes")}
         for entry in find_inserts("cargo")
         if entry.get("sequence")
     ]
@@ -80,8 +79,8 @@ def _load_cargo_presets() -> list[dict]:
 
 CARGO_PRESETS = _load_cargo_presets()
 
-# Bibliothek für Linker mit Aminosäuren aa; kurze Beschreibung desc; Wiederholungssequenz repeat; Anzahl der
-# Wiederholungen n; Art des Linkers type. Laenge (bp) und Slots kommen aus der Datenbank.
+# Library for linkers with amino acids aa; short description desc; repeat sequence repeat; number of
+# repeats n; kind of linker type. Length (bp) and slots come from the database.
 _LINKER_META = [
     ("GGS2", "2×(GGS)", "short · very flexible", "GGS", 2),
     ("GSSS2", "2×(GSSS)", "short · flexible", "GSSS", 2),
@@ -95,12 +94,12 @@ LINKERS = [
     if _length("linker", pid)
 ]
 
-# Bibliothek für Promotoren
+# Library for promoters
 PROMOTERS = [{"id": "GAL110", "label": "GAL1-10", "desc": "bidirectional, inducible"}]
 
-# Oberflaechen-Marker. Sie lassen sich in einen der Slots neben der Shell legen
-# (Type 1, 2, 4, 5) und sitzen dadurch AUSSEN auf dem Encapsulin — im Gegensatz
-# zum Cargo, das innen verpackt wird.
+# Surface markers. They can be put into one of the slots next to the shell
+# (Type 1, 2, 4, 5) and therefore sit on the OUTSIDE of the encapsulin, in contrast
+# to the cargo, which is packed inside.
 _MARKER_META = [
     ("spycatcher", "SpyCatcher", "covalent SpyTag capture (isopeptide bond)"),
     ("spytag", "SpyTag", "13-aa peptide, binds SpyCatcher"),
@@ -112,8 +111,8 @@ SURFACE_MARKERS = [
     if _length("marker", pid)
 ]
 
-# INT (Type 0.1, Cargo Site) und die Targeting-Peptide (nur Cargo Site: C-terminal in Type 0.1 mit Stopcodon, N-terminal
-# in Type 0.5 mit Startcodon) — jeweils mit den Slots, an denen es ein Level-0-Plasmid gibt.
+# INT (Type 0.1, cargo site) and the targeting peptides (cargo site only: C-terminal in Type 0.1 with stop codon, N-terminal
+# in Type 0.5 with start codon), each with the slots where a Level 0 plasmid exists.
 INTEINS = [
     {"id": "int", "label": "INT", "aa": (_length("intein", "int") or 0) // 3, "bp": _length("intein", "int") or 0,
      "desc": "INT", "slots": _slots("intein", "int")}
@@ -124,7 +123,7 @@ TARGETING_PEPTIDES = [
 
 
 def _ncs_slots() -> dict:
-    """Welche NCS-Varianten ("plain" / "stop") es je Site und Slot gibt: {"nc": {"1": ["plain"], ...}, "cargo": {...}}."""
+    """Which NCS variants ("plain" / "stop") exist per site and slot: {"nc": {"1": ["plain"], ...}, "cargo": {...}}."""
     out = {"nc": {}, "cargo": {}}
     for entry in find_inserts("ncs"):
         roles = out[SITE_KEY[entry["site"]]].setdefault(str(entry["type_slot"]), [])
@@ -133,9 +132,9 @@ def _ncs_slots() -> dict:
     return out
 
 
-# Alles, was das Frontend für seine Dropdowns braucht — an EINER Stelle.
-# Bewusst eine Funktion und keine Konstante, damit sie später aus der Datenbank
-# lesen kann, ohne dass sich die Aufrufer ändern (siehe PROJECT_TODO.txt, 5).
+# Everything the frontend needs for its dropdowns, in ONE place.
+# On purpose a function and not a constant, so that it can read from the database
+# later without the callers changing (see PROJECT_TODO.txt, 5).
 
 def get_libraries() -> dict:
     parts = load_parts()
@@ -148,18 +147,18 @@ def get_libraries() -> dict:
         "inteins": INTEINS,
         "targetingPeptides": TARGETING_PEPTIDES,
         "ncs": _ncs_slots(),
-        # Die Backbones kommen aus der Parts-Datenbank (Biologik/level0_design/parts/README.md); das Level-0-Backbone
-        # samt fertigem GenBank-Text (Copy/Download im Frontend, Step 4 / Level 0).
+        # The backbones come from the parts database (Biologik/level0_design/parts/README.md); the Level 0 backbone
+        # with its finished GenBank text (copy/download in the frontend, step 4 / Level 0).
         "level0Backbones": [{**b, "genbank": format_backbone_record(b)} for b in parts["level0_backbones"] if b.get("sequence")],
         "level1Backbones": [{**b, "genbank": format_backbone_record(b)} for b in parts["level1_backbones"] if b.get("sequence")],
         "level2Backbones": [{**b, "genbank": format_backbone_record(b)} for b in parts["level2_backbones"] if b.get("sequence")],
     }
 
 
-# Suchfunktionen für die Bibliotheken, um ein Element anhand seiner ID zu finden.
+# Search functions for the libraries to find an element by its ID.
 
 def find_nanocompartment(identifier: str):
-    # next(...) sucht das erste passende Element und gibt es zurück.
+    # next(...) looks for the first matching element and returns it.
     return next((item for item in NANOCOMPARTMENTS if item["id"] == identifier), None)
 
 

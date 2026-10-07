@@ -1,16 +1,16 @@
-"""Level-1- und Level-2-Assemblierung per Golden Gate.
+"""Level 1 and Level 2 assembly by Golden Gate.
 
-Level 0 -> 1 (BsaI): BsaI schneidet aus jedem Level-0-Plasmid das Fragment vom Level-1-N- bis zum Level-1-C-
-Overhang (= Teil + Level-1-Overhangs, bei Type 0.1/0.5 zusaetzlich die Level-2-Overhangs). Die fuenf Fragmente
-eines Moduls ligieren ueber ihre gemeinsamen Overhangs (ACAT | TATG | TTCT | ATCC | TGGC | TTGT) und landen
-zwischen den Akzeptor-Overhangs NLvl1/CLvl1 des Level-1-Backbones (pAGM1311).
+Level 0 -> 1 (BsaI): BsaI cuts out of every Level 0 plasmid the fragment from the Level 1 N overhang to the Level 1 C
+overhang (= part + Level 1 overhangs, for Type 0.1/0.5 additionally the Level 2 overhangs). The five fragments
+of a module ligate through their shared overhangs (ACAT | TATG | TTCT | ATCC | TGGC | TTGT) and end up
+between the acceptor overhangs NLvl1/CLvl1 of the Level 1 backbone (pAGM1311).
 
-Level 1 -> 2 (BbsI): BbsI schneidet aus den drei Level-1-Plasmiden (Cargo-Modul, Promotor, NC-Modul) das Stueck
-zwischen den Level-2-Overhangs (CCAA ... CGTT | CGTT ... TGAT | TGAT ... AATG) und ligiert es zwischen BbLvl2N/
-BbLvl2C des Level-2-Backbones (pESC-HIS).
+Level 1 -> 2 (BbsI): BbsI cuts out of the three Level 1 plasmids (cargo module, promoter, NC module) the piece
+between the Level 2 overhangs (CCAA ... CGTT | CGTT ... TGAT | TGAT ... AATG) and ligates it between BbLvl2N/
+BbLvl2C of the Level 2 backbone (pESC-HIS).
 
-Alle Sequenzen sind der Top-Strand, 5' links -> 3' rechts. Das Cargo-Modul liegt darauf antisense (jedes Teil als
-Reverse Complement), die zugehoerigen CDS-Features tragen deshalb complement()."""
+All sequences are the top strand, 5' left -> 3' right. The cargo module lies antisense on it (every part as a
+reverse complement), so the matching CDS features carry complement()."""
 
 from __future__ import annotations
 
@@ -28,8 +28,8 @@ def _loc(start: int, end: int, antisense: bool = False) -> str:
 
 
 def level1_fragment(built: dict) -> dict:
-    """Das BsaI-Fragment eines Level-0-Konstrukts (`attach_adapter`-Ergebnis in Plasmid-Orientierung): vom
-    Level-1-N-Overhang bis einschliesslich Level-1-C-Overhang. Koordinaten relativ zum Fragment (1-basiert)."""
+    """The BsaI fragment of a Level 0 construct (`attach_adapter` result in plasmid orientation): from the
+    Level 1 N overhang up to and including the Level 1 C overhang. Coordinates relative to the fragment (1-based)."""
     roles = {o["role"]: o for o in built["overhangs"]}
     n0, _ = location_span(roles["level1_N"]["location"])
     _, c1 = location_span(roles["level1_C"]["location"])
@@ -50,7 +50,7 @@ def _site_hits(seq: str) -> list:
 
 
 def _merge_overhangs(items: list) -> list:
-    """Overhang-Features gleicher Position (Naht zweier Fragmente) zu einem zusammenfassen, Labels mit ' / '."""
+    """Merge overhang features at the same position (seam of two fragments) into one, labels joined with ' / '."""
     merged = {}
     for it in items:
         key = (it["start"], it["end"])
@@ -73,7 +73,7 @@ def _spacer_feature(sp: dict) -> dict:
 
 def _pack(label: str, what: str, site: str, strand: str, seq: str, parts: list, overhangs: list, notes: list,
           sites: list, name: str, spacers: list | None = None) -> dict:
-    """Gemeinsame Gestalt eines Level-1-Inserts (auch fuer den Promotor)."""
+    """Common shape of a Level 1 insert (also for the promoter)."""
     feats = [_overhang_feature(o, seq) for o in overhangs] + [_spacer_feature(sp) for sp in (spacers or [])]
     for p in parts:
         feats.append(make_feature("CDS" if p["kind"] != "promoter" else "promoter",
@@ -91,7 +91,7 @@ def _pack(label: str, what: str, site: str, strand: str, seq: str, parts: list, 
 
 
 def assemble_level1_module(fragments: list, label: str, site: str, antisense: bool, name: str) -> dict:
-    """Fuenf Level-0-Fragmente (Type 0.1 ... 0.5) zu einem Level-1-Insert. `fragments`: Eintraege mit
+    """Five Level 0 fragments (Type 0.1 ... 0.5) into one Level 1 insert. `fragments`: entries with
     "fragment" (level1_fragment), "label", "type", "isReal", "isUser", "what", "insertSequence"."""
     seq, parts, overhangs, sites, placeholders, spacers = "", [], [], [], [], []
     for k, fr in enumerate(fragments):
@@ -125,7 +125,7 @@ def assemble_level1_module(fragments: list, label: str, site: str, antisense: bo
 
 
 def level2_overhang(adapter_id: str, role: str) -> str:
-    """Top-Strand-Basen des Level-2-Overhangs eines Adapters (z.B. ("0.5rc", "level2_C") -> CGTT)."""
+    """Top strand bases of the Level 2 overhang of an adapter (e.g. ("0.5rc", "level2_C") -> CGTT)."""
     entry = find_part("type_overhangs", adapter_id)
     for o in entry["overhangs"]:
         if o["role"] == role:
@@ -134,8 +134,8 @@ def level2_overhang(adapter_id: str, role: str) -> str:
 
 
 def assemble_level1_promoter(label: str, promoter_seq: str, is_real: bool, name: str, backbone: dict) -> dict:
-    """Promotor-Insert fuer Level 1: NLvl1 + Level-2-N-Overhang (= C-Overhang des Cargo-Moduls) + Promotor +
-    Level-2-C-Overhang (= N-Overhang des NC-Moduls) + CLvl1."""
+    """Promoter insert for Level 1: NLvl1 + Level 2 N overhang (= C overhang of the cargo module) + promoter +
+    Level 2 C overhang (= N overhang of the NC module) + CLvl1."""
     n1 = backbone["sequence"][location_span(backbone["receiver_overhangs"]["5_prime"]["location"])[0] - 1:
                               location_span(backbone["receiver_overhangs"]["5_prime"]["location"])[1]]
     c1 = backbone["sequence"][location_span(backbone["receiver_overhangs"]["3_prime"]["location"])[0] - 1:
@@ -165,11 +165,11 @@ def _site_intact(new_seq: str, location: str, enzyme: str) -> bool:
 
 def clone_fragment_into_backbone(backbone: dict, fragment: str, features: list, name: str, what: str,
                                  keep_label: str | None = None, keep_enzyme: str | None = None) -> dict:
-    """Ersetzt in `backbone` alles von NLvl-Overhang bis einschliesslich CLvl-Overhang durch `fragment` (das mit
-    genau diesen beiden Overhangs beginnt/endet). Backbone-Features ausserhalb bleiben (hinter dem Insert
-    verschoben); Features im ersetzten Bereich entfallen mit dem Stuffer. Erkennungsstellen mit `keep_label`
-    ragen an der Naht in den Bereich hinein und bleiben erhalten — ihre Basen setzen Backbone und Fragment
-    gemeinsam zusammen; sie werden danach auf Unversehrtheit geprueft. `features` liegen relativ zum Fragment."""
+    """Replaces in `backbone` everything from the NLvl overhang up to and including the CLvl overhang by `fragment` (which begins/ends
+    with exactly these two overhangs). Backbone features outside stay (shifted behind the insert);
+    features in the replaced region disappear with the stuffer. Recognition sites with `keep_label`
+    reach into the region at the seam and are kept; backbone and fragment together build their bases;
+    they are checked for integrity afterwards. `features` are relative to the fragment."""
     seq = backbone["sequence"]
     oh5, oh3 = backbone["receiver_overhangs"]["5_prime"], backbone["receiver_overhangs"]["3_prime"]
     n0, n1 = location_span(oh5["location"])
@@ -214,9 +214,9 @@ def clone_fragment_into_backbone(backbone: dict, fragment: str, features: list, 
 
 
 def rotated_view(module: dict) -> dict:
-    """Dasselbe Level-1-Insert um 180 Grad gedreht (Reverse Complement, Positionen gespiegelt, Strang gekippt), damit
-    das Cargo-Modul in seiner eigenen Leserichtung steht (5' links -> 3' rechts, Type 0.5 ... 0.1). Nur zur Anzeige
-    und fuer den Insert-Download; Plasmid und Level-2-Assemblierung bleiben in der Top-Strand-Orientierung."""
+    """The same Level 1 insert rotated by 180 degrees (reverse complement, positions mirrored, strand flipped), so that
+    the cargo module reads in its own direction (5' left -> 3' right, Type 0.5 ... 0.1). For display only
+    and for the insert download; plasmid and Level 2 assembly stay in top strand orientation."""
     seq, n = module["sequence"], module["length"]
     rseq = reverse_complement(seq)
 
@@ -250,7 +250,7 @@ def rotated_view(module: dict) -> dict:
 
 
 def finish_level1(module: dict, backbone: dict | None) -> dict:
-    """Insert-Record (linear) und, falls das Level-1-Backbone da ist, das Plasmid mit BsaI-Klonierung."""
+    """Insert record (linear) and, if the Level 1 backbone is there, the plasmid with BsaI cloning."""
     definition = (f"{module['what']}: Level 0 parts joined via BsaI overhangs, flanked by NLvl1 (ACAT) and CLvl1 (TTGT); "
                   f"Level 2 overhangs {module['level2Overhangs']['n']} / {module['level2Overhangs']['c']}. "
                   + ("Sequence 5'->3' left to right = Level 1 plasmid top strand"
@@ -258,7 +258,7 @@ def finish_level1(module: dict, backbone: dict | None) -> dict:
                   + (" " + " ".join(module["notes"]) if module["notes"] else ""))
     feats = module.pop("_features")
     module["genbank"] = format_genbank_record(module["name"], module["sequence"], feats, False, definition)
-    # Cargo-Modul: Anzeige/Insert-Download gedreht (Cargo in Leserichtung), wie bei Level 0
+    # Cargo module: display/insert download rotated (cargo in reading direction), as for Level 0
     module["shown"] = rotated_view(module) if module["strand"] == "antisense" else None
     module["plasmid"] = None
     if backbone:
@@ -269,9 +269,9 @@ def finish_level1(module: dict, backbone: dict | None) -> dict:
 
 
 def assemble_level2(modules: list, name: str, backbone: dict | None) -> dict:
-    """Cargo-Modul, Promotor und NC-Modul (Level-1-Inserts, in dieser Reihenfolge) zum Level-2-Insert: aus jedem
-    Level-1-Insert wird per BbsI das Stueck zwischen den Level-2-Overhangs geschnitten (NLvl1/CLvl1 entfallen),
-    die drei Stuecke ligieren ueber CGTT bzw. TGAT; die Enden (CCAA / AATG) passen zu BbLvl2N/BbLvl2C."""
+    """Cargo module, promoter and NC module (Level 1 inserts, in this order) into the Level 2 insert: from every
+    Level 1 insert the piece between the Level 2 overhangs is cut by BbsI (NLvl1/CLvl1 drop out),
+    the three pieces ligate through CGTT and TGAT; the ends (CCAA / AATG) match BbLvl2N/BbLvl2C."""
     seq, parts, inner, ends, spacers = "", [], [], [], []
     for k, m in enumerate(modules):
         frag = m["sequence"][4:-4]
@@ -282,8 +282,8 @@ def assemble_level2(modules: list, name: str, backbone: dict | None) -> dict:
                 raise ValueError(f"Level 2: overhang {frag[:4]} of {m['label']} does not match the predecessor ({seq[-4:]}).")
             base = len(seq) - 4
             seq += frag[4:]
-        shift = base - 4                                  # Level-1-Koordinate -> Level-2-Koordinate
-        ends.append(len(seq))                             # Ende dieses Stuecks im Level-2-Insert
+        shift = base - 4                                  # Level 1 coordinate -> Level 2 coordinate
+        ends.append(len(seq))  # end of this piece in the Level 2 insert
         for p in m["parts"]:
             parts.append({**p, "start": p["start"] + shift, "end": p["end"] + shift, "module": m["site"]})
         for sp in m["spacers"]:

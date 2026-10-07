@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""Sequenz-Beschaffung für das Primerdesign.
+"""Obtaining the sequence for primer design.
 
-Die Sequenz kann aus zwei Quellen kommen:
+The sequence can come from two sources:
 
-* einem FASTA-File (so ruft die CLI es auf), oder
-* direkt als String (so ruft der Webserver es auf — dort liegt die Sequenz
-  bereits im Request und soll nicht erst auf die Platte geschrieben werden).
+* a FASTA file (this is how the CLI calls it), or
+* directly as a string (this is how the web server calls it: there the sequence
+  is already in the request and should not first be written to disk).
 
-Deshalb ist das Einlesen in drei Teile zerlegt: ``parse_fasta`` (reiner Text,
-keine Datei-IO), ``read_fasta_sequence`` (Datei -> Sequenz, unverändertes
-Verhalten) und ``resolve_sequence`` (nimmt entgegen, was da ist).
+That is why reading is split into three parts: ``parse_fasta`` (plain text,
+no file IO), ``read_fasta_sequence`` (file -> sequence, unchanged
+behaviour) and ``resolve_sequence`` (takes whatever is there).
 """
 
 from __future__ import annotations
@@ -26,7 +26,7 @@ VALID_IUPAC = frozenset("ACGTRYKMSWBDHVN")
 
 
 def normalise_sequence(sequence: str) -> str:
-    """Grossbuchstaben, Whitespace raus, IUPAC-Zeichen prüfen."""
+    """Upper case, whitespace removed, IUPAC characters checked."""
     seq = "".join((sequence or "").split()).upper()
 
     if not seq:
@@ -42,7 +42,7 @@ def normalise_sequence(sequence: str) -> str:
 
 
 def parse_fasta(text: str) -> str:
-    """FASTA-Text mit genau einem Record -> Sequenz. Ohne Datei-Zugriff."""
+    """FASTA text with exactly one record -> sequence. Without file access."""
     lines = text.splitlines()
     headers = [line for line in lines if line.startswith(">")]
     if len(headers) > 1:
@@ -55,7 +55,7 @@ def parse_fasta(text: str) -> str:
 
 
 def read_fasta_sequence(fasta_file: str) -> str:
-    """FASTA-Datei -> Sequenz. Verhalten unverändert."""
+    """FASTA file -> sequence. Behaviour unchanged."""
     path = Path(fasta_file)
     if not path.exists():
         raise FileNotFoundError(f"FASTA file not found: {fasta_file}")
@@ -64,7 +64,7 @@ def read_fasta_sequence(fasta_file: str) -> str:
 
 
 def resolve_sequence(sequence: str | None = None, fasta_file: str | None = None) -> str:
-    """Genau eine der beiden Quellen muss gesetzt sein."""
+    """Exactly one of the two sources must be set."""
     if sequence is not None and fasta_file is not None:
         raise ValueError("Provide either `sequence` or `fasta_file`, not both.")
     if sequence is not None:
@@ -79,7 +79,7 @@ def rc(seq: str) -> str:
 
 
 def slice_primers(seq: str, primer_length: int = 25) -> tuple:
-    """Aus einer bereits eingelesenen Sequenz die beiden Rohprimer schneiden."""
+    """Cut the two raw primers from an already read sequence."""
     if len(seq) < primer_length:
         raise ValueError(f"Sequence must be at least {primer_length} bp long")
 
@@ -95,6 +95,6 @@ def get_primer_sequences(
     *,
     sequence: str | None = None,
 ) -> tuple:
-    """Rohprimer aus FASTA-Datei ODER aus einer Sequenz."""
+    """Raw primers from a FASTA file OR from a sequence."""
     seq = resolve_sequence(sequence=sequence, fasta_file=fasta_file)
     return slice_primers(seq, primer_length=primer_length)

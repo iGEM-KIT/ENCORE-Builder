@@ -104,8 +104,7 @@
     return `<div class="prop"><span class="k">${esc(label)}</span><span class="v">${esc(display(value))}</span></div>`;
   }
 
-  // structure_id can hold several semicolon-separated PDB codes (e.g. "4PT2; 7S20") —
-  // link each to its RCSB PDB entry. Assemblies have no UniProt entry of their own
+  // structure_id can hold several semicolon-separated PDB codes (e.g. "4PT2; 7S20");   // link each to its RCSB PDB entry. Assemblies have no UniProt entry of their own
   // (UniProt indexes protein sequences, not individual experimental structures or
   // engineered variants), so the PDB structure is the correct per-variant reference.
   function propertyPdb(label, value) {

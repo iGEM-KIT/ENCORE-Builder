@@ -1,83 +1,82 @@
 # commec-service
 
-Optionaler Sidecar-Container, der [COMMEC](https://github.com/ibbis-bio/common-mechanism)
-("Common Mechanism", IBBIS) per HTTP nutzbar macht. commec selbst ist eine
-FASTA-in/JSON-out-CLI ohne eigene API — `app.py` ist ein dünner Wrapper
-darum, damit `server/utils/commec.js` (im Hauptprojekt) es per HTTP aufrufen
-kann.
+Optional sidecar container that makes [COMMEC](https://github.com/ibbis-bio/common-mechanism)
+("Common Mechanism", IBBIS) usable over HTTP. commec itself is a
+FASTA-in/JSON-out CLI without an API of its own; `app.py` is a thin wrapper
+around it, so that `server/utils/commec.js` (in the main project) can call it
+over HTTP.
 
-Warum ein eigener Container statt Teil des Haupt-Images: commec braucht
-Conda und BLAST/HMMER — das ist zu schwer, um es wie primer3-py/ViennaRNA
-automatisch mitzuinstallieren. Details und Einrichtung: siehe die Sektion
-"Biosecurity screening" in der [Haupt-README](../README.md).
+Why a container of its own instead of part of the main image: commec needs
+Conda and BLAST/HMMER, which is too heavy to install automatically like
+primer3-py/ViennaRNA. Details and setup: see the section
+"Biosecurity screening" in the [main README](../README.md).
 
-## Datenbankumfang (wichtig!)
+## Database scope (important!)
 
-Dieses Image lädt beim Build **nur** die kuratierte Biorisk+Low-concern-Datenbank
-(~1.2 GB, per `commec setup` mit einer festen Antwortsequenz, siehe
-`Dockerfile`) — **nicht** die vollen Taxonomie-Datenbanken (Protein-NR
-~530GB, Nukleotid-NT ~580GB; `commec setup -a` würde ALLES laden, zusammen
-über 1TB). Das war eine bewusste Entscheidung: die vollen Datenbanken passen
-auf den meisten Entwicklungsrechnern nicht auf die Platte und brauchen sehr
-lange zum Laden.
+At build time this image downloads **only** the curated biorisk + low-concern database
+(~1.2 GB, via `commec setup` with a fixed answer sequence, see
+`Dockerfile`), **not** the full taxonomy databases (protein NR
+~530 GB, nucleotide NT ~580 GB; `commec setup -a` would download EVERYTHING, together
+over 1 TB). That was a deliberate decision: the full databases do not fit
+on the disk of most development machines and take very long to download.
 
-Praktische Folge: `commec screen` läuft hier immer mit `--skip-tx --skip-nt`
-(`app.py`, steuerbar über `COMMEC_SKIP_TAXONOMY`). Damit liefert commec
-**keine Taxonomie-Bestmatches** gegen beliebige Organismen — nur direkte
-Sequenztreffer gegen die kuratierte Biorisk-Liste (bekannte Toxine,
-Virulenzfaktoren, regulierte Pathogene). Ein wichtiger Nebeneffekt: **jede**
-Sequenz ohne Treffer bekommt von commec selbst `screen_status: "Warning"`
-mit der Begründung "Sequence risk is unknown, possibly generated in
-silico." — auch völlig harmlose Gene wie GFP, weil ohne Taxonomie-Check
-nichts *positiv* als sicher bestätigt werden kann. Das ist erwartetes
-commec-Verhalten bei einem unvollständigen Datenbanksatz, kein Fehler.
+Practical consequence: `commec screen` always runs here with `--skip-tx --skip-nt`
+(`app.py`, controllable via `COMMEC_SKIP_TAXONOMY`). That way commec delivers
+**no taxonomy best matches** against arbitrary organisms, only direct
+sequence hits against the curated biorisk list (known toxins,
+virulence factors, regulated pathogens). An important side effect: **every**
+sequence without a hit gets `screen_status: "Warning"` from commec itself
+with the rationale "Sequence risk is unknown, possibly generated in
+silico.", even completely harmless genes such as GFP, because without the taxonomy check
+nothing can be confirmed as *positively* safe. That is expected
+commec behaviour with an incomplete database set, not an error.
 
-Deshalb wertet das Frontend (`frontend/index.html`, `biosecEffectiveStatus()`)
-in diesem Fall gezielt das `biorisk`-Feld statt des generischen
-`screen_status` aus — nur ein echter Biorisk-Treffer (`biorisk` != `Pass`)
-löst die Warnung/Blockierung aus, nicht das allgemeine "ungeprüft"-Warning.
+That is why the frontend (`frontend/index.html`, `biosecEffectiveStatus()`)
+evaluates the `biorisk` field in this case instead of the generic
+`screen_status`: only a real biorisk hit (`biorisk` != `Pass`)
+triggers the warning/block, not the general "unchecked" warning.
 
-## Endpunkte
+## Endpoints
 
-- `GET /health` — `{"ok": bool, "detail": str}`. `ok` ist `false`, solange
-  `COMMEC_DB_DIR` (Standard `/databases`) fehlt oder leer ist.
-- `POST /screen` — Body `{"sequences": [{"label": str, "sequence": str}]}`,
-  Antwort `{"results": [...]}` mit einem Eintrag pro Eingabesequenz, in
-  derselben Reihenfolge:
-  - Erfolg: `{"available": true, "status": {"screen_status": "Pass"|"Warning"|"Flag"|"Mixed"|"Error"|"Skip", "biorisk": ..., "protein_taxonomy": ..., "nucleotide_taxonomy": ..., "low_concern": ..., "rationale": "..."}}`
-    (das `status`-Objekt kommt unverändert von commec selbst)
-  - Fehlgeschlagen (Sequenz zu lang, commec-Fehler, Timeout, ...):
+- `GET /health`: `{"ok": bool, "detail": str}`. `ok` is `false` as long as
+  `COMMEC_DB_DIR` (default `/databases`) is missing or empty.
+- `POST /screen`: body `{"sequences": [{"label": str, "sequence": str}]}`,
+  answer `{"results": [...]}` with one entry per input sequence, in
+  the same order:
+  - success: `{"available": true, "status": {"screen_status": "Pass"|"Warning"|"Flag"|"Mixed"|"Error"|"Skip", "biorisk": ..., "protein_taxonomy": ..., "nucleotide_taxonomy": ..., "low_concern": ..., "rationale": "..."}}`
+    (the `status` object comes unchanged from commec itself)
+  - failed (sequence too long, commec error, timeout, ...):
     `{"available": false, "reason": "..."}`
 
-Jede Sequenz läuft als eigener `commec screen`-Aufruf in einem temporären
-Verzeichnis (unabhängig voneinander — ein Fehler bei einer Sequenz blockiert
-nicht die anderen im selben Batch).
+Every sequence runs as its own `commec screen` call in a temporary
+directory (independent of each other; an error for one sequence does not block
+the others in the same batch).
 
-## Konfiguration (Umgebungsvariablen)
+## Configuration (environment variables)
 
-- `COMMEC_DB_DIR` (Standard `/databases`) — wohin `commec setup` geladen hat.
-- `COMMEC_THREADS` (Standard `4`) — an `commec screen -t` durchgereicht.
-- `COMMEC_SKIP_TAXONOMY` (Standard `true`) — haengt `--skip-tx --skip-nt` an.
-  Nur auf `false` setzen, wenn dieses Image um die Protein-/Nukleotid-Taxonomie-
-  Datenbanken erweitert wurde (siehe oben).
-- `COMMEC_RUN_TIMEOUT_SECONDS` (Standard `900`) — harter Timeout pro
-  Einzel-Screen, damit eine hängende Sequenz nicht den ganzen Service blockiert.
-- `COMMEC_MAX_SEQ_LEN` (Standard `20000`) — Sequenzen darüber werden ohne
-  commec-Aufruf mit `available:false` abgelehnt.
-- `PORT` (Standard `8787`).
+- `COMMEC_DB_DIR` (default `/databases`): where `commec setup` downloaded to.
+- `COMMEC_THREADS` (default `4`): passed through to `commec screen -t`.
+- `COMMEC_SKIP_TAXONOMY` (default `true`): appends `--skip-tx --skip-nt`.
+  Only set to `false` if this image has been extended with the protein/nucleotide taxonomy
+  databases (see above).
+- `COMMEC_RUN_TIMEOUT_SECONDS` (default `900`): hard timeout per
+  single screen, so that a hanging sequence does not block the whole service.
+- `COMMEC_MAX_SEQ_LEN` (default `20000`): sequences above this are rejected without
+  a commec call with `available:false`.
+- `PORT` (default `8787`).
 
-## Verifiziert
+## Verified
 
-Dieser Wrapper wurde gegen einen echten, lokal gebauten Container
-(commec 1.0.4) end-to-end getestet, nicht nur nach Doku gebaut:
+This wrapper was tested end to end against a real, locally built container
+(commec 1.0.4), not just built from the docs:
 
-- `commec setup` mit der in `Dockerfile` verwendeten Antwortsequenz lädt
-  tatsächlich nur `biorisk/` + `low_concern/` (~1.2 GB) herunter.
-- `GET /health` meldet `ok: true` sobald die Datenbank da ist.
-- `POST /screen` mit einer harmlosen Sequenz (GFP) liefert
-  `biorisk: "Pass"` (bei generischem `screen_status: "Warning"`, siehe oben).
-- `POST /screen` mit einer echten, aus UniProt bezogenen Conotoxin-Sequenz
-  (Q9BPJ4, in der Biorisk-Datenbank als "Must flag" gelistet) liefert
-  korrekt `screen_status: "Flag"`, `biorisk: "Flag"`,
-  `rationale: "Matches sequence with pathogenic or toxin function."` — und
-  loest im Frontend zuverlaessig das blockierende Warn-Modal aus.
+- `commec setup` with the answer sequence used in `Dockerfile` really
+  only downloads `biorisk/` + `low_concern/` (~1.2 GB).
+- `GET /health` reports `ok: true` as soon as the database is there.
+- `POST /screen` with a harmless sequence (GFP) returns
+  `biorisk: "Pass"` (with a generic `screen_status: "Warning"`, see above).
+- `POST /screen` with a real conotoxin sequence obtained from UniProt
+  (Q9BPJ4, listed in the biorisk database as "Must flag") correctly returns
+  `screen_status: "Flag"`, `biorisk: "Flag"`,
+  `rationale: "Matches sequence with pathogenic or toxin function."`, and
+  reliably triggers the blocking warning modal in the frontend.

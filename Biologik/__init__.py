@@ -1,13 +1,12 @@
-"""ENCORE Biologik — die fachliche Logik des Builders.
+"""ENCORE Biologik: the scientific logic of the builder.
 
-Zwei unabhängige Unterpakete:
+Two independent subpackages:
 
-* ``level0_design`` — Golden-Gate-Design (Level 0/1/2, Order-Liste, FASTA).
-  Reine Standardbibliothek, braucht keine externen Pakete.
-* ``primer_design``  — Primerauswahl und Thermodynamik. Braucht ``primer3-py``
-  (siehe ``Biologik/requirements.txt``).
+* ``level0_design``: Golden Gate design (Level 0/1/2, order list, GenBank export).
+  Standard library only, needs no external packages.
+* ``primer_design``: primer selection and thermodynamics. Needs ``primer3-py``
+  (see ``Biologik/requirements.txt``).
 
-Hier wird bewusst NICHTS importiert: ``import Biologik`` soll billig bleiben
-und darf primer3 nicht voraussetzen, damit ``level0_design`` auch ohne
-installiertes primer3 nutzbar ist.
+Nothing is imported here on purpose: ``import Biologik`` should stay cheap and must not
+require primer3, so that ``level0_design`` stays usable without primer3 installed.
 """

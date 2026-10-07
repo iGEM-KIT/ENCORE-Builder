@@ -14,7 +14,7 @@
  *   //                                | { kind: 'linker', id: string }
  *   //                                | { kind: 'marker', id: string }    // spycatcher | spytag
  *   //                                | { kind: 'custom', label?: string, seq: string } }
- *   genbank?: boolean          // also return a GenBank export string (annotated — see design.py: build_genbank)
+ *   genbank?: boolean          // also return a GenBank export string (annotated; see design.py: build_genbank)
  * }
  *
  * Runs the Golden Gate design in Biologik (Python) and returns what the Builder UI shows:
@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
     return design
   } catch (err) {
     // Biologik reports invalid input with .status = 400 and a message that
-    // explains what is wrong — pass it through instead of a generic string.
+    // explains what is wrong; pass it through instead of a generic string.
     if (err?.status === 400) {
       throw createError({ statusCode: 400, statusMessage: err.message })
     }

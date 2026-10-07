@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-// Legt beim ersten `pnpm dev` automatisch ein `.venv` mit primer3-py an, damit
-// niemand mehr manuell `pip install` ausfuehren muss. Schlaegt irgendein
-// Schritt fehl (kein Python im PATH, kein C-Compiler fuer primer3-py, ...),
-// bricht das Skript NICHT mit einem Fehler ab: Biologik faellt dann einfach
-// auf die ungenauere Wallace-Tm-Schaetzung zurueck (server/utils/biologik.js).
+// On the first `pnpm dev` this automatically creates a `.venv` with primer3-py, so that
+// nobody has to run `pip install` by hand any more. If any step fails
+// (no Python on the PATH, no C compiler for primer3-py, ...), the script does NOT
+// abort with an error: Biologik then simply falls back to the less accurate
+// Wallace Tm estimate (server/utils/biologik.js).
 import { existsSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
 import { resolve, dirname } from 'node:path'
@@ -19,19 +19,19 @@ const venvPip = resolve(venvDir, isWindows ? 'Scripts/pip.exe' : 'bin/pip')
 const log = (msg) => console.log(`[setup-python] ${msg}`)
 
 if (process.env.BIOLOGIK_PYTHON) {
-  log(`BIOLOGIK_PYTHON ist gesetzt (${process.env.BIOLOGIK_PYTHON}) — ueberspringe automatisches venv-Setup.`)
+  log(`BIOLOGIK_PYTHON is set (${process.env.BIOLOGIK_PYTHON}); skipping the automatic venv setup.`)
   process.exit(0)
 }
 
 if (!existsSync(requirements)) {
-  // Passiert z.B. in der Docker-Build-Stage, falls dieses Skript dort vor
-  // `COPY . .` liefe — dort uebernimmt ohnehin das Dockerfile die Installation.
-  log('Biologik/requirements.txt nicht gefunden — ueberspringe.')
+  // Happens e.g. in the Docker build stage if this script ran there before
+  // `COPY . .`; the Dockerfile takes care of the installation there anyway.
+  log('Biologik/requirements.txt not found; skipping.')
   process.exit(0)
 }
 
 if (existsSync(venvPython)) {
-  log('.venv existiert bereits — nichts zu tun (zum Neuaufsetzen .venv loeschen).')
+  log('.venv already exists; nothing to do (delete .venv to set it up again).')
   process.exit(0)
 }
 
@@ -45,22 +45,22 @@ function findSystemPython() {
 
 const systemPython = findSystemPython()
 if (!systemPython) {
-  log('Kein Python 3 im PATH gefunden — Biologik nutzt bis auf Weiteres die Wallace-Tm-Schaetzung. Python installieren und `pnpm dev` erneut starten, oder BIOLOGIK_PYTHON setzen.')
+  log('No Python 3 found on the PATH; Biologik keeps using the Wallace Tm estimate for now. Install Python and start `pnpm dev` again, or set BIOLOGIK_PYTHON.')
   process.exit(0)
 }
 
-log(`Lege virtuelle Umgebung an mit ${systemPython} ...`)
+log(`Creating a virtual environment with ${systemPython} ...`)
 const venvResult = spawnSync(systemPython, ['-m', 'venv', venvDir], { stdio: 'inherit', cwd: root })
 if (venvResult.status !== 0) {
-  log('venv-Erstellung fehlgeschlagen — Biologik nutzt bis auf Weiteres die Wallace-Tm-Schaetzung.')
+  log('Creating the venv failed; Biologik keeps using the Wallace Tm estimate for now.')
   process.exit(0)
 }
 
-log('Installiere primer3-py in .venv (fuer echte Tm/Dimer-Berechnung) ...')
+log('Installing primer3-py into .venv (for real Tm/dimer calculation) ...')
 const pipResult = spawnSync(venvPip, ['install', '--quiet', '-r', requirements], { stdio: 'inherit', cwd: root })
 if (pipResult.status !== 0) {
-  log('primer3-py-Installation fehlgeschlagen (z.B. fehlender C-Compiler) — Biologik nutzt bis auf Weiteres die Wallace-Tm-Schaetzung. Das ist unproblematisch, aber weniger genau.')
+  log('Installing primer3-py failed (e.g. missing C compiler); Biologik keeps using the Wallace Tm estimate for now. That is harmless, but less accurate.')
   process.exit(0)
 }
 
-log('Fertig — primer3-py ist in .venv installiert und wird automatisch von Biologik gefunden.')
+log('Done: primer3-py is installed in .venv and is found by Biologik automatically.')

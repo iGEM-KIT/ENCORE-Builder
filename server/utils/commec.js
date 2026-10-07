@@ -1,23 +1,23 @@
 /**
- * Brücke zum COMMEC-Sidecar (Biosicherheits-Screening, "Common Mechanism", IBBIS).
+ * Bridge to the COMMEC sidecar (biosecurity screening, "Common Mechanism", IBBIS).
  *
- * COMMEC ist bewusst NICHT Teil dieses Node/Python-Stacks: es braucht Conda
- * und BLAST/HMMER (siehe commec-service/README.md) — viel zu schwer, um es
- * wie primer3-py/ViennaRNA automatisch mitzuinstallieren. Stattdessen läuft
- * es als eigener Container (commec-service/), der per Docker Compose standard-
- * mäßig zusammen mit der App startet (COMMEC_URL zeigt per Default darauf).
+ * COMMEC is deliberately NOT part of this Node/Python stack: it needs Conda
+ * and BLAST/HMMER (see commec-service/README.md), far too heavy to install
+ * automatically like primer3-py/ViennaRNA. Instead it runs
+ * as its own container (commec-service/), which starts together with the app by
+ * default through Docker Compose (COMMEC_URL points to it by default).
  *
- * Genau wie primer3/ViennaRNA beim Fehlen degradiert dieser Check graziös:
- * ist COMMEC_URL nicht gesetzt oder der Service (noch) nicht erreichbar
- * (z. B. während der Container erst hochfährt), wird {available:false, reason}
- * zurückgegeben statt eines Fehlers — das Design bleibt nutzbar, nur ohne das
- * Sicherheits-Screening.
+ * Just like primer3/ViennaRNA when missing, this check degrades gracefully:
+ * if COMMEC_URL is not set or the service is not (yet) reachable
+ * (e.g. while the container is still starting up), {available:false, reason}
+ * is returned instead of an error; the design stays usable, only without the
+ * security screening.
  */
 
-// Ein voller COMMEC-Lauf (Biorisk + Protein-/Nukleotid-Taxonomie) kann laut
-// IBBIS-Doku mehrere Minuten dauern — das Timeout muss entsprechend grosszuegig
-// sein, sonst wird ein echter, laufender Scan faelschlich als "nicht erreichbar"
-// gewertet.
+// A full COMMEC run (biorisk + protein/nucleotide taxonomy) can take several
+// minutes according to the IBBIS docs; the timeout has to be generous
+// accordingly, otherwise a real, running scan is wrongly counted as
+// "not reachable".
 const DEFAULT_TIMEOUT_MS = 5 * 60_000
 
 function commecUrl() {
@@ -25,14 +25,14 @@ function commecUrl() {
   return url ? url.replace(/\/+$/, '') : null
 }
 
-// Kurzer Timeout: das ist ein simpler "laeuft der Container und sind die
-// Datenbanken da"-Ping fuer die Status-Anzeige im Header, kein echter Screen —
-// soll die Seite beim Laden nicht spuerbar verzoegern.
+// Short timeout: this is a simple "is the container running and are the
+// databases there" ping for the status display in the header, not a real screen;
+// it must not noticeably delay the page load.
 const HEALTH_TIMEOUT_MS = 4_000
 
 /**
- * Fuer die Status-Anzeige im Header ("Biosecurity screening: on/off"): fragt
- * GET /health des Sidecars ab, statt eine ganze Sequenz zu screenen.
+ * For the status display in the header ("Biosecurity screening: on/off"): asks
+ * GET /health of the sidecar instead of screening a whole sequence.
  *
  * @returns {Promise<{available: boolean, reason?: string}>}
  */
@@ -58,20 +58,20 @@ export async function checkCommecHealth() {
 }
 
 /**
- * Mehrere Sequenzen auf einmal screenen.
+ * Screen several sequences at once.
  *
  * @param {{label: string, sequence: string}[]} sequences
  * @returns {Promise<{available: boolean, reason?: string, results?: object[]}>}
- *   `results[i]` korrespondiert zu `sequences[i]` und hat die Form
+ *   `results[i]` corresponds to `sequences[i]` and has the form
  *   `{status: {screen_status, biorisk, protein_taxonomy, nucleotide_taxonomy, low_concern, rationale}}`
- *   — siehe commec-service/app.py für das genaue Schema.
+ *   (see commec-service/app.py for the exact schema).
  */
 export async function screenSequences(sequences) {
   const base = commecUrl()
   if (!base) {
     return {
       available: false,
-      reason: 'COMMEC_URL is not set: biosecurity screening is disabled. See README.md ("Biosicherheits-Screening ist immer dabei") for how to run the commec-service sidecar.',
+      reason: 'COMMEC_URL is not set: biosecurity screening is disabled. See README.md ("Biosecurity screening is always included") for how to run the commec-service sidecar.',
     }
   }
   if (!Array.isArray(sequences) || sequences.length === 0) {

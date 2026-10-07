@@ -17,8 +17,8 @@ from Biologik.level0_design.sequence import is_protein, reverse_complement, vali
 
 
 def test_validate_cargo_rejects_a_trailing_stop_codon():
-    # Lang genug und im Raster — die einzige Regel, die hier greifen darf, ist
-    # das Stopcodon am Ende. Deshalb ist errors[0] eindeutig.
+    # Long enough and in frame; the only rule allowed to fire here is
+    # the stop codon at the end. That is why errors[0] is unambiguous.
     cargo = validate_cargo('ATGAAATTTGAAATGAAATTTGAAATGAAATTTTAG', min_bp=30)
 
     assert cargo['ok'] is False
@@ -28,8 +28,7 @@ def test_validate_cargo_rejects_a_trailing_stop_codon():
 
 
 def test_validate_cargo_rejects_a_too_short_sequence():
-    # Endet auf GAA, nicht auf einem Stopcodon — hier darf nur die
-    # Laengenpruefung anschlagen.
+    # Ends in GAA, not in a stop codon; only the length check may fire here.
     cargo = validate_cargo('ATGAAATTTGAA', min_bp=30)
 
     assert cargo['ok'] is False
@@ -49,10 +48,10 @@ def test_validate_cargo_accepts_a_fusion_ready_sequence():
 
 CARGO = 'ATGAAATTTGAAATGAAATTTGAAATGAAATTTGAA'
 
-# Die zwei Fusionsrichtungen sind seit dem Slot-Umbau kein eigener 'fusion'-Parameter
-# mehr, sondern ergeben sich daraus, in welchem Cargo-Modul-Slot (Type 0.1 oder 0.5)
-# das Targeting-Peptid sitzt. Ein Linker im Nachbarslot ist Pflicht (siehe
-# resolve_slots in design.py) — ohne ihn lehnt design_construct die Eingabe ab.
+# The two fusion directions have not been a separate 'fusion' parameter since the slot rework,
+# but follow from which cargo module slot (Type 0.1 or 0.5) holds the targeting peptide.
+# A linker in the neighbouring slot is mandatory (see resolve_slots in slots.py); without it
+# design_construct rejects the input.
 CARGO_SLOTS_C_TERM = {'1': {'kind': 'tp'}, '2': {'kind': 'linker', 'id': 'GSSS2'}}
 CARGO_SLOTS_N_TERM = {'5': {'kind': 'tp'}, '4': {'kind': 'linker', 'id': 'GSSS2'}}
 
@@ -83,9 +82,9 @@ def test_make_primer_pair_and_genbank_export():
     primers = make_primer_pair('ATGAAATTTGAA', 'CCAA', 'GCAA')
     assert len(primers) == 2
 
-    # build_genbank erwartet die volle design_construct()-Antwort (cargoSlots, ncSlots,
-    # sequenceAntisense, ...) — ein von Hand gebautes Teil-Dict war hier frueher schon
-    # einmal veraltet, ohne dass es auffiel. Deshalb jetzt gegen ein echtes Ergebnis.
+    # build_genbank expects the full design_construct() answer (cargoSlots, ncSlots,
+    # sequenceAntisense, ...); a hand-built partial dict was already outdated here once
+    # without anyone noticing. So it now runs against a real result.
     design = _design()
     genbank = build_genbank(design)
     assert 'LOCUS       Level1_Cargo ' in genbank
@@ -118,7 +117,7 @@ def test_json_cli_connects_backend_request_to_biologik():
 
 
 def _run_cli(command, payload):
-    """Ruft cli.py so auf, wie server/utils/biologik.js es tut."""
+    """Calls cli.py the way server/utils/biologik.js does."""
     return subprocess.run(
         [sys.executable, '-m', 'Biologik.level0_design.cli', command],
         input=json.dumps(payload),
@@ -143,8 +142,8 @@ def test_json_cli_serves_libraries():
 
 
 def test_json_cli_validates_cargo_without_failing():
-    # Eine ungueltige Sequenz ist eine gueltige Antwort mit ok:false,
-    # kein Fehler-Exit — sonst wuerde die API daraus faelschlich HTTP 500 machen.
+    # An invalid sequence is a valid answer with ok:false,
+    # not an error exit; otherwise the API would wrongly turn it into HTTP 500.
     result = _run_cli('validate', {'cargoSeq': 'ATGAAATTTGAAATGAAATTTGAAATGAAATTTTAA'})
     response = json.loads(result.stdout)
 
@@ -155,32 +154,32 @@ def test_json_cli_validates_cargo_without_failing():
 
 
 def test_json_cli_reports_the_real_error_on_stdout():
-    # cli.py beendet sich mit 1, legt die Meldung aber auf stdout ab. Die
-    # Gegenstelle muss stdout auswerten, sonst geht der Grund verloren.
-    result = _run_cli('design', {'nanocompartment': 'gibtsnicht', 'cargoSeq': CARGO})
+    # cli.py exits with 1 but puts the message on stdout. The
+    # other side has to read stdout, otherwise the reason is lost.
+    result = _run_cli('design', {'nanocompartment': 'doesnotexist', 'cargoSeq': CARGO})
     response = json.loads(result.stdout)
 
     assert result.returncode == 1
     assert response['ok'] is False
-    assert 'gibtsnicht' in response['error']
+    assert 'doesnotexist' in response['error']
     assert result.stderr.strip() == ''
 
 
 def test_stop_codon_is_only_set_where_the_user_put_an_ncs_with_stop():
-    # Kein automatisches Stopcodon: ohne ausdruecklich gewaehlten "NCS mit Stopcodon" traegt kein Slot eines.
+    # No automatic stop codon: without an explicitly chosen "NCS with stop codon" no slot carries one.
     for slots in (CARGO_SLOTS_C_TERM, CARGO_SLOTS_N_TERM):
         module = _design(cargo_slots=slots)['level0']['cargoModule']
         assert not any(p['stop'] for p in module)
 
-    # Mit ausdruecklich gewaehltem NCS mit Stopcodon (NC Site, direkt hinter der Shell) sitzt es genau dort.
+    # With an explicitly chosen NCS with stop codon (NC site, directly behind the shell) it sits exactly there.
     nc_module = _design(nc_slots={'4': {'kind': 'ncsstop'}})['level0']['ncModule']
     assert [p['stop'] for p in nc_module] == [False, False, False, True, False]
 
 
 def test_surface_marker_sits_at_the_chosen_terminus():
-    # Ein Marker (oder jede andere CDS) in Type 0.1/0.5 braucht zwingend einen Linker
-    # im Nachbarslot (0.2/0.4) — anders als frueher gibt es keinen automatischen L1-Linker
-    # mehr, die Wahl liegt beim Nutzer.
+    # A marker (or any other CDS) in Type 0.1/0.5 requires a linker
+    # in the neighbouring slot (0.2/0.4); unlike earlier there is no automatic L1 linker
+    # any more, the choice is up to the user.
     n_term = _design(nc_slots={'1': {'kind': 'marker', 'id': 'spycatcher'}, '2': {'kind': 'linker', 'id': 'GSSS2'}})['level0']['ncModule']
     c_term = _design(nc_slots={'4': {'kind': 'linker', 'id': 'GSSS2'}, '5': {'kind': 'marker', 'id': 'spycatcher'}})['level0']['ncModule']
 
@@ -198,9 +197,9 @@ def test_without_a_marker_the_slots_stay_inert_spacers():
 
 def test_unknown_surface_marker_is_rejected():
     try:
-        _design(nc_slots={'1': {'kind': 'marker', 'id': 'gibtsnicht'}, '2': {'kind': 'linker', 'id': 'GSSS2'}})
+        _design(nc_slots={'1': {'kind': 'marker', 'id': 'doesnotexist'}, '2': {'kind': 'linker', 'id': 'GSSS2'}})
     except ValueError as error:
-        assert 'gibtsnicht' in str(error)
+        assert 'doesnotexist' in str(error)
     else:
         raise AssertionError('unknown marker should raise')
 
@@ -259,7 +258,7 @@ def test_attach_adapter_rejects_an_unknown_adapter():
 
 
 def test_design_builds_a_level0_construct_for_every_user_entered_sequence():
-    # Cargo (immer) + eigene Cargo-Modul-Sequenz (Type 0.1 -> rc-Adapter) + eigene NC-Sequenz (Type 0.5 -> 0.5)
+    # Cargo (always) + own cargo module sequence (Type 0.1 -> rc adapter) + own NC sequence (Type 0.5 -> 0.5)
     design = _design(
         cargo_slots={'1': {'kind': 'custom', 'label': 'Part A', 'seq': 'ATG' + 'AAA' * 12},
                      '2': {'kind': 'linker', 'id': 'GSSS2'}, '4': {'kind': 'ncs'}, '5': {'kind': 'ncs'}},
@@ -272,7 +271,7 @@ def test_design_builds_a_level0_construct_for_every_user_entered_sequence():
     assert [constructs[k]['adapter'] for k in constructs] == ['0.1rc', '0.3', '0.5']
     assert constructs['Part A']['module'] == 'cargo_site' and constructs['Part B']['module'] == 'nc_site'
 
-    # Cargo-Modul-Teile werden als Reverse Complement eingesetzt, NC-Teile unveraendert
+    # Cargo module parts are inserted as a reverse complement, NC parts unchanged
     assert constructs['GFP']['insert']['sequence'] == design['cargo']['sequence']      # shown in its own reading direction
     assert translate(constructs['Part B']['insert']['sequence']) == translate('ATG' + 'CCC' * 10)   # codon-optimized, same protein
     for c in constructs.values():
@@ -405,15 +404,15 @@ def test_level0_primers_carry_the_adapter_flanks_and_anneal_to_the_insert():
     start, end = location_span(construct['insert']['location'])
     flank5, flank3 = construct['sequence'][:start - 1], construct['sequence'][end:]
     insert = construct['insert']['sequence']
-    assert translate(insert) == translate(cds)            # Cargo Site wird in Leserichtung gezeigt (codon-optimiert, gleiches Protein)
+    assert translate(insert) == translate(cds)            # the cargo site is shown in reading direction (codon-optimized, same protein)
     fwd, rev = pr['forward'], pr['reverse']
     assert fwd['sequence'] == pr['clamp'] + flank5 + fwd['anneal']
     assert insert.startswith(fwd['anneal'])
     assert rev['sequence'] == pr['clamp'] + reverse_complement(flank3) + rev['anneal']
     assert insert.endswith(reverse_complement(rev['anneal']))
-    # PCR-Produkt = Konstrukt + je ein Polster
+    # PCR product = construct + one clamp on each side
     assert pr['productLength'] == construct['length'] + 2 * len(pr['clamp'])
-    # BbsI-Erkennungsstelle liegt hinter dem Polster, damit das Enzym am Produktende schneidet
+    # BbsI recognition site lies behind the clamp, so that the enzyme cuts at the end of the product
     assert fwd['sequence'][len(pr['clamp']):].startswith('GAAGAC')
     assert rev['sequence'][len(pr['clamp']):].startswith('GAAGAC')
     assert pr['internalSites'] == [] or all('site' in s for s in pr['internalSites'])
@@ -440,10 +439,10 @@ def test_level0_primers_need_a_real_long_enough_insert(monkeypatch):
 def test_level0_primers_flag_internal_restriction_sites(monkeypatch):
     import Biologik.level0_design.user_codons as user_codons_module
     cds = _long_cargo()
-    cds = cds[:60] + 'GAAGAC' + cds[66:]                 # BbsI-Stelle mitten im Insert
+    cds = cds[:60] + 'GAAGAC' + cds[66:]  # BbsI site in the middle of the insert
     monkeypatch.setattr(user_codons_module, 'codon_optimize_part',
                         lambda sequence, module, slot, protein=False: optimize_cds(sequence) | {'sequence': sequence, 'optimized': False})
-    design = _design(cargoSeq=cds)                       # ohne Optimierung bleibt die Stelle, und die Primer warnen davor
+    design = _design(cargoSeq=cds)  # without optimization the site stays, and the primers warn about it
     pr = next(c for c in design['level0Constructs'] if c['module'] == 'cargo_site' and c['slot'] == 3)['primers']
     assert any('BbsI' in s for s in pr['internalSites'])
 
@@ -460,7 +459,7 @@ def test_level0_primers_export_a_genbank_of_the_pcr_product():
         assert f'/label="{primer["name"]}"' in gb
     assert gb.count('primer_bind') == 2
     assert f"1..{pr['forward']['length']}" in gb and f"complement({pr['productLength'] - pr['reverse']['length'] + 1}..{pr['productLength']})" in gb
-    # liegt auch im Gesamt-GenBank-Export
+    # is also part of the complete GenBank export
     full = build_genbank(design)
     assert 'LOCUS       Level0.3_Primers_GFP_Cargo' in full
     assert 'LOCUS       Level0.3_GFP_Cargo' in full
@@ -481,21 +480,21 @@ def test_record_names_tell_the_site_without_reading_the_description():
 
 
 # ---------------------------------------------------------------------------------------------------------
-# Level 1 (BsaI) und Level 2 (BbsI): die Assemblies werden hier wirklich "verdaut" nachgerechnet.
+# Level 1 (BsaI) and Level 2 (BbsI): the assemblies are really recomputed here as a "digest".
 
 def _bsai_fragment(plasmid: str) -> str:
-    """Top-Strand-Fragment, das BsaI aus einem Level-0-Plasmid schneidet (Stuecke zwischen den beiden Schnitten)."""
-    left = plasmid.index('GGTCTC')                    # Top-Strand-Stelle, schneidet 1 nt dahinter, Overhang = 4 nt
-    right = plasmid.index('GAGACC')                   # Stelle auf dem Gegenstrang, schneidet 1 nt davor
+    """Top strand fragment that BsaI cuts out of a Level 0 plasmid (pieces between the two cuts)."""
+    left = plasmid.index('GGTCTC')  # top strand site, cuts 1 nt behind it, overhang = 4 nt
+    right = plasmid.index('GAGACC')  # site on the opposite strand, cuts 1 nt before it
     return plasmid[left + 7:right - 1]
 
 
 def _bbsi_piece(plasmid: dict) -> str:
-    """Top-Strand-Stueck zwischen den beiden BbsI-Schnitten des Level-1-Plasmids: 2 nt hinter GAAGAC bzw. 2 nt vor
-    GTCTTC, jeweils mit 4-nt-Overhang. Die beiden Stellen sind die des Backbones links/rechts des Inserts."""
+    """Top strand piece between the two BbsI cuts of the Level 1 plasmid: 2 nt behind GAAGAC and 2 nt before
+        GTCTTC, each with a 4-nt overhang. The two sites are those of the backbone left/right of the insert."""
     seq = plasmid['sequence']
     left = 2                                                # GAAGAC an 3..8
-    right = plasmid['insertEnd'] - 2                        # GTCTTC beginnt am G von TTGT
+    right = plasmid['insertEnd'] - 2  # GTCTTC starts at the G of TTGT
     assert seq.startswith('GAAGAC', left) and seq.startswith('GTCTTC', right)
     return seq[left + 8:right - 2]
 
@@ -514,7 +513,7 @@ def test_level1_modules_are_the_bsai_assembly_of_the_level0_parts():
     assert promoter['level2Overhangs'] == {'n': 'CGTT', 'c': 'TGAT'}
     assert nc['level2Overhangs'] == {'n': 'TGAT', 'c': 'AATG'}
 
-    # Die fuenf Fragmente, die BsaI aus den echten Level-0-Plasmiden schneidet, ergeben genau das Modul.
+    # The five fragments that BsaI cuts out of the real Level 0 plasmids give exactly the module.
     for module, site in ((cargo, 'cargo_site'), (nc, 'nc_site')):
         pieces = [_bsai_fragment(c['plasmid']['sequence']) for c in design['level0Constructs'] if c['module'] == site]
         assembled = pieces[0]
@@ -530,7 +529,7 @@ def test_level1_parts_sit_where_their_features_say():
     design = _real_design()
     cargo, _, nc = design['level1Constructs']
     gene = next(p for p in cargo['parts'] if p['label'] == 'GFP')
-    # Das Cargo-Modul liegt als Reverse Complement auf dem Top-Strand (antisense).
+    # The cargo module lies as a reverse complement on the top strand (antisense).
     assert gene['strand'] == 'antisense'
     assert cargo['sequence'][gene['start'] - 1:gene['end']] == reverse_complement(design['cargo']['sequence'])
     mine = next(p for p in nc['parts'] if p['label'] == 'MyPart')
@@ -550,7 +549,7 @@ def test_level1_plasmid_has_the_module_between_bbsi_sites_and_no_bsai_site():
     assert seq[2:8] == 'GAAGAC' and seq[:pl['insertStart'] - 1] == backbone['sequence'][:pl['insertStart'] - 1]
     assert seq.endswith(backbone['sequence'][-100:])
     assert '/label="KanR"' in pl['genbank'] and '/label="0.1N Lvl1"' in pl['genbank']
-    # BbsI schneidet aus dem Plasmid genau das Stueck zwischen den Level-2-Overhangs
+    # BbsI cuts exactly the piece between the Level 2 overhangs out of the plasmid
     assert _bbsi_piece(pl) == cargo['sequence'][4:-4]
 
 
@@ -583,7 +582,7 @@ def test_internal_restriction_sites_are_reported_on_level1(monkeypatch):
     cds = cds[:60] + 'GGTCTC' + cds[66:]
     monkeypatch.setattr(user_codons_module, 'codon_optimize_part',
                         lambda sequence, module, slot, protein=False: optimize_cds(sequence) | {'sequence': sequence, 'optimized': False})
-    cargo = _design(cargoSeq=cds)['level1Constructs'][0]     # ohne Optimierung bleibt die Stelle
+    cargo = _design(cargoSeq=cds)['level1Constructs'][0]  # without optimization the site stays
     assert any('BsaI' in s and 'GFP' in s for s in cargo['internalSites'])
 
 
@@ -617,14 +616,14 @@ def test_cargo_module_is_shown_rotated_so_the_cargo_reads_5_to_3_left_to_right()
     assert shown['level2Overhangs'] == {'n': reverse_complement('CGTT'), 'c': reverse_complement('CCAA')}
     assert shown['sequence'][:4] == reverse_complement('TTGT') and shown['sequence'][-4:] == reverse_complement('ACAT')
     assert 'complement(' not in shown['genbank'] and '/label="GFP"' in shown['genbank']
-    # NC-Modul und Promotor bleiben unveraendert; Plasmid und Level 2 arbeiten mit der Top-Strand-Orientierung weiter
+    # NC module and promoter stay unchanged; plasmid and Level 2 continue to work with the top strand orientation
     assert promoter['shown'] is None and nc['shown'] is None
     assert cargo['plasmid']['sequence'][cargo['plasmid']['insertStart'] - 1:cargo['plasmid']['insertEnd']] == cargo['sequence']
     assert shown['genbank'] in build_genbank(design)
 
 
 # ---------------------------------------------------------------------------------------------------------
-# Leseraster: 2-nt-Frame-Spacer direkt vor dem Insert jedes Adapters (parts/type_overhangs/)
+# Reading frame: 2-nt frame spacer directly before the insert of every adapter (parts/type_overhangs/)
 
 def _orf_codons(sequence: str) -> list:
     return [sequence[i:i + 3] for i in range(0, len(sequence), 3)]
@@ -711,7 +710,7 @@ def test_frame_spacers_are_annotated_in_constructs_and_plasmids():
 
 
 # ---------------------------------------------------------------------------------------------------------
-# Bestellung: Oligos fuer zu kurze Teile, Lagerstatus der Toolkit-Teile
+# Ordering: oligos for parts that are too short
 
 def test_short_real_parts_get_an_oligo_pair_that_anneals_to_the_bbsi_cut_fragment():
     short = 'ATG' + 'GCT' * 5
@@ -734,18 +733,28 @@ def test_short_real_parts_get_an_oligo_pair_that_anneals_to_the_bbsi_cut_fragmen
     assert all(c['oligos'] is None for c in design['level0Constructs'] if not c['isReal'])
 
 
-def test_constructs_carry_the_stock_flag_of_toolkit_parts():
-    design = _design(cargoSeq=_long_cargo(), cargo_slots={'4': {'kind': 'linker', 'id': 'GSSS3'}, '5': {'kind': 'tp'}},
-                     nc_slots={'4': {'kind': 'custom', 'label': 'Mine', 'seq': 'ATG' + 'GCT' * 20}})
-    flags = {(c['module'], c['slot']): c['onStock'] for c in design['level0Constructs']}
-    assert flags[('nc_site', 3)] is True                                           # toolkit shell E-Tm (glycerol stock: yes)
-    assert flags[('cargo_site', 4)] is False                                       # 0.4 L3rc: glycerol stock "nein"
-    assert flags[('cargo_site', 5)] is True                                        # TP, N-terminal, Type 0.5
-    assert flags[('nc_site', 4)] is None and flags[('cargo_site', 3)] is None      # own sequences have no stock status
+def test_toolkit_constructs_have_a_registry_link_slot_that_stays_empty_until_the_database_has_a_url(monkeypatch):
+    design = _design(cargoSeq=_long_cargo(), nc_slots={'4': {'kind': 'custom', 'label': 'Mine', 'seq': 'ATG' + 'GCT' * 20}})
+    constructs = design['level0Constructs']
+    assert all('registryUrl' in c and 'onStock' not in c and 'plasmid_source' not in c for c in constructs)
+    assert all(c['registryUrl'] is None for c in constructs)                      # no URL stored yet: the UI shows a placeholder
+    # as soon as the parts database carries a URL, toolkit parts get it, own sequences never do
+    import Biologik.level0_design.parts_db as parts_db_module
+    real_inserts = parts_db_module.inserts
+    monkeypatch.setattr(parts_db_module, 'inserts',
+                        lambda: [{**e, 'registry_url': 'https://parts.igem.org/Part:TEST'} for e in real_inserts()])
+    constructs = _design(cargoSeq=_long_cargo(), nc_slots={'4': {'kind': 'custom', 'label': 'Mine', 'seq': 'ATG' + 'GCT' * 20}})['level0Constructs']
+    by_slot = {(c['module'], c['slot']): c for c in constructs}
+    assert by_slot[('nc_site', 3)]['registryUrl'] == 'https://parts.igem.org/Part:TEST'
+    assert by_slot[('nc_site', 4)]['registryUrl'] is None and by_slot[('cargo_site', 3)]['registryUrl'] is None
+
+
+def test_every_level0_insert_in_the_database_has_a_registry_url_field():
+    assert all('registry_url' in e for e in load_parts()['level0_inserts'])
 
 
 # ---------------------------------------------------------------------------------------------------------
-# Level-0-Inserts-Datenbank (parts/level0_inserts/): reine Teilsequenzen aus den Level-0-Plasmiden
+# Level 0 inserts database (parts/level0_inserts/): bare part sequences from the Level 0 plasmids
 
 def test_insert_database_is_consistent():
     from Biologik.level0_design.parts_db import inserts
@@ -765,7 +774,7 @@ def test_insert_database_is_consistent():
             assert e['site'] == 'nc_site' and e['type_slot'] == 3 and e['sequence'].startswith('ATG')
         if e['category'] == 'cargo':
             assert e['site'] == 'cargo_site' and e['type_slot'] == 3 and e['sequence'].startswith('ATG')
-    # coding parts must be a multiple of 3 for the fusions to stay in frame — one known exception in the supplied plasmids
+    # coding parts must be a multiple of 3 for the fusions to stay in frame; one known exception in the supplied plasmids
     coding = [e for e in entries if e['category'] in ('shell', 'cargo', 'linker', 'tp', 'marker', 'intein')]
     assert [e['id'] for e in coding if len(e['sequence']) % 3] == ['Lvl0.5_a_026']
 
@@ -786,15 +795,15 @@ def test_libraries_offer_each_part_only_where_a_level0_plasmid_exists():
     assert [n['shellBp'] for n in libs['nanocompartments']] == [798, 864, 849]
 
 
-def test_a_cargo_taken_unchanged_from_the_library_is_a_toolkit_part_with_a_stock_flag():
+def test_a_cargo_taken_unchanged_from_the_library_is_a_toolkit_part():
     from Biologik.level0_design.data import get_libraries
     yegfp = next(c for c in get_libraries()['cargoPresets'] if c['id'] == 'yegfp')
     design = _design(cargoSeq=yegfp['seq'], cargoLabel='yeGFP')
     cargo = next(c for c in design['level0Constructs'] if c['module'] == 'cargo_site' and c['slot'] == 3)
-    assert cargo['isUser'] is False and cargo['onStock'] is True and cargo['what'] == 'cargo (toolkit part)'
+    assert cargo['isUser'] is False and cargo['what'] == 'cargo (toolkit part)'
     edited = _design(cargoSeq=yegfp['seq'][:-3] + 'GCT', cargoLabel='yeGFP')
     mine = next(c for c in edited['level0Constructs'] if c['module'] == 'cargo_site' and c['slot'] == 3)
-    assert mine['isUser'] is True and mine['onStock'] is None
+    assert mine['isUser'] is True
 
 
 def test_toolkit_parts_use_the_inserts_of_their_own_site_and_slot():
@@ -826,7 +835,7 @@ def test_primers_exist_only_for_own_sequences_of_at_least_150_bp_and_shorter_par
         n = len(c['insert']['sequence'])
         # primers: only own sequences that are long enough for PCR
         assert c['primers']['possible'] is (c['isUser'] and n >= 150)
-        # oligo pair: every part with a real sequence below 150 bp — own or toolbox, no matter which
+        # oligo pair: every part with a real sequence below 150 bp; own or toolbox, no matter which
         assert (c['oligos'] is not None) == (c['isReal'] and n < 150)
     mid = next(c for c in design['level0Constructs'] if c['label'] == 'Mid')            # 93 bp own part -> oligos, no primers
     assert mid['oligos']['possible'] is True and mid['primers']['possible'] is False and 'below 150 bp' in mid['primers']['reason']
@@ -877,15 +886,7 @@ def test_oligo_pairs_come_with_an_annotated_genbank_record_of_the_annealed_fragm
     assert '/label="Stop codon"' in stop['oligos']['genbank'] and '/label="Frame spacer"' in stop['oligos']['genbank']
 
 
-def test_toolbox_constructs_name_the_level0_plasmid_they_come_from():
-    design = _design(cargoSeq=_long_cargo())
-    shell = next(c for c in design['level0Constructs'] if c['module'] == 'nc_site' and c['slot'] == 3)
-    assert shell['plasmid_source'] == {'id': 'Lvl0.3_a_016', 'name': '0.3E-Tm'}
-    own = next(c for c in design['level0Constructs'] if c['isUser'])
-    assert own['plasmid_source'] is None
-
-
-# Codon-Optimierung fuer S. cerevisiae: jede eingegebene Sequenz, Protein unveraendert, keine BsaI/BbsI-Stellen
+# Codon optimization for S. cerevisiae: every entered sequence, protein unchanged, no BsaI/BbsI sites
 
 SITE_CDS = ('ATG' + 'GAAGAC' + 'GGTCTC' + 'GAGACC' + 'GTCTTC' + 'AAATTTGGTCTCAAAGAAGACGAGACCCGT' * 3
             + 'TTTTTTTTTTTTTTTAAAAAAAAAAAAAAAAAA' + 'GGG' * 3)
@@ -914,7 +915,7 @@ def test_codon_optimization_is_reproducible_and_yeast_like_like_vectorbuilder():
 
 def test_codon_optimization_leaves_an_already_adapted_sequence_alone():
     # an optimized sequence (CAI ~0.88, no sites, no long runs) is kept as entered, like VectorBuilder returns a yeast-adapted
-    # CDS unchanged — so optimizing twice changes nothing
+    # CDS unchanged: so optimizing twice changes nothing
     once = optimize_cds(_long_cargo())['sequence']
     again = optimize_cds(once)
     assert again['status'] == 'kept' and again['sequence'] == once and again['changed'] == 0
@@ -993,7 +994,7 @@ def test_validate_previews_the_codon_optimization_and_checks_the_optimized_mrna(
     assert 'codonOptimization' not in json.loads(_run_cli('validate', {'cargoSeq': 'ATGTAA'}).stdout)['validation']      # invalid sequence: no preview
 
 
-# Aminosaeuresequenzen als Eingabe: werden mit der Hefe-Codon-Tabelle in DNA uebersetzt
+# Amino acid sequences as input: translated into DNA with the yeast codon table
 
 PROTEIN = 'MSKGEELFTGVVPILVELDGDVNGHKFSVSGEGEGDATYGKLTLKFICTTGKLPVPWPTLVTTFGYGVQCFARYPDHMKQHDFFKSAMPEGYVQERTIFFKDDGNYK'
 
@@ -1057,3 +1058,8 @@ def test_custom_shell_can_be_a_protein_too():
 def test_validate_previews_a_protein_back_translation():
     out = json.loads(_run_cli('validate', {'cargoSeq': PROTEIN}).stdout)['validation']
     assert out['isProtein'] and out['codonOptimization']['fromProtein'] and out['mrnaStructure'] is not None
+
+
+def test_to_dna_gives_the_screening_a_dna_form_of_every_input():
+    out = json.loads(_run_cli('to_dna', {'sequences': ['atg aaa\nttt 12', 'MKV*', '>name\nMK']}).stdout)
+    assert out['ok'] and out['dna'] == ['ATGAAATTT', 'ATGAAAGTTTAA', 'ATGAAA']

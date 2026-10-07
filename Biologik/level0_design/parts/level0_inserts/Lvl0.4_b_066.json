@@ -17,6 +17,7 @@
   "sequence": "GGTTCCTCTTCTGGTTCCTCTTCTGGTTCCTCTTCT",
   "sequence_status": "real",
   "on_stock": false,
+  "registry_url": null,
   "length_bp": 36,
   "organism": null,
   "source": "Level 0 plasmid '0.4L3rc' (Lvl0.4_b_066) from the user-supplied GenBank file 'documents from Level 0'; only the insert was taken; the type overhangs and the frame spacer of the plasmid were cut off. Stock: glycerol stock column of 'Level 0 constructs.xlsx'.",

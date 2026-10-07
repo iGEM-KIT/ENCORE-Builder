@@ -1,4 +1,4 @@
-"""BbsI-Klonierung eines Adapter-Konstrukts ins Level-0-Backbone (Plasmid samt GenBank)."""
+"""BbsI cloning of an adapter construct into the Level 0 backbone (plasmid including GenBank)."""
 
 from __future__ import annotations
 
@@ -7,17 +7,17 @@ from .sequence import reverse_complement
 
 
 def clone_into_level0_backbone(built: dict, label: str, backbone: dict, antisense: bool = False, name: str | None = None) -> dict:
-    """BbsI-Klonierung eines Adapter-Konstrukts (attach_adapter) ins Level-0-Backbone.
+    """BbsI cloning of an adapter construct (attach_adapter) into the Level 0 backbone.
 
-    BbsI schneidet aus dem Backbone den Stuffer heraus (die Stelle zwischen den Akzeptor-Overhangs
-    NLvl0/CLvl0) und aus dem Konstrukt das Fragment vom Level-0-N- bis zum Level-0-C-Overhang — die
-    BbsI-Erkennungsstellen des Adapters bleiben im verworfenen Rest zurueck. Die vier-Basen-Enden
-    beider Fragmente sind identisch und ligieren: Plasmid = Backbone bis vor NLvl0 + Fragment + Backbone
-    ab nach CLvl0. An den Naehten entstehen die BsaI-Stellen fuer Level 1 neu (GGT|CTC und GAGACC).
-    Annotationen: alles vom Backbone, was ausserhalb des herausgeschnittenen Bereichs liegt, plus die
-    Overhangs und das Insert aus dem Adapter. Features im Stuffer (lacZ-alpha, MCS, BbsI-Stellen, ...)
-    sind mit dem Stuffer verschwunden. Die Sequenz ist immer der Top-Strand, 5' links -> 3' rechts;
-    `antisense` (Cargo-Modul): das Insert liegt im Backbone-Top-Strand antisense -> CDS-Feature mit complement()."""
+    BbsI cuts the stuffer out of the backbone (the region between the acceptor overhangs NLvl0/CLvl0) and
+    from the construct the fragment from the Level 0 N overhang to the Level 0 C overhang; the BbsI recognition
+    sites of the adapter stay behind in the discarded rest. The four-base ends of both fragments are identical
+    and ligate: plasmid = backbone up to NLvl0 + fragment + backbone after CLvl0. At the seams the BsaI sites for
+    Level 1 form anew (GGT|CTC and GAGACC).
+    Annotations: everything from the backbone that lies outside the excised region, plus the overhangs and the
+    insert from the adapter. Features in the stuffer (lacZ-alpha, MCS, BbsI sites, ...) disappeared with the
+    stuffer. The sequence is always the top strand, 5' left -> 3' right;
+    `antisense` (cargo module): the insert lies antisense in the backbone top strand -> CDS feature with complement()."""
     seq = backbone["sequence"]
     oh5 = backbone["receiver_overhangs"]["5_prime"]
     oh3 = backbone["receiver_overhangs"]["3_prime"]
@@ -48,8 +48,8 @@ def clone_into_level0_backbone(built: dict, label: str, backbone: dict, antisens
         elif lo > bb_c1:
             loc = shift_location(f["location"], tail_shift)
         elif lab == "BsaI rec site":
-            # die beiden BsaI-Stellen ragen an der Naht in den Austauschbereich hinein; die Basen werden von
-            # Backbone und Fragment gemeinsam neu zusammengesetzt (GGT|CTC bzw. GAG|ACC) — Stelle bleibt erhalten
+            # the two BsaI sites reach into the replaced region at the seam; the bases are reassembled by
+            # backbone and fragment together (GGT|CTC and GAG|ACC), so the site is kept
             loc = f["location"] if lo < bb_n0 else shift_location(f["location"], tail_shift)
             a, b = location_span(loc)
             site = new_seq[a - 1:b]

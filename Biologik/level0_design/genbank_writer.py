@@ -1,14 +1,14 @@
-"""Minimaler GenBank-Flatfile-Schreiber (keine externe Abhaengigkeit noetig,
-passend zum Rest des Repos; siehe commec-service/app.py fuer dieselbe
-Stdlib-only-Philosophie). Ersetzt den bisherigen reinen FASTA-Export: FASTA
-kennt keine Feature-Tabelle, GenBank schon; genau das war der Punkt, echte
-Annotationen (Type-Zuordnung, Quelle PLACEHOLDER/PARTS DB/REAL INPUT, bei
-Level 2 sogar die echten Backbone-Features wie HIS3/AmpR/Origins) im Export
-zu erhalten statt sie beim Speichern zu verlieren.
+"""Minimal GenBank flat file writer (no external dependency needed,
+in line with the rest of the repo; see commec-service/app.py for the same
+standard-library-only philosophy). Replaces the former plain FASTA export: FASTA
+has no feature table, GenBank does; that was the point: to keep real
+annotations (Type assignment, source PLACEHOLDER/PARTS DB/REAL INPUT, and for
+Level 2 even the real backbone features such as HIS3/AmpR/origins) in the export
+instead of losing them on saving.
 
-Ein "Feature" ist hier ein einfaches dict: {"type", "location", "qualifiers"}
-mit qualifiers als Liste von (key, value)-Paaren (Reihenfolge bleibt erhalten,
-value=None bedeutet ein Flag-Qualifier ohne Wert, z.B. /pseudo)."""
+A "feature" here is a simple dict: {"type", "location", "qualifiers"}
+with qualifiers as a list of (key, value) pairs (order is kept,
+value=None means a flag qualifier without a value, e.g. /pseudo)."""
 
 from __future__ import annotations
 
@@ -20,14 +20,14 @@ _LOCUS_NAME_RE = re.compile(r"[^A-Za-z0-9_.-]")
 
 
 def _safe_locus_name(name: str) -> str:
-    # LOCUS-Namen duerfen keine Leerzeichen/Sonderzeichen enthalten; auf eine
-    # in der Praxis von SnapGene/Geneious/Benchling akzeptierte Laenge kuerzen.
+    # LOCUS names must not contain spaces or special characters; shorten to a length
+    # accepted in practice by SnapGene/Geneious/Benchling.
     return _LOCUS_NAME_RE.sub("_", name)[:60] or "sequence"
 
 
 def _format_qualifier(key: str, value) -> str:
     text = f"/{key}" if value is None else f'/{key}="{value}"'
-    # GenBank qualifiers wrap at Spalte 80 (21 Einrueckung + bis zu 59 Zeichen Inhalt).
+    # GenBank qualifiers wrap at column 80 (21 indentation + up to 59 characters of content).
     wrapped = textwrap.wrap(text, width=58, break_long_words=True, break_on_hyphens=False) or [text]
     return "\n".join(" " * 21 + line for line in wrapped)
 
@@ -54,9 +54,9 @@ def _format_origin(sequence: str) -> str:
 
 def format_genbank_record(name: str, sequence: str, features: list[dict] | None = None,
                            circular: bool = False, definition: str = "") -> str:
-    """Ein vollstaendiger LOCUS...// -Block. Mehrere Records lassen sich einfach
-    aneinanderhaengen (Standard-GenBank-Multi-Record-Datei, von allen gaengigen
-    Tools als mehrere Sequenzen importierbar)."""
+    """A complete LOCUS...// block. Several records can simply be
+    appended (standard multi-record GenBank file, importable by all common
+    tools as several sequences)."""
     topology = "circular" if circular else "linear"
     lines = [f"LOCUS       {_safe_locus_name(name):<28} {len(sequence)} bp    DNA     {topology}   SYN"]
     if definition:
@@ -71,10 +71,10 @@ def format_genbank_record(name: str, sequence: str, features: list[dict] | None 
 
 
 # ---------------------------------------------------------------------------
-# Hilfsfunktionen fuer den Level-2-Merge (echtes Backbone + neues Insert) —
-# siehe design.py: build_genbank(). Arbeiten rein ueber die Zahlen in der
-# Location-Zeichenkette, damit complement()/join()-Wrapper erhalten bleiben,
-# ohne sie voll parsen zu muessen.
+# Helper functions for the Level 2 merge (real backbone + new insert);
+# see design.py: build_genbank(). They work purely on the numbers in the
+# location string, so that complement()/join() wrappers are kept
+# without having to parse them fully.
 # ---------------------------------------------------------------------------
 
 def make_feature(ftype: str, location: str, label: str, note: str | None = None, extra: list | None = None) -> dict:
@@ -86,9 +86,9 @@ def make_feature(ftype: str, location: str, label: str, note: str | None = None,
 
 
 def location_span(location: str) -> tuple[int, int]:
-    """(min, max) aller Positionszahlen in einer Location — reicht, um zu
-    entscheiden, ob ein Feature vor/nach/innerhalb eines auszutauschenden
-    Bereichs liegt, auch bei complement()/join()/fuzzy '>' Markierungen."""
+    """(min, max) of all position numbers in a location; enough to
+    decide whether a feature lies before/after/inside a region to be
+    replaced, also with complement()/join()/fuzzy '>' markers."""
     numbers = [int(n) for n in re.findall(r"\d+", location)]
     return min(numbers), max(numbers)
 
@@ -98,9 +98,9 @@ def shift_location(location: str, shift: int) -> str:
 
 
 def format_backbone_record(entry: dict) -> str:
-    """GenBank-Text eines importierten Backbone-Eintrags (parts/level*_backbones/) mit seiner kompletten
-    Feature-Tabelle — die Qualifier liegen dort als {name: [werte]}, der Writer erwartet eine Liste aus
-    (name, wert); /translation wird weggelassen (laesst sich aus der Sequenz ableiten)."""
+    """GenBank text of an imported backbone entry (parts/level*_backbones/) with its complete
+    feature table; the qualifiers are stored there as {name: [values]}, the writer expects a list of
+    (name, value); /translation is omitted (it can be derived from the sequence)."""
     features = [
         {"type": f["type"], "location": f["location"],
          "qualifiers": [(k, v) for k, values in f["qualifiers"].items() if k != "translation" for v in values]}
@@ -111,8 +111,8 @@ def format_backbone_record(entry: dict) -> str:
 
 
 def level0_record_name(label: str, slot: int, module: str, kind: str = "") -> str:
-    """Name eines Level-0-Records, an dem man Type und Site direkt erkennt: z.B. Level0.2_NCS_Cargo / Level0.2_NCS_NC
-    (mit `kind="Primers"`: Level0.2_Primers_NCS_Cargo). `module` ist "cargo"/"nc" (oder "cargo_site"/"nc_site")."""
+    """Name of a Level 0 record from which Type and site can be read directly: e.g. Level0.2_NCS_Cargo / Level0.2_NCS_NC
+    (with `kind="Primers"`: Level0.2_Primers_NCS_Cargo). `module` is "cargo"/"nc" (or "cargo_site"/"nc_site")."""
     site = "Cargo" if module.startswith("cargo") else "NC"
     clean = re.sub(r"[^A-Za-z0-9.-]+", "-", label.replace("×", "x")).strip("-") or "part"
     return "_".join(filter(None, (f"Level0.{slot}", kind, clean, site)))

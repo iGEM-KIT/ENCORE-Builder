@@ -8,6 +8,6 @@
   "length_bp": 190,
   "organism": "S. cerevisiae",
   "source": "Extrahiert aus Level 2 Destination HIS3.gb (pESC-HIS-Backbone), GenBank-Location 2952..3141.",
-  "notes": "Noch kein eigener Slot in der Level-0/1/2-Design-Engine; aktuell rein informationell.",
+  "notes": "No slot of its own in the Level 0/1/2 design engine yet; purely informational for now.",
   "used_by": []
 }

@@ -1,4 +1,4 @@
-"""Belegung der vier Module neben dem Mittelteil (Type 0.1, 0.2, 0.4, 0.5) und der Aufbau der Modul-Teile fuer die Anzeige."""
+"""Assignment of the four modules next to the central part (Type 0.1, 0.2, 0.4, 0.5) and the construction of the module parts for the display."""
 
 from __future__ import annotations
 
@@ -10,11 +10,12 @@ CUSTOM_NC_ID = "custom"
 
 
 def build_custom_nanocompartment(custom) -> dict:
-    """Eigene Shell-CDS des Nutzers als Nanocompartment-Eintrag.
+    """Own shell CDS of the user as a nanocompartment entry.
 
-    Die Sequenz laeuft durch dieselbe Pruefung wie das Cargo (Laenge, kein
-    Stopcodon am Ende, Leseraster). Eine eigene Shell bringt kein Targeting-Peptid
-    mit (tp = None); im Cargo-Modul geht dann nur noch eine eigene Sequenz.
+        The sequence goes through the same check as the cargo (length, no
+        stop codon at the end, reading frame). An own shell brings no targeting peptide
+        (tp = None); in the cargo module only an own sequence is possible then.
+
     """
     custom = custom if isinstance(custom, dict) else {}
     validation = validate_cargo(custom.get("seq", ""), kind="shell")
@@ -29,20 +30,21 @@ def build_custom_nanocompartment(custom) -> dict:
 
 
 NC_SLOTS = (1, 2, 4, 5)
-# Teile aus der Bibliothek, die ein Slot aufnehmen kann: Art -> (Suchfunktion, Name fuer die Fehlermeldung)
+# Parts from the library that a slot can take: kind -> (search function, name for the error message)
 LIBRARY_PARTS = {"linker": (find_linker, "linker"), "marker": (find_surface_marker, "surface marker"),
                  "intein": (find_intein, "intein")}
 
 
 def resolve_slots(raw, module: str = "nc") -> dict:
-    """Belegung der vier Slots neben dem Mittelteil (Type 0.1, 0.2, 0.4, 0.5).
+    """Assignment of the four slots next to the central part (Type 0.1, 0.2, 0.4, 0.5).
 
-    ``module`` ist "nc" (Mittelteil = Shell, ORF von Type 0.1 nach 0.5) oder "cargo"
-    (Mittelteil = Cargo, ORF laeuft von Type 0.5 nach 0.1, weil das Cargo-Modul auf dem
-    Antisense-Strang sitzt). Jeder Slot ist ein NCS-Spacer, ein NCS mit Stopcodon, ein
-    Linker, ein Oberflaechen-Marker, im Cargo-Modul ausserdem das Targeting-Peptid, oder
-    eine eigene Sequenz. Eigene Sequenzen laufen durch dieselbe Pruefung wie das Cargo.
-    Fehlende Slots bleiben NCS.
+        ``module`` is "nc" (central part = shell, ORF from Type 0.1 to 0.5) or "cargo"
+        (central part = cargo, ORF runs from Type 0.5 to 0.1, because the cargo module sits on the
+        antisense strand). Every slot is an NCS spacer, an NCS with stop codon, a
+        linker, a surface marker, in the cargo module also the targeting peptide, or
+        an own sequence. Own sequences go through the same check as the cargo.
+        Missing slots stay NCS.
+
     """
     raw = raw if isinstance(raw, dict) else {}
     slots = {}
@@ -76,12 +78,12 @@ def resolve_slots(raw, module: str = "nc") -> dict:
     if sum(1 for n in NC_SLOTS if slots[n]["kind"] == "tp") > 1:
         raise ValueError("Only one targeting peptide can be used.")
 
-    # Slots hinter dem Mittelteil, in ORF-Richtung: Shell -> 4, 5; Cargo (Antisense) -> 2, 1.
+    # Slots behind the central part, in ORF direction: shell -> 4, 5; cargo (antisense) -> 2, 1.
     behind = (4, 5) if module == "nc" else (2, 1)
     part_name = "shell" if module == "nc" else "cargo"
 
-    # NCS mit Stopcodon: nur hinter dem Mittelteil, hoechstens einmal, und danach darf nichts
-    # mehr uebersetzt werden.
+    # NCS with stop codon: only behind the central part, at most once, and nothing
+    # may be translated after it.
     stops = [n for n in NC_SLOTS if slots[n]["kind"] == "ncsstop"]
     for n in stops:
         if n not in behind:
@@ -93,9 +95,9 @@ def resolve_slots(raw, module: str = "nc") -> dict:
     if slots[behind[0]]["kind"] == "ncsstop" and slots[behind[1]]["kind"] != "ncs":
         raise ValueError(f"Type 0.{behind[1]}: nothing can follow the stop codon in Type 0.{behind[0]}.")
 
-    # Ist der aeussere Slot (Type 0.1 bzw. 0.5) belegt, darf der innere (0.2 bzw. 0.4) kein
-    # NCS-Spacer sein. Sitzt aussen eine CDS (Marker, TP oder eigene Sequenz), muss innen ein
-    # Linker sitzen — ein zweiter Marker reicht dort nicht.
+    # If the outer slot (Type 0.1 or 0.5) is used, the inner one (0.2 or 0.4) must not be an
+    # NCS spacer. If a CDS (marker, TP or own sequence) sits outside, a
+    # linker must sit inside; a second marker is not enough there.
     for outer, inner in ((1, 2), (5, 4)):
         if slots[outer]["kind"] not in ("ncs", "ncsstop") and slots[inner]["kind"] == "ncs":
             raise ValueError(f"Type 0.{inner}: cannot be an NCS spacer while Type 0.{outer} is in use.")
@@ -127,14 +129,14 @@ def _slot_part(n: int, cfg: dict, tp_label: str = "TP") -> dict:
 
 
 def _module_layout(slots: dict, middle: dict, tp_label: str = "TP") -> list:
-    """Die fuenf Teile eines Moduls in Typ-Reihenfolge. Das Stopcodon traegt nur ein vom Nutzer
-    ausdruecklich gewaehlter "NCS mit Stopcodon" — es wird nicht automatisch gesetzt."""
+    """The five parts of a module in Type order. The stop codon is only carried by an "NCS with stop codon"
+        explicitly chosen by the user; it is not set automatically."""
     parts = {n: _slot_part(n, slots[n], tp_label) for n in NC_SLOTS}
     return [parts[1], parts[2], middle, parts[4], parts[5]]
 
 
 def level0_part(slot: int, spec: dict) -> dict:
-    # Funktion zur Erstellung eines Level-0-Moduls, eine Art Steckbrief.
+    # Function to create a Level 0 module, a kind of profile.
     return {
         "slot": slot,
         "type": f"Type 0.{slot}",
@@ -146,23 +148,23 @@ def level0_part(slot: int, spec: dict) -> dict:
         "surface": spec.get("surface", False),
         "isCargo": spec.get("isCargo", False),
         "isNew": spec.get("isNew", False),
-        # Traegt dieser Slot das Stopcodon? Es sitzt immer am 3'-Ende des ORFs,
-        # also am C-Terminus des Fusionsproteins. Welcher Slot das ist, haengt
-        # an der Fusionsrichtung bzw. am Display-Terminus.
+        # Does this slot carry the stop codon? It always sits at the 3' end of the ORF,
+        # that is at the C terminus of the fusion protein. Which slot that is depends
+        # on the fusion direction or on the display terminus.
         "stop": spec.get("stop", False),
     }
 
 
 def build_modules(nc: dict, cargo_label: str, cargo_bp: int, cargo_slots: dict, nc_slots: dict):
-    # Ein Modul besteht aus fuenf Level-0-Teilen. Hier werden Cargo- und NC-Modul aufgebaut.
+    # A module consists of five Level 0 parts. The cargo and NC modules are built here.
     cg = {"role": "cargo", "label": cargo_label, "kind": "t3", "note": "Cargo", "bp": cargo_bp, "isCargo": True}
-    # Cargo-Modul (Antisense): der ORF laeuft von Type 0.5 nach 0.1.
+    # Cargo module (antisense): the ORF runs from Type 0.5 to 0.1.
     cargo_layout = _module_layout(cargo_slots, cg, tp_label=nc["tp"])
     cargo_module = [level0_part(index + 1, spec) for index, spec in enumerate(cargo_layout)]
 
     shell = {"role": "shell", "label": nc["shell"], "kind": "shell", "note": "Shell", "bp": nc["shellBp"],
              "isNew": bool(nc.get("custom"))}
-    # NC-Modul (Sense): der ORF laeuft von Type 0.1 nach 0.5.
+    # NC module (sense): the ORF runs from Type 0.1 to 0.5.
     nc_layout = _module_layout(nc_slots, shell)
     nc_module = [level0_part(index + 1, spec) for index, spec in enumerate(nc_layout)]
     return cargo_module, nc_module

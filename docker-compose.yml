@@ -12,12 +12,12 @@ services:
       # elsewhere.
       - COMMEC_URL=${COMMEC_URL:-http://commec:8787}
 
-  # Biosecurity screening sidecar (COMMEC, "Common Mechanism", IBBIS) — starts
+  # Biosecurity screening sidecar (COMMEC, "Common Mechanism", IBBIS); starts
   # by default with plain `docker compose up`, so screening can't accidentally
   # be skipped. Builds a curated ~1.2GB database on first build (see
   # commec-service/README.md), so the first `docker compose up --build` takes
   # a while longer. Not meant to be a tamper-proof gate (it's self-hosted,
-  # open-source software — a determined user could still disable it locally),
+  # open-source software: a determined user could still disable it locally),
   # just the honest default so normal usage always includes the check.
   commec:
     build: ./commec-service

@@ -1,0 +1,98 @@
+/* Shared by the builder (index.html) and the guide (guide.html): theme tokens, page base and the header. */
+/* ============ THEME TOKENS ============ */
+:root{
+  /* The ENTIRE palette is colour-blind-safe by default; there is no separate CB
+     mode to switch on. Chrome (header, accents, links, buttons) uses dark blue
+     instead of forest green, CB blue instead of turquoise, and CB orange. */
+  --ink:#0d1b26; --ink-soft:#37454f;
+  --forest:#12283a; --forest-deep:#0c1c29;
+  --teal:#0072B2; --teal-deep:#005f93; --teal-soft:#dbe9f3;
+  --orange:#E69F00; --orange-ink:#3a2200; --orange-deep:#8a5a00;
+  --paper:#F3F6F3; --card:#FFFFFF; --card-2:#FAFCFA;
+  --line:#D7E1DB; --line-soft:#E9EFEB; --muted:#5C6B62;
+  --shadow:0 1px 2px rgba(20,38,32,.06), 0 10px 30px rgba(20,38,32,.07);
+  --radius:14px; --hdr-h:64px; --stepper-h:74px; --band-h:52px; --side-w:214px;
+  /* ---- ENCORE brand palette (taken from the toolKIT artwork) ----
+     Deep-teal outline · mint shell spheres · pale-mint panel · olive and
+     orange connector squiggles · yellow and purple accents. These drive the
+     assembled module output (Level 0 → 1 → 2), the live construct strip and the
+     plasmid map, i.e. everything the user gets back after filling in their
+     inputs. The page chrome (header, stepper, CTA) is deliberately untouched. */
+  --brand-teal-deep:#17806F; --brand-teal:#2FBFA6; --brand-mint:#BFE5DC;
+  --brand-olive:#9CB63C; --brand-yellow:#FBDD52;
+  --brand-orange:#FF9C21; --brand-purple:#C98EDE; --brand-slate:#8FA39D;
+  /* Two shades pulled deeper than the artwork values, purely so neighbouring
+     slots keep a lightness gap (see the note below): the mint used as a part
+     fill, and the olive that sits directly beside the teal shell. */
+  --brand-mint-mid:#9BD9C7; --brand-olive-deep:#7E9A25;
+  /* Module type colours: the brand hues mapped onto the slot positions.
+     Seven fills out of a seven-colour brand palette cannot all be separated by
+     lightness alone, so the shades are tuned where it actually matters: slots
+     that sit NEXT TO each other in a module row keep a luminance gap of ≥1.4×
+     (t1/t2 2.4× · t2/t3 1.5× · t2/shell 1.4× · t4/t5 1.6×). The pairs that are
+     left on hue alone (orange/purple, teal/purple, yellow/mint) sit on
+     opposite hue axes and survive deutan, protan and tritan vision. Colour
+     therefore stays a REDUNDANT cue: every block, legend row and well carries
+     its text label as well. Each ink clears WCAG AA on its own fill.
+       Colours follow the toolbox scheme (Level 0 types):
+       Type 0.1 = green · 0.2 = orange · 0.3 = teal (cargo and shell) · 0.4 = purple · 0.5 = yellow
+       promoter = sky blue. A module keeps the colour of the slot it sits in. */
+  --t1:#B7D63F; --t2:#F7A11B; --t3:#2BBFA7; --t4:#C58ADF; --t5:#FFE14B;
+  --shell:var(--t3); --promo:#3EB4F2; --ncs:var(--brand-slate);
+  --t1-ink:#141c06; --t2-ink:#2a1700; --t3-ink:#04231d; --t4-ink:#2b0f3d;
+  --t5-ink:#2e2700; --shell-ink:#04231d; --promo-ink:#04263a; --ncs-ink:#152420;
+  /* Surface-display marker (e.g. SpyCatcher): the artwork's outline teal taken
+     to its darkest, so it never collides with the Type 4 purple or the shell
+     teal inside the same module row. Inverted under [data-theme="dark"]. */
+  --mark:#0B3A33; --mark-ink:#ffffff;
+}
+/* Darkmode */
+[data-theme="dark"]{
+  --ink:#E7EEF4; --ink-soft:#B7C2CC;
+  --forest:#0c1a29; --forest-deep:#08131f;
+  --teal:#3fa9d8; --teal-deep:#7fc4ea; --teal-soft:#0e2a3d;
+  --orange:#F0A93A; --orange-deep:#F0A93A;
+  --paper:#0d1814; --card:#13211c; --card-2:#172821;
+  --line:#26362f; --line-soft:#1d2c25; --muted:#8da095;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 32px rgba(0,0,0,.35);
+  /* Part fills stay at their brand values on a dark card (they are opaque chips
+     carrying their own ink). Only the pale-mint panel field and the near-black
+     surface marker have to flip. */
+  --brand-mint:#102A25;
+  --mark:#DFF3EE; --mark-ink:#0B2A24;
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;
+  font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;transition:background .25s,color .25s}
+h1,h2,h3,h4,.display{font-family:'Space Grotesk',sans-serif;letter-spacing:-.01em}
+img,svg{max-width:100%}
+
+/* ============ HEADER ============ */
+header{background:linear-gradient(160deg,var(--forest-deep),var(--forest));color:#E9F2EE;
+  padding:0 24px;height:var(--hdr-h);display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:40}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}
+a.brand{text-decoration:none;color:inherit;cursor:pointer;border-radius:8px}
+a.brand:focus-visible{outline:2px solid #E69F00;outline-offset:4px}
+.brand-wordmark{height:30px;width:auto;flex:none;display:block;color:#fff}
+.brand-sub{font-size:12.5px;color:#aebfd2;letter-spacing:.01em;
+  padding-left:11px;margin-left:3px;border-left:1px solid rgba(255,255,255,.2);line-height:1.2;font-weight:600}
+.brand-sub b{color:#E69F00;font-weight:700}
+@media(max-width:600px){.brand-sub{display:none}}
+header .spacer{flex:1}
+.site-tabs{display:flex;gap:4px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:9px;padding:2px}
+.site-tabs a{font-family:inherit;font-size:11.5px;font-weight:600;color:#B9C7D6;text-decoration:none;padding:6px 11px;border-radius:7px;white-space:nowrap}
+.site-tabs a:hover{color:#E9F2EE}
+/* Highlighted only once the builder itself is showing; on the intro card you're on neither tab,
+   so neither link carries .on; showBuilder()/showIntro() toggle it on the "ENCORE Builder" link.
+   Fixed colour (not var(--teal), which differs from the selector page in light mode) so the
+   highlight matches the Encapsulin Filter tab's own colour in both themes. */
+.site-tabs a.on{background:#3fa9d8;color:#04231d}
+@media(max-width:640px){.site-tabs{display:none}}
+.hbtn{border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.06);color:#E9F2EE;
+  font-family:inherit;font-size:11.5px;font-weight:600;padding:7px 11px;border-radius:9px;cursor:pointer;
+  transition:.15s;display:flex;align-items:center;gap:6px}
+.hbtn:hover{background:rgba(255,255,255,.14)}
+.hbtn.on{background:var(--teal);border-color:var(--teal);color:#fff}

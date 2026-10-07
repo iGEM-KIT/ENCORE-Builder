@@ -1,22 +1,21 @@
-"""Codon-Optimierung fuer Saccharomyces cerevisiae.
+"""Codon optimization for Saccharomyces cerevisiae.
 
-Jede vom Nutzer eingegebene Sequenz (Cargo, eigene Shell, eigene Teile in den Slots) wird hier uebersetzt und mit der
-Codon-Nutzung von S. cerevisiae zurueckuebersetzt. Das Protein bleibt dabei exakt gleich.
+Every sequence entered by the user (cargo, own shell, own parts in the slots) is translated here and back-translated with the
+codon usage of S. cerevisiae. The protein stays exactly the same.
 
-Vorgehen (wie gaengige Tools, z.B. VectorBuilder): Jedes Codon wird zufaellig gezogen, gewichtet mit der natuerlichen
-Haeufigkeit in S. cerevisiae (hoch SHARPEN = 3, das trifft CAI/GC von VectorBuilder), seltene Codons (unter 10 % der Synonyme) werden nie benutzt. Das ergibt einen hohen CAI (~0.85-0.9) bei
-natuerlichem GC-Gehalt (~35-40 %) und ohne lange Wiederholungen identischer Codons. Der Zufall ist an die Eingabe gekoppelt
-(Seed = Hash der Sequenz), dieselbe Eingabe gibt also immer dieselbe Ausgabe.
+Approach (like common tools, e.g. VectorBuilder): every codon is drawn at random, weighted by the natural
+frequency in S. cerevisiae (to the power SHARPEN = 3, which matches the CAI/GC of VectorBuilder); rare codons (below 10 % of their
+synonyms) are never used. This gives a high CAI (~0.85 to 0.9) at a natural GC content (~35 to 40 %) and without long runs of
+identical codons. The randomness is tied to the input (seed = hash of the sequence), so the same input always gives the same output.
 
-Danach wird mit einer exakten Suche (Dynamic Programming ueber alle Codons, nicht gierig) die Auswahl so wenig wie moeglich
-korrigiert, damit
+Afterwards an exact search (dynamic programming over all codons, not greedy) corrects the choice as little as possible, so that
 
-* keine BsaI-Stelle (GGTCTC / GAGACC) und keine BbsI-Stelle (GAAGAC / GTCTTC) entsteht oder bleibt, auch nicht ueber die Naht zum
-  Adapter hinweg (4-nt-Overhang + GC-Spacer + Insert + Overhang), damit das Golden-Gate-Klonieren nicht zerschneidet;
-* keine Homopolymere ab 7 gleichen Basen entstehen (Syntheseprobleme, bei A/T in Hefe zusaetzlich vorzeitige Termination).
+* no BsaI site (GGTCTC / GAGACC) and no BbsI site (GAAGAC / GTCTTC) arises or remains, also not across the seam to the
+  adapter (4-nt overhang + GC spacer + insert + overhang), so that the Golden Gate cloning does not cut the part;
+* no homopolymers of 7 or more identical bases arise (synthesis problems, for A/T in yeast also premature termination).
 
-Codon-Nutzung: Kazusa-Tabelle fuer S. cerevisiae (Haeufigkeit pro 1000 Codons). CAI nach Sharp & Li (1987) mit
-w = Haeufigkeit / Haeufigkeit des haeufigsten synonymen Codons.
+Codon usage: Kazusa table for S. cerevisiae (frequency per 1000 codons). CAI after Sharp & Li (1987) with
+w = frequency / frequency of the most frequent synonymous codon.
 """
 
 from __future__ import annotations
@@ -26,7 +25,7 @@ import random
 from itertools import product
 from math import exp, log
 
-# Haeufigkeit pro 1000 Codons, S. cerevisiae (Kazusa, Codon Usage Database).
+# Frequency per 1000 codons, S. cerevisiae (Kazusa, Codon Usage Database).
 CODON_USAGE = {
     "TTT": 26.1, "TTC": 18.4, "TTA": 26.2, "TTG": 27.2,
     "CTT": 12.3, "CTC": 5.4, "CTA": 13.4, "CTG": 10.5,
@@ -54,24 +53,27 @@ SYNONYMS: dict = {}
 for _codon, _aa in CODON_TABLE.items():
     SYNONYMS.setdefault(_aa, []).append(_codon)
 
-# Restriktionsstellen, die nie entstehen duerfen (beide Straenge).
+# Restriction sites that must never arise (both strands).
 FORBIDDEN_SITES = {"BsaI": ("GGTCTC", "GAGACC"), "BbsI": ("GAAGAC", "GTCTTC")}
 _FORBIDDEN = tuple(s for pair in FORBIDDEN_SITES.values() for s in pair)
-MAX_RUN = 6                      # laengstes erlaubtes Homopolymer
-SHARPEN = 3.0                    # Exponent auf die Haeufigkeit bei der Zufallswahl (1 = proportional); 3 trifft CAI/GC von VectorBuilder (~0.87 / ~36 %)
-ALREADY_ADAPTED_CAI = 0.85       # ab diesem CAI bleibt eine Sequenz, die sonst keine Stelle/Wiederholung hat, unveraendert (wie bei VectorBuilder)
-MIN_SHARE = 0.10                 # Codons mit weniger als 10 % der synonymen Nutzung werden nie gewaehlt
+MAX_RUN = 6  # longest allowed homopolymer
+# Exponent on the frequency in the random draw (1 = proportional); 3 matches CAI/GC of VectorBuilder (~0.87 / ~36 %)
+SHARPEN = 3.0
+# From this CAI on, a sequence without sites or runs stays unchanged (like VectorBuilder)
+ALREADY_ADAPTED_CAI = 0.85
+# Codons below 10 % of the usage of their amino acid are never chosen
+MIN_SHARE = 0.10
 
-# w = relative Adaptiertheit (haeufigstes synonymes Codon = 1)
+# w = relative adaptiveness (most frequent synonymous codon = 1)
 W = {c: CODON_USAGE[c] / max(CODON_USAGE[s] for s in SYNONYMS[CODON_TABLE[c]]) for c in CODON_TABLE}
 BEST_CODON = {aa: max(codons, key=CODON_USAGE.get) for aa, codons in SYNONYMS.items()}
-# Synonyme Codons je Aminosaeure ohne die seltenen (unter MIN_SHARE der Gesamtnutzung der Aminosaeure)
+# Synonymous codons per amino acid without the rare ones (below MIN_SHARE of the total usage of the amino acid)
 _USABLE = {aa: [c for c in codons if CODON_USAGE[c] / sum(CODON_USAGE[s] for s in codons) >= MIN_SHARE]
            for aa, codons in SYNONYMS.items()}
 
 
 def back_translate(protein: str) -> str:
-    """Aminosaeurefolge -> DNA mit dem jeweils haeufigsten Hefe-Codon (Ausgangspunkt fuer die Optimierung; ein '*' wird TAA)."""
+    """Amino acid sequence -> DNA with the most frequent yeast codon each (starting point for the optimization; a '*' becomes TAA)."""
     return "".join(BEST_CODON[aa] for aa in protein)
 
 
@@ -80,7 +82,7 @@ def translate(dna: str) -> str:
 
 
 def cai(dna: str) -> float:
-    """Codon Adaptation Index (geometrisches Mittel der w-Werte, ohne ATG/TGG, die keine Wahl haben, und ohne Stopcodons)."""
+    """Codon adaptation index (geometric mean of the w values, without ATG/TGG, which have no choice, and without stop codons)."""
     ws = [W[dna[i:i + 3]] for i in range(0, len(dna) - len(dna) % 3, 3)
           if CODON_TABLE[dna[i:i + 3]] not in ("M", "W", "*")]
     return exp(sum(log(w) for w in ws) / len(ws)) if ws else 1.0
@@ -91,7 +93,7 @@ def gc_percent(dna: str) -> float:
 
 
 def find_forbidden(dna: str) -> list:
-    """Alle verbotenen Restriktionsstellen (Enzym, Position 0-basiert, Stelle) in einer Sequenz."""
+    """All forbidden restriction sites (enzyme, 0-based position, site) in a sequence."""
     hits = []
     for enzyme, sites in FORBIDDEN_SITES.items():
         for site in sites:
@@ -107,11 +109,11 @@ def _has_run(dna: str) -> bool:
 
 
 def _bad(window: str, tail_len: int) -> bool:
-    """Enthaelt `window` (Kontext + neues Codon; die letzten `tail_len` Basen sind neu) ein verbotenes Motiv, das
-    mindestens eine neue Base beruehrt?"""
+    """Does `window` (context + new codon; the last `tail_len` bases are new) contain a forbidden motif that
+        touches at least one new base?"""
     n = len(window)
     for site in _FORBIDDEN:
-        for end in range(n - tail_len + 1, n + 1):          # Stelle endet in den neuen Basen
+        for end in range(n - tail_len + 1, n + 1):  # site ends in the new bases
             if end - len(site) >= 0 and window[end - len(site):end] == site:
                 return True
     run = MAX_RUN + 1
@@ -122,7 +124,7 @@ def _bad(window: str, tail_len: int) -> bool:
 
 
 def _crosses(window: str, split: int) -> bool:
-    """Enthaelt `window` eine verbotene Stelle, die die Position `split` ueberspannt (Basen auf beiden Seiten)?"""
+    """Does `window` contain a forbidden site that spans the position `split` (bases on both sides)?"""
     for site in _FORBIDDEN:
         for start in range(max(0, split - len(site) + 1), min(split, len(window) - len(site) + 1)):
             if window[start:start + len(site)] == site:
@@ -131,8 +133,8 @@ def _crosses(window: str, split: int) -> bool:
 
 
 def _cost(codon: str, target: str) -> float:
-    """Kosten, vom Wunsch-Codon abzuweichen: 0 beim Wunsch-Codon, sonst 1 (bei gleicher Anzahl Abweichungen gewinnt das haeufigere
-    Codon); ein seltenes Codon (unter MIN_SHARE) kostet zusaetzlich 5, wird also nur gewaehlt, wenn es nicht anders geht."""
+    """Cost of deviating from the target codon: 0 for the target codon, otherwise 1 (with the same number of deviations the more frequent
+        codon wins); a rare codon (below MIN_SHARE) costs 5 extra, so it is only chosen when there is no other way."""
     if codon == target:
         return 0.0
     rare = codon not in _USABLE[CODON_TABLE[codon]]
@@ -144,7 +146,7 @@ def _as_list(value) -> list:
 
 
 def _sites_in_context(seq: str, lefts: list, rights: list) -> list:
-    """Verbotene Stellen in `seq` samt allen Nachbarkontexten (jede Links-/Rechts-Variante), ohne Doppelte."""
+    """Forbidden sites in `seq` including all neighbour contexts (every left/right variant), without duplicates."""
     seen, hits = set(), []
     for left in lefts:
         for right in rights:
@@ -157,7 +159,7 @@ def _sites_in_context(seq: str, lefts: list, rights: list) -> list:
 
 
 def _draw_targets(dna: str) -> list:
-    """Pro Position das zufaellig gezogene Wunsch-Codon (Seed = Eingabe, also reproduzierbar); Stopcodons bleiben, wie eingegeben."""
+    """The randomly drawn target codon per position (seed = input, so reproducible); stop codons stay as entered."""
     rng = random.Random(hashlib.sha256(dna.encode()).digest())
     targets = []
     for i in range(0, len(dna), 3):
@@ -172,9 +174,9 @@ def _draw_targets(dna: str) -> list:
 
 
 def _search(dna: str, targets: list, lefts: list, rights: list) -> tuple:
-    """Exakte Suche (Dynamic Programming) nach den Codons, die so wenig wie moeglich von den Wunsch-Codons abweichen und
-    keine verbotene Stelle bilden. Zustand = die letzten 6 Basen je Kontextvariante. Gibt (Sequenz, None) oder (None, Grund)."""
-    layers = []                                  # je Position: Zustand -> (Score, Vorgaenger-Zustand, Codon) fuer die Rueckverfolgung
+    """Exact search (dynamic programming) for the codons that deviate as little as possible from the target codons and
+        form no forbidden site. State = the last 6 bases per context variant. Returns (sequence, None) or (None, reason)."""
+    layers = []  # per position: state -> (score, predecessor state, codon) for the traceback
     states = {tuple(left[-6:] for left in lefts): 0.0}
     for i, target in enumerate(targets):
         original = dna[3 * i:3 * i + 3]
@@ -189,12 +191,12 @@ def _search(dna: str, targets: list, lefts: list, rights: list) -> tuple:
                 s = score - _cost(codon, target)
                 if key not in nxt or s > nxt[key][0]:
                     nxt[key] = (s, state, codon)
-        if not nxt:                              # nichts erlaubt (kann in der Praxis nicht passieren)
+        if not nxt:  # nothing allowed (cannot happen in practice)
             return None, "No codon combination avoids all restriction sites."
         layers.append(nxt)
         states = {k: v[0] for k, v in nxt.items()}
 
-    # Rechter Kontext: auch ueber die Naht zum Adapter darf keine Stelle entstehen.
+    # Right context: no site may arise across the seam to the adapter either.
     finals = [(score, key) for key, score in states.items()
               if not any(_crosses(w[-5:] + r[:5], len(w[-5:])) for w in key for r in rights)]
     if not finals:
@@ -209,19 +211,19 @@ def _search(dna: str, targets: list, lefts: list, rights: list) -> tuple:
 
 
 def optimize_cds(dna: str, left="", right="", protein: bool = False) -> dict:
-    """Codon-optimiert eine CDS (Sense-Strang, 5'->3', ohne Stopcodon am Ende) fuer S. cerevisiae.
+    """Codon-optimizes a CDS (sense strand, 5'->3', without a stop codon at the end) for S. cerevisiae.
 
-    `left`/`right` ist der feste Nachbarkontext (Adapter-Flanke, Sense-Richtung) links bzw. rechts vom Insert, damit keine
-    Stelle ueber die Naht hinweg entsteht. Statt eines Strings geht auch eine Liste von Varianten (z.B. Level-0-Adapter und der
-    Nachbar im Level-1-Modul); die Sequenz ist dann gegen alle frei von Stellen. Das Protein bleibt unveraendert; Stopcodons, die
-    der Nutzer mitten in der Sequenz eingegeben hat, bleiben wie eingegeben.
+        `left`/`right` is the fixed neighbour context (adapter flank, sense direction) left and right of the insert, so that no
+        site arises across the seam. Instead of a string a list of variants is also accepted (e.g. Level 0 adapter and the
+        neighbour in the Level 1 module); the sequence is then free of sites against all of them. The protein stays unchanged; stop codons
+        the user entered in the middle of the sequence stay as entered.
 
-    Mit `protein=True` ist `dna` eine Aminosaeurefolge: sie wird mit der Codon-Tabelle in DNA uebersetzt (gleiche Wahl und gleiche
-    Regeln wie sonst); "vorher"-Werte (CAI, GC, Stellen) gibt es dann nicht, und `fromProtein` ist True.
+        With `protein=True`, `dna` is an amino acid sequence: it is translated into DNA with the codon table (same choice and same
+        rules as otherwise); there are no "before" values (CAI, GC, sites) then, and `fromProtein` is True.
 
-    Ergebnis: dict mit `status` ("optimized", "kept" oder "skipped", dann mit `reason`), `sequence`, `changed` (Anzahl geaenderter
-    Codons), `codons`, CAI/GC vorher/nachher, `forbiddenBefore` (verbotene Stellen in der Eingabe) und `forbiddenAfter` (mit
-    Kontext, sollte leer sein)."""
+        Result: dict with `status` ("optimized", "kept" or "skipped", then with `reason`), `sequence`, `changed` (number of changed
+        codons), `codons`, CAI/GC before/after, `forbiddenBefore` (forbidden sites in the input) and `forbiddenAfter` (with
+        context, should be empty)."""
     dna = (dna or "").upper()
     if protein:
         dna = back_translate(dna)

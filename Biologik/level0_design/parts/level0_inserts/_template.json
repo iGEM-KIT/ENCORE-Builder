@@ -14,6 +14,7 @@
   "sequence": "ONLY THE PART: sense strand, no overhangs, no frame spacer",
   "sequence_status": "real",
   "on_stock": true,
+  "registry_url": null,
   "length_bp": 0,
   "organism": null,
   "source": "where the sequence comes from",

@@ -1,4 +1,4 @@
-"""Codon-Optimierung der vom Nutzer eingegebenen Sequenzen im Design: Kontext des Adapters, Zusammenfassung, GenBank-Notiz."""
+"""Codon optimization of the sequences entered by the user, within the design: adapter context, summary, GenBank note."""
 
 from __future__ import annotations
 
@@ -8,14 +8,14 @@ from .parts_db import find_library_cargo
 
 
 def codon_optimize_part(sequence: str, module: str, slot: int, protein: bool = False) -> dict:
-    """Codon-Optimierung (S. cerevisiae, ohne BsaI/BbsI-Stellen) einer vom Nutzer eingegebenen Sense-Sequenz, die in `module`
-    ("cargo"/"nc") an Type 0.<slot> eingebaut wird. Siehe codon.optimize_cds. Mit `protein=True` ist `sequence` eine Aminosaeurefolge."""
+    """Codon optimization (S. cerevisiae, without BsaI/BbsI sites) of a sense sequence entered by the user that is built into `module`
+    ("cargo"/"nc") at Type 0.<slot>. See codon.optimize_cds. With `protein=True`, `sequence` is an amino acid sequence."""
     lefts, rights = adapter_contexts(adapter_id_for(module, slot), module == "cargo")
     return optimize_cds(sequence, lefts, rights, protein)
 
 
 def codon_summary(result: dict) -> dict:
-    """Was Design-Antwort und GenBank von einer Optimierung brauchen (ohne die Sequenzen)."""
+    """What the design response and the GenBank notes need from an optimization (without the sequences)."""
     return {"status": result["status"], "fromProtein": result["fromProtein"], "optimized": result["optimized"],
             "reason": result.get("reason"), "changed": result["changed"], "codons": result["codons"],
             "caiBefore": result["caiBefore"], "caiAfter": result["caiAfter"],
@@ -38,10 +38,10 @@ def codon_note(summary: dict | None) -> str:
 
 
 def optimize_user_sequences(cargo: dict, cargo_label: str, nc: dict, cargo_slots: dict, nc_slots: dict) -> tuple:
-    """Codon-optimiert jede vom Nutzer eingegebene Sequenz (Cargo, eigene Shell, eigene Teile in den Slots) fuer S. cerevisiae;
-    das Protein bleibt gleich, es entstehen keine BsaI/BbsI-Stellen. Ein Cargo aus der Bibliothek ist ein Toolkit-Teil und bleibt,
-    wie es ist. Die Sequenzen in `cargo`, `nc` und den Slots werden ersetzt und bekommen ihre Zusammenfassung unter "codon".
-    Gibt (Bericht fuer die Antwort, Zusammenfassung des Cargos oder None) zurueck."""
+    """Codon-optimizes every sequence entered by the user (cargo, own shell, own parts in the slots) for S. cerevisiae;
+    the protein stays the same and no BsaI/BbsI sites are created. A cargo from the library is a toolkit part and stays as it is.
+    The sequences in `cargo`, `nc` and the slots are replaced and get their summary under "codon".
+    Returns (report for the response, summary of the cargo or None)."""
     report = []
 
     def optimize(role: str, label: str, module: str, slot: int, sequence: str, protein: bool) -> tuple:

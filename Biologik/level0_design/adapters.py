@@ -1,4 +1,4 @@
-"""Die Overhang-Adapter der Type-Slots (parts/type_overhangs/): Teilsequenz einsetzen, Nachbarkontext, Drehen um 180 Grad fuer die Cargo Site."""
+"""The overhang adapters of the Type slots (parts/type_overhangs/): insert a part sequence, neighbour context, rotate by 180 degrees for the cargo site."""
 
 from __future__ import annotations
 
@@ -10,14 +10,13 @@ from .sequence import reverse_complement
 
 
 def attach_adapter(adapter, insert_seq: str) -> dict:
-    """Haengt die Overhang-Flanken eines Type-Adapters (parts/type_overhangs/) an eine CDS bzw.
-    Teilsequenz: der 4-nt-Platzhalter ("Insert", z.B. AAAA) wird durch die Sequenz ersetzt.
+    """Attaches the overhang flanks of a Type adapter (parts/type_overhangs/) to a CDS or part sequence:
+    the 4-nt placeholder ("Insert", e.g. AAAA) is replaced by the sequence.
 
-    `adapter` ist die id ("0.1", "0.1rc", "0.2", ...) oder der bereits geladene Eintrag. Die Sequenz
-    wird unveraendert eingesetzt — die Orientierung (bei den rc-Adaptern der Cargo Site) liegt beim
-    Aufrufer. Alle Features hinter dem Insert werden um die Laengendifferenz verschoben; am Ende wird
-    jeder Overhang und jede BbsI-Stelle gegen die neue Sequenz geprueft, damit eine verrutschte
-    Position nie still durchgeht."""
+    `adapter` is the id ("0.1", "0.1rc", "0.2", ...) or the already loaded entry. The sequence is inserted
+    unchanged; the orientation (for the rc adapters of the cargo site) is up to the caller. All features after
+    the insert are shifted by the length difference; at the end every overhang and every BbsI site is checked
+    against the new sequence, so that a shifted position never passes silently."""
     entry = adapter if isinstance(adapter, dict) else find_part("type_overhangs", adapter)
     if not entry or not entry.get("sequence"):
         raise ValueError(f"Unknown or empty overhang adapter: {adapter!r}")
@@ -72,16 +71,16 @@ def attach_adapter(adapter, insert_seq: str) -> dict:
 
 
 def adapter_id_for(module: str, slot: int) -> str:
-    """Welcher Adapter (parts/type_overhangs/) fuer ein Teil in Modul `module` ("cargo"/"nc") an Type 0.<slot>
-    gilt: an den Aussenslots 0.1/0.5 haben die Cargo Site eigene rc-Adapter, 0.2-0.4 gelten fuer beide Seiten."""
+    """Which adapter (parts/type_overhangs/) applies to a part in module `module` ("cargo"/"nc") at Type 0.<slot>:
+    at the outer slots 0.1/0.5 the cargo site has its own rc adapters, 0.2 to 0.4 apply to both sides."""
     return f"0.{slot}rc" if module == "cargo" and slot in (1, 5) else f"0.{slot}"
 
 
 def adapter_contexts(adapter_id: str, antisense: bool) -> tuple:
-    """Nachbarkontext einer Teilsequenz im Sense-Strang des Teils: (Links-Varianten, Rechts-Varianten). Gebraucht, damit die
-    Codon-Optimierung keine BsaI/BbsI-Stelle ueber die Naht zum Adapter erzeugt. Rechts gibt es zwei Varianten: der Adapter selbst
-    (Level 0) und der Overhang mit dem GC-Spacer des naechsten Teils (Level 1). Im Cargo-Modul liegt das Teil als Reverse
-    Complement im Adapter, links und rechts tauschen dann die Seiten."""
+    """Neighbour context of a part sequence on the sense strand of the part: (left variants, right variants). Needed so that the
+    codon optimization does not create a BsaI/BbsI site across the seam to the adapter. On the right there are two variants: the
+    adapter itself (Level 0) and the overhang with the GC spacer of the next part (Level 1). In the cargo module the part sits
+    as a reverse complement in the adapter, so left and right swap sides."""
     entry = find_part("type_overhangs", adapter_id)
     start, end = location_span(entry["insert"]["location"])
     left = entry["sequence"][:start - 1]
@@ -93,8 +92,8 @@ def adapter_contexts(adapter_id: str, antisense: bool) -> tuple:
 
 
 def flip_location(location: str, length: int) -> str:
-    """Location nach einer Drehung des Molekuels um 180 Grad (Reverse Complement der ganzen Sequenz):
-    Positionen werden gespiegelt, der Strang kippt (complement() an/aus), fuzzy-Markierungen (<, >) tauschen."""
+    """Location after rotating the molecule by 180 degrees (reverse complement of the whole sequence):
+    positions are mirrored, the strand flips (complement() on/off), fuzzy markers (<, >) swap."""
     complement = location.startswith("complement(")
     inner = location[len("complement("):-1] if complement else location
     mirror = {"<": ">", ">": "<", "": ""}
@@ -108,9 +107,9 @@ def flip_location(location: str, length: int) -> str:
 
 
 def rotate_built(built: dict) -> dict:
-    """Dasselbe Konstrukt, um 180 Grad gedreht: Reverse Complement der gesamten Sequenz, Overhangs/BbsI-Stellen/
-    Insert an gespiegelten Positionen. Fuer die Cargo Site, damit das Cargo (5' links -> 3' rechts) in seiner
-    eigenen Leserichtung steht — das Konstrukt ist physisch dasselbe Molekuel, nur vom anderen Strang gelesen."""
+    """The same construct rotated by 180 degrees: reverse complement of the whole sequence, overhangs/BbsI sites/
+    insert at mirrored positions. For the cargo site, so that the cargo reads in its own direction (5' left -> 3' right);
+    the construct is physically the same molecule, just read from the other strand."""
     length = built["length"]
     seq = reverse_complement(built["sequence"])
 

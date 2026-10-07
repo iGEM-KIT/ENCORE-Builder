@@ -1,147 +1,153 @@
 # ENCORE-Builder
 
-Golden Gate Design Software, um mit unserer Golden Gate Toolbox einen
-Encapsulin-Cargo-Konstrukt zu planen: Nanocompartment und Cargo zusammenstellen,
-Primer und eine fertige Level-2-Plasmidkarte bekommen — inklusive einem
-separaten Filter-Tool, um das passende Encapsulin zu finden.
+Golden Gate design software for planning an encapsulin cargo construct with our
+Golden Gate toolbox: put together a nanocompartment and a cargo, and get
+primers and a finished Level 2 plasmid map, plus a separate filter tool
+to find the matching encapsulin.
 
-## Schnellstart — Software einfach benutzen
+## Quick start: just use the software
 
-Du brauchst nur [Docker](https://www.docker.com/products/docker-desktop/)
-installiert. Keine Programmierkenntnisse, kein Node.js, kein Python nötig.
+You only need [Docker](https://www.docker.com/products/docker-desktop/)
+installed. No programming skills, no Node.js, no Python needed.
 
-1. Repo herunterladen:
+1. Download the repo:
    ```bash
    git clone https://github.com/iGEM-KIT/ENCORE-Builder.git
    cd ENCORE-Builder
    ```
-2. Starten:
+2. Start it:
    ```bash
    docker compose up --build
    ```
-   Der erste Start dauert etwas länger (baut den Builder und lädt zusätzlich
-   die ~1,2GB-Datenbank für das automatische Biosicherheits-Screening
-   herunter, siehe unten).
-3. Im Browser öffnen: **[http://localhost:3000](http://localhost:3000)**
-4. Zum Beenden im Terminal `Ctrl+C` drücken, oder in einem neuen Terminal:
+   The first start takes a bit longer (it builds the builder and additionally
+   downloads the ~1.2 GB database for the automatic biosecurity screening,
+   see below).
+3. Open it in the browser: **[http://localhost:3000](http://localhost:3000)**
+4. To stop, press `Ctrl+C` in the terminal, or in a new terminal:
    ```bash
    docker compose down
    ```
 
-Das war's — der Builder und der Encapsulin-Filter laufen jetzt vollständig.
+That's it: the builder and the encapsulin filter are now fully running.
 
-### Biosicherheits-Screening ist immer dabei
+### Biosecurity screening is always included
 
-Jede selbst eingegebene Gensequenz wird automatisch auf bekannte Toxine,
-Virulenzfaktoren und regulierte Pathogene geprüft
-([COMMEC](https://github.com/ibbis-bio/common-mechanism) von IBBIS) — dafür
-startet `docker compose up` standardmäßig einen zweiten Container mit, ohne
-dass dafür etwas extra angegeben werden muss. Sobald beide Container laufen,
-zeigt der Header oben rechts **"Biosecurity screening: on"** mit einem
-grünen Punkt.
+Every gene sequence you enter yourself is automatically checked for known toxins,
+virulence factors and regulated pathogens
+([COMMEC](https://github.com/ibbis-bio/common-mechanism) by IBBIS). For this,
+`docker compose up` starts a second container by default, without
+having to specify anything extra. As soon as both containers are running,
+the header at the top right shows **"Biosecurity screening: on"** with a
+green dot.
 
-## Die Software benutzen
+## Using the software
 
-1. Startseite → **"Start builder"**
-2. **Schritt 1 – Nanocompartment Site:** Nanocompartment aus der Bibliothek
-   wählen (oder eine eigene Sequenz einfügen) und die vier Module drumherum
-   belegen (Spacer, Linker, Oberflächenmarker oder eigene Sequenz)
-3. **Schritt 2 – Cargo Site:** eigene CDS einfügen (oder ein Beispiel wie GFP
-   laden) und die Module drumherum belegen
-4. **Schritt 3 – Promoter:** Promoter auswählen
-5. **"Calculate construct"** klicken — läuft bei aktivem Screening automatisch
-   mit; nur bei einem echten Treffer erscheint eine Warnung, die man vor dem
-   Fortfahren bestätigen muss
-6. **Schritt 4 – Ergebnis:** fertiges Golden-Gate-Design (Level 0 → 1 → 2),
-   Primer, Plasmidkarte und Bestellliste, als annotierte GenBank-Datei (.gb)
-   exportierbar
+The start page has a **"Before you start"** card that opens a guide with all rules and
+notes for using the builder (what the builder accepts, which combinations are
+allowed, what happens to your sequences). Read it once.
 
-Passendes Encapsulin noch nicht klar? Oben im Header auf **"Encapsulin
-Filter"** wechseln — dort lässt sich nach Organismus/Accession suchen oder
-nach physikalischen Eigenschaften (Durchmesser, Triangulationszahl) filtern.
+1. Start page → **"Start builder"**
+2. **Step 1, Nanocompartment Site:** choose a nanocompartment from the library
+   (or paste your own sequence) and fill the four modules around it
+   (spacer, linker, surface marker or own sequence)
+3. **Step 2, Cargo Site:** paste your own CDS or amino acid sequence (or load an
+   example such as GFP) and fill the modules around it
+4. **Step 3, Promoter:** choose the promoter
+5. Click **"Calculate construct"**. With screening active it runs automatically;
+   only for a real hit a warning appears that has to be confirmed before
+   continuing
+6. **Step 4, Modules:** the finished Golden Gate design (Level 0 → 1 → 2), primers,
+   plasmid map, exportable as an annotated GenBank file (.gb)
+7. **Step 5, Order:** what to order as oligos, primers or DNA
+
+Every sequence you enter yourself (DNA or amino acids) is codon-optimized for
+*S. cerevisiae* and kept free of BsaI and BbsI sites.
+
+Not sure yet which encapsulin fits? Switch to **"Encapsulin Filter"** in the
+header at the top: there you can search by organism/accession or filter by
+physical properties (diameter, triangulation number).
 
 ---
 
-## Für Entwickler
+## For developers
 
-### Lokale Entwicklung (ohne Docker)
+### Local development (without Docker)
 
-Voraussetzung: Node.js ≥20.19 und [pnpm](https://pnpm.io/).
+Requirements: Node.js ≥20.19 and [pnpm](https://pnpm.io/).
 
 ```bash
 pnpm install
 pnpm dev
 ```
 
-`pnpm dev` legt beim ersten Start automatisch ein `.venv` mit primer3-py an
-([scripts/setup-python.mjs](scripts/setup-python.mjs)) — kein manuelles
-`pip install` nötig. Ist kein Python 3 im PATH oder schlägt die Installation
-fehl (z. B. fehlender C-Compiler), läuft Biologik trotzdem weiter, nur mit
-einer ungenaueren Wallace-Tm-Schätzung statt primer3. Einen bestimmten
-Interpreter erzwingen geht über `BIOLOGIK_PYTHON=/pfad/zu/python`.
+On the first start `pnpm dev` automatically creates a `.venv` with primer3-py
+([scripts/setup-python.mjs](scripts/setup-python.mjs)), so no manual
+`pip install` is needed. If there is no Python 3 on the PATH or the installation
+fails (e.g. missing C compiler), Biologik keeps running anyway, only with
+a less accurate Wallace Tm estimate instead of primer3. A specific
+interpreter can be forced with `BIOLOGIK_PYTHON=/path/to/python`.
 
-Alternativ Docker ohne Compose:
+Alternatively Docker without Compose:
 
 ```bash
 docker build -t encore-builder .
 docker run -p 3000:3000 encore-builder
 ```
 
-### Biosicherheits-Screening (COMMEC) — Details
+### Biosecurity screening (COMMEC): details
 
-Bevor der Builder in Schritt 4 das finale Design berechnet, wird jede vom
-Nutzer selbst eingegebene Sequenz (Cargo, eigene Shell, eigene Modul-Teile)
-per COMMEC auf Treffer gegen eine kuratierte Liste bekannter Toxine,
-Virulenzfaktoren und regulierter Pathogene geprüft. Ein Treffer blockiert das
-Design nicht automatisch, sondern zeigt eine Warnung mit Begründung, die der
-Nutzer explizit bestätigen muss, bevor er fortfahren kann.
+Before the builder computes the final design in step 4, every sequence
+entered by the user (cargo, own shell, own module parts) is checked
+by COMMEC for hits against a curated list of known toxins,
+virulence factors and regulated pathogens. A hit does not block the
+design automatically, but shows a warning with a rationale that the
+user has to confirm explicitly before they can continue.
 
-**Läuft standardmäßig als zweiter Container mit**, weil COMMEC Conda und
-BLAST/HMMER braucht — das passt nicht ins schlanke Haupt-Image und wird nicht
-automatisch mitinstalliert (anders als primer3-py/ViennaRNA), deshalb der
-eigene Sidecar-Container statt eines eingebauten Checks. Bewusst kein reines
-Opt-in mehr: ein Sicherheits-Check, den man erst manuell dazuschalten müsste,
-würde im Alltag zu leicht vergessen oder übersprungen. Ist `commec` einmal
-nicht erreichbar (z. B. während des Hochfahrens, oder bei `COMMEC_URL`
-manuell auf leer gesetzt), läuft der Builder trotzdem normal weiter, nur ohne
-dieses Screening (mit sichtbarem Hinweis in Schritt 4) — echte
-Unumgehbarkeit kann selbst gehostete, quelloffene Software ohnehin nicht
-garantieren, das ist hier also die ehrliche Grundeinstellung, kein
-Manipulationsschutz.
+**Runs as a second container by default**, because COMMEC needs Conda and
+BLAST/HMMER. That does not fit into the slim main image and is not
+installed automatically (unlike primer3-py/ViennaRNA), hence the
+separate sidecar container instead of a built-in check. Deliberately no longer
+plain opt-in: a safety check that had to be switched on manually
+would too easily be forgotten or skipped in everyday use. If `commec` is
+once not reachable (e.g. while starting up, or with `COMMEC_URL`
+set to empty manually), the builder keeps running normally, only without
+this screening (with a visible note in step 4). Real
+unavoidability cannot be guaranteed by self-hosted, open source software anyway,
+so this is the honest default here, not a tamper protection.
 
-**Datenbankumfang:** Das mitgelieferte `commec-service`-Image lädt beim Build
-nur die kuratierte Biorisk+Low-concern-Datenbank (~1.2 GB) — nicht die vollen
-Protein-/Nukleotid-Taxonomie-Datenbanken (zusammen über 1 TB laut
-COMMEC-eigener Größenangabe), die auf den meisten Rechnern weder auf die
-Platte passen noch in angemessener Zeit herunterladen. Das bedeutet: kein
-Taxonomie-Bestmatch gegen beliebige Organismen, nur direkte Treffer gegen die
-kuratierte Biorisk-Liste — Details und Konsequenzen (u. a. wie generische
-"Warning"-Ergebnisse für ungeprüfte, aber harmlose Sequenzen gehandhabt
-werden) stehen in [commec-service/README.md](commec-service/README.md).
+**Database scope:** The shipped `commec-service` image only downloads the
+curated biorisk + low-concern database (~1.2 GB) at build time, not the full
+protein/nucleotide taxonomy databases (over 1 TB together according to
+COMMEC's own size statement), which on most machines neither fit on the
+disk nor download in a reasonable time. That means: no
+taxonomy best match against arbitrary organisms, only direct hits against the
+curated biorisk list. Details and consequences (among others how generic
+"Warning" results for unchecked but harmless sequences are handled)
+are in [commec-service/README.md](commec-service/README.md).
 
-Mit Docker Compose finden sich `app` und `commec` automatisch über den
-Compose-internen Hostnamen (`COMMEC_URL` in `docker-compose.yml` zeigt
-standardmäßig auf `http://commec:8787`). Bei lokaler Entwicklung ohne Docker:
+With Docker Compose `app` and `commec` find each other automatically through the
+Compose-internal host name (`COMMEC_URL` in `docker-compose.yml` points
+to `http://commec:8787` by default). For local development without Docker:
 
 ```bash
 COMMEC_URL=http://localhost:8787 pnpm dev
 ```
 
-(nachdem der `commec`-Container separat gestartet wurde, z. B. mit
+(after the `commec` container has been started separately, e.g. with
 `docker compose up commec`).
 
-**Verifiziert:** Der komplette Ablauf (Container-Build, echter
-`commec screen`-Aufruf, Frontend-Gate inkl. Warn-Modal) wurde end-to-end
-gegen einen real gebauten und laufenden Container getestet — inklusive eines
-positiven Tests mit einer echten, aus UniProt bezogenen Conotoxin-Sequenz,
-die korrekt als "Flag" erkannt wurde und das Warn-Modal auslöste.
+**Verified:** The complete flow (container build, real
+`commec screen` call, frontend gate including warning modal) was tested end to end
+against a really built and running container, including
+a positive test with a real conotoxin sequence obtained from UniProt,
+which was correctly detected as "Flag" and triggered the warning modal.
 
-### Encapsulin-Datenbank erweitern
+### Extending the encapsulin database
 
-Der Encapsulin-Filter (`/selector/`) liest seine Daten aus einzelnen
-JSON-Dateien unter [encapsulin_selector/data/](encapsulin_selector/data/) —
-ein neues Encapsulin hinzuzufügen heißt: Vorlage kopieren, Felder ausfüllen,
-`pnpm dev` starten. Siehe
+The encapsulin filter (`/selector/`) reads its data from individual
+JSON files under [encapsulin_selector/data/](encapsulin_selector/data/):
+adding a new encapsulin means: copy the template, fill in the fields,
+start `pnpm dev`. See
 [encapsulin_selector/data/README.md](encapsulin_selector/data/README.md).
 
 # Permission

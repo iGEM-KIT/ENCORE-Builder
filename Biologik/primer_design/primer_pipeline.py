@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
-"""Primer-Pipeline: Primer schneiden, Tm balancieren, bewerten, Extensions anhängen.
+"""Primer pipeline: cut primers, balance Tm, evaluate, attach extensions.
 
-Zwei Nutzungsarten, dieselbe Logik:
+Two ways of use, the same logic:
 
-* ``design_primers(...)`` gibt ein dict zurück — das ist der Einstiegspunkt für
-  den Webserver und für Tests.
-* die CLI (``main``) formatiert dasselbe dict als Text, wie bisher.
+* ``design_primers(...)`` returns a dict; this is the entry point for
+  the web server and for tests.
+* the CLI (``main``) formats the same dict as text, as before.
 
-Aufruf als CLI (aus dem Repo-Wurzelverzeichnis, weil das Modul jetzt Teil des
-Pakets ``Biologik.primer_design`` ist):
+Called as a CLI (from the repo root directory, because the module is now part of the
+package ``Biologik.primer_design``):
 
-    python -m Biologik.primer_design.primer_pipeline sequenz.fasta
-    python -m Biologik.primer_design.primer_pipeline sequenz.fasta --json
+    python -m Biologik.primer_design.primer_pipeline sequence.fasta
+    python -m Biologik.primer_design.primer_pipeline sequence.fasta --json
 """
 
 from __future__ import annotations
@@ -34,13 +34,14 @@ def build_result(
     ext_fw: str | None = None,
     ext_rv: str | None = None,
 ) -> dict:
-    """Rohergebnis + optionale Extensions -> serialisierbares dict.
+    """Raw result + optional extensions -> serializable dict.
 
-    Wichtig (wie vorher): Tm und Q5-Temperatur beziehen sich auf den
-    ANNEALING-Teil, nicht auf den verlängerten Primer — ein 5'-Überhang nimmt
-    am ersten Annealing-Schritt nicht teil. Die Bewertung (Dimere/Hairpins)
-    wird dagegen auf dem verlängerten Primer neu gerechnet, weil sich die
-    Sekundärstruktur durch den Überhang sehr wohl ändert.
+        Important (as before): Tm and Q5 temperature refer to the
+        ANNEALING part, not to the extended primer; a 5' overhang does not take
+        part in the first annealing step. The evaluation (dimers/hairpins),
+        on the other hand, is recomputed on the extended primer, because the
+        secondary structure certainly changes through the overhang.
+
     """
     anneal_fw = best_result['primer_fw']
     anneal_rv = best_result['primer_rv']
@@ -91,11 +92,12 @@ def design_primers(
     ext_fw: str | None = None,
     ext_rv: str | None = None,
 ) -> dict:
-    """Einstiegspunkt für Server und Tests: Sequenz rein, dict raus.
+    """Entry point for server and tests: sequence in, dict out.
 
-    Wirft ``ValueError``, wenn kein Primerpaar gefunden wird — genau wie
-    ``level0_design.design.design_construct`` bei ungültigen Eingaben, damit
-    die API-Schicht beides gleich auf HTTP 400 abbilden kann.
+        Raises ``ValueError`` if no primer pair is found, exactly like
+        ``level0_design.design.design_construct`` for invalid inputs, so that
+        the API layer can map both to HTTP 400 the same way.
+
     """
     if ext_type and (ext_fw or ext_rv):
         raise ValueError('Use either `ext_type` or `ext_fw`/`ext_rv`, not both.')
@@ -114,7 +116,7 @@ def design_primers(
 
 
 def format_result(result: dict) -> str:
-    """Dasselbe dict als Text — Wortlaut unverändert gegenüber der alten CLI."""
+    """The same dict as text; wording unchanged compared to the old CLI."""
     lines = [
         f"Forward primer:  {result['primerFw']} (len={result['lengthFw']}, Tm={result['tmFw']:.1f})",
         f"Reverse primer:  {result['primerRv']} (len={result['lengthRv']}, Tm={result['tmRv']:.1f})",

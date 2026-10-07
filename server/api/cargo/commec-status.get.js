@@ -1,10 +1,10 @@
 /**
  * GET /api/cargo/commec-status
  *
- * Leichter Health-Check fuer die Statusanzeige im Header ("Biosecurity
- * screening: on/off", neben dem Dark-Mode-Toggle) — fragt nur, ob der
- * COMMEC-Sidecar erreichbar ist und seine Datenbanken bereit sind, screent
- * dabei keine Sequenz. Siehe server/utils/commec.js.
+ * Light health check for the status display in the header ("Biosecurity
+ * screening: on/off", next to the dark mode toggle); it only asks whether the
+ * COMMEC sidecar is reachable and its databases are ready, and screens
+ * no sequence. See server/utils/commec.js.
  */
 import { checkCommecHealth } from '../../utils/commec.js'
 

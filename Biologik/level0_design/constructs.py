@@ -1,4 +1,4 @@
-"""Das Level-0-Konstrukt jedes der zehn Module: Teilsequenz im Adapter, Plasmid, Primer, Oligos und GenBank."""
+"""The Level 0 construct of each of the ten modules: part sequence in the adapter, plasmid, primers, oligos and GenBank."""
 
 from __future__ import annotations
 
@@ -29,11 +29,11 @@ def placeholder_seq(seed: str, length: int) -> str:
 
 
 def resolve_seq(kind: str, part_id: str, seed: str, length: int) -> tuple[str, bool]:
-    """(sequence, is_real). Nutzt eine echte Sequenz aus der Teile-Datenbank
-    (Biologik/level0_design/parts/<kind>/<part_id>.json), falls dort mit
-    sequence_status "real" hinterlegt — sonst faellt es auf die bisherige
-    deterministische Platzhalter-Sequenz zurueck. Sobald jemand die JSON-Datei
-    ausfuellt, verwendet der naechste Request automatisch die echte Sequenz."""
+    """(sequence, is_real). Uses a real sequence from the parts database
+    (Biologik/level0_design/parts/<kind>/<part_id>.json) if one is stored there with
+    sequence_status "real"; otherwise it falls back to the earlier
+    deterministic placeholder sequence. As soon as someone fills in the JSON file,
+    the next request automatically uses the real sequence."""
     real = find_real_sequence(kind, part_id)
     if real:
         return real, True
@@ -41,22 +41,22 @@ def resolve_seq(kind: str, part_id: str, seed: str, length: int) -> tuple[str, b
 
 
 def resolve_insert(category: str, part: str, site: str, slot: int, seed: str, length: int, **extra) -> tuple:
-    """(Teilsequenz in Sense-Richtung, ist_echt, Lagerstatus, Eintrag des Level-0-Plasmids oder None) eines Toolkit-Teils fuer eine Site ("nc_site"/"cargo_site") und
-    einen Type-Slot aus der Datenbank parts/level0_inserts/. Gibt es genau dort ein Level-0-Plasmid, kommt dessen Insert und
-    sein Lagerstatus (on_stock). Sonst die Sequenz desselben Teils von einer anderen Site/einem anderen Slot (Lagerstatus
-    False: an dieser Stelle gibt es kein Plasmid), und ohne jeden Treffer eine deterministische Platzhalter-Sequenz."""
+    """(part sequence in sense direction, is_real, entry of the Level 0 plasmid or None) of a toolkit part for a site
+    ("nc_site"/"cargo_site") and a Type slot from the database parts/level0_inserts/. If there is a Level 0 plasmid exactly
+    there, its insert and entry are used. Otherwise the sequence of the same part from another site/slot (entry None: there
+    is no plasmid at this position), and without any hit a deterministic placeholder sequence."""
     exact = find_inserts(category, part, site, slot, **extra)
     if exact:
-        return exact[0]["sequence"], True, exact[0].get("on_stock"), exact[0]
+        return exact[0]["sequence"], True, exact[0]
     other = (find_inserts(category, part, site, **extra) or find_inserts(category, part, **extra)
              or (find_inserts(category, part, site) or find_inserts(category, part) if "variant" not in extra else []))
     if other:
-        return other[0]["sequence"], True, False, None
-    return placeholder_seq(seed, length), False, None, None
+        return other[0]["sequence"], True, None
+    return placeholder_seq(seed, length), False, None
 
 
 def first_stop_offset(sense: str):
-    """Offset (0-basiert) des ersten Stopcodons (TAA/TAG/TGA) im Leseraster einer Sense-Sequenz, sonst None."""
+    """Offset (0-based) of the first stop codon (TAA/TAG/TGA) in the reading frame of a sense sequence, otherwise None."""
     for i in range(0, len(sense) - 2, 3):
         if sense[i:i + 3] in STOP_CODONS:
             return i
@@ -64,57 +64,56 @@ def first_stop_offset(sense: str):
 
 
 class Part(NamedTuple):
-    """Ein Teil eines Moduls, bevor es in seinen Adapter kommt. `seq` ist die Sense-Sequenz (beim Cargo erst spaeter bekannt);
-    `is_user` = vom Nutzer eingegeben statt Toolkit-Teil, `is_real` = echte Sequenz statt Platzhalter, `source` = Eintrag
-    des Level-0-Plasmids in der Datenbank."""
+    """A part of a module before it goes into its adapter. `seq` is the sense sequence (for the cargo only known later);
+    `is_user` = entered by the user instead of a toolkit part, `is_real` = real sequence instead of a placeholder, `source` = entry
+    of the Level 0 plasmid in the database (it carries the iGEM Registry link of a toolkit part)."""
     label: str
     seq: str | None
     is_real: bool
     is_user: bool
     what: str
-    on_stock: bool | None
     source: dict | None
 
 
 def _toolkit_part(cfg: dict, nc: dict, site: str, n: int) -> Part:
-    """Das Teil in Slot `n` einer Site: die eigene Sequenz des Nutzers oder das gewaehlte Toolkit-Teil aus der Datenbank."""
+    """The part in slot `n` of a site: the user's own sequence or the chosen toolkit part from the database."""
     kind = cfg["kind"]
     if kind == "custom":
-        return Part(cfg["label"], cfg["seq"], True, True, "your own part", None, None)
+        return Part(cfg["label"], cfg["seq"], True, True, "your own part", None)
     if kind == "tp":
         found = resolve_insert("tp", nc["tp"], site, n, "TP" + nc["tp"], NOMINAL_BP["TP"], variant="c_term" if n == 1 else "n_term")
-        return Part(nc["tp"], found[0], found[1], False, "targeting peptide (toolkit part)", found[2], found[3])
+        return Part(nc["tp"], found[0], found[1], False, "targeting peptide (toolkit part)", found[2])
     if kind == "linker":
         found = resolve_insert("linker", cfg["id"], site, n, "LINK" + cfg["id"], cfg["bp"])
-        return Part(cfg["label"], found[0], found[1], False, "linker (toolkit part)", found[2], found[3])
+        return Part(cfg["label"], found[0], found[1], False, "linker (toolkit part)", found[2])
     if kind == "marker":
         found = resolve_insert("marker", cfg["id"], site, n, "MARK" + cfg["id"], cfg["bp"])
-        return Part(cfg["label"], found[0], found[1], False, "surface marker (toolkit part)", found[2], found[3])
+        return Part(cfg["label"], found[0], found[1], False, "surface marker (toolkit part)", found[2])
     if kind == "intein":
         found = resolve_insert("intein", cfg["id"], site, n, "INT" + cfg["id"], cfg["bp"])
-        return Part(cfg["label"], found[0], found[1], False, "intein (toolkit part)", found[2], found[3])
+        return Part(cfg["label"], found[0], found[1], False, "intein (toolkit part)", found[2])
     found = resolve_insert("ncs", "ncs", site, n, "NCS", 30, ncs_role="stop" if kind == "ncsstop" else "plain")
     what = "NCS spacer with stop codon (toolkit part)" if kind == "ncsstop" else "NCS spacer (toolkit part)"
-    return Part("NCS", found[0], found[1], False, what, found[2], found[3])
+    return Part("NCS", found[0], found[1], False, what, found[2])
 
 
 def _middle_parts(nc: dict, cargo_label: str, cargo_antisense: str) -> tuple:
-    """(Shell, Cargo) als Teile von Type 0.3. Eine eigene Shell und ein eigenes Cargo sind Nutzereingaben; stammt das Cargo
-    unveraendert aus der Cargo-Bibliothek, ist es ein Toolkit-Teil mit Lagerstatus. Die Cargo-Sequenz wird erst spaeter
-    (als Antisense) eingesetzt."""
+    """(shell, cargo) as parts of Type 0.3. An own shell and an own cargo are user inputs; if the cargo comes
+    unchanged from the cargo library it is a toolkit part. The cargo sequence is only inserted later
+    (as antisense)."""
     if nc.get("custom"):
-        shell = Part(nc["shell"], nc["seq"], True, True, "your own nanocompartment shell", None, None)
+        shell = Part(nc["shell"], nc["seq"], True, True, "your own nanocompartment shell", None)
     else:
         found = resolve_insert("shell", nc["shell"], "nc_site", 3, "SHELL" + nc["shell"], nc["shellBp"])
-        shell = Part(nc["shell"], found[0], found[1], False, "nanocompartment shell (toolkit part)", found[2], found[3])
+        shell = Part(nc["shell"], found[0], found[1], False, "nanocompartment shell (toolkit part)", found[2])
     preset = find_library_cargo(reverse_complement(cargo_antisense))
     cargo = Part(cargo_label, None, True, preset is None, "cargo gene of interest" if preset is None else "cargo (toolkit part)",
-                 preset.get("on_stock") if preset else None, preset)
+                 preset)
     return shell, cargo
 
 
 def _mark_stop(built: dict, seq: str, module: str) -> None:
-    """NCS mit Stopcodon: das Stopcodon im Leseraster als Eintrag in `built["stops"]` markieren."""
+    """NCS with stop codon: mark the stop codon in the reading frame as an entry in `built["stops"]`."""
     sense = reverse_complement(seq) if module == "cargo" else seq
     off = first_stop_offset(sense)
     if off is None:
@@ -125,7 +124,7 @@ def _mark_stop(built: dict, seq: str, module: str) -> None:
 
 
 def _construct_features(shown: dict, part: Part, n: int, adapter_id: str, orientation: str, codon: dict | None) -> list:
-    """Annotationen des Konstrukts (so wie es angezeigt wird): BbsI-Stellen, Overhangs, Frame-Spacer, Stopcodon und das Insert."""
+    """Annotations of the construct (as it is displayed): BbsI sites, overhangs, frame spacer, stop codon and the insert."""
     features = [_feat("misc_feature", b["location"], "BbsI rec site") for b in shown["bbsiSites"]]
     features += [_feat("overhang", o["location"], o["label"], f"{o['role']} · top strand {o['sequence_top_strand']}")
                  for o in shown["overhangs"]]
@@ -138,15 +137,14 @@ def _construct_features(shown: dict, part: Part, n: int, adapter_id: str, orient
 
 
 def _ordering_options(part: Part, built: dict, shown: dict, n: int, module: str, adapter_id: str, features: list) -> tuple:
-    """(Primer, Oligo-Paar) eines Teils. Primer gibt es nur fuer eigene Sequenzen (die man in die Toolbox einbauen will) und nur,
-    wenn sie lang genug fuer PCR sind; Toolkit-Teile bestellt man als DNA/Oligos oder fragt das Plasmid beim KIT an. Ein
-    Oligo-Paar bekommt jedes Teil mit echter Sequenz unter MIN_PCR_INSERT_BP, egal ob eigene Eingabe oder Toolkit-Teil.
-    Die Bindestellen der Primer kommen als Features zu `features` dazu."""
+    """(primers, oligo pair) of a part. Primers exist only for own sequences (which one wants to build into the toolbox) and only
+    if they are long enough for PCR; toolkit parts are ordered as DNA/oligos. Every part
+    with a real sequence below MIN_PCR_INSERT_BP gets an oligo pair, whether own input or toolkit part.
+    The primer binding sites are added to `features` as features."""
     if not part.is_real:
         primers = {"possible": False, "reason": "No real sequence in the parts database yet; primers can only be designed for a real sequence."}
     elif not part.is_user:
-        primers = {"possible": False, "reason": "Toolbox part: request the plasmid from the KIT (igem@blt.kit.edu) or order it as DNA; "
-                                                 "primers are only designed for your own sequences."}
+        primers = {"possible": False, "reason": "Toolbox part: order it as DNA; primers are only designed for your own sequences."}
     else:
         primers = design_level0_primers(shown, part.label, n, module)
     oligos = (design_level0_oligos(built, part.label, n, module)
@@ -170,16 +168,16 @@ def _definition(label: str, adapter_id: str, antisense: bool, is_real: bool) -> 
 
 
 def _build_construct(part: Part, module: str, n: int, codon: dict | None, backbone: dict | None, cargo_antisense: str) -> tuple:
-    """Das Level-0-Konstrukt von Type 0.`n` des Moduls `module` und das BsaI-Fragment dieses Teils fuer Level 1.
-    Cargo-Modul-Teile liegen auf dem Antisense-Strang und werden als Reverse Complement eingesetzt (das Cargo ist bereits
-    reverse-komplementiert); angezeigt wird die Cargo Site um 180 Grad gedreht, damit das Cargo in seiner eigenen
-    Leserichtung steht (5' links -> 3' rechts)."""
+    """The Level 0 construct of Type 0.`n` of module `module` and the BsaI fragment of this part for Level 1.
+    Cargo module parts sit on the antisense strand and are inserted as a reverse complement (the cargo is already
+    reverse-complemented); the cargo site is displayed rotated by 180 degrees so that the cargo reads in its own
+    reading direction (5' left -> 3' right)."""
     antisense = module == "cargo"
     seq = part.seq
     if antisense:
         seq = cargo_antisense if n == 3 else reverse_complement(seq)
     adapter_id = adapter_id_for(module, n)
-    built = attach_adapter(adapter_id, seq)      # Top-Strand des Level-0-Plasmids, 5' links -> 3' rechts
+    built = attach_adapter(adapter_id, seq)  # top strand of the Level 0 plasmid, 5' left -> 3' right
     built["stops"] = []
     if "stop codon" in part.what:
         _mark_stop(built, seq, module)
@@ -206,9 +204,10 @@ def _build_construct(part: Part, module: str, n: int, codon: dict | None, backbo
         "adapter": built["adapter"], "usedForModules": built["usedForModules"],
         "sequence": shown["sequence"], "length": shown["length"], "insert": shown["insert"],
         "overhangs": shown["overhangs"], "bbsiSites": shown["bbsiSites"],
-        "primers": primers, "oligos": oligos, "onStock": None if part.is_user else part.on_stock,
+        "primers": primers, "oligos": oligos,
+        # link to the part in the iGEM Registry (parts database field `registry_url`); None until it is filled in, and for own parts
+        "registryUrl": None if part.is_user or not part.source else part.source.get("registry_url"),
         "codon": codon if part.is_user else None,
-        "plasmid_source": {"id": part.source["id"], "name": part.source["label"]} if part.source and not part.is_user else None,
         "stopCodon": "stop codon" in part.what, "stopLocation": shown["stops"][0]["location"] if shown["stops"] else None,
         "genbank": format_genbank_record(record_name, shown["sequence"], features, False,
                                          _definition(part.label, adapter_id, antisense, part.is_real)),
@@ -219,13 +218,13 @@ def _build_construct(part: Part, module: str, n: int, codon: dict | None, backbo
 
 def build_level0_constructs(nc: dict, cargo_label: str, cargo_antisense: str, cargo_slots: dict, nc_slots: dict,
                             fragments: list | None = None, cargo_codon: dict | None = None) -> list:
-    """Das Level-0-Konstrukt jedes der zehn Module (Cargo Site + NC Site, Type 0.1-0.5): die Teilsequenz im
-    Overhang-Adapter ihres Type-Slots (attach_adapter) und, wenn das Level-0-Backbone in der Datenbank liegt,
-    das daraus per BbsI klonierte Plasmid (clone_into_level0_backbone), jeweils mit fertigem GenBank-Text.
+    """The Level 0 construct of each of the ten modules (cargo site + NC site, Type 0.1-0.5): the part sequence in the
+    overhang adapter of its Type slot (attach_adapter) and, if the Level 0 backbone is in the database,
+    the plasmid cloned from it by BbsI (clone_into_level0_backbone), each with a finished GenBank text.
 
-    `isUser` = vom Nutzer eingegeben (Cargo, eigene Shell/Teile), sonst Toolkit-Teil; `isReal` = echte
-    Sequenz (Nutzereingabe oder Parts-Datenbank) statt deterministischem Platzhalter. Die BsaI-Fragmente aller Teile
-    (fuer die Level-1-Assemblierung) kommen, wenn `fragments` uebergeben wird, dort hinein."""
+    `isUser` = entered by the user (cargo, own shell/parts), otherwise toolkit part; `isReal` = real
+    sequence (user input or parts database) instead of a deterministic placeholder. The BsaI fragments of all parts
+    (for the Level 1 assembly) go into `fragments` if it is passed."""
     shell, cargo = _middle_parts(nc, cargo_label, cargo_antisense)
     backbone = next(iter(load_parts()["level0_backbones"]), None)
     if backbone and not backbone.get("sequence"):

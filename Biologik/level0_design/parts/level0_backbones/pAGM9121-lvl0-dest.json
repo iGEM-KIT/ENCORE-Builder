@@ -29,8 +29,8 @@
       "location": "2055..2646"
     }
   },
-  "source": "Level 0 Destination.gb (vom Nutzer bereitgestellt), pAGM9121 aus Weber E, Engler C, Gruetzner R, Werner S, Marillonnet S. \"A modular cloning system for standardized assembly of multigene constructs.\" PLoS One. 2011 Feb 18;6(2):e16765. PMID 21364738. Importiert 2026-09-30.",
-  "notes": "Die Overhang-Labels \"NLvl0\"/\"CLvl0\" hatten im Original ein Leerzeichen am Ende (\"NLvl0 \"/\"CLvl0 \"); hier bereinigt. Noch nicht in die Level-0/1/2-Design-Engine oder die Frontend-Plasmidkarte verdrahtet.",
+  "source": "Level 0 Destination.gb (provided by the user), pAGM9121 from Weber E, Engler C, Gruetzner R, Werner S, Marillonnet S. \"A modular cloning system for standardized assembly of multigene constructs.\" PLoS One. 2011 Feb 18;6(2):e16765. PMID 21364738. Imported 2026-09-30.",
+  "notes": "The overhang labels \"NLvl0\"/\"CLvl0\" had a trailing space in the original (\"NLvl0 \"/\"CLvl0 \"); cleaned here.",
   "features": [
     {
       "type": "source",

@@ -2,7 +2,7 @@
  * GET /api/libraries
  *
  * Returns the pickable module libraries (nanocompartments, cargo presets,
- * linkers, promoters) plus the Type overhang reference — straight out of
+ * linkers, promoters) plus the Type overhang reference; straight out of
  * Biologik/level0_design/data.py, the same source the design itself uses.
  * The frontend populates its decision dropdowns from here instead of
  * hardcoding them, so adding a new nanocompartment (decision 1.2) stays a

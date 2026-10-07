@@ -77,11 +77,11 @@ def find_best_primers(
     *,
     sequence: str | None = None,
 ):
-    """Beste Primerlänge suchen — akzeptiert FASTA-Datei ODER Sequenz-String.
+    """Search for the best primer length; accepts a FASTA file OR a sequence string.
 
-    Die Sequenz wird einmal aufgelöst und danach nur noch geschnitten (vorher
-    wurde die FASTA-Datei in jedem Schleifendurchlauf neu von der Platte
-    gelesen). Ergebnis identisch.
+        The sequence is resolved once and then only sliced (before, the FASTA file
+        was read from disk again in every loop iteration). Identical result.
+
     """
     seq = resolve_sequence(sequence=sequence, fasta_file=fasta_file)
 

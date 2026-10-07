@@ -1,30 +1,30 @@
 #!/usr/bin/env python3
-"""Duenner HTTP-Wrapper um die commec-CLI (Common Mechanism, IBBIS) fuer den
-ENCORE-Builder. commec selbst hat keine REST-API, nur eine FASTA-in/JSON-out
-CLI (siehe https://github.com/ibbis-bio/common-mechanism/wiki) — dieser
-Wrapper nimmt eine Sequenz per HTTP entgegen, schreibt sie in eine temporaere
-FASTA-Datei, ruft `commec screen` auf und gibt das geparste Ergebnis zurueck.
+"""Thin HTTP wrapper around the commec CLI (Common Mechanism, IBBIS) for the
+ENCORE Builder. commec itself has no REST API, only a FASTA-in/JSON-out
+CLI (see https://github.com/ibbis-bio/common-mechanism/wiki); this
+wrapper takes a sequence over HTTP, writes it to a temporary
+FASTA file, calls `commec screen` and returns the parsed result.
 
-Bewusst nur Python-Standardbibliothek (kein Flask/FastAPI): das vermeidet
-Versionskonflikte mit den von `conda create -n commec-env commec` installierten
-Paketen (strict channel priority, siehe Install-Guide).
+Only the Python standard library on purpose (no Flask/FastAPI): this avoids
+version conflicts with the packages installed by `conda create -n commec-env commec`
+(strict channel priority, see the install guide).
 
-Endpunkte:
+Endpoints:
   GET  /health           -> {"ok": bool, "detail": str}
   POST /screen            body: {"sequences": [{"label": str, "sequence": str}]}
                            -> {"results": [{"available": bool, "status"?: {...}, "reason"?: str}]}
 
-`status` ist das von commec selbst gelieferte Objekt, unveraendert
-durchgereicht, verifiziert gegen einen echten Lauf (commec 1.0.4, nur
-Biorisk+Low-concern-Datenbank, siehe Dockerfile), z.B.:
+`status` is the object delivered by commec itself, passed
+through unchanged, verified against a real run (commec 1.0.4, only the
+biorisk + low-concern database, see Dockerfile), e.g.:
   {"screen_status": "Warning", "biorisk": "Pass", "protein_taxonomy": "Skip",
    "nucleotide_taxonomy": "Skip", "low_concern": "Pass",
    "rationale": "No matches found during any stage of analysis. ..."}
-Ohne Protein-/Nukleotid-Taxonomie-Datenbanken (siehe Dockerfile) stehen
-protein_taxonomy/nucleotide_taxonomy immer auf "Skip", und eine Sequenz ohne
-jeden Treffer bekommt "Warning" (nicht "Pass") mit der obigen Begruendung —
-das ist commecs eigene, erwartete Reaktion auf einen unvollstaendigen
-Datenbanksatz, kein Fehler in diesem Wrapper. screen_status-Werte laut Doku:
+Without protein/nucleotide taxonomy databases (see Dockerfile),
+protein_taxonomy/nucleotide_taxonomy are always "Skip", and a sequence without
+any hit gets "Warning" (not "Pass") with the rationale above;
+that is commec's own expected reaction to an incomplete
+database set, not an error in this wrapper. screen_status values according to the docs:
 Pass, Warning, Flag, Mixed, Error, Skip.
 """
 
@@ -43,24 +43,24 @@ THREADS = os.environ.get("COMMEC_THREADS", "4")
 PORT = int(os.environ.get("PORT", "8787"))
 # The Dockerfile here only downloads the curated biorisk+low_concern set
 # (~1.2 GB) via `commec setup`, not the ~530GB protein-NR / ~580GB
-# nucleotide-NT taxonomy databases (see Dockerfile for why) — so the
+# nucleotide-NT taxonomy databases (see Dockerfile for why); so the
 # protein/nucleotide taxonomy search steps must be skipped, or commec errors
 # looking for databases that were never downloaded. Kept as an env var, not
 # hardcoded, so a deployment that DID download nr/nt can flip this off
 # without editing code.
 SKIP_TAXONOMY = os.environ.get("COMMEC_SKIP_TAXONOMY", "true").strip().lower() not in ("false", "0", "no")
-# Ein voller Lauf (Biorisk + Protein-/Nukleotid-Taxonomie) kann laut IBBIS
-# mehrere Minuten dauern — Timeout entsprechend grosszuegig, aber nicht
-# unbegrenzt, damit eine haengende Sequenz nicht den ganzen Service blockiert.
+# A full run (biorisk + protein/nucleotide taxonomy) can take several minutes
+# according to IBBIS; the timeout is generous accordingly, but not
+# unlimited, so that a hanging sequence does not block the whole service.
 RUN_TIMEOUT_SECONDS = int(os.environ.get("COMMEC_RUN_TIMEOUT_SECONDS", "900"))
 MAX_SEQ_LEN = int(os.environ.get("COMMEC_MAX_SEQ_LEN", "20000"))
 
 
 def _find_status(node):
-    """commec's .output.json-Struktur ist nicht offiziell mit Schema
-    dokumentiert (nur Beispiele im Wiki) — statt uns an eine vermutete Form zu
-    binden, wird der Baum nach dem ersten Objekt durchsucht, das wie das
-    dokumentierte `status`-Objekt aussieht (hat ein `screen_status`-Feld)."""
+    """commec's .output.json structure is not officially documented with a schema
+        (only examples in the wiki); instead of committing to an assumed shape,
+        the tree is searched for the first object that looks like the
+        documented `status` object (has a `screen_status` field)."""
     if isinstance(node, dict):
         status = node.get("status")
         if isinstance(status, dict) and "screen_status" in status:
@@ -87,9 +87,9 @@ def _screen_one(label: str, sequence: str) -> dict:
         return {"available": False, "reason": f"Sequence longer than {MAX_SEQ_LEN} bp: skipped for this service's configured limit."}
 
     run_id = uuid.uuid4().hex[:12]
-    # Kein Nutzertext im Dateinamen/FASTA-Header — nur eine erzeugte ID. Das
-    # Label wird ausschliesslich in der HTTP-Antwort verwendet, nie an einen
-    # Shell-Befehl oder Dateinamen weitergereicht.
+    # No user text in the file name/FASTA header, only a generated ID. The
+    # label is used exclusively in the HTTP response, never passed on to a
+    # shell command or file name.
     with tempfile.TemporaryDirectory(prefix=f"commec-{run_id}-") as tmp:
         fasta_path = os.path.join(tmp, "query.fasta")
         out_prefix = os.path.join(tmp, "out")

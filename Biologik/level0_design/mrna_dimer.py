@@ -1,35 +1,30 @@
-"""mRNA-Selbststruktur (optional, braucht ViennaRNA): nicht nur fuer die Cargo,
-sondern fuer JEDE vom Nutzer selbst eingegebene Sequenz (Cargo, eigene Shell,
-eigenes Modul), siehe cli.py cmd_validate().
+"""mRNA self structure (optional, needs ViennaRNA): not only for the cargo
+but for EVERY sequence entered by the user (cargo, own shell,
+own module), see cli.py cmd_validate().
 
-Zwei getrennte Phänomene, die beide ein scannendes Ribosom blockieren und die
-Translation verhindern können:
+Two separate phenomena that can both block a scanning ribosome and
+prevent translation:
 
-  - selfFold:  eine einzelne mRNA faltet sich auf sich selbst zurück
-               (Haarnadelstruktur / Sekundärstruktur INNERHALB einer Kopie).
-  - selfDimer: zwei Kopien derselben mRNA lagern sich aneinander an
-               (intermolekularer Duplex ZWISCHEN zwei Kopien).
+  - selfFold:  a single mRNA folds back onto itself
+               (hairpin / secondary structure WITHIN one copy).
+  - selfDimer: two copies of the same mRNA anneal to each other
+               (intermolecular duplex BETWEEN two copies).
 
-Beide brauchen ViennaRNA (``pip install ViennaRNA``: siehe
-Biologik/requirements.txt). Fehlt es, ist das kein Fehler: der Check wird
-einfach ausgelassen, genau wie primer3 an anderer Stelle auf die
-Wallace-Schaetzung zurueckfaellt: design_construct() liefert trotzdem ein
-Ergebnis.
+Both need ViennaRNA (``pip install ViennaRNA``: see
+Biologik/requirements.txt). If it is missing that is no error: the check is
+simply left out, just like primer3 elsewhere falls back to the
+Wallace estimate: design_construct() still returns a result.
 
-Eine rohe minimale freie Energie (MFE) allein ist zwischen Sequenzen nicht fair
-vergleichbar: jede RNA hat allein durch Laenge und GC-Gehalt eine gewisse
-Baseline-Faltungsenergie. Deshalb wird die MFE der echten Sequenz gegen den
-Hintergrund mehrerer zufaellig durchmischter (basenzusammensetzungsgleicher)
-Varianten derselben Sequenz verglichen: ein Z-Score, wie viele
-Standardabweichungen die echte Sequenz staerker faltet/dimerisiert, als es
-fuer eine zufaellige Sequenz derselben Zusammensetzung zu erwarten waere.
-Deutlich negativer Z-Score = staerker strukturiert/selbstkomplementaer als
-Zufall. Das Mischen ist ein einfaches Basen-Shuffle (nicht Dinukleotid-
-erhaltend): eine bewusste Vereinfachung.
+A raw minimum free energy (MFE) alone cannot be compared fairly between sequences:
+every RNA has a certain baseline folding energy simply from its length and GC content. So the MFE of the real sequence is
+compared against the background of several randomly shuffled variants (same base composition)
+of the same sequence: a z-score, how many standard deviations more strongly the real sequence
+folds/dimerizes than would be expected for a random sequence of the same composition.
+A clearly negative z-score = more structured/self-complementary than chance.
+The shuffling is a simple base shuffle (not dinucleotide preserving): a deliberate simplification.
 
-Das ist eine thermodynamische MFE-Abschaetzung, KEINE Bindungswahrscheinlichkeit
-im kinetischen/Konzentrations-Sinn (dafuer fehlen intrazellulaere
-Konzentrationen und Kinetik-Daten, die dieses Tool nicht hat).
+This is a thermodynamic MFE estimate, NOT a binding probability in the kinetic/concentration sense
+(that would need intracellular concentrations and kinetics data, which this tool does not have).
 """
 
 from __future__ import annotations
@@ -37,21 +32,20 @@ from __future__ import annotations
 
 import random
 
-# ViennaRNA-Aufrufe werden mit der Sequenzlaenge ungefaehr quadratisch
-# langsamer. Real gemessen (RNA.fold + RNA.duplexfold zusammen, eine Sequenz):
-#   500bp ~0.3s · 1000bp ~1.4s · 1500bp ~3.2s · 2000bp ~5.7s · 3000bp ~13.8s
-# TARGET_SECONDS ist das Zeitbudget PRO Check (self-fold bzw. self-dimer,
-# jeweils inkl. Zufalls-Hintergrund) — der Live-Check laeuft im Hintergrund
-# nach einer Tipppause, nicht bei jedem Tastendruck, ein paar Sekunden
-# Wartezeit fuer eine lange Sequenz sind hier in Ordnung.
+# ViennaRNA calls get roughly quadratically slower with the sequence length. Measured (RNA.fold + RNA.duplexfold together, one sequence):
+# 500bp ~0.3s · 1000bp ~1.4s · 1500bp ~3.2s · 2000bp ~5.7s · 3000bp ~13.8s
+# TARGET_SECONDS is the time budget PER check (self-fold or self-dimer,
+# each including the random background); the live check runs in the background
+# after a typing pause, not on every keystroke, so a few seconds of
+# waiting for a long sequence are fine here.
 TARGET_SECONDS = 10.0
-# grober Kalibrierungsfaktor aus obigen Messungen (Sekunden pro bp^2), mit
-# etwas Sicherheitsmarge nach oben, um das Budget nicht zu reissen
+# rough calibration factor from the measurements above (seconds per bp^2), with a
+# safety margin upwards so the budget is not blown
 TIME_PER_BP2 = 1.6e-6
-MIN_SHUFFLES = 2   # weniger als 2 ergibt keine sinnvolle Standardabweichung
-MAX_SHUFFLES = 10  # mehr bringt bei kurzen Sequenzen kaum noch Praezision
-MAX_LEN = 3000  # laenger: Check komplett uebersprungen (selbst 1x falten waere zu langsam)
-SHUFFLE_SEED = 20260928  # deterministisch: dieselbe Sequenz -> dasselbe Ergebnis
+MIN_SHUFFLES = 2  # fewer than 2 gives no meaningful standard deviation
+MAX_SHUFFLES = 10  # more hardly adds any precision for short sequences
+MAX_LEN = 3000  # longer: check skipped entirely (even folding once would be too slow)
+SHUFFLE_SEED = 20260928  # deterministic: same sequence -> same result
 
 
 def _estimated_seconds(length: int) -> float:
@@ -59,11 +53,12 @@ def _estimated_seconds(length: int) -> float:
 
 
 def _shuffle_count(length: int) -> int:
-    """Wie viele Zufalls-Hintergrundsequenzen passen noch ins Zeitbudget?
+    """How many random background sequences still fit in the time budget?
 
-    0 heisst: selbst 2 Shuffles wuerden das Budget reissen — dann gibt es nur
-    die rohe MFE ohne Z-Score/Risikostufe. Kuerzere Sequenzen bekommen mehr
-    Shuffles (bessere Statistik), laengere weniger, aber selten weniger als 2.
+        0 means: even 2 shuffles would blow the budget; then there is only
+        the raw MFE without z-score/risk level. Shorter sequences get more
+        shuffles (better statistics), longer ones fewer, but rarely fewer than 2.
+
     """
     est = _estimated_seconds(length)
     if est <= 0:
@@ -115,9 +110,9 @@ def _one_check(seq_rna: str, mfe_fn, rng: random.Random, shuffles: int) -> dict:
 
 
 def check_mrna_structure(sense_seq: str) -> dict:
-    """``sense_seq``: eine validierte, fusionsbereite CDS in Sense-/Kodierrichtung
-    (Cargo, eigene Shell oder eigenes Modul) — genau das ist auch die
-    mRNA-Sequenz (mit U statt T)."""
+    """``sense_seq``: a validated, fusion-ready CDS in sense/coding direction
+        (cargo, own shell or own module); this is also exactly the
+        mRNA sequence (with U instead of T)."""
     seq = (sense_seq or "").upper()
     if len(seq) < 8:
         return {"available": False, "reason": "Sequence too short to fold."}

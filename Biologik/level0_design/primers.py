@@ -1,4 +1,4 @@
-"""PCR-Primer: das Cargo-Primerpaar fuer Level 1 und die Level-0-Primer fuer eigene Sequenzen samt PCR-Produkt als GenBank."""
+"""PCR primers: the cargo primer pair for Level 1 and the Level 0 primers for own sequences, with the PCR product as GenBank."""
 
 from __future__ import annotations
 
@@ -10,12 +10,13 @@ from .sequence import reverse_complement, wallace_tm
 
 
 def _wallace_anneal(sequence: str):
-    """Annealing-Teile (vorwaerts, rueckwaerts) ueber die Wallace-Regel (2 °C je A/T, 4 °C je G/C).
+    """Annealing parts (forward, reverse) by the Wallace rule (2 °C per A/T, 4 °C per G/C).
 
-    Fallback, wenn primer3 nicht installiert ist oder kein Paar findet. Reicht
-    fuer die Vorschau, nicht fuer die Bestellung. Gibt (anneal_f, anneal_r, balanced) zurueck.
+        Fallback when primer3 is not installed or finds no pair. Good enough
+        for the preview, not for ordering. Returns (anneal_f, anneal_r, balanced).
+
     """
-    # len_f und len_r sind die Annealing-Längen der Primer. Sie werden angepasst, damit die Tm-Werte passend sind.
+    # len_f and len_r are the annealing lengths of the primers. They are adjusted so that the Tm values fit.
     len_f = 22
     len_r = 22
     balanced = False
@@ -30,7 +31,7 @@ def _wallace_anneal(sequence: str):
         elif tm_r > tm_f and len_r > 16:
             len_r -= 1
         else:
-            # Abbruch, weil keine sinnvolle Anpassung mehr möglich
+            # stop, because no sensible adjustment is possible any more
             break
     return sequence[:len_f], reverse_complement(sequence[-len_r:]), balanced
 
@@ -53,18 +54,19 @@ def _wallace_primer_pair(sequence: str, oh_f: str, oh_r: str):
 
 
 def _primer3_primer_pair(sequence: str, oh_f: str, oh_r: str):
-    """Echte Nearest-Neighbor-Thermodynamik aus ``Biologik.primer_design``.
+    """Real nearest-neighbour thermodynamics from ``Biologik.primer_design``.
 
-    Der Import ist bewusst lokal: ``level0_design`` soll ohne primer3 nutzbar
-    bleiben, deshalb wird die Abhaengigkeit erst beim Aufruf gezogen.
+        The import is local on purpose: ``level0_design`` should stay usable without primer3,
+        so the dependency is only pulled in when this is called.
 
-    Die Dimer-/Hairpin-Bewertung laeuft nur auf dem ANNEALING-Bereich, nicht
-    auf dem fertigen Oligo. Grund: ``BSAI_PRIMER_PREFIX`` endet auf einem
-    literalen "N", und primer3 lehnt Nicht-ACGT-Basen ab
-    ("Sequence contains non-ACGT base 'N'"). Sobald der Spacer auf eine
-    konkrete Base festgelegt ist, sollte hier der volle Primer geprueft werden
-    (ueber ``ext_fw`` / ``ext_rv`` in ``design_primers``) — der Ueberhang
-    veraendert die Sekundaerstruktur messbar.
+        The dimer/hairpin evaluation runs only on the ANNEALING region, not
+        on the finished oligo. Reason: ``BSAI_PRIMER_PREFIX`` ends in a
+        literal "N", and primer3 rejects non-ACGT bases
+        ("Sequence contains non-ACGT base 'N'"). As soon as the spacer is fixed to a
+        concrete base, the full primer should be checked here
+        (via ``ext_fw`` / ``ext_rv`` in ``design_primers``); the overhang
+        measurably changes the secondary structure.
+
     """
     from ..primer_design import design_primers
 
@@ -88,15 +90,16 @@ def _primer3_primer_pair(sequence: str, oh_f: str, oh_r: str):
 
 
 def _assemble_primers(anneal_f: str, anneal_r: str, oh_f: str, oh_r: str, tm_f, tm_r):
-    """Baut die beiden Primer-Eintraege aus Annealing-Teil + BsaI-Praefix + Overhang.
+    """Builds the two primer entries from annealing part + BsaI prefix + overhang.
 
-    Die Overhangs kommen unveraendert von der aufrufenden Stelle (aktuell
-    CARGO_L1_FLANK). Sie sind NICHT identisch mit den Extensions in
-    ``primer_design/add_extensions.py`` (type0.3 haengt TTCT an, also den
-    Type-3-Overhang). Welche Variante die reale Toolbox
-    beschreibt, ist offen — siehe PROJECT_TODO.txt Abschnitt 1. Hier wird
-    bewusst nichts entschieden: die Thermodynamik wurde ausgetauscht, die
-    Biologie nicht.
+        The overhangs come unchanged from the calling code (currently
+        CARGO_L1_FLANK). They are NOT identical to the extensions in
+        ``primer_design/add_extensions.py`` (type0.3 appends TTCT, i.e. the
+        Type 3 overhang). Which variant describes the real toolbox
+        is open; see PROJECT_TODO.txt section 1. Nothing is decided here
+        on purpose: the thermodynamics were swapped, the
+        biology was not.
+
     """
     def build(overhang: str, anneal: str) -> str:
         return f"{BSAI_PRIMER_PREFIX}{overhang}{anneal}"
@@ -114,39 +117,40 @@ def _assemble_primers(anneal_f: str, anneal_r: str, oh_f: str, oh_r: str, tm_f, 
 
 
 def make_primer_pair(sequence: str, oh_f: str, oh_r: str, use_primer3: bool = True):
-    """Primerpaar fuer das Cargo. Nutzt primer3, faellt sonst auf Wallace zurueck.
+    """Primer pair for the cargo. Uses primer3, otherwise falls back to Wallace.
 
-    ``use_primer3=False`` erzwingt den Fallback (fuer Tests und fuer eine reine
-    Vorschau ohne installiertes primer3).
+        ``use_primer3=False`` forces the fallback (for tests and for a plain
+        preview without primer3 installed).
+
     """
     if use_primer3:
         try:
             return _primer3_primer_pair(sequence, oh_f, oh_r)
         except ImportError:
-            pass          # primer3-py nicht installiert -> Wallace
+            pass  # primer3-py not installed -> Wallace
         except ValueError:
-            pass          # kein gueltiges Paar gefunden -> Wallace
+            pass  # no valid pair found -> Wallace
 
     return _wallace_primer_pair(sequence, oh_f, oh_r)
 
 
-# 5'-Polster vor der BbsI-Erkennungsstelle: Restriktionsenzyme schneiden am Ende eines PCR-Produkts
-# schlecht, wenn die Erkennungsstelle direkt am Rand liegt.
+# 5' clamp in front of the BbsI recognition site: restriction enzymes cut badly at the end of a PCR product
+# if the recognition site lies right at the edge.
 PCR_CLAMP = "TTTT"
 
 
-# Teile (eigene wie aus der Datenbank) unter dieser Laenge werden als annealte Oligo-Paare bestellt, ab dieser Laenge gibt
-# es fuer eigene Sequenzen Primer (PCR) bzw. fuer Toolbox-Teile die DNA-Bestellung (fertige Fragmente gibt es erst ab ~125 bp).
+# Parts (own ones as well as those from the database) below this length are ordered as annealed oligo pairs; from this length on
+# there are primers (PCR) for own sequences and the DNA order for toolbox parts (finished fragments only exist from ~125 bp).
 MIN_PCR_INSERT_BP = 150
 
 
 def design_level0_primers(shown: dict, label: str, slot: int, module: str):
-    """PCR-Primer, die eine vorhandene Teilsequenz (`shown["insert"]`, 5'->3' im Konstrukt) Level-0-kompatibel
-    machen: 5'-Ueberhang = Polster + gesamte Adapter-Flanke vor/hinter dem Insert (BbsI-Stelle, Level-0-/
-    Level-1-/ggf. Level-2-Overhangs, BsaI-Stelle), 3'-Teil = Annealing an das Insert (primer3, sonst Wallace).
-    Das PCR-Produkt entspricht `shown["sequence"]` plus je ein Polster, kann also direkt mit BbsI ins
-    Level-0-Backbone kloniert werden. Gibt `{"possible": False, "reason": ...}` zurueck, wenn das Insert
-    fuer PCR zu kurz ist."""
+    """PCR primers that make an existing part sequence (`shown["insert"]`, 5'->3' in the construct) Level 0 compatible:
+        5' overhang = clamp + the whole adapter flank before/after the insert (BbsI site, Level 0/
+        Level 1/where applicable Level 2 overhangs, BsaI site), 3' part = annealing to the insert (primer3, otherwise Wallace).
+        The PCR product equals `shown["sequence"]` plus one clamp on each side, so it can be cloned directly with BbsI
+        into the Level 0 backbone. Returns `{"possible": False, "reason": ...}` if the insert
+        is too short for PCR."""
     insert = shown["insert"]["sequence"]
     if len(insert) < MIN_PCR_INSERT_BP:
         return {"possible": False,
@@ -161,7 +165,7 @@ def design_level0_primers(shown: dict, label: str, slot: int, module: str):
         from ..primer_design import design_primers
         result = design_primers(sequence=insert, ext_fw=ext_f, ext_rv=ext_r)
     except (ImportError, ValueError):
-        pass                       # primer3 fehlt oder kein Paar -> Wallace
+        pass  # primer3 missing or no pair -> Wallace
     if result:
         anneal_f, anneal_r = result["annealFw"], result["annealRv"]
         tm_f, tm_r, method = round(result["tmFw"], 1), round(result["tmRv"], 1), "primer3-nn"
@@ -192,10 +196,9 @@ def design_level0_primers(shown: dict, label: str, slot: int, module: str):
 
 
 def pcr_product_genbank(shown: dict, primers: dict, label: str, slot: int, module: str, adapter_id: str, features: list) -> str:
-    """GenBank-Record des PCR-Produkts (Polster + Konstrukt + Polster, linear) mit beiden Primern als
-    `primer_bind` ueber ihre volle Laenge (Polster + Adapter-Flanke + Annealing-Teil). `features` sind die
-    Konstrukt-Features (BbsI-Stellen, Overhangs, Insert) in Konstrukt-Koordinaten; sie werden um das Polster
-    verschoben."""
+    """GenBank record of the PCR product (clamp + construct + clamp, linear) with both primers as
+        `primer_bind` over their full length (clamp + adapter flank + annealing part). `features` are the
+        construct features (BbsI sites, overhangs, insert) in construct coordinates; they are shifted by the clamp."""
     clamp = primers["clamp"]
     sequence = clamp + shown["sequence"] + clamp
     out = [{**f, "location": shift_location(f["location"], len(clamp))} for f in features]

@@ -1,4 +1,4 @@
-<!-- ENCORE Builder v6 — English UI, toolKIT branding, dark mode, dropdown NC, well-plate pick plan, info bubbles -->
+<!-- ENCORE Builder v6: English UI, toolKIT branding, dark mode, dropdown NC, well-plate pick plan, info bubbles -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ENCORE toolKIT</title>
@@ -7,106 +7,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/site.css">
 <style>
-  /* ============ THEME TOKENS ============ */
-  :root{
-    /* The ENTIRE palette is colour-blind-safe by default — there is no separate CB
-       mode to switch on. Chrome (header, accents, links, buttons) uses dark blue
-       instead of forest green, CB blue instead of turquoise, and CB orange. */
-    --ink:#0d1b26; --ink-soft:#37454f;
-    --forest:#12283a; --forest-deep:#0c1c29;
-    --teal:#0072B2; --teal-deep:#005f93; --teal-soft:#dbe9f3;
-    --orange:#E69F00; --orange-ink:#3a2200; --orange-deep:#8a5a00;
-    --paper:#F3F6F3; --card:#FFFFFF; --card-2:#FAFCFA;
-    --line:#D7E1DB; --line-soft:#E9EFEB; --muted:#5C6B62;
-    --shadow:0 1px 2px rgba(20,38,32,.06), 0 10px 30px rgba(20,38,32,.07);
-    --radius:14px; --hdr-h:64px; --stepper-h:74px; --band-h:52px; --side-w:214px;
-    /* ---- ENCORE brand palette (taken from the toolKIT artwork) ----
-       Deep-teal outline · mint shell spheres · pale-mint panel · olive and
-       orange connector squiggles · yellow and purple accents. These drive the
-       assembled module output (Level 0 → 1 → 2), the live construct strip and the
-       plasmid map — i.e. everything the user gets back after filling in their
-       inputs. The page chrome (header, stepper, CTA) is deliberately untouched. */
-    --brand-teal-deep:#17806F; --brand-teal:#2FBFA6; --brand-mint:#BFE5DC;
-    --brand-olive:#9CB63C; --brand-yellow:#FBDD52;
-    --brand-orange:#FF9C21; --brand-purple:#C98EDE; --brand-slate:#8FA39D;
-    /* Two shades pulled deeper than the artwork values, purely so neighbouring
-       slots keep a lightness gap (see the note below): the mint used as a part
-       fill, and the olive that sits directly beside the teal shell. */
-    --brand-mint-mid:#9BD9C7; --brand-olive-deep:#7E9A25;
-    /* Module type colours — the brand hues mapped onto the slot positions.
-       Seven fills out of a seven-colour brand palette cannot all be separated by
-       lightness alone, so the shades are tuned where it actually matters: slots
-       that sit NEXT TO each other in a module row keep a luminance gap of ≥1.4×
-       (t1/t2 2.4× · t2/t3 1.5× · t2/shell 1.4× · t4/t5 1.6×). The pairs that are
-       left on hue alone — orange/purple, teal/purple, yellow/mint — sit on
-       opposite hue axes and survive deutan, protan and tritan vision. Colour
-       therefore stays a REDUNDANT cue: every block, legend row and well carries
-       its text label as well. Each ink clears WCAG AA on its own fill.
-         Colours follow the toolbox scheme (Level 0 types):
-         Type 0.1 = green · 0.2 = orange · 0.3 = teal (cargo and shell) · 0.4 = purple · 0.5 = yellow
-         promoter = sky blue. A module keeps the colour of the slot it sits in. */
-    --t1:#B7D63F; --t2:#F7A11B; --t3:#2BBFA7; --t4:#C58ADF; --t5:#FFE14B;
-    --shell:var(--t3); --promo:#3EB4F2; --ncs:var(--brand-slate);
-    --t1-ink:#141c06; --t2-ink:#2a1700; --t3-ink:#04231d; --t4-ink:#2b0f3d;
-    --t5-ink:#2e2700; --shell-ink:#04231d; --promo-ink:#04263a; --ncs-ink:#152420;
-    /* Surface-display marker (e.g. SpyCatcher) — the artwork's outline teal taken
-       to its darkest, so it never collides with the Type 4 purple or the shell
-       teal inside the same module row. Inverted under [data-theme="dark"]. */
-    --mark:#0B3A33; --mark-ink:#ffffff;
-  }
-  /* Darkmode */
-  [data-theme="dark"]{
-    --ink:#E7EEF4; --ink-soft:#B7C2CC;
-    --forest:#0c1a29; --forest-deep:#08131f;
-    --teal:#3fa9d8; --teal-deep:#7fc4ea; --teal-soft:#0e2a3d;
-    --orange:#F0A93A; --orange-deep:#F0A93A;
-    --paper:#0d1814; --card:#13211c; --card-2:#172821;
-    --line:#26362f; --line-soft:#1d2c25; --muted:#8da095;
-    --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 32px rgba(0,0,0,.35);
-    /* Part fills stay at their brand values on a dark card (they are opaque chips
-       carrying their own ink). Only the pale-mint panel field and the near-black
-       surface marker have to flip. */
-    --brand-mint:#102A25;
-    --mark:#DFF3EE; --mark-ink:#0B2A24;
-  }
-
-  *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  html,body{margin:0}
-  body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;
-    font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;transition:background .25s,color .25s}
-  h1,h2,h3,h4,.display{font-family:'Space Grotesk',sans-serif;letter-spacing:-.01em}
-  img,svg{max-width:100%}
-
-  /* ============ HEADER ============ */
-  header{background:linear-gradient(160deg,var(--forest-deep),var(--forest));color:#E9F2EE;
-    padding:0 24px;height:var(--hdr-h);display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:40}
-  .brand{display:flex;align-items:center;gap:11px;min-width:0}
-  a.brand{text-decoration:none;color:inherit;cursor:pointer;border-radius:8px}
-  a.brand:focus-visible{outline:2px solid #E69F00;outline-offset:4px}
-  .brand-wordmark{height:30px;width:auto;flex:none;display:block;color:#fff}
-  .brand-sub{font-size:12.5px;color:#aebfd2;letter-spacing:.01em;
-    padding-left:11px;margin-left:3px;border-left:1px solid rgba(255,255,255,.2);line-height:1.2;font-weight:600}
-  .brand-sub b{color:#E69F00;font-weight:700}
-  @media(max-width:600px){.brand-sub{display:none}}
-  header .spacer{flex:1}
-  .site-tabs{display:flex;gap:4px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:9px;padding:2px}
-  .site-tabs a{font-family:inherit;font-size:11.5px;font-weight:600;color:#B9C7D6;text-decoration:none;padding:6px 11px;border-radius:7px;white-space:nowrap}
-  .site-tabs a:hover{color:#E9F2EE}
-  /* Highlighted only once the builder itself is showing — on the intro card you're on neither tab,
-     so neither link carries .on; showBuilder()/showIntro() toggle it on the "ENCORE Builder" link.
-     Fixed colour (not var(--teal), which differs from the selector page in light mode) so the
-     highlight matches the Encapsulin Filter tab's own colour in both themes. */
-  .site-tabs a.on{background:#3fa9d8;color:#04231d}
-  @media(max-width:640px){.site-tabs{display:none}}
-  .hbtn{border:1px solid rgba(255,255,255,.24);background:rgba(255,255,255,.06);color:#E9F2EE;
-    font-family:inherit;font-size:11.5px;font-weight:600;padding:7px 11px;border-radius:9px;cursor:pointer;
-    transition:.15s;display:flex;align-items:center;gap:6px}
-  .hbtn:hover{background:rgba(255,255,255,.14)}
-  .hbtn.on{background:var(--teal);border-color:var(--teal);color:#fff}
-
-  /* Biosecurity screening (COMMEC) status — a passive header badge, not a
+  /* Biosecurity screening (COMMEC) status; a passive header badge, not a
      button: it only reports whether the sidecar is reachable right now, it
      doesn't toggle anything. Same dot-language everywhere on the site
      (green=good, amber=checking/degraded, red=off). */
@@ -210,7 +113,7 @@
     .shell.show{margin-left:var(--side-w)}
   }
 
-  /* top construct map — selected modules appear in place, then fuse (bidirectional) */
+  /* top construct map: selected modules appear in place, then fuse (bidirectional) */
   .grow-strip{max-width:none;margin:0;display:flex;align-items:center;gap:12px;padding:7px 24px 9px;border-top:1px dashed var(--line-soft)}
   .grow-strip .gs-label{font-family:'JetBrains Mono';font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
     color:var(--teal-deep);background:var(--teal-soft);padding:3px 8px;border-radius:6px;flex:none}
@@ -298,7 +201,7 @@
   .btn-ghost{background:var(--card);border:1px solid var(--line);color:var(--ink)}
   .btn-ghost:hover{background:var(--line-soft)}
 
-  /* ============ LEVEL VISUALISIERUNG ============ */
+  /* ============ LEVEL VISUALIZATION ============ */
   .sectitle{display:flex;align-items:center;gap:9px;margin:0 0 2px}
   .sectitle h3{font-size:17px;margin:0;font-family:'Space Grotesk';font-weight:600;display:flex;align-items:center}
   .secsub{color:var(--muted);font-size:13px;margin:0 0 14px}
@@ -351,29 +254,17 @@
     color:var(--muted);margin:22px 0 10px}
   .lvlsubhead:first-of-type{margin-top:18px}
 
-  .platchips{display:flex;flex-wrap:wrap;gap:12px}
-  .platchip{display:flex;align-items:center;gap:10px;border:1px solid var(--line);
-    border-radius:11px;padding:8px 13px 8px 8px;background:var(--card-2)}
-  .platchip svg{flex:none}
-  .platchip-text{display:flex;flex-direction:column;font-size:11.5px;line-height:1.4}
-  .platchip-text b{font-size:12.5px}
-  .platchip-text span{color:var(--muted)}
-
   .oi-badge.pcr{background:rgba(52,131,205,.14);color:#2160a8}
   [data-theme="dark"] .oi-badge.pcr{background:rgba(96,165,250,.18);color:#8ec1fb}
   .oi-badge.assemble{background:rgba(23,128,111,.12);color:#2C6A60}
   [data-theme="dark"] .oi-badge.assemble{background:rgba(47,191,166,.15);color:#9FD9CD}
-  .primerlines{margin-top:8px;padding-left:23px;display:flex;flex-direction:column;gap:4px}
-  .primerline{font-family:'JetBrains Mono';font-size:11px;color:var(--ink-soft)}
-  .primerline b{color:var(--ink)}
-  .primerline .oh{background:var(--orange);color:var(--orange-ink);border-radius:3px;padding:0 3px;font-weight:700}
 
   .levelblock{margin-bottom:20px}
   .levellabel{display:flex;align-items:center;gap:10px;margin-bottom:10px}
   .levellabel h4{font-size:14px;margin:0}
   .enzyme-tag{font-family:'JetBrains Mono';font-size:10px;color:var(--muted);background:var(--card-2);border:1px solid var(--line);padding:2px 7px;border-radius:5px}
 
-  /* DNA-Strang-Darstellung mit 5'->3' */
+  /* DNA strand display with 5'->3' */
   .strandwrap{overflow-x:auto;padding:4px 0 2px}
   .strand{display:inline-flex;flex-direction:column;gap:3px;min-width:100%}
   .strand-dir{display:flex;justify-content:space-between;font-family:'JetBrains Mono';font-size:10px;color:var(--muted);padding:0 2px}
@@ -404,14 +295,13 @@
      Level 0 is the stage BEFORE assembly: each part is still cloned on its own
      plasmid, hence discrete boxes with gaps rather than a joined strand. New/
      all parts share the same inset ring and are shown in full colour.
-     Overhang chips (.l0oh) sit beside the boxes, all on one horizontal line —
-     one shared chip per junction (not duplicated per part). Each chip shows
+     Overhang chips (.l0oh) sit beside the boxes, all on one horizontal line;      one shared chip per junction (not duplicated per part). Each chip shows
      BOTH strands of the 4nt sticky end, stacked (sense/top 5'->3' above,
-     antisense/bottom 3'->5' below) — this is a fixed physical property of the
+     antisense/bottom 3'->5' below): this is a fixed physical property of the
      DNA fragment, so it's the same in the cargo row and the nc-site row; only
      the .strand-dir header above each row (which flips for the antisense
      cargo ORF) says which of the two actually carries that module's coding
-     sequence — see l0ModuleRow(). */
+     sequence: see l0ModuleRow(). */
   /* Identical column template in the cargo row and the NC row (edge chip · 5 modules each separated by a junction
      chip · edge chip), so the two rows stand exactly on top of each other. */
   .partsrow.sep.l0grid{display:grid;grid-template-columns:35px repeat(4,minmax(54px,1fr) 66px) minmax(54px,1fr) 35px;min-width:0;align-items:stretch;gap:0 4px}
@@ -435,7 +325,7 @@
   .part small{font-weight:400;opacity:.9;font-size:10px}
   .part .ptype{font-family:'JetBrains Mono';font-size:9px;opacity:.85;letter-spacing:.02em}
 
-  /* Level 2 bidirektional */
+  /* Level 2 bidirectional */
   #lvl2strand{display:flex;width:100%}
   .l2grid .part,.l2-hub .part{overflow-wrap:anywhere}
   .l2-row{display:flex;align-items:stretch;gap:4px;flex-wrap:nowrap;width:100%;min-width:max-content}
@@ -463,10 +353,6 @@
   .note{display:flex;gap:9px;align-items:flex-start;background:var(--card-2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--ink-soft);margin-top:10px}
   .note svg{flex:none;margin-top:1px;color:var(--teal-deep)}
 
-  /* ============ 96-WELL PLATE ============ */
-  
-  .plate{display:grid;grid-template-columns:auto repeat(12,1fr);gap:5px;min-width:560px}
-
   /* ============ ORDER / TO ORDER ============ */
   .oi-seq{font-family:'JetBrains Mono';font-size:11px;line-height:1.5;word-break:break-all;color:var(--ink-soft);margin-top:2px}
   .oi-seq b{font-weight:700;color:var(--ink)}
@@ -482,7 +368,10 @@
   .orderitem .oi-name{font-weight:600;font-size:13.5px}
   .orderitem .oi-sub{font-size:11.5px;color:var(--muted)}
   .orderitem .oi-badge{font-family:'JetBrains Mono';font-size:10.5px;font-weight:700;padding:4px 9px;border-radius:6px;white-space:nowrap}
-  .oi-badge.fixed{background:var(--card-2);color:var(--muted);border:1px solid var(--line)}
+  .orderitem .oi-kind{margin:5px 0 3px}
+  .oi-badge.reg{background:var(--card-2);color:var(--teal-deep);border:1px solid var(--line);text-decoration:none}
+  a.oi-badge.reg:hover{border-color:var(--teal-deep)}
+  .oi-badge.reg.soon{color:var(--muted);border-style:dashed;cursor:default}
   .oi-badge.synth{background:rgba(230,159,0,.16);color:var(--orange-deep)}
 
   /* ============ PRIMER ============ */
@@ -500,7 +389,7 @@
   [data-theme="dark"] .mrna-risk.high{background:rgba(213,94,0,.22);color:#f0a883}
 
   /* Compact version of the same mRNA self-fold/self-dimer check, shown right under a sequence
-     field — same idea as the length/aa/GC line, just for a slower (backend-only) result that
+     field: same idea as the length/aa/GC line, just for a slower (backend-only) result that
      arrives a moment later once the debounced server check returns. */
   .mrna-inline{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin-top:6px;font-size:11.5px;color:var(--muted)}
   .mrna-inline .mrna-item{display:inline-flex;align-items:center;gap:5px}
@@ -509,7 +398,7 @@
   .mrna-inline .mrna-spin{width:11px;height:11px;border-radius:50%;border:2px solid var(--line);border-top-color:var(--teal-deep);flex:none;animation:mrnaspin .7s linear infinite}
   @keyframes mrnaspin{to{transform:rotate(360deg)}}
 
-  /* Biosecurity screening (COMMEC) — same low/moderate/high badge language as
+  /* Biosecurity screening (COMMEC): same low/moderate/high badge language as
      the mRNA risk chips, reused here for Pass/Warning/Flag so the two checks
      read as one visual system. */
   .biosec-badge{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:12px;padding:3px 9px;border-radius:999px}
@@ -621,8 +510,6 @@
   .asm-parts .ph{font-family:'JetBrains Mono';font-size:10px;color:#7a4600}
   .l0bulkrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:10px 0 0}
   .l0bulkrow>span{min-width:76px;font-size:12px;font-weight:700;color:var(--muted)}
-  a.chip{text-decoration:none;display:inline-block}
-  .l0m-note a{color:var(--teal-deep);font-weight:600}
   .chip{background:var(--card);border:1px solid var(--line);color:var(--ink);font-family:inherit;font-weight:600;font-size:12.5px;padding:8px 14px;border-radius:9px;cursor:pointer;transition:.12s}
   .chip:hover{background:var(--line-soft)}
   .chip.primary-chip{background:var(--forest);color:#fff;border-color:var(--forest)}
@@ -650,6 +537,7 @@
     <span id="themeLabel">Light</span>
   </button>
 </header>
+<div class="stopwarn" id="backendDown" style="display:none;margin:0;border-radius:0" role="alert"></div>
 
 <!-- ============ INTRO ============ -->
 <div class="intro" id="intro">
@@ -830,6 +718,7 @@
               <option value="" disabled selected>Please select</option>
             </select>
           </label>
+          <div class="stopwarn" id="calcError" style="display:none" role="alert"></div>
           <div class="nav">
             <button class="btn btn-ghost" id="back2">Back</button>
             <button class="btn btn-primary" id="next2">Calculate construct
@@ -867,7 +756,7 @@
             </div>
           </div>
 
-          <!-- Level 0 / 1 / 2 — collapsible tabs. Each shows that level's modules in
+          <!-- Level 0 / 1 / 2; collapsible tabs. Each shows that level's modules in
                their correct construct form, the acceptor plasmid(s) they get cloned
                into, and an order checklist (stock / PCR / synthesize). -->
           <div class="block">
@@ -1016,7 +905,7 @@
         <div class="htext">
           <div class="eyebrow">Step 5</div>
           <h2>Order</h2>
-          <p>What the KIT can ship, what to order as oligos or primers, and the sequences as DNA. Your own sequences are codon-optimized for <i>S. cerevisiae</i>; the sequences below are the optimized ones.</p>
+          <p>What to order as oligos or primers, and the sequences as DNA. Your own sequences are codon-optimized for <i>S. cerevisiae</i>; the sequences below are the optimized ones.</p>
         </div>
       </div>
       <div class="card-body">
@@ -1026,24 +915,13 @@
         </div>
         <div id="body4" style="display:none">
           <div class="lvltabs" id="ordTabs">
-            <div class="lvltab" id="ordStock">
-              <button class="lvltab-head" type="button">
-                <span class="lvltab-title">From the KIT</span><span class="l0m-meta" id="ordStockMeta"></span>
-                <svg class="lvltab-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg>
-              </button>
-              <div class="lvltab-body ordblock">
-                <p class="l0m-note">Toolbox parts the KIT has on stock, shipped on request as Level 0 plasmids in <i>E.&nbsp;coli</i>. Write to <a href="mailto:igem@blt.kit.edu">igem@blt.kit.edu</a> or use the button below, which opens an e-mail with your parts already listed.</p>
-                <div class="orderlist" id="ordStockList"></div>
-                <div class="l0m-actions" id="ordStockActions"></div>
-              </div>
-            </div>
             <div class="lvltab" id="ordOligo">
               <button class="lvltab-head" type="button">
                 <span class="lvltab-title">Oligos</span><span class="l0m-meta" id="ordOligoMeta"></span>
                 <svg class="lvltab-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg>
               </button>
               <div class="lvltab-body ordblock">
-                <p class="l0m-note">Every part shorter than 150 bp (your own sequence or a toolbox part) is ordered as an oligo pair (toolbox parts alternatively from the KIT): order the two oligos, anneal them and ligate the product into the Level 0 backbone; the 5′ overhangs already fit, no digest needed.</p>
+                <p class="l0m-note">Every part shorter than 150 bp (your own sequence or a toolbox part) is ordered as an oligo pair: order the two oligos, anneal them and ligate the product into the Level 0 backbone; the 5′ overhangs already fit, no digest needed.</p>
                 <div class="orderlist" id="ordOligoList"></div>
               <div class="l0m-actions" id="ordOligoActions"></div>
               </div>
@@ -1065,7 +943,7 @@
                 <svg class="lvltab-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg>
               </button>
               <div class="lvltab-body ordblock">
-                <p class="l0m-note">Every part with a real sequence that is not ordered as oligos, as one double-stranded fragment (adapter with BbsI sites, overhangs and frame spacer around the part). Order it as DNA instead of PCR with primers, or instead of requesting the plasmid from the KIT, and clone it with BbsI into the Level 0 backbone.</p>
+                <p class="l0m-note">Every part with a real sequence that is not ordered as oligos, as one double-stranded fragment (adapter with BbsI sites, overhangs and frame spacer around the part). Order it as DNA instead of PCR with primers, and clone it with BbsI into the Level 0 backbone.</p>
                 <div class="orderlist" id="ordDsList"></div>
               <div class="l0m-actions" id="ordDsActions"></div>
               </div>
@@ -1090,7 +968,7 @@
   <div class="pop-body"><h5 id="popTitle"></h5><div id="popText"></div></div>
 </div>
 
-<!-- Biosecurity screening (COMMEC) gate — appears before Step 4 if any user-entered
+<!-- Biosecurity screening (COMMEC) gate; appears before Step 4 if any user-entered
      sequence is flagged. Blocks by default; the checkbox is a deliberate extra step,
      not a silent bypass, because a "Warning" can be a shared benign virulence-factor
      homolog rather than an actual pathogen sequence (see rationale text per hit). -->
@@ -1198,13 +1076,26 @@
 </div>
 
 <script>
-/* ===================== ENCORE Builder v5 — Logik ===================== */
+/* ===================== ENCORE Builder v5: logic ===================== */
 const $ = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
 const esc = v => String(v??'').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
 
-/* ---------- Sequenz-Helfer ---------- */
-/* A sequence field takes DNA (CDS) or an amino acid sequence — same rule as is_protein() in Biologik/level0_design/sequence.py:
+/* Id of this page's own script. The caches below hold server answers shaped for exactly this code, so a changed script
+   starts with empty caches (no hand-bumped version numbers); caches of other builds are removed. */
+const BUILD_ID = (()=>{
+  const src = document.currentScript ? document.currentScript.textContent : '';
+  let h = 5381;
+  for(let i=0;i<src.length;i++) h = ((h<<5)+h+src.charCodeAt(i))|0;
+  return (h>>>0).toString(36);
+})();
+const buildKey = name => `encore.${name}.${BUILD_ID}`;
+try{
+  Object.keys(sessionStorage).filter(k=>/^encore\.(libs|val|design)\./.test(k) && !k.endsWith('.'+BUILD_ID)).forEach(k=>sessionStorage.removeItem(k));
+}catch(e){}
+
+/* ---------- Sequence helpers ---------- */
+/* A sequence field takes DNA (CDS) or an amino acid sequence; same rule as is_protein() in Biologik/level0_design/sequence.py:
    DNA if >= 90 % of the letters are A/C/G/T/U/N, else protein. A protein is back-translated by the builder (S. cerevisiae codon usage). */
 const isProteinText = s => { const l=(s||'').toUpperCase().replace(/^>.*$/gm,'').replace(/[^A-Z*]/g,''); return l.length>0 && l.replace(/[^ACGTUN]/g,'').length/l.length<0.9; };
 const cleanProtein = s => (s||'').toUpperCase().replace(/^>.*$/gm,'').replace(/[^ACDEFGHIKLMNPQRSTVWY*]/g,'');
@@ -1213,56 +1104,21 @@ const seqBp = s => isProteinText(s) ? 3*s.replace(/\*/g,'').length : s.length;  
 const seqLenLabel = s => isProteinText(s) ? `${s.replace(/\*/g,'').length} aa → ${seqBp(s)} bp` : `${s.length} bp`;
 const gc = s => s.length ? Math.round((s.replace(/[^GC]/g,'').length/s.length)*100) : 0;
 const rc = s => s.split('').reverse().map(c => ({A:'T',T:'A',G:'C',C:'G'}[c]||'N')).join('');
-const comp = s => s.split('').map(c => ({A:'T',T:'A',G:'C',C:'G'}[c]||'N')).join('');   // same column order, NOT reversed — the antiparallel strand directly below
-const wallaceTm = s => { const at=(s.match(/[AT]/g)||[]).length, g=(s.match(/[GC]/g)||[]).length; return 2*at+4*g; };
+const comp = s => s.split('').map(c => ({A:'T',T:'A',G:'C',C:'G'}[c]||'N')).join('');   // same column order, NOT reversed; the antiparallel strand directly below
 const STOP_CODONS = ['TAA','TAG','TGA'];
 const findInternalStops = seq => { const h=[]; for(let i=0;i+3<=seq.length;i+=3){const c=seq.slice(i,i+3); if(STOP_CODONS.includes(c)) h.push({pos:i,codon:c});} return h; };
 const endsWithStop = seq => seq.length>=3 && STOP_CODONS.includes(seq.slice(-3)) ? seq.slice(-3) : null;
 
-/* ---------- Golden-Gate-Konstanten (aus dem Type-Diagramm) ---------- */
-const CARGO_L1_FLANK = ['CCAA','GCAA'];   // BsaI-Flanken Cargo-Modul (Level1)
-
-/* ---------- Libraries (expandable — hence dropdown) ---------- */
-const NANOCOMPARTMENTS = [
-  { id:'tmari', label:'Thermotoga maritima',          T:1, dia:'24 nm', tp:'TP-Tm', shell:'E-Tm', shellBp:516 },
-  { id:'mxan',  label:'Myxococcus xanthus',           T:3, dia:'32 nm', tp:'TP-Mx', shell:'E-Mx', shellBp:579 },
-  { id:'qther', label:'Quasibacillus thermotolerans', T:4, dia:'42 nm', tp:'TP-Qt', shell:'E-Qt', shellBp:621 },
-  // more entries can be added here -> dropdown scales automatically
-];
-const CARGO_PRESETS = [
-  { id:'gfp',  label:'GFP',        seq:'ATGAGCAAAGGCGAAGAACTGTTTACCGGCGTTGTTCCGATTCTGGTTGAACTGGATGGCGATGTTAACGGCCATAAATTTAGCGTTAGCGGCGAAGGCGAAGGCGATGCGACCTATGGCAAACTGACCCTGAAATTTATTTGCACCACCGGCAAACTGCCGGTTCCGTGGCCGACCCTGGTTACCACCCTGAGC' },
-  { id:'pabp', label:'PABP (Pab1p)', seq:'ATGGCAGATATTACCGAAAAACTGCTGGAACAGCTGAACAGCCTGACCCTGGAAGAAAGCAGCAAAGAAGTTAGCGGCGAACTGAGCGGCAAACTGGAAGCAAGCAGCAGCGAAAGCAGCGGC' },
-];
-const LINKERS = [
-  { id:'GSSS2', label:'2×(GSSS)', aa:8,  bp:24, desc:'short · flexible',      repeat:'GSSS', n:2, type:'flexible' },
-  { id:'GSSS3', label:'3×(GSSS)', aa:12, bp:36, desc:'medium · flexible',     repeat:'GSSS', n:3, type:'flexible' },
-  { id:'GGS2',  label:'2×(GGS)',  aa:6,  bp:18, desc:'short · very flexible', repeat:'GGS', n:2, type:'flexible' },
-];
-/* Optional surface-display markers — fused into a shell-flanking slot (Type 1),
-   so the protein ends up presented on the OUTSIDE of the encapsulin cage. */
-const SURFACE_MARKERS = [
-  { id:'spycatcher', label:'SpyCatcher', aa:113, bp:339, desc:'covalent SpyTag capture (isopeptide bond)' },
-  { id:'spytag',     label:'SpyTag',     aa:13,  bp:39,  desc:'13-aa peptide, binds SpyCatcher' },
-];
-
-/* ---------- Active libraries ----------------------------------------------
-   The constants above are only the FALLBACK for opening this file straight
-   from disk. When the page is served by the Nuxt server, loadLibraries()
-   replaces them with GET /api/libraries, i.e. with Biologik/level0_design/
-   data.py — the same source the design itself is computed from. Adding a
-   nanocompartment is then a backend-only change.                            */
+/* ---------- Libraries ------------------------------------------------------
+   Filled by loadLibraries() from GET /api/libraries, i.e. from Biologik/level0_design/data.py and the parts
+   database: the same source the design itself is computed from. Adding a nanocompartment is a backend-only change. */
 const LIB = {
-  source: 'inline',
-  nanocompartments: NANOCOMPARTMENTS,
-  cargoPresets: CARGO_PRESETS,
-  linkers: LINKERS,
-  promoters: [{ id:'GAL110', label:'GAL1-10', desc:'bidirectional, inducible' }],
-  surfaceMarkers: SURFACE_MARKERS,
-  inteins: [], targetingPeptides: [], ncs: null,            // slot availability per site only comes with the backend's parts database
-  level0Backbones: [], level1Backbones: [], level2Backbones: [],   // only available once the backend serves the real parts database
+  nanocompartments: [], cargoPresets: [], linkers: [], promoters: [], surfaceMarkers: [],
+  inteins: [], targetingPeptides: [], ncs: null,
+  level0Backbones: [], level1Backbones: [], level2Backbones: [],
 };
 
-const LIBS_KEY='encore.libs.v3';
+const LIBS_KEY=buildKey('libs');
 function applyLibs(l){
   LIB.nanocompartments = l.nanocompartments || LIB.nanocompartments;
   LIB.cargoPresets     = l.cargoPresets     || LIB.cargoPresets;
@@ -1275,7 +1131,6 @@ function applyLibs(l){
   LIB.level0Backbones  = l.level0Backbones  || LIB.level0Backbones;
   LIB.level1Backbones  = l.level1Backbones  || LIB.level1Backbones;
   LIB.level2Backbones  = l.level2Backbones  || LIB.level2Backbones;
-  LIB.source = 'api';
 }
 /* Stale-while-revalidate: on a refresh the libraries from the last visit (sessionStorage) are applied
    instantly so the page can restore itself without waiting for the network; the fresh copy fetched by
@@ -1292,11 +1147,11 @@ async function loadLibraries(){
     return;
   }
   try{
-    await api.ready;                       // health check abwarten (laedt dabei schon /api/libraries)
+    await api.ready;                       // wait for the health check (which already downloads /api/libraries)
     if(!api.available) return;
     applyLibs(api.librariesData); store(api.librariesData);
   }catch(err){
-    console.warn('[ENCORE] /api/libraries failed: using the inline fallback', err);
+    console.warn('[ENCORE] /api/libraries failed', err);
   }
 }
 
@@ -1307,7 +1162,7 @@ const INFO = {
           <p><b>Checks.</b> Heterodimers, homodimers and hairpins are evaluated by primer3 on the <i>complete</i> primer, because the 5′ extension changes the secondary structure. Anything critical is listed as a warning. The <b>Q5 annealing temperature</b> is the lower Tm of the pair minus 2 to 5 °C (the hotter the primers, the smaller the offset).</p>
           <p><b>5′ extension.</b> Each primer carries, in front of the annealing part, the <b>TTTT clamp</b>, the adapter flank of this Type (BbsI site, the Level 0 and Level 1 overhangs, for Type 0.1/0.5 also the Level 2 overhang) and the 2-nt frame spacer. The PCR product therefore is exactly the Level 0 construct, ready for BbsI cloning into the backbone.</p>
           <p><b>Why the TTTT clamp?</b> Restriction enzymes cut badly when their recognition site sits at the very end of a DNA fragment. The four extra bases give BbsI room to bind and cut; they are cut off again and never end up in the plasmid. A/T-only bases add no extra GC-rich structure to the primer.</p>
-          <p><b>Only when it makes sense.</b> Primers are designed for your own sequences of at least 150 bp. Shorter parts are ordered as an oligo pair, toolbox parts are requested from the KIT or ordered as DNA. If the insert already contains a BbsI or BsaI site, you get a warning; it has to be domesticated first. Without <code>primer3</code> only a rough Wallace estimate (2 °C per A/T, 4 °C per G/C) is shown.</p>` },
+          <p><b>Only when it makes sense.</b> Primers are designed for your own sequences of at least 150 bp. Shorter parts are ordered as an oligo pair, toolbox parts are ordered as DNA. If the insert already contains a BbsI or BsaI site, you get a warning; it has to be domesticated first. Without <code>primer3</code> only a rough Wallace estimate (2 °C per A/T, 4 °C per G/C) is shown.</p>` },
   level0: { title:'Level 0 · individual parts', img:'Diagram: ten parts, one plasmid each',
     body:`<p>Level 0 parts are cloned <b>separately</b>; one plasmid each. They are not joined yet: the <b>Type number</b> alone fixes where each part ends up once BsaI assembles them into the Level 1 module.</p>` },
   level1: { title:'Level 1 · modules (BsaI)', img:'Diagram: BsaI assembly of five Level 0 parts',
@@ -1409,7 +1264,7 @@ function openPopover(key, anchor){
   pop.classList.add('show');
   positionPopover();
 }
-/* Closes only on a click outside the box (or its X button) — scrolling no longer dismisses it. */
+/* Closes only on a click outside the box (or its X button); scrolling no longer dismisses it. */
 document.addEventListener('click', e=>{
   const btn = e.target.closest('.info');
   if(btn){ e.stopPropagation(); openPopover(btn.dataset.info, btn); return; }
@@ -1428,8 +1283,7 @@ function showBuilder(){
   $('#stepperWrap').classList.add('show');
   $('#shell').classList.add('show');
   $('#tabBuilder').classList.add('on');
-  // Only relevant once you're actually in the builder (it gates Step 3->4) —
-  // no point showing it on the intro or on the separate selector page.
+  // Only relevant once you're actually in the builder (it gates Step 3->4);   // no point showing it on the intro or on the separate selector page.
   $('#commecStatus').style.display='flex';
 }
 function showIntro(){
@@ -1515,9 +1369,9 @@ function renderShellValidation(v){
 }
 /* Server validation answers (incl. the slow ViennaRNA mRNA-structure panel) are deterministic per
    sequence, so they are cached in sessionStorage: after a page refresh the full result renders at once
-   instead of ~700 ms later — which also kept inserting the mRNA panel above the restored scroll position
+   instead of ~700 ms later; which also kept inserting the mRNA panel above the restored scroll position
    and nudged it. */
-const VAL_KEY='encore.val.v4';
+const VAL_KEY=buildKey('val');
 function valCacheGet(kind,seq){ try{ return (JSON.parse(sessionStorage.getItem(VAL_KEY)||'{}'))[(kind||'cargo')+':'+seq]||null; }catch(e){ return null; } }
 function valCachePut(kind,seq,v){
   try{
@@ -1568,8 +1422,7 @@ function renderNcMeta(){
 
 /* ===================== Step 2: cargo ===================== */
 const CUSTOM_CARGO='custom';
-/* Cargo dropdown, same pattern as the nanocompartment one: the examples from the library plus "your own" —
-   only "your own" reveals the sequence box (an example just shows its length / checks below). */
+/* Cargo dropdown, same pattern as the nanocompartment one: the examples from the library plus "your own";    only "your own" reveals the sequence box (an example just shows its length / checks below). */
 function initCargoDropdown(){
   const sel=$('#cargoSelect');
   LIB.cargoPresets.forEach(p=>{
@@ -1606,8 +1459,7 @@ function handleCargoInput(){
 
 /* Same rules and the same object shape as validate_cargo() in
    Biologik/level0_design/sequence.py, so the local preview and the server
-   answer can be rendered by one function. The server stays the authority —
-   scheduleServerCargoCheck() overwrites this result as soon as it arrives. */
+   answer can be rendered by one function. The server stays the authority;    scheduleServerCargoCheck() overwrites this result as soon as it arrives. */
 /* Same wording as _stop_message() in sequence.py. */
 const stopMessage = (stop, kind) => `Stop codon at the end (${stop}). Remove it: ` + (kind==='shell'
   ? 'the construct adds its own stop codon right after the shell.'
@@ -1683,7 +1535,7 @@ function seqNotesHtml(v, okText){
   if(notes.length) return notes.map(t=>`<div class="stopwarn">${ICON_WARN}<div>${t}</div></div>`).join('');
   return `<div class="stopok">${ICON_OK}<div>${okText}</div></div>` + codonLineHtml(v.codonOptimization, false);
 }
-/* mRNA self-fold/self-dimer for THIS field's sequence — same info as the Step 4 block, just
+/* mRNA self-fold/self-dimer for THIS field's sequence; same info as the Step 4 block, just
    compact and inline, right under the field (like the length/aa/GC line). Only ever comes from
    the server (no JS equivalent to ViennaRNA), so it's empty until the debounced check returns,
    and stays empty entirely offline or once ViennaRNA isn't installed server-side (mirrors how the
@@ -1710,7 +1562,7 @@ function renderCargoValidation(v){
 
 /* Debounced second opinion from the server. One call per keystroke would mean
    one Python process per keystroke, and a stale answer must never overwrite a
-   newer one — hence the token. */
+   newer one: hence the token. */
 let cargoCheckTimer=null, cargoCheckToken=0;
 function scheduleServerCargoCheck(seq){
   const api=window.ENCORE_API;
@@ -1722,7 +1574,7 @@ function scheduleServerCargoCheck(seq){
     $('#cargoMrna').innerHTML = MRNA_LOADING_HTML;
     try{
       const v=await validateCached(api,seq,undefined);
-      if(token!==cargoCheckToken || seq!==state.cargoSeq) return;   // veraltet
+      if(token!==cargoCheckToken || seq!==state.cargoSeq) return;   // outdated
       renderCargoValidation(v);
     }catch(err){
       console.warn('[ENCORE] /api/cargo/validate failed: keeping the local check', err);
@@ -1790,7 +1642,7 @@ function enforceSlotRules(mod){
     const noNcs = inner && blocksNcs(mod,n), needLnk = inner && needsLinker(mod,n), outer=LINKER_FOR[n];
     const afterStop = n===far && sl[near].kind==='ncsstop';
     const otherTp = SLOT_NUMBERS.some(m=>m!==n && sl[m].kind==='tp');
-    const noTpHere = !!(state.nc && state.nc.custom);                     // an own shell brings no targeting peptide — use "Use your own sequence"
+    const noTpHere = !!(state.nc && state.nc.custom);                     // an own shell brings no targeting peptide; use "Use your own sequence"
     [...sel.options].forEach(o=>{
       const v=o.value;
       let off=false;
@@ -1828,7 +1680,7 @@ function enforceSlotRules(mod){
 function refreshNext0(){ $('#next0').disabled = !(state.nc && slotsValid('nc') && slotRulesOk('nc')); }
 function refreshNext1(){ $('#next1').disabled = !(state.cargoValid && slotsValid('cargo') && slotRulesOk('cargo')); }
 const refreshNav=mod=>mod==='nc' ? refreshNext0() : refreshNext1();
-/* Which parts exist at which site and slot comes from the parts database ("slots" in every library entry — a part is
+/* Which parts exist at which site and slot comes from the parts database ("slots" in every library entry; a part is
    offered only where a Level 0 plasmid for it exists; for NC site vs. cargo site this follows the overhangs / the
    orientation of the plasmid). Without the backend (no "slots") everything is offered everywhere, as before. */
 const availableAt = (item, mod, n) => !item.slots || (item.slots[mod]||[]).includes(n);
@@ -1921,19 +1773,6 @@ function scheduleServerSlotCheck(mod,n,seq){
     }
   }, 400);
 }
-/* Slots as one flat list, the same shape the API returns in `ncSlots` / `cargoSlots`. */
-function slotsFromState(mod){
-  const sl=slotsOf(mod);
-  return SLOT_NUMBERS.map(n=>{
-    const c=sl[n];
-    if(c.kind==='linker'){ const l=LIB.linkers.find(x=>x.id===c.id); return {slot:n, kind:'linker', id:l.id, label:l.label, aa:l.aa, bp:l.bp}; }
-    if(c.kind==='marker'){ const m=LIB.surfaceMarkers.find(x=>x.id===c.id); return {slot:n, kind:'marker', id:m.id, label:m.label, aa:m.aa, bp:m.bp}; }
-    if(c.kind==='intein'){ const m=LIB.inteins.find(x=>x.id===c.id); return {slot:n, kind:'intein', id:m.id, label:m.label, aa:m.aa, bp:m.bp}; }
-    if(c.kind==='tp') return {slot:n, kind:'tp', label:state.nc? state.nc.tp : 'TP', bp:TP_BP};
-    if(c.kind==='custom'){ const seq=clean(c.seqRaw||''); return {slot:n, kind:'custom', label:(c.label||'').trim()||('Custom part '+n), bp:seqBp(seq), aa:isProteinText(seq)?seq.replace(/\*/g,'').length:Math.floor(seq.length/3), sequence:seq, isNew:true}; }
-    return {slot:n, kind:c.kind==='ncsstop'?'ncsstop':'ncs', label:'NCS', bp:NCS_BP};
-  });
-}
 function slotsPayload(mod){
   const sl=slotsOf(mod), out={};
   SLOT_NUMBERS.forEach(n=>{
@@ -1954,7 +1793,7 @@ function applyLocks(){
   updateConstructStrip();
 }
 
-/* Top construct map — selected modules appear in their place and fuse (bidirectional).
+/* Top construct map: selected modules appear in their place and fuse (bidirectional).
    Empty slots are dashed; chosen modules fill in and interlock; when computed → "fused". */
 const TRI_L='<svg class="tri" viewBox="0 0 9 10" aria-hidden="true"><path d="M9 0v10L0 5z"/></svg>';
 const TRI_R='<svg class="tri" viewBox="0 0 9 10" aria-hidden="true"><path d="M0 0v10l9-5z"/></svg>';
@@ -1964,14 +1803,14 @@ function updateConstructStrip(){
   // Nothing is filled in automatically: a slot fills only once it has been chosen.
   const cargo = { kind:'t3',    label: state.cargoValid ? (state.cargoLabel!=='Custom cargo' ? state.cargoLabel : seqBp(state.cargoSeq)+' bp') : 'Cargo', filled: !!state.cargoValid };
   const shell = { kind:'shell', label:n? n.shell : 'Shell',      filled: !!n };
-  // Module slots: empty ("–") until something is chosen, then filled — NCS included.
+  // Module slots: empty ("·") until something is chosen, then filled; NCS included.
   const slotSeg = (mod,k) => {
     const c=slotsOf(mod)[k];
     if(c.kind==='linker'){ const l=LIB.linkers.find(x=>x.id===c.id); return { kind:'t2', label:l? l.label : 'Linker', filled:true }; }
     if(c.kind==='marker'){ const m=LIB.surfaceMarkers.find(x=>x.id===c.id); return { kind:'mark', label:m? m.label : 'Marker', filled:true }; }
     if(c.kind==='intein'){ const m=LIB.inteins.find(x=>x.id===c.id); return { kind:'t'+k, label:m? m.label : 'INT', filled:true }; }
     if(c.kind==='tp') return { kind:'t'+k, label:n? n.tp : 'TP', filled:true };
-    // Filled as soon as "own sequence" is chosen — same as every other kind (linker/marker/NCS/TP)
+    // Filled as soon as "own sequence" is chosen; same as every other kind (linker/marker/NCS/TP)
     // shows immediately on selection. The typed name appears live; whether the sequence itself is
     // valid yet only gates "Continue", not this preview.
     if(c.kind==='custom') return { kind:'t'+k, label:(c.label||'').trim() || 'Custom', filled:true };
@@ -2007,12 +1846,12 @@ $('#back1').addEventListener('click', ()=>scrollToSection('sec-0'));
 $('#next1').addEventListener('click', ()=>{ state.unlocked[2]=true; applyLocks(); updateStepperLocks(); scrollToSection('sec-2'); });
 $('#back2').addEventListener('click', ()=>scrollToSection('sec-1'));
 /* ===================== Biosecurity screening (COMMEC) ===================== */
-/* Every sequence the user actually typed/pasted — cargo, a custom nanocompartment
-   shell, or a custom part in any Type 0.1/0.2/0.4/0.5 slot. Library parts (NCS,
-   linkers, markers, TP) are toolkit stock and are not screened. */
+/* Every sequence the user actually typed/pasted; cargo, a custom nanocompartment
+   shell, or a custom part in any Type 0.1/0.2/0.4/0.5 slot. Library parts (cargo
+   examples, NCS, linkers, markers, TP) are toolkit parts and are not screened. */
 function collectUserSequences(){
   const items=[];
-  const cargo=clean(state.cargoSeq);
+  const cargo = state.cargoFromPreset ? '' : clean(state.cargoSeq);      // a library cargo is a toolbox part
   if(cargo) items.push({label: state.cargoLabel || 'Cargo', sequence: cargo});
   if(state.nc && state.nc.custom){
     const seq=clean(state.customNc.seqRaw||'');
@@ -2034,14 +1873,14 @@ const biosecRiskClass = status => {
   const s=(status||'').toLowerCase();
   if(s==='pass'||s==='skip') return 'low';
   if(s==='warning'||s==='mixed') return 'moderate';
-  return 'high'; // flag / error / anything unexpected — treat as the strongest signal
+  return 'high'; // flag / error / anything unexpected; treat as the strongest signal
 };
 /* This deployment only has the curated biorisk+low_concern database, not the
    ~530GB/~580GB protein/nucleotide taxonomy databases (see commec-service/
-   Dockerfile) — so protein_taxonomy/nucleotide_taxonomy always come back
+   Dockerfile): so protein_taxonomy/nucleotide_taxonomy always come back
    "Skip", and commec itself then reports the overall screen_status as
    "Warning" for EVERY sequence with no biorisk hit, including completely
-   benign genes ("risk is unknown, possibly generated in silico" — it simply
+   benign genes ("risk is unknown, possibly generated in silico"; it simply
    never got to check taxonomy). Blocking on that generic status would flag
    every single cargo. The only step that ran against real reference data is
    `biorisk`, so that's the actual signal to gate on whenever taxonomy was
@@ -2083,13 +1922,18 @@ function renderBiosecNote(screening, flaggedCount, items=[], persist=true){
     note.dataset.state=state; note.style.display='flex';
     $('#biosecIcon').innerHTML = BR_ICON[state]; title.textContent=t; text.innerHTML=body; chips.innerHTML=chipHtml;
   };
+  if(!items.length){
+    set('off','Nothing to screen',
+        'You entered no sequence of your own, and toolbox parts are not screened.');
+    return;
+  }
   if(!screening || !screening.available){
     set('off','Biosecurity screening was not run',
         'Screening (<code>COMMEC</code>) is not configured for this deployment; sequences were not screened. See <code>COMMEC_URL</code> in the README.');
     return;
   }
   const n=screening.results.length;
-  // results[i] belongs to items[i] (the sequences that were sent) — the labels come from there
+  // results[i] belongs to items[i] (the sequences that were sent); the labels come from there
   const chipHtml = screening.results.map((r,i)=>{
     const flagged = biosecRiskClass(biosecEffectiveStatus((r&&r.status)||{}))!=='low';
     return `<span class="br-chip${flagged?' flag':''}"><i></i>${esc((items[i]&&items[i].label)||('Sequence '+(i+1)))}</span>`;
@@ -2146,7 +1990,15 @@ $('#next2').addEventListener('click', async ()=>{
     if(flagged.length) proceed = await showBiosecModal(flagged);
   }
   if(proceed){
-    try{ await compute(); } finally { refreshNext2(); }
+    try{
+      await compute();
+      showCalcError('');
+    }catch(err){
+      showCalcError(err.message);
+      return;
+    }finally{
+      refreshNext2();
+    }
     renderBiosecNote(screening, flaggedCount, items);
     state.unlocked[3]=true; state.unlocked[4]=true; applyLocks(); updateStepperLocks(); scrollToSection('sec-3');
   } else {
@@ -2188,7 +2040,7 @@ function resetBuilder(){
   // derived output
   $('#cargoLen').textContent='0 bp';
   ['#ncMeta','#shellMeta','#shellStopArea','#shellMrna','#cargoMeta','#cargoStopArea','#cargoMrna','#lvl0strand','#lvl1cargo','#lvl1nc','#lvl2strand',
-   '#lvl1promo','#biosecNoteText','#biosecChips','#plat0feats','#plat1feats','#plat2bfeats','#ordStockList','#ordOligoList','#ordPrimerList','#ordDsList','#ordOligoActions','#ordPrimerActions','#ordDsActions']
+   '#lvl1promo','#biosecNoteText','#biosecChips','#plat0feats','#plat1feats','#plat2bfeats','#ordOligoList','#ordPrimerList','#ordDsList','#ordOligoActions','#ordPrimerActions','#ordDsActions']
     .forEach(sel=>{ const el=$(sel); if(el) el.innerHTML=''; });
 
   $('#plat0title').textContent=''; $('#plat0explain').textContent=''; $('#plasmid0').innerHTML='';
@@ -2226,9 +2078,9 @@ function renderStrand(elId, parts, opts={}){
 }
 
 /* Level 0: the cargo module and the nanocompartment-site module, each still five
-   parts on five separate plasmids (.partsrow.sep) — shown as two separate rows, one
+   parts on five separate plasmids (.partsrow.sep); shown as two separate rows, one
    per module, all on one horizontal line (junction, box, junction, box, ...) beside
-   each other — nothing stacked above/below or overlapping a box.
+   each other: nothing stacked above/below or overlapping a box.
    Each junction is ONE shared column, not duplicated per part, and shows BOTH strands
    of the 4nt sticky end as two separate fields: top strand (top edge flush with the
    boxes' top edge) and bottom strand (bottom edge flush with the boxes' bottom edge),
@@ -2238,7 +2090,7 @@ function renderStrand(elId, parts, opts={}){
    is sense and is drawn in its physical order (Type 0.1 -> 0.5, JUNCTIONS as is).
    The cargo module's ORF is antisense, so its row is the same construct rotated by
    180 degrees: Type 0.5 -> 0.1 left to right, the junction order reversed, and every
-   junction rotated too — the old bottom strand becomes the top strand, read 5'->3'
+   junction rotated too: the old bottom strand becomes the top strand, read 5'->3'
    (= reverse complement of the physical top-strand junction), the old top strand
    becomes the bottom one (= the junction reversed). All ten parts are shown in full
    colour; only a thin inset ring marks new vs. stock. */
@@ -2259,7 +2111,7 @@ function l0ModuleRow(parts, antisense){
   // antisense (cargo): rotate the whole construct by 180 degrees (see comment above)
   const top = j => antisense ? rc(j) : j;
   const bottom = j => antisense ? j.split('').reverse().join('') : comp(j);
-  // outermost junctions only keep the overhang that belongs to the adjacent module — nothing is
+  // outermost junctions only keep the overhang that belongs to the adjacent module; nothing is
   // cloned in beyond the first/last part, so there is no second fragment carrying the other strand
   const ohChip = (j, edge) => `<div class="l0ohcol">` +
     (edge==='right' ? '' : `<span class="l0oh sense${edge?' edge':''}">${top(j)}</span>`) +
@@ -2278,7 +2130,7 @@ function renderLevel0(elId, m){
     `<div class="l0shellcap">Nanocompartment site <span class="l0m-badge sense">sense strand</span></div>` + l0ModuleRow(m.l1nc, false);
 }
 
-/* Level 2: bidirectional promoter as the pivot point — cargo module transcribes to the left,
+/* Level 2: bidirectional promoter as the pivot point; cargo module transcribes to the left,
    NC module to the right. The cargo side is shown mirrored (5'->3' away from the promoter). */
 function renderLevel2(elId, m, api){
   const el=$(elId);
@@ -2326,7 +2178,7 @@ $('#ordTabs').addEventListener('click', e=>{
   if(head) head.closest('.lvltab').classList.toggle('open');
 });
 
-/* Level 0: the real pAGM9121 acceptor backbone as a full ring map, like Level 2 — the plain destination
+/* Level 0: the real pAGM9121 acceptor backbone as a full ring map, like Level 2; the plain destination
    vector as it is, still carrying its lacZα stuffer between the NLvl0/CLvl0 overhangs (every Level 0
    part later replaces that stuffer, one part per plasmid). Segment sizes come from the backbone's own
    GenBank annotation, the unannotated stretches are drawn as neutral gaps. */
@@ -2373,7 +2225,7 @@ function renderLevel0Plasmid(res){
 }
 
 /* A reopened popup must always start at the top, not wherever the previous one was scrolled to (the dialog itself
-   and the inner scrollable sequence box). Call after the backdrop is visible — scrollTop is ignored on display:none. */
+   and the inner scrollable sequence box). Call after the backdrop is visible; scrollTop is ignored on display:none. */
 function scrollModalToTop(backdrop){
   const modal = backdrop.querySelector('.modal'); if(modal) modal.scrollTop = 0;
   backdrop.querySelectorAll('.l0m-seq').forEach(el=>{ el.scrollTop = 0; });
@@ -2424,7 +2276,7 @@ function primerHtml(p, clamp){
 }
 function renderL0Primers(c){
   const pr=c.primers, sec=$('#l0mPrimSec'), body=$('#l0mPrimBody');
-  // Primers only exist for your own sequences that are long enough for PCR — otherwise the section just says so.
+  // Primers only exist for your own sequences that are long enough for PCR; otherwise the section just says so.
   sec.style.display = pr ? '' : 'none';
   $('#l0mPrimIntro').style.display = pr && pr.possible ? '' : 'none';
   if(!pr || !pr.possible){ $('#l0mPrimMeta').textContent=''; body.innerHTML = pr ? '<p class="l0m-note" style="margin:0">No primers available.</p>' : ''; return; }
@@ -2527,7 +2379,7 @@ function renderLevel0Extras(res){
 function polar(cx,cy,r,deg){ const a=(deg-90)*Math.PI/180; return [cx+r*Math.cos(a), cy+r*Math.sin(a)]; }
 function arc(cx,cy,r,a0,a1){ const [x0,y0]=polar(cx,cy,r,a0),[x1,y1]=polar(cx,cy,r,a1); const big=(a1-a0)%360>180?1:0; return `M${x0} ${y0} A${r} ${r} 0 ${big} 1 ${x1} ${y1}`; }
 function locLen(loc){
-  // Sums every start..end span in the location — a plain "a..b" or "complement(a..b)"
+  // Sums every start..end span in the location; a plain "a..b" or "complement(a..b)"
   // has one, but a spliced "join(complement(a..b),complement(c..d))" (e.g. AmpR in the
   // real pESC-HIS backbone) has several, and all of them count towards the real length.
   const spans = [...String(loc||'').matchAll(/(\d+)\.\.>?(\d+)/g)];
@@ -2603,8 +2455,8 @@ function renderLevel2Plasmid(res){
   $('#l2bulk').style.display = l2 && l2.plasmid ? '' : 'none';
   renderLevel2Backbone();
 
-  // GenBank export (annotated — see Biologik/level0_design/design.py: build_genbank) only exists
-  // once the backend has actually computed it; the offline/inline fallback has no GenBank writer.
+  // GenBank export (annotated: see Biologik/level0_design/design.py: build_genbank) only exists
+  // once the backend has actually computed it.
   const dlBtn = $('#dlGenbank');
   dlBtn.style.display = (res.api && res.api.genbank) ? 'inline-flex' : 'none';
 }
@@ -2636,7 +2488,7 @@ const api2 = () => (lastResult && lastResult.api && lastResult.api.level2Constru
    level, so every junction is a single chip. Sequences come from the backend (top strand). */
 function l1Row(kind, c, parts){
   // Sticky ends as BsaI/BbsI leave them: the top strand carries the 5′ overhang at the LEFT end (upper), the bottom strand
-  // carries its 5′ overhang at the RIGHT end (lower, shown as the complement under the top strand, 3′→5′) — so the right
+  // carries its 5′ overhang at the RIGHT end (lower, shown as the complement under the top strand, 3′→5′); so the right
   // end of one fragment always pairs with the left end of the next, instead of repeating the same four letters.
   const top = (seq, cls, title) => `<div class="l1oh t ${cls}" title="${esc(title)} · top strand 5′→3′">${seq}</div>`;
   const bot = (seq, cls, title) => `<div class="l1oh b ${cls}" title="${esc(title)} · bottom strand, shown 3′→5′ under the top strand">${comp(seq)}</div>`;
@@ -2794,14 +2646,20 @@ $('#lvl2strand').addEventListener('keydown', e=>{ if((e.key==='Enter'||e.key==='
 
 
 /* ===================== Step 5: order ===================== */
-function orderRow(name, sub, status, seqHtml){
-  const badge = status==='stock' ? '<span class="oi-badge fixed">in stock · E. coli</span>'
-    : status==='oligo' ? '<span class="oi-badge synth">oligo pair</span>'
+/* Link to a toolkit part in the iGEM Registry, shown in the order lists. The URL comes from the parts database
+   (`registry_url`); until it is filled in, a placeholder is shown in its place. */
+function registryLinkHtml(c){
+  return c.registryUrl
+    ? `<a class="oi-badge reg" href="${esc(c.registryUrl)}" target="_blank" rel="noopener" title="Open this part in the iGEM Registry">iGEM Registry ↗</a>`
+    : `<span class="oi-badge reg soon" title="The link to this part in the iGEM Registry will be added here">iGEM Registry ↗</span>`;
+}
+function orderRow(name, sub, status, seqHtml, construct){
+  const badge = status==='oligo' ? '<span class="oi-badge synth">oligo pair</span>'
     : status==='primer' ? '<span class="oi-badge pcr">primer pair</span>'
     : '<span class="oi-badge assemble">DNA</span>';
-  const sw = status==='stock' ? 'ncs' : status==='oligo' ? 't3' : status==='primer' ? 'shell' : 'promo';
+  const sw = status==='oligo' ? 't3' : status==='primer' ? 'shell' : 'promo';
   return `<div class="orderitem"><span class="oi-sw" style="background:${cvar(sw)}"></span>
-    <div class="oi-main"><div class="oi-name">${esc(name)}</div><div class="oi-sub">${esc(sub)}</div>${seqHtml||''}</div>${badge}</div>`;
+    <div class="oi-main"><div class="oi-name">${esc(name)}</div><div class="oi-sub">${esc(sub)}</div><div class="oi-kind">${badge}</div>${seqHtml||''}</div>${construct && !construct.isUser ? registryLinkHtml(construct) : ''}</div>`;
 }
 const orderName = c => c.stopCodon ? `${c.label}*` : c.label;     // NCS spacers that carry the ORF's stop codon are marked with * (as in the selection)
 const orderSite = c => c.module==='cargo_site' ? 'cargo site' : 'nanocompartment site';
@@ -2811,54 +2669,35 @@ const seqLine = (n, seq, stop) => {
   const body = stop ? `${esc(seq.slice(0,stop[0]))}<mark class="stp" title="stop codon">${esc(seq.slice(stop[0],stop[1]+1))}</mark>${esc(seq.slice(stop[1]+1))}` : esc(seq);
   return `<div class="oi-seq"><b>${esc(n)}</b> 5′-${body}-3′ <span style="color:var(--muted)">(${seq.length} nt)</span></div>`;
 };
-const KIT_EMAIL = 'igem@blt.kit.edu';
-/* mailto link that asks the KIT team for plasmids; only part names go into the mail, never a sequence. */
-function kitRequestMailto(stock){
-  const lines = stock.map(c=>`- ${orderName(c)} (${c.type}, ${orderSite(c)}${c.plasmid_source?', plasmid '+c.plasmid_source.name:''})`);
-  const body = `Hello KIT iGEM team,\n\nI would like to request the following Level 0 plasmids from the ENCORE toolKIT:\n\n${lines.join('\n')}\n\nThank you!\n`;
-  return `mailto:${KIT_EMAIL}?subject=${encodeURIComponent('ENCORE toolKIT: plasmid request')}&body=${encodeURIComponent(body)}`;
-}
-function listActions(el, text, csv, file, gb, mail){
+function listActions(el, text, csv, file, gb){
   el.innerHTML = `<button class="chip" type="button" data-act="copy">Copy list</button><button class="chip primary-chip" type="button" data-act="csv">Download list (.csv)</button>` +
-    (gb ? `<button class="chip primary-chip" type="button" data-act="gb">Download GenBank (.gb)</button>` : '') +
-    (mail ? `<a class="chip primary-chip" href="${mail}">Request by e-mail</a>` : '');
+    (gb ? `<button class="chip primary-chip" type="button" data-act="gb">Download GenBank (.gb)</button>` : '');
   el.onclick = e=>{ const b=e.target.closest('button[data-act]'); if(!b) return;
     if(b.dataset.act==='copy') copyText(b, text); else if(b.dataset.act==='gb') downloadText(gb.file, gb.text); else downloadText(file, csv); };
 }
 function renderOrder(res){
   const list = (res.api && res.api.level0Constructs) || [];
   const empty = (id, msg) => { $(id).innerHTML = `<p class="l0m-note" style="margin:0">${msg}</p>`; };
-  $('#ordStockMeta').textContent=$('#ordOligoMeta').textContent=$('#ordPrimerMeta').textContent=$('#ordDsMeta').textContent='';
-  ['#ordStockActions','#ordOligoActions','#ordPrimerActions','#ordDsActions'].forEach(id=>{ $(id).innerHTML=''; $(id).onclick=null; });
+  $('#ordOligoMeta').textContent=$('#ordPrimerMeta').textContent=$('#ordDsMeta').textContent='';
+  ['#ordOligoActions','#ordPrimerActions','#ordDsActions'].forEach(id=>{ $(id).innerHTML=''; $(id).onclick=null; });
   if(!list.length){
-    ['#ordStockList','#ordOligoList','#ordPrimerList','#ordDsList'].forEach(id=>empty(id,'Backend not connected: the order lists are only available with the server running.'));
+    ['#ordOligoList','#ordPrimerList','#ordDsList'].forEach(id=>empty(id,'Backend not connected: the order lists are only available with the server running.'));
     return;
   }
 
-  // 1 — toolbox parts the KIT has on stock
-  const stock = list.filter(c=>c.onStock===true);
-  $('#ordStockMeta').textContent = stock.length ? `${stock.length} part${stock.length>1?'s':''}` : '';
-  if(stock.length){
-    $('#ordStockList').innerHTML = stock.map(c=>orderRow(orderName(c), `${orderWhere(c)} · toolbox part: Level 0 plasmid${c.plasmid_source ? ' '+c.plasmid_source.name : ''}, shipped on request`, 'stock')).join('');
-    const cell = v => `"${String(v==null?'':v).replace(/"/g,'""')}"`, row = c=>[orderName(c), c.type, orderSite(c), c.plasmid_source?c.plasmid_source.id:'', c.plasmid_source?c.plasmid_source.name:''];
-    listActions($('#ordStockActions'), stock.map(c=>row(c).join('\t')).join('\n'),
-      'name,type,site,plasmid_id,plasmid_name\n'+stock.map(c=>row(c).map(cell).join(',')).join('\n')+'\n', 'level0_kit_stock_request.csv', null, kitRequestMailto(stock));
-  }
-  else empty('#ordStockList','None of the toolbox parts in this design is marked as on stock yet; the stock status comes with the part sequences.');
-
-  // 2 — oligo pairs (every part shorter than 150 bp)
+  // 1: oligo pairs (every part shorter than 150 bp)
   const oligo = list.filter(c=>c.oligos);
   $('#ordOligoMeta').textContent = oligo.length ? `${oligo.length} pair${oligo.length>1?'s':''} · ${oligo.length*2} oligos` : '';
   if(oligo.length){
     $('#ordOligoList').innerHTML = oligo.map(c=>orderRow(orderName(c), `${orderWhere(c)} · ${c.insert.sequence.length} bp part · anneals to ${c.oligos.annealedLength} bp with 5′ overhangs ${c.oligos.overhangs.left} / ${c.oligos.overhangs.right}`, 'oligo',
-      seqLine(c.oligos.top.name, c.oligos.top.sequence, c.oligos.stop && c.oligos.stop.top)+seqLine(c.oligos.bottom.name, c.oligos.bottom.sequence, c.oligos.stop && c.oligos.stop.bottom))).join('');
+      seqLine(c.oligos.top.name, c.oligos.top.sequence, c.oligos.stop && c.oligos.stop.top)+seqLine(c.oligos.bottom.name, c.oligos.bottom.sequence, c.oligos.stop && c.oligos.stop.bottom), c)).join('');
     const rows = oligo.flatMap(c=>[c.oligos.top, c.oligos.bottom]);
     listActions($('#ordOligoActions'), rows.map(o=>`${o.name}\t${o.sequence}`).join('\n'),
       'name,sequence,length\n'+rows.map(o=>`${o.name},${o.sequence},${o.length}`).join('\n')+'\n', 'level0_oligos.csv',
       { file:'level0_oligos.gb', text: joinGb(oligo.map(c=>c.oligos.genbank)) });
   } else empty('#ordOligoList','No oligos needed: every part with a real sequence is long enough for PCR primers.');
 
-  // 3 — primer pairs for your own sequences
+  // 2: primer pairs for your own sequences
   const primer = list.filter(c=>c.isUser && c.primers && c.primers.possible);
   $('#ordPrimerMeta').textContent = primer.length ? `${primer.length} pair${primer.length>1?'s':''} · ${primer.length*2} primers` : '';
   if(primer.length){
@@ -2870,11 +2709,11 @@ function renderOrder(res){
       'name,sequence,length\n'+rows.map(o=>`${o.name},${o.sequence},${o.length}`).join('\n')+'\n', 'level0_primers.csv');
   } else empty('#ordPrimerList','No primers needed: your own sequences are shorter than 150 bp (see the oligos above) or none is part of this design.');
 
-  // 4 — DNA: every part with a real sequence
+  // 3: DNA: every part with a real sequence
   const ds = list.filter(c=>c.isReal && !c.oligos);          // parts that are ordered as oligos are not listed again
   $('#ordDsMeta').textContent = ds.length ? `${ds.length} fragment${ds.length>1?'s':''}` : '';
   if(ds.length){
-    $('#ordDsList').innerHTML = ds.map(c=>orderRow(orderName(c), `${orderWhere(c)} · ${c.length} bp fragment (part ${c.insert.sequence.length} bp)${c.isUser ? ' · your own sequence' : c.onStock ? ' · toolbox part, also on stock' : ' · toolbox part'}`, 'dsdna')).join('');
+    $('#ordDsList').innerHTML = ds.map(c=>orderRow(orderName(c), `${orderWhere(c)} · ${c.length} bp fragment (part ${c.insert.sequence.length} bp)${c.isUser ? ' · your own sequence' : ' · toolbox part'}`, 'dsdna', '', c)).join('');
     const names = ds.map(recName);
     $('#ordDsActions').innerHTML = `<button class="chip" type="button" data-act="copy">Copy list</button><button class="chip primary-chip" type="button" data-act="csv">Download list (.csv)</button><button class="chip primary-chip" type="button" data-act="gb">Download GenBank (.gb)</button>`;
     $('#ordDsActions').onclick = e=>{ const b=e.target.closest('button[data-act]'); if(!b) return;
@@ -2887,64 +2726,9 @@ function renderOrder(res){
 }
 
 /* ===================== Calculation ===================== */
-/* nominal lengths for the schematic construct map (real bp come from the model where known) */
-const TP_BP=54, PROMO_BP=680, NCS_BP=15;
-/* One module = five parts in Type order. The stop codon is never placed automatically: only an "NCS with stop codon"
-   that the user picked explicitly carries it. */
-function moduleParts(entries, middle){
-  const part = e => e.kind==='linker' ? { label:e.label, kind:'t2', note:'Linker', bp:e.bp }
-    : e.kind==='marker' ? { label:e.label, kind:'mark', note:'Surface marker', bp:e.bp }
-    : e.kind==='intein' ? { label:e.label, kind:'t'+e.slot, note:'Intein', bp:e.bp }
-    : e.kind==='tp' ? { label:e.label, kind:'t'+e.slot, note:'Targeting peptide', bp:e.bp, mapnote:'TP' }
-    : e.kind==='custom' ? { label:e.label, kind:'t'+e.slot, note:'Your sequence', bp:e.bp, isNew:true }
-    : e.kind==='ncsstop' ? { label:'NCS', dummy:true, note:'Spacer · stop codon', bp:NCS_BP, stop:true }
-    : { label:'NCS', dummy:true, note:'Spacer', bp:NCS_BP };
-  const byNo = {}; entries.forEach(e=>{ byNo[e.slot]=part(e); });
-  const parts = [ byNo[1], byNo[2], middle, byNo[4], byNo[5] ];
-  // Fusion-site type = the slot position; the part colour follows its Type (as in the scheme figure).
-  parts.forEach((p,i)=>{ p.type = 'Type 0.'+(i+1); if(p.kind!=='shell') p.kind = 't'+(i+1); });
-  return parts;
-}
-function buildModel(){
-  const n=state.nc;
-  const cargoBp = seqBp(state.cargoSeq);
-  const cargoLabel = state.cargoLabel;
-  // isCargo mirrors the same field in Biologik/level0_design/design.py, so the
-  // renderer never has to guess which of the five parts is the user's own.
-  const cg   = { label:cargoLabel, kind:'t3', note:'Cargo', bp:cargoBp, mapnote:cargoBp+' bp', isCargo:true };
-  const cslots = slotsFromState('cargo'), slots = slotsFromState('nc');
-
-  // Level 0 / Level 1 cargo module (antisense): the ORF runs Type 0.5 -> 0.1, the stop sits on the left.
-  const l0 = moduleParts(cslots, cg);
-  const l1cargo = l0.map(p=>({...p}));
-
-  // Level 1 NC module (sense): the ORF runs Type 0.1 -> 0.5, the stop sits on the right.
-  const shellPart = { label:n.shell, kind:'shell', note:'Shell', bp:n.shellBp, mapnote:'Shell', isNew:!!n.custom };
-  const l1nc = moduleParts(slots, shellPart);
-
-  // Level 2: cargo module  <-promoter->  NC module
-  const promo = { label:state.promoter==='GAL110'?'GAL1-10':state.promoter, kind:'promo', note:'bidirectional', bp:PROMO_BP };
-
-  return { n, cargoBp, cargoLabel, l0, l1cargo, l1nc, promo, slots, cslots };
-}
-
-function makePrimerPair(seq, ohF, ohR){
-  let lenF=22, lenR=22;
-  for(let i=0;i<12;i++){
-    const tmF=wallaceTm(seq.slice(0,lenF)), tmR=wallaceTm(rc(seq.slice(-lenR)));
-    if(Math.abs(tmF-tmR)<=5) break;
-    if(tmF>tmR && lenF>16) lenF--; else if(tmR>tmF && lenR>16) lenR--; else break;
-  }
-  const af=seq.slice(0,lenF), ar=rc(seq.slice(-lenR));
-  return [
-    { name:'Cargo_F', role:'forward', oh:ohF, anneal:af, full:'GGTCTCN'+ohF+af, len:('GGTCTCN'+ohF+af).length, tm:wallaceTm(af) },
-    { name:'Cargo_R', role:'reverse', oh:ohR, anneal:ar, full:'GGTCTCN'+ohR+ar, len:('GGTCTCN'+ohR+ar).length, tm:wallaceTm(ar) },
-  ];
-}
-
 /* ---------- API response -> the shape the renderers expect ----------------
    The engine returns semantic kinds (t1/t2/t3/ncs/shell/mark); the diagram
-   colours every slot by its Type POSITION, exactly as buildModel() does, so
+   colours every slot by its Type POSITION, as the diagram always has, so
    shell and marker keep their own colour and everything else follows Type
    1..5.                                                                     */
 function partFromApi(p){
@@ -2957,9 +2741,9 @@ function partFromApi(p){
     stop: !!p.stop,
     dummy: p.role==='ncs' || p.role==='surface',
     surface: !!p.surface,
-    // isCargo muss durchgereicht werden: renderLevel0() entscheidet daran, welcher
-    // der fuenf Level-0-Parts als neu (volle Farbe, Fusionsstellen, BbsI-Tag) und
-    // welche als Stock-Teile gezeichnet werden. mapnote bleibt fuer die Strip-Ansicht.
+    // isCargo has to be passed through: renderLevel0() uses it to decide which
+    // of the five Level 0 parts is drawn as new (full colour, fusion sites, BbsI tag) and
+    // which as stock parts. mapnote stays for the strip view.
     isCargo: !!p.isCargo,
     isNew: !!p.isNew,
     mapnote: p.isCargo ? (p.bp+' bp') : undefined,
@@ -2985,8 +2769,8 @@ function modelFromApi(d){
 }
 
 function primersFromApi(primers){
-  // Feldnamen angleichen (overhang -> oh, length -> len) und die neuen
-  // primer3-Angaben mitnehmen.
+  // Align the field names (overhang -> oh, length -> len) and carry over the new
+  // primer3 data.
   return primers.map(p=>({
     name:p.name, role:p.role, oh:p.overhang, anneal:p.anneal, full:p.full,
     len:p.length, tm:p.tm, tmMethod:p.tmMethod || 'wallace',
@@ -2994,37 +2778,41 @@ function primersFromApi(primers){
   }));
 }
 
-const DESIGN_KEY='encore.design.v29';
+const DESIGN_KEY=buildKey('design');
 let renderedFromCache=false;
 const resultFromApi = d => ({ model:modelFromApi(d), primers:primersFromApi(d.primers), api:d });
+function showCalcError(message){
+  const el=$('#calcError');
+  el.textContent = message ? `The design could not be calculated: ${message}` : '';
+  el.style.display = message ? '' : 'none';
+}
+function showBackendDown(){
+  const el=$('#backendDown');
+  el.textContent = 'The builder server is not reachable, so nothing can be selected or calculated. Start it (docker compose up) and reload this page.';
+  el.style.display = '';
+}
+
+/* Asks the server for the design of the current inputs and renders it. Throws if the server is not reachable or
+   rejects the inputs; the caller shows the message. */
 async function compute(){
   const api=window.ENCORE_API;
-  if(api && api.available){
-    try{
-      const d=await api.designFromState(state);
-      const json=JSON.stringify(d);
-      let prev=null; try{ prev=sessionStorage.getItem(DESIGN_KEY); }catch(e){}
-      try{ sessionStorage.setItem(DESIGN_KEY, json); }catch(e){}
-      lastResult=resultFromApi(d);
-      // Background refresh after a restore-from-cache: identical result -> don't re-render (would only
-      // cause a pointless layout shift under the restored scroll position).
-      if(renderedFromCache && prev===json){ renderedFromCache=false; return; }
-      renderedFromCache=false;
-      renderAll(lastResult);
-      return;
-    }catch(err){
-      console.warn('[ENCORE] /api/design failed: falling back to the inline model', err);
-    }
-  }
-  const m=buildModel();
-  lastResult={ model:m, primers:makePrimerPair(rc(state.cargoSeq), CARGO_L1_FLANK[0], CARGO_L1_FLANK[1]), api:null };
+  if(!api || !api.available) throw new Error('The builder server is not reachable.');
+  const d=await api.designFromState(state);
+  const json=JSON.stringify(d);
+  let prev=null; try{ prev=sessionStorage.getItem(DESIGN_KEY); }catch(e){}
+  try{ sessionStorage.setItem(DESIGN_KEY, json); }catch(e){}
+  lastResult=resultFromApi(d);
+  // Background refresh after a restore-from-cache: identical result -> don't re-render (would only
+  // cause a pointless layout shift under the restored scroll position).
+  if(renderedFromCache && prev===json){ renderedFromCache=false; return; }
+  renderedFromCache=false;
   renderAll(lastResult);
 }
 
 function renderAll(res){
   const m=res.model;
 
-  /* --- Level 0: only the cargo is new — show it with its Type 3 overhangs --- */
+  /* --- Level 0: only the cargo is new; show it with its Type 3 overhangs --- */
   renderLevel0('#lvl0strand', m);
   /* --- Level 1: cargo module, NC module, promoter (assembled via BsaI, with overhangs) --- */
   renderLevel1(res);
@@ -3043,7 +2831,7 @@ stepEls.forEach((el,i)=>el.querySelector('.s-node').addEventListener('click', ()
 function updateStepperLocks(){ stepEls.forEach((el,i)=>el.querySelector('.s-node').disabled=!(i===0||state.unlocked[i])); }
 const secEls=['sec-0','sec-1','sec-2','sec-3','sec-4'].map(id=>document.getElementById(id));
 // Track every section's latest known ratio (not just the ones that changed in
-// the current callback batch) — otherwise a section's own "just left the
+// the current callback batch); otherwise a section's own "just left the
 // viewport" event (ratio 0) can fire in its own batch *after* another
 // section's "just entered" event and win by default for being the only entry
 // that round, leaving the stepper's active highlight stuck on the wrong step.
@@ -3137,12 +2925,18 @@ async function restoreSession(){
     try{ cachedDesign=JSON.parse(sessionStorage.getItem(DESIGN_KEY)); }catch(e){}
     if(cachedDesign && window.ENCORE_API && window.ENCORE_API.available){
       lastResult=resultFromApi(cachedDesign); renderAll(lastResult); renderedFromCache=true;
-      compute();
-    } else await compute();
+      compute().catch(err=>console.warn('[ENCORE] refreshing the design failed', err));
+    } else {
+      try{ await compute(); }
+      catch(err){
+        console.warn('[ENCORE] restoring the design failed', err);
+        state.unlocked[3]=state.unlocked[4]=false; applyLocks(); updateStepperLocks();
+      }
+    }
   }
 
   if(step>=0){
-    // "#step-1" is the generic "open the builder" entry point (the header tab) — resume the
+    // "#step-1" is the generic "open the builder" entry point (the header tab); resume the
     // deepest step already reached instead of forcing the user back to step 1. A specific deep
     // link (e.g. a bookmarked "#step-3") is still clamped down to the deepest unlocked step.
     let target = step===0 ? state.unlocked.lastIndexOf(true) : step;
@@ -3151,7 +2945,7 @@ async function restoreSession(){
     const y=s.scrollY||0;
     window.scrollTo({top:y, behavior:'instant'});
     // Late layout shifts above the viewport (web fonts swapping in, images) would otherwise push the
-    // restored position off by a few px — re-apply it once those settle, unless the user already scrolled.
+    // restored position off by a few px; re-apply it once those settle, unless the user already scrolled.
     let touched=false; const mark=()=>{ touched=true; };
     ['wheel','touchstart','keydown','mousedown'].forEach(ev=>window.addEventListener(ev,mark,{once:true,passive:true}));
     const reapply=()=>{ if(!touched && Math.abs(window.scrollY-y)>0.5) window.scrollTo({top:y, behavior:'instant'}); };
@@ -3165,7 +2959,7 @@ document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState=
 
 /* ===================== Init ===================== */
 /* Header badge: is the optional COMMEC biosecurity-screening sidecar up right
-   now? Purely informational (no click action) — refreshed on load and every
+   now? Purely informational (no click action); refreshed on load and every
    30s afterwards, since the container can be started/stopped independently
    of this page being open. */
 async function refreshCommecStatus(){
@@ -3193,27 +2987,26 @@ async function refreshCommecStatus(){
 }
 async function boot(){
   // Any "#step-N" link (e.g. the header's "ENCORE Builder" tab) should land straight in the
-  // builder, whether or not a saved session exists — never show the intro card in that case.
+  // builder, whether or not a saved session exists; never show the intro card in that case.
   // Done before the loadLibraries() network round-trip so the switch happens as early as possible
   // (the matching CSS rule on data-entry="builder" already hid #intro before first paint).
   if(stepFromHash()>=0) showBuilder();
   // The attribute has now done its one job (hiding #intro before JS ran). Drop it so it can never
-  // again override showIntro()'s own inline style later (e.g. clicking the ENCORE logo) — from here
+  // again override showIntro()'s own inline style later (e.g. clicking the ENCORE logo); from here
   // on, intro/builder visibility is entirely JS-driven again, as before.
   document.documentElement.removeAttribute('data-entry');
-  await loadLibraries();          // API, sonst die Inline-Konstanten
+  await loadLibraries();
+  if(!window.ENCORE_API || !window.ENCORE_API.available) showBackendDown();
   initNcDropdown(); initCargoDropdown(); initPromoterDropdown();
   initSlots();
   applyLocks(); updateStepperLocks(); updateProgress();
   await restoreSession();
-  console.info(`[ENCORE] libraries loaded from: ${LIB.source}`);
   refreshCommecStatus();
   setInterval(refreshCommecStatus, 30_000);
 }
-// window.ENCORE_API wird in einem SPAETEREN <script>-Block definiert. Wuerde
-// boot() sofort laufen, saehe loadLibraries() die API noch nicht und fiele
-// unnoetig auf die Inline-Konstanten zurueck. DOMContentLoaded feuert erst,
-// wenn alle synchronen Skripte durch sind.
+// window.ENCORE_API is defined in a LATER <script> block. If boot() ran
+// immediately, loadLibraries() would not see the API yet and would find no
+// libraries. DOMContentLoaded only fires once all synchronous scripts are done.
 if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
 else boot();
 
@@ -3221,7 +3014,6 @@ else boot();
 
 <!-- ============================================================= -->
 <!-- OPTIONAL backend connection layer. Additive & non-breaking:   -->
-<!-- the prototype above keeps working standalone (inline logic).  -->
 <!-- When this page is served by the Nuxt server, window.ENCORE_API -->
 <!-- talks to the real Golden Gate engine (server/services/         -->
 <!-- goldenGate). See PROJECT_TODO.txt for how to fully switch the  -->
@@ -3242,10 +3034,9 @@ window.ENCORE_API = (function(){
     validateCargo: (cargoSeq, kind) => post('/cargo/validate', { cargoSeq, kind }),
     // Biosecurity screening (COMMEC) of every user-entered sequence before the
     // final design is computed. `sequences`: [{label, sequence}]. Gracefully
-    // reports {available:false} if no screening service is configured/reachable —
-    // see server/utils/commec.js.
+    // reports {available:false} if no screening service is configured/reachable;     // see server/utils/commec.js.
     screenSequences: (sequences) => post('/cargo/screen', { sequences }),
-    // Lightweight ping for the header badge — just "is the sidecar up and are
+    // Lightweight ping for the header badge; just "is the sidecar up and are
     // its databases ready", no sequence involved (see server/utils/commec.js).
     commecStatus: () => json(base+'/cargo/commec-status'),
     design: (decisions) => post('/design', decisions),
@@ -3262,7 +3053,7 @@ window.ENCORE_API = (function(){
   // once and then look at `available` instead of racing the check.
   api.ready = api.libraries()
     .then(l=>{ api.librariesData = l; api.available = true; console.info('[ENCORE] backend connected: window.ENCORE_API ready'); })
-    .catch(()=>{ api.available = false; console.info('[ENCORE] backend not reachable: prototype running standalone (inline logic)'); });
+    .catch(()=>{ api.available = false; console.info('[ENCORE] backend not reachable'); });
   return api;
 })();
 </script>

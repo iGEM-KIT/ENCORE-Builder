@@ -1,109 +1,110 @@
-# Sequenz-Datenbank fuer Golden-Gate-Standardteile
+# Sequence database for Golden Gate standard parts
 
-Jeder Eintrag ist eine eigene JSON-Datei, gruppiert nach Art in einem Unterordner — genau wie bei
-`encapsulin_selector/data/` fuer die Encapsuline. Eine neue oder geaenderte Datei wirkt sofort (kein Build, kein Neustart):
-`cli.py` wird pro Anfrage neu gestartet und liest die Dateien jedes Mal frisch von der Platte.
+Every entry is a JSON file of its own, grouped by kind in a subfolder, exactly like
+`encapsulin_selector/data/` for the encapsulins. A new or changed file takes effect immediately (no build, no restart):
+`cli.py` is restarted per request and reads the files fresh from disk every time.
 
-| Ordner              | Inhalt |
-|---------------------|--------|
-| `level0_inserts/`   | die reine Teilsequenz je Level-0-Plasmid: Shells, Cargos, Linker, Marker, Intein, Targeting-Peptide, NCS (siehe unten) |
-| `promoters/`        | Promotoren (Sequenz noch nicht hinterlegt -> Platzhalter) |
-| `terminators/`      | Terminatoren, rein informativ |
-| `level0_backbones/`, `level1_backbones/`, `level2_backbones/` | die Ziel-Backbones pAGM9121, pAGM1311, pESC-HIS |
-| `type_overhangs/`   | die sieben Overhang-Adapter (Quelle der Overhangs und des Frame-Spacers) |
+| Folder              | Content |
+|---------------------|---------|
+| `level0_inserts/`   | the bare part sequence of each Level 0 plasmid: shells, cargos, linkers, markers, intein, targeting peptides, NCS (see below) |
+| `promoters/`        | promoters (sequence not stored yet -> placeholder) |
+| `terminators/`      | terminators, purely informational |
+| `level0_backbones/`, `level1_backbones/`, `level2_backbones/` | the destination backbones pAGM9121, pAGM1311, pESC-HIS |
+| `type_overhangs/`   | the seven overhang adapters (source of the overhangs and the frame spacer) |
 
-Die Dropdowns der Software (Katalog-Metadaten wie Labels, T-Zahl, Beschreibung) stehen in `data.py`; welche Teile es an
-welcher Site und welchem Slot wirklich gibt und welche Sequenz sie haben, kommt aus `level0_inserts/`.
+The dropdowns of the software (catalogue metadata such as labels, T number, description) live in `data.py`; which parts really exist at
+which site and slot and what sequence they have comes from `level0_inserts/`.
 
 ## `level0_inserts/<id>.json`
 
-Pro Level-0-Plasmid eine Datei, `id` = Beschreibung im GenBank-File (z.B. `Lvl0.2_b_034`). Gespeichert ist NUR das Insert —
-nicht das Plasmid, ohne Type-Overhangs und ohne den Frame-Spacer des Plasmids; beides setzt die Software aus
-`type_overhangs/` wieder an. `sequence` ist immer die Sense-Sequenz des Teils (wie es abgelesen wird); liegt es im Plasmid
-revers-komplementiert (Cargo Site), ist das hier schon zurueckgedreht — die Software dreht das Cargo-Modul beim Bauen wieder.
+One file per Level 0 plasmid, `id` = description in the GenBank file (e.g. `Lvl0.2_b_034`). ONLY the insert is stored,
+not the plasmid, without the Type overhangs and without the frame spacer of the plasmid; the software attaches both again from
+`type_overhangs/`. `sequence` is always the sense sequence of the part (as it is read); if it lies in the plasmid
+as a reverse complement (cargo site), it has already been turned back here; the software turns the cargo module again when building.
 
-- `plasmid_name`, `label` — Name im GenBank-File bzw. in `Level 0 constructs.xlsx`.
-- `category` — `shell`, `cargo`, `linker`, `marker`, `intein`, `tp` oder `ncs`; `part` / `part_label` — die Teil-ID und das
-  Label in den Dropdowns (z.B. Linker `L3` = `GSSS3`).
-- `type_slot` (1-5) und `site` (`nc_site` / `cargo_site`). Die Site folgt bei Type 0.1/0.5 aus dem Level-2-Overhang
-  (`level2_overhang`: TGAT/AATG = NC Site, CCAA/CGTT = Cargo Site), bei Type 0.2-0.4 aus dem Strang, auf dem das Teil im
-  Plasmid liegt (`stored_orientation`: sense = NC Site, antisense = Cargo Site; die "rc"-Plasmide).
-- `variant` (`tp`: `c_term` = Type 0.1 mit Stopcodon, `n_term` = Type 0.5 mit Startcodon) und `ncs_role` (`plain` / `stop`;
-  `stop` nur an den Slots hinter dem Mittelteil: NC Site 0.4/0.5, Cargo Site 0.2/0.1).
-- `frame_spacer_in_plasmid` — die 2 Basen, die das Plasmid vor dem ORF traegt (nur zur Nachvollziehbarkeit; sie sind hier
-  NICHT in `sequence` enthalten, die Software setzt ihren eigenen Spacer aus den Adaptern).
-- `on_stock` — `true` = Glycerinstock vorhanden (Spalte "Glycerol" in `Level 0 constructs.xlsx`: ja), `false` = nein.
-- `checks` — Laenge durch 3 teilbar, Start-/Stopcodon, BsaI-/BbsI-Stellen im Teil.
-- `notes` — Auffaelligkeiten, die beim Import aufgefallen sind (zu pruefen).
+- `plasmid_name`, `label`: name in the GenBank file or in `Level 0 constructs.xlsx`.
+- `category`: `shell`, `cargo`, `linker`, `marker`, `intein`, `tp` or `ncs`; `part` / `part_label`: the part id and the
+  label in the dropdowns (e.g. linker `L3` = `GSSS3`).
+- `type_slot` (1-5) and `site` (`nc_site` / `cargo_site`). For Type 0.1/0.5 the site follows from the Level 2 overhang
+  (`level2_overhang`: TGAT/AATG = NC site, CCAA/CGTT = cargo site), for Type 0.2-0.4 from the strand on which the part lies in the
+  plasmid (`stored_orientation`: sense = NC site, antisense = cargo site; the "rc" plasmids).
+- `variant` (`tp`: `c_term` = Type 0.1 with stop codon, `n_term` = Type 0.5 with start codon) and `ncs_role` (`plain` / `stop`;
+  `stop` only at the slots behind the central part: NC site 0.4/0.5, cargo site 0.2/0.1).
+- `frame_spacer_in_plasmid`: the 2 bases the plasmid carries before the ORF (only for traceability; they are
+  NOT contained in `sequence` here, the software attaches its own spacer from the adapters).
+- `on_stock`: `true` = glycerol stock available (column "Glycerol" in `Level 0 constructs.xlsx`: yes), `false` = no. The builder does not use it at the moment (there is no order from the KIT any more).
+- `registry_url`: link to the part in the iGEM Registry, `null` until it is known. The builder shows it for every toolbox part in the order lists of step 5 (a placeholder while it is `null`).
+- `checks`: length divisible by 3, start/stop codon, BsaI/BbsI sites in the part.
+- `notes`: oddities noticed during the import (to be checked).
 
-Die Dropdowns bieten ein Teil nur dort an, wo es ein Level-0-Plasmid dafuer gibt (`slots` je Bibliothek in
-`get_libraries()`); die Teile selbst sind unabhaengig davon verwendbar (Fallback auf die Sequenz derselben Teil-ID von einem
-anderen Slot, Lagerstatus dann `false`).
+The dropdowns only offer a part where there is a Level 0 plasmid for it (`slots` per library in
+`get_libraries()`); the parts themselves can be used independently of that (fallback to the sequence of the same part id from another
+slot, without a Level 0 plasmid entry of its own, so without a registry link).
 
-## Gemeinsame Felder (promoters/, terminators/)
+## Common fields (promoters/, terminators/)
 
-- `id`, `kind`, `label`, `sequence` (oder `null`), `sequence_status` (`real`/`missing`), `on_stock`, `length_bp`,
+- `id`, `kind`, `label`, `sequence` (or `null`), `sequence_status` (`real`/`missing`), `on_stock`, `length_bp`,
   `organism`, `source`, `notes`, `used_by`.
 
 ## `level0_backbones/`, `level1_backbones/`, `level2_backbones/<id>.json`
 
-Ein komplettes, zirkulaeres Plasmid-Backbone (z.B. aus einer GenBank-Datei
-importiert) mit voller Sequenz, den kuratierten Kernfeldern (Marker, Origin,
-Akzeptor-Overhangs `receiver_overhangs.5_prime`/`3_prime`, aktuell belegte
-Stuffer-/Testkassette in `current_insert`) UND der vollstaendigen, roh
-geparsten GenBank-`FEATURES`-Tabelle (`features`: Liste aus
-`{type, location, qualifiers}`) fuer maximale Nachvollziehbarkeit. Hat
-ebenfalls das `on_stock`-Feld (siehe oben) direkt nach `sequence_status`.
+A complete, circular plasmid backbone (e.g. imported from a GenBank file)
+with the full sequence, the curated core fields (marker, origin,
+acceptor overhangs `receiver_overhangs.5_prime`/`3_prime`, currently occupying
+stuffer/test cassette in `current_insert`) AND the complete, raw
+parsed GenBank `FEATURES` table (`features`: list of
+`{type, location, qualifiers}`) for maximum traceability. Also has
+the `on_stock` field (see above) directly after `sequence_status`.
 
-Aktuell real hinterlegt: `pAGM9121-lvl0-dest` (Level 0, Weber et al. 2011),
+Currently stored as real: `pAGM9121-lvl0-dest` (Level 0, Weber et al. 2011),
 `pAGM1311-lvl1-dest` (Level 1, Weber et al. 2011), `pESC-HIS-lvl2-dest`
-(Level 2, vom Nutzer bereitgestelltes pESC-HIS). Alle drei stammen aus vom
-Nutzer bereitgestellten GenBank-Dateien, nicht selbst generiert.
+(Level 2, pESC-HIS provided by the user). All three come from GenBank files
+provided by the user, not generated by ourselves.
 
 ## `type_overhangs/<id>.json`
 
-Die sieben Overhang-Adapter, die an die Sequenz jedes Level-0-Teils angehaengt werden
-(BbsI-Schnittstelle, Level-0-Overhangs 0N/0C passend zum Level-0-Backbone, Level-1-Overhangs
-fuer den jeweiligen Type-Slot und bei Type 0.1/0.5 zusaetzlich die Level-2-Overhangs, um einen
-4-nt-"Insert"-Platzhalter herum). Die CDS bzw. Teilsequenz ersetzt diesen Platzhalter. Eine
-Datei pro Adapter, Dateiname = `id` = Name im GenBank-File des Nutzers:
+The seven overhang adapters that are attached to the sequence of every Level 0 part
+(BbsI cut site, Level 0 overhangs 0N/0C matching the Level 0 backbone, Level 1 overhangs
+for the respective Type slot and, for Type 0.1/0.5, additionally the Level 2 overhangs, around a
+4-nt "insert" placeholder). The CDS or part sequence replaces this placeholder. One
+file per adapter, file name = `id` = name in the user's GenBank file:
 
-| id      | Type-Slot | `used_for_modules`        | Besonderheit |
-|---------|-----------|---------------------------|--------------|
-| `0.1`   | 0.1       | `nc_site`                 | Level-2-Overhang `2_N` = TGAT |
-| `0.1rc` | 0.1       | `cargo_site`              | Level-2-Overhang `2_N` = CCAA (Cargo-Modul, rc-Variante) |
-| `0.2`   | 0.2       | `nc_site`, `cargo_site`   | beide Seiten |
-| `0.3`   | 0.3       | `nc_site`, `cargo_site`   | beide Seiten |
-| `0.4`   | 0.4       | `nc_site`, `cargo_site`   | beide Seiten |
-| `0.5`   | 0.5       | `nc_site`                 | Level-2-Overhang `2_C` = AATG |
-| `0.5rc` | 0.5       | `cargo_site`              | Level-2-Overhang `2_C` = CGTT (Cargo-Modul, rc-Variante) |
+| id      | Type slot | `used_for_modules`        | Special feature |
+|---------|-----------|---------------------------|-----------------|
+| `0.1`   | 0.1       | `nc_site`                 | Level 2 overhang `2_N` = TGAT |
+| `0.1rc` | 0.1       | `cargo_site`              | Level 2 overhang `2_N` = CCAA (cargo module, rc variant) |
+| `0.2`   | 0.2       | `nc_site`, `cargo_site`   | both sides |
+| `0.3`   | 0.3       | `nc_site`, `cargo_site`   | both sides |
+| `0.4`   | 0.4       | `nc_site`, `cargo_site`   | both sides |
+| `0.5`   | 0.5       | `nc_site`                 | Level 2 overhang `2_C` = AATG |
+| `0.5rc` | 0.5       | `cargo_site`              | Level 2 overhang `2_C` = CGTT (cargo module, rc variant) |
 
-Felder (zusaetzlich zu `id`/`kind`/`label`/`sequence`/`sequence_status`/`on_stock`/
-`length_bp`/`source`/`notes`/`used_by`, siehe oben):
+Fields (in addition to `id`/`kind`/`label`/`sequence`/`sequence_status`/`on_stock`/
+`length_bp`/`source`/`notes`/`used_by`, see above):
 
-- `type_slot` — 1..5 (Type 0.x).
-- `used_for_modules` — Liste aus `"nc_site"` (Nanocompartment-Site) und/oder `"cargo_site"`.
-- `reverse_complement_variant` — `true` bei den `rc`-Adaptern der Cargo Site (Antisense-Modul).
-- `description` — DEFINITION-Zeile aus dem GenBank-File.
-- `enzyme`, `bbsi_sites` — Erkennungsstellen (`GAAGAC` bzw. rc) mit Position/Strang.
-- `overhangs` — Liste der beschrifteten Overhangs: `label` (z.B. `0.5N Lvl1`), `role`
+- `type_slot`: 1..5 (Type 0.x).
+- `used_for_modules`: list of `"nc_site"` (nanocompartment site) and/or `"cargo_site"`.
+- `reverse_complement_variant`: `true` for the `rc` adapters of the cargo site (antisense module).
+- `description`: DEFINITION line from the GenBank file.
+- `enzyme`, `bbsi_sites`: recognition sites (`GAAGAC` or rc) with position/strand.
+- `overhangs`: list of the labelled overhangs: `label` (e.g. `0.5N Lvl1`), `role`
   (`level0_N`, `level1_N`, `level2_N`, `level1_C`, `level2_C`, `level0_C`), `location`, `strand`,
-  `sequence_top_strand` (Basen auf dem Top-Strang) und `sequence_own_strand_5to3` (so wie auf
-  dem eigenen Strang gelesen, also bei `strand: "-"` das Reverse-Komplement).
-- `insert` — Position und Platzhalter (`AAAA`) der Stelle, an der die CDS eingesetzt wird.
-- `frame_spacer` — 2 nt (`GC`) direkt vor dem Insert (5'-Seite, Top-Strand), hinter dem Level-1-N-Overhang und damit
-  INNERHALB des BsaI-Fragments (wird beim Klonieren nicht herausgeschnitten). Der 4-nt-Overhang zwischen zwei Teilen
-  allein verschiebt das Leseraster um 1 nt; Overhang (4) + Spacer (2) = 6 nt = zwei Codons, fusionierte Teile bleiben im
-  Raster. Gewaehlt so, dass in beiden Leserichtungen (Sense- und Cargo-Modul, das antisense liegt) kein Stopcodon an
-  der Naht entsteht und keine BsaI-/BbsI-Stelle neu gebildet wird (Test: `test_junction_codons_are_never_stops_...`).
-- `features` — die komplette, roh geparste GenBank-Feature-Tabelle.
+  `sequence_top_strand` (bases on the top strand) and `sequence_own_strand_5to3` (as read on
+  its own strand, so for `strand: "-"` the reverse complement).
+- `insert`: position and placeholder (`AAAA`) of the place where the CDS is inserted.
+- `frame_spacer`: 2 nt (`GC`) directly before the insert (5' side, top strand), behind the Level 1 N overhang and thus
+  INSIDE the BsaI fragment (it is not cut out during cloning). The 4-nt overhang between two parts
+  alone shifts the reading frame by 1 nt; overhang (4) + spacer (2) = 6 nt = two codons, fused parts stay in
+  frame. Chosen so that in both reading directions (sense and cargo module, which lies antisense) no stop codon arises at
+  the seam and no BsaI/BbsI site is newly formed (test: `test_junction_codons_are_never_stops_...`).
+- `features`: the complete, raw parsed GenBank feature table.
 
-Stand: Die Overhangs der Adapter waren gegen die frueheren hartcodierten Konstanten gegengeprueft (Level-1-Overhangs
-je Slot, NC-Flanken TGAT/TTAC, Cargo-Flanken CCAA/GCAA — rechter Wert jeweils als Komplement); die Adapter sind jetzt
-die Quelle dafuer. Nicht belegt: die Promotor-Flanke ACTA.
+Status: the overhangs of the adapters were checked against the earlier hard-coded constants (Level 1 overhangs
+per slot, NC flanks TGAT/TTAC, cargo flanks CCAA/GCAA, the right value each as a complement); the adapters are now
+the source for them. Not covered: the promoter flank ACTA.
 
-## Validierung
+## Validation
 
-`load_parts()` (`parts_db.py`) bricht mit einer klaren Fehlermeldung ab (statt
-still eine kaputte Datenbank zu laden), wenn eine `id` in einem Ordner fehlt
-oder doppelt vergeben ist, oder eine Datei kein gueltiges JSON ist.
+`load_parts()` (`parts_db.py`) aborts with a clear error message (instead of
+silently loading a broken database) if an `id` is missing in a folder
+or assigned twice, or a file is not valid JSON.

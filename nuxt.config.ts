@@ -6,18 +6,18 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   nitro: {
-    // Der Builder-Prototyp liegt in frontend/, nicht in public/. Nuxt liefert
-    // von sich aus nur public/ statisch aus — die Seite waere sonst gar nicht
-    // erreichbar und ihre relativen /api-Aufrufe (window.ENCORE_API) liefen
-    // ins Leere. Dieser Eintrag stellt frontend/ zusaetzlich bereit.
+    // The builder prototype lives in frontend/, not in public/. By itself Nuxt
+    // only serves public/ statically; the page would not be reachable at all
+    // and its relative /api calls (window.ENCORE_API) would go
+    // nowhere. This entry makes frontend/ available as well.
     //
-    // Es gibt keine eigene Vue-Startseite (app/pages/ ist leer) — die Datei
-    // heisst deshalb bewusst index.html: der uebliche Static-Server-Fallback
-    // liefert sie direkt unter "/" aus (echter 200, kein Redirect/Proxy-Hop).
+    // There is no Vue start page of its own (app/pages/ is empty), so the file
+    // is deliberately called index.html: the usual static server fallback
+    // serves it directly at "/" (a real 200, no redirect/proxy hop).
     publicAssets: [
       { baseURL: '/', dir: fileURLToPath(new URL('./frontend', import.meta.url)) },
-      // Das separate Nanocompartment-Finder-Tool, verlinkt von der Builder-
-      // Intro-Seite aus ("Before you start" -> /selector/selector-alpha.html).
+      // The separate nanocompartment finder tool, linked from the builder
+      // intro page (the filter link, /selector/selector-alpha.html).
       { baseURL: '/selector/', dir: fileURLToPath(new URL('./encapsulin_selector', import.meta.url)) },
     ],
   },

@@ -1,17 +1,17 @@
-"""Primerdesign: Auswahl, Tm-Balancing, Bewertung, Golden-Gate-Extensions.
+"""Primer design: selection, Tm balancing, evaluation, Golden Gate extensions.
 
-Öffentlicher Einstiegspunkt für Server, Tests und CLI:
+Public entry point for server, tests and CLI:
 
     from Biologik.primer_design import design_primers
 
     result = design_primers(sequence="ATG...", ext_type="type0.3")
     result["primerFw"], result["tmFw"], result["q5AnnealingTemp"]
 
-``design_primers`` liefert ein dict, das direkt als JSON serialisierbar ist,
-und wirft ``ValueError``, wenn kein Primerpaar gefunden wird.
+``design_primers`` returns a dict that can be serialized directly as JSON,
+and raises ``ValueError`` if no primer pair is found.
 
-Dieses Paket importiert primer3 (siehe ``Biologik/requirements.txt``).
-``Biologik.level0_design`` kommt dagegen ohne externe Pakete aus.
+This package imports primer3 (see ``Biologik/requirements.txt``).
+``Biologik.level0_design``, in contrast, needs no external packages.
 """
 
 from .add_extensions import TYPE_EXTENSIONS, add_extensions

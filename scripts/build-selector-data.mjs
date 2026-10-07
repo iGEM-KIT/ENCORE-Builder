@@ -1,14 +1,14 @@
 #!/usr/bin/env node
-// Baut encapsulin_selector/selector-data.js aus den einzelnen JSON-Dateien in
-// encapsulin_selector/data/ zusammen. Wird automatisch vor `pnpm dev` und
-// `pnpm build`/`generate` ausgefuehrt (siehe package.json) — wer einen neuen
-// Kandidaten unter data/candidates/<ID>.json hinzufuegt und `pnpm dev`
-// startet, sieht ihn sofort im Filter, ohne einen eigenen Befehl zu lernen.
+// Builds encapsulin_selector/selector-data.js from the individual JSON files in
+// encapsulin_selector/data/. Runs automatically before `pnpm dev` and
+// `pnpm build`/`generate` (see package.json); whoever adds a new
+// candidate under data/candidates/<ID>.json and starts `pnpm dev`
+// sees it in the filter right away, without learning a separate command.
 //
-// selector-data.js selbst ist GENERIERT und wird trotzdem mit eingecheckt
-// (die Selector-Seite wird als reine statische Datei ausgeliefert, siehe
-// nuxt.config.ts) — bei einer PR einfach `pnpm build:selector-data` laufen
-// lassen und die aktualisierte selector-data.js mit committen.
+// selector-data.js itself is GENERATED and is still committed
+// (the selector page is served as a plain static file, see
+// nuxt.config.ts); in a PR just run `pnpm build:selector-data`
+// and commit the updated selector-data.js as well.
 import { readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import { resolve, dirname, basename } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -20,8 +20,8 @@ const outFile = resolve(root, 'encapsulin_selector/selector-data.js')
 const log = (msg) => console.log(`[build-selector-data] ${msg}`)
 
 function readJsonDir(dir) {
-  // Dateien, die mit "_" beginnen (z.B. _template.json), sind Vorlagen fuer
-  // Beitragende und fliessen nicht in die gebaute Datenbank ein.
+  // Files that start with "_" (e.g. _template.json) are templates for
+  // contributors and do not go into the built database.
   return readdirSync(dir)
     .filter((f) => f.endsWith('.json') && !f.startsWith('_'))
     .sort()
@@ -29,15 +29,15 @@ function readJsonDir(dir) {
       try {
         return JSON.parse(readFileSync(resolve(dir, f), 'utf8'))
       } catch (error) {
-        throw new Error(`${basename(dir)}/${f} ist kein gueltiges JSON: ${error.message}`)
+        throw new Error(`${basename(dir)}/${f} is not valid JSON: ${error.message}`)
       }
     })
 }
 
-// Rundet "~24" oder "24" oder "20-24" in ein fuer den Filter nutzbares
-// {min, max, center, approximate, kind} um. Muss von Beitragenden NICHT
-// selbst angegeben werden, damit ein neuer Eintrag so einfach wie moeglich
-// bleibt (nur das rohe Messwert-Feld ausfuellen).
+// Turns "~24" or "24" or "20-24" into an {min, max, center, approximate, kind}
+// object usable by the filter. Contributors do NOT have to give it
+// themselves, so that a new entry stays as simple as possible
+// (just fill in the raw measured value field).
 function deriveShellDiameter(raw) {
   if (raw === null || raw === undefined || raw === '') return null
   if (typeof raw === 'number') {
@@ -66,44 +66,44 @@ const assemblies = readJsonDir(resolve(dataDir, 'assemblies')).map((a) => ({
   _shell_diameter: deriveShellDiameter(a.shell_diameter_nm),
 }))
 
-// Konsistenz pruefen, statt eine kaputte Datenbank stillschweigend zu bauen.
+// Check consistency instead of silently building a broken database.
 const errors = []
 const candidateIds = new Set()
 for (const c of candidates) {
-  if (!c.candidate_id) { errors.push('Ein Kandidat ohne candidate_id gefunden.'); continue }
+  if (!c.candidate_id) { errors.push('Found a candidate without candidate_id.'); continue }
   if (c.candidate_id !== c.candidate_id.trim()) {
-    errors.push(`candidate_id "${c.candidate_id}" hat ein fuehrendes/anhaengendes Leerzeichen (fast immer ein Tippfehler).`)
+    errors.push(`candidate_id "${c.candidate_id}" has a leading/trailing space (almost always a typo).`)
   }
-  if (candidateIds.has(c.candidate_id)) errors.push(`candidate_id "${c.candidate_id}" kommt doppelt vor.`)
+  if (candidateIds.has(c.candidate_id)) errors.push(`candidate_id "${c.candidate_id}" occurs twice.`)
   candidateIds.add(c.candidate_id)
 }
 const assemblyIds = new Set()
 for (const a of assemblies) {
-  if (!a.assembly_id) { errors.push('Eine Assembly ohne assembly_id gefunden.'); continue }
+  if (!a.assembly_id) { errors.push('Found an assembly without assembly_id.'); continue }
   if (a.assembly_id !== a.assembly_id.trim()) {
-    errors.push(`assembly_id "${a.assembly_id}" hat ein fuehrendes/anhaengendes Leerzeichen (fast immer ein Tippfehler).`)
+    errors.push(`assembly_id "${a.assembly_id}" has a leading/trailing space (almost always a typo).`)
   }
-  if (assemblyIds.has(a.assembly_id)) errors.push(`assembly_id "${a.assembly_id}" kommt doppelt vor.`)
+  if (assemblyIds.has(a.assembly_id)) errors.push(`assembly_id "${a.assembly_id}" occurs twice.`)
   assemblyIds.add(a.assembly_id)
   if (!candidateIds.has(a.candidate_id)) {
-    errors.push(`Assembly "${a.assembly_id}" verweist auf unbekannte candidate_id "${a.candidate_id}".`)
+    errors.push(`Assembly "${a.assembly_id}" refers to unknown candidate_id "${a.candidate_id}".`)
   }
 }
 for (const c of candidates) {
   if (c.reference_assembly_id && !assemblyIds.has(c.reference_assembly_id)) {
-    errors.push(`Kandidat "${c.candidate_id}" verweist mit reference_assembly_id auf unbekannte Assembly "${c.reference_assembly_id}".`)
+    errors.push(`Candidate "${c.candidate_id}" refers with reference_assembly_id to unknown assembly "${c.reference_assembly_id}".`)
   }
 }
 
 if (errors.length > 0) {
-  log('Fehler in encapsulin_selector/data/ — Datenbank wird NICHT gebaut:')
+  log('Errors in encapsulin_selector/data/; the database is NOT built:')
   for (const e of errors) log(`  - ${e}`)
   process.exit(1)
 }
 
-// assembly_count pro Kandidat ist immer exakt die Anzahl seiner Assemblies
-// (verifiziert gegen den bisherigen Datensatz) — auch dieses Feld muss ein
-// neuer Eintrag nicht von Hand pflegen.
+// assembly_count per candidate is always exactly the number of its assemblies
+// (verified against the previous data set); a new entry does not
+// have to maintain this field by hand either.
 const assembliesByCandidate = new Map()
 for (const a of assemblies) {
   assembliesByCandidate.set(a.candidate_id, (assembliesByCandidate.get(a.candidate_id) ?? 0) + 1)
@@ -124,7 +124,7 @@ const data = {
   assemblies,
 }
 
-const banner = '// GENERIERT von scripts/build-selector-data.mjs aus encapsulin_selector/data/ — nicht von Hand editieren.\n// Neue Encapsuline hinzufuegen: siehe encapsulin_selector/data/README.md\n'
+const banner = '// GENERATED by scripts/build-selector-data.mjs from encapsulin_selector/data/; do not edit by hand.\n// To add new encapsulins, see encapsulin_selector/data/README.md\n'
 writeFileSync(outFile, `${banner}window.ENCAPSULIN_SELECTOR_DATA = ${JSON.stringify(data, null, 2)};\n`)
 
-log(`fertig: ${candidatesOut.length} Kandidaten, ${assemblies.length} Assemblies -> ${basename(outFile)}`)
+log(`done: ${candidatesOut.length} candidates, ${assemblies.length} assemblies -> ${basename(outFile)}`)

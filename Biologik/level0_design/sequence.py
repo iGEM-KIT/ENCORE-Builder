@@ -1,31 +1,31 @@
-"""Hilfsfunktionen für Cargo-Validierung."""
+"""Helper functions for cargo validation."""
 
 from __future__ import annotations
 
 
-# In diesem Ordner wird die vom Benutzer frei eingegebene Cargo-Sequenzen (Gene of Interest) verarbeitet.
-# Es sind kleine, unabhängige Funktionen aufgeführt, auf denen die Validierung der Cargo-Sequenzen aufbaut. 
-# Mit der Validierung der Cargo-Sequenz wird geprüft, ob eine vom User eingegebene Cargo-Sequenz eine gültige
-# und ausreichend lange DNA-Sequenz ist und lang genug ist und kein Stopcodon enthält.
+# This module processes the cargo sequences (gene of interest) freely entered by the user.
+# It lists small, independent functions on which the validation of the cargo sequences builds.
+# The validation of the cargo sequence checks whether a cargo sequence entered by the user is a valid
+# DNA sequence of sufficient length and contains no stop codon.
 
 import re
 
 from .data import STOP_CODONS
 
-# Wenn Uracil (mRNA) in Cargo-Sequenz enthalten ist, zu DNA umschreiben und dem USser als Anmerkung/Info anzeigen.
+# If uracil (mRNA) is contained in the cargo sequence, convert it to DNA and show the user a note/info.
 COMPLEMENT = {"A": "T", "T": "A", "G": "C", "C": "G"}
 
-# Definition von Funktionen mit def
-# DNA-Sequenz "sequence" vom Dateityp str wird als Parameter/ Input übergeben -> Platzhalter für die vom User eingegebene Sequenz.
-# Die Funktionen geben als Output entweder den Dateityp str oder int zurück.
-# str steht für den Dateitp String, also eine Text bzw. eine Zeichenkette, z.B. 'GCT'
-# int steht für den Dateityp Integer, also eine ganze Zahl ohne Nachkommastellen, z.B. '42'
+# Definition of functions with def
+# The DNA sequence "sequence" of type str is passed as a parameter/input -> placeholder for the sequence entered by the user.
+# The functions return either the type str or int as output.
+# str stands for the type string, i.e. a text or character string, e.g. 'GCT'
+# int stands for the type integer, i.e. a whole number without decimals, e.g. '42'
 
 
- # Prüfen, ob nur gültige Basen (A,T,G,C,) verwendet werden.
+ # Check whether only valid bases (A,T,G,C) are used.
 def clean_seq(sequence: str) -> str:
-    # re.sub() ersetzt alle Zeichen, die nicht A, T, G oder C sind, durch nichts.
-    # Wenn beim Code kopieren noch zusätzliche Zeichen mitkopiert wurden.
+    # re.sub() replaces all characters that are not A, T, G or C by nothing.
+    # If additional characters were copied along when copying the code.
     return re.sub(r"[^ATGC]", "", (sequence or "").upper())
          
 
@@ -33,13 +33,13 @@ AMINO_ACIDS = "ACDEFGHIKLMNPQRSTVWY"
 
 
 def _without_fasta_header(raw: str) -> str:
-    """Grossgeschrieben, ohne FASTA-Kopfzeilen (">name")."""
+    """Upper case, without FASTA header lines (">name")."""
     return re.sub(r"^>.*$", "", (raw or "").upper(), flags=re.M)
 
 
 def is_protein(raw: str) -> bool:
-    """Aminosaeure statt DNA? Eine DNA besteht (bis auf Leerzeichen/Ziffern) fast nur aus A/T/G/C (auch U/N); ein Protein hat
-    nur etwa ein Viertel solche Buchstaben. Ab 90 % A/C/G/T/U/N gilt die Eingabe als DNA. FASTA-Kopfzeilen (">...") zaehlen nicht."""
+    """Amino acid instead of DNA? A DNA consists (apart from spaces/digits) almost only of A/T/G/C (also U/N); a protein has
+        only about a quarter of such letters. From 90 % A/C/G/T/U/N on the input counts as DNA. FASTA header lines (">...") do not count."""
     letters = re.sub(r"[^A-Z*]", "", _without_fasta_header(raw))
     if not letters:
         return False
@@ -47,39 +47,39 @@ def is_protein(raw: str) -> bool:
 
 
 def clean_protein(raw: str) -> str:
-    """Nur die 20 Aminosaeuren (und ein Stern fuer ein Stopcodon) bleiben; FASTA-Kopfzeilen, Leerzeichen und Ziffern fallen weg."""
+    """Only the 20 amino acids (and an asterisk for a stop codon) remain; FASTA header lines, spaces and digits are dropped."""
     return re.sub(rf"[^{AMINO_ACIDS}*]", "", _without_fasta_header(raw))
 
 
 def gc_content(sequence: str) -> int:
-    # Zählt GC-Gehalt: die drei Wasserstoffbrücken der G–C-Paarung ist Hauptfaktor für die Stabilität,
-    # relevant für Primer-Schmelztemperaturen, die Wahl der Fusion Sites und die Synthetisierbarkeit einer CDS.
-    # Wenn die Sequenz leer ist, wird direkt 0 zurückgegeben.
-    # Ist Auswählung des GC-Gehalts an dieser Stelle redundant? Wird unten nochmal gezählt.
+    # Counts the GC content: the three hydrogen bonds of the G-C pairing are the main factor for stability,
+    # relevant for primer melting temperatures, the choice of fusion sites and the synthesizability of a CDS.
+    # If the sequence is empty, 0 is returned directly.
+    # Is counting the GC content at this point redundant? It is counted again below.
     if not sequence:
         return 0
-    # Die Schleife mit for geht jede Base der Sequenz durch und zählt die G/C-Basen
+    # The for loop goes through every base of the sequence and counts the G/C bases
     return round((sum(1 for base in sequence if base in "GC") / len(sequence)) * 100)
 
 
 def reverse_complement(sequence: str) -> str:
-    # reversed(...) dreht die Reihenfolge um, und die Komplement-Tabelle ersetzt jede Base
-    # Um Leserichtung bei Bildung des Gegenstrangs beizubehalten, muss Sequenz rückwärts gelesen werden (reverse) 
-    # Komplement-Tabelle ist ein Dictionary, das jede Base auf ihre Basenpaarungspartnerin abbildet:
+    # reversed(...) reverses the order, and the complement table replaces every base
+    # To keep the reading direction when forming the opposite strand, the sequence has to be read backwards (reverse)
+    # The complement table is a dictionary that maps every base to its base pairing partner:
     return "".join(COMPLEMENT.get(base, "N") for base in reversed(sequence))
 
 
 def wallace_tm(sequence: str) -> int:
-    # sum(...) zählt A/T- und G/C-Basen. Die Formel berechnet die Schmelztemperatur grob.
+    # sum(...) counts A/T and G/C bases. The formula roughly calculates the melting temperature.
     at = sum(1 for base in sequence if base in "AT")
     gc = sum(1 for base in sequence if base in "GC")
     return 2 * at + 4 * gc
 
 
 def find_internal_stops(sequence: str):
-    # Eine leere Liste wird als Sammelbehälter für Ergebnisse angelegt.
+    # An empty list is created as a container for results.
     hits = []
-    # Eine for-Schleife läuft über die Sequenz in Schritten von 3 Basen.
+    # A for loop runs over the sequence in steps of 3 bases.
     for index in range(0, len(sequence) - 2, 3):
         codon = sequence[index:index + 3]
         if codon in STOP_CODONS:
@@ -93,17 +93,17 @@ def ends_with_stop(sequence: str):
     return None
 
 
-# Wenn ATG gefunden, alles vor ATG löschen und User mit Anzeige informieren.
+# If ATG is found, delete everything before ATG and inform the user with a message.
 
 
 def validate_cargo(raw: str, min_bp: int = 30, kind: str = "cargo") -> dict:
-    # ``kind`` waehlt nur den Wortlaut der Stopcodon-Meldung: "cargo" (Standard), "shell" fuer eine
-    # eigene Nanocompartment-Shell oder "part" fuer eine eigene Sequenz in einem Slot. Die Regeln sind identisch.
-    # Die Eingabe darf DNA (CDS) oder eine Aminosaeuresequenz sein (``isProtein``); ein Protein wird beim Bauen mit der
-    # Codon-Nutzung von S. cerevisiae in DNA uebersetzt (codon.py), ``length`` ist dann die Laenge dieser DNA (3 pro Aminosaeure).
+    # ``kind`` only selects the wording of the stop codon message: "cargo" (default), "shell" for an
+    # own nanocompartment shell or "part" for an own sequence in a slot. The rules are identical.
+    # The input may be DNA (CDS) or an amino acid sequence (``isProtein``); a protein is translated into DNA when building, using the
+    # codon usage of S. cerevisiae (codon.py), ``length`` is then the length of this DNA (3 per amino acid).
     if is_protein(raw):
         return _validate_protein(raw, min_bp, kind)
-    # clean_seq() macht die Eingabe für die weitere Analyse brauchbar.
+    # clean_seq() makes the input usable for further analysis.
     clean = clean_seq(raw)
     length = len(clean)
     invalid_chars = len(re.sub(r"[ATGC\s]", "", (raw or "").upper()))
@@ -117,8 +117,8 @@ def validate_cargo(raw: str, min_bp: int = 30, kind: str = "cargo") -> dict:
     if length == 0:
         errors.append("No valid A/T/G/C sequence provided.")
     else:
-        # Die Mindestlaenge gilt nur fuer das Cargo (dafuer werden Primer designt); Shell und
-        # eigene Module werden als Synthese bestellt und duerfen beliebig kurz sein.
+        # The minimum length only applies to the cargo (primers are designed for it); shell and
+        # own modules are ordered as synthesis and may be arbitrarily short.
         if kind == "cargo" and length < min_bp:
             errors.append(f"Sequence too short ({length} bp, need at least {min_bp} bp).")
         if trailing_stop:
@@ -155,8 +155,8 @@ def _stop_message(stop: str, kind: str) -> str:
 
 
 def _validate_protein(raw: str, min_bp: int, kind: str) -> dict:
-    """Wie validate_cargo, fuer eine Aminosaeuresequenz: ``clean`` ist die Aminosaeurefolge, ``length`` die Laenge der DNA nach der
-    Rueckuebersetzung. Ein Stern am Ende ist ein Stopcodon (Fehler wie bei DNA), ein Stern mitten drin eine Warnung."""
+    """Like validate_cargo, for an amino acid sequence: ``clean`` is the amino acid sequence, ``length`` the length of the DNA after
+        back-translation. A trailing asterisk is a stop codon (error as for DNA), an asterisk in the middle is a warning."""
     clean = clean_protein(raw)
     invalid_chars = len(re.sub(rf"[{AMINO_ACIDS}*\s]", "", _without_fasta_header(raw)))
     trailing_stop = "*" if clean.endswith("*") else None

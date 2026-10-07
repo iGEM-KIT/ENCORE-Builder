@@ -1,12 +1,12 @@
-"""Loader fuer Biologik/level0_design/parts/: die Sequenz-Datenbank fuer
-Golden-Gate-Standardteile (Level-0-Inserts: Shells, Cargos, Linker, Marker, TPs, NCS-Spacer;
-Promotoren, Terminatoren, Level-0/1/2-Ziel-Backbones, Type-Overhang-Adapter).
+"""Loader for Biologik/level0_design/parts/: the sequence database for
+Golden Gate standard parts (Level 0 inserts: shells, cargos, linkers, markers, TPs, NCS spacers;
+promoters, terminators, Level 0/1/2 destination backbones, Type overhang adapters).
 
-Gleiches Prinzip wie encapsulin_selector/data/ (eine JSON-Datei pro Eintrag,
-gruppiert nach Art in Unterordnern); siehe parts/README.md. Anders als beim
-Selector gibt es hier KEINEN Build-Schritt zu einem generierten JS-Bundle:
-das laeuft serverseitig in Python (cli.py wird pro Request neu gestartet),
-daher werden die JSON-Dateien bei jedem Aufruf frisch von der Platte gelesen; eine neue/geaenderte Datei wirkt sofort, ohne Neustart oder Build.
+Same principle as encapsulin_selector/data/ (one JSON file per entry,
+grouped by kind in subfolders); see parts/README.md. Unlike the
+selector there is NO build step to a generated JS bundle:
+this runs server side in Python (cli.py is restarted per request),
+so the JSON files are read fresh from disk on every call; a new or changed file takes effect immediately, without restart or build.
 """
 
 from __future__ import annotations
@@ -36,7 +36,7 @@ def _read_kind(kind: str) -> list[dict]:
     seen_ids = set()
     for path in sorted(directory.glob("*.json")):
         if path.name.startswith("_"):
-            continue  # Vorlagen (z.B. _template.json) fliessen nicht mit ein.
+            continue  # Templates (e.g. _template.json) are not included.
         try:
             entry = json.loads(path.read_text(encoding="utf-8"))
         except json.JSONDecodeError as error:
@@ -45,14 +45,14 @@ def _read_kind(kind: str) -> list[dict]:
         if not entry_id:
             raise ValueError(f"parts/{kind}/{path.name} has no \"id\" field.")
         if entry_id in seen_ids:
-            raise ValueError(f"parts/{kind}: id \"{entry_id}\" kommt doppelt vor (zuletzt in {path.name}).")
+            raise ValueError(f"parts/{kind}: id \"{entry_id}\" occurs twice (last in {path.name}).")
         seen_ids.add(entry_id)
         entries.append(entry)
     return entries
 
 
 def load_parts() -> dict:
-    """{kind: [entries...]} fuer jeden parts/-Unterordner."""
+    """{kind: [entries...]} for every parts/ subfolder."""
     return {kind: _read_kind(kind) for kind in KINDS}
 
 
@@ -61,9 +61,9 @@ def find_part(kind: str, part_id: str) -> dict | None:
 
 
 def find_real_sequence(kind: str, part_id: str) -> str | None:
-    """Liefert die echte Sequenz eines Teils, falls in der Datenbank hinterlegt
-    (sequence_status == "real" und sequence gesetzt) — sonst None, damit der
-    Aufrufer auf die deterministische Platzhalter-Sequenz zurueckfallen kann."""
+    """Returns the real sequence of a part if it is stored in the database
+    (sequence_status == "real" and sequence set); otherwise None, so that the
+    caller can fall back to the deterministic placeholder sequence."""
     entry = find_part(kind, part_id)
     if not entry:
         return None
@@ -74,14 +74,14 @@ def find_real_sequence(kind: str, part_id: str) -> str | None:
 
 
 def inserts() -> list[dict]:
-    """Alle Level-0-Inserts (parts/level0_inserts/): die reine Teilsequenz je Level-0-Plasmid, ohne Overhangs und ohne Frame-Spacer."""
+    """All Level 0 inserts (parts/level0_inserts/): the bare part sequence of each Level 0 plasmid, without overhangs and without frame spacer."""
     return _read_kind("level0_inserts")
 
 
 def find_inserts(category: str, part: str | None = None, site: str | None = None, slot: int | None = None,
                  **extra) -> list[dict]:
-    """Inserts einer Kategorie (shell, cargo, linker, marker, intein, tp, ncs), optional gefiltert nach Teil-ID,
-    Site ("nc_site"/"cargo_site"), Type-Slot und weiteren Feldern (variant="c_term", ncs_role="stop", ...)."""
+    """Inserts of one category (shell, cargo, linker, marker, intein, tp, ncs), optionally filtered by part id,
+    site ("nc_site"/"cargo_site"), Type slot and further fields (variant="c_term", ncs_role="stop", ...)."""
     out = []
     for entry in inserts():
         if entry.get("category") != category:
@@ -99,5 +99,5 @@ def find_inserts(category: str, part: str | None = None, site: str | None = None
 
 
 def find_library_cargo(sequence: str) -> dict | None:
-    """Der Cargo-Eintrag der Bibliothek, dessen Sense-Sequenz genau `sequence` ist (ein Toolkit-Teil, keine Nutzereingabe), sonst None."""
+    """The cargo entry of the library whose sense sequence is exactly `sequence` (a toolkit part, not a user input), otherwise None."""
     return next((e for e in find_inserts("cargo") if e["sequence"] == sequence), None)

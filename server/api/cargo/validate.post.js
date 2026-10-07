@@ -6,7 +6,7 @@
  *   wording of the stop-codon message differs.
  *
  * Checks a user-supplied cargo CDS (decision 2.2): length, GC, reading frame,
- * and — crucially — that it does not carry a stop codon (TAA/TAG/TGA) at the
+ * and (crucially) that it does not carry a stop codon (TAA/TAG/TGA) at the
  * end, which would stop translation before the targeting peptide is attached.
  *
  * Runs the same validate_cargo() that the design itself uses, so the sequence

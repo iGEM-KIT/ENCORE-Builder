@@ -32,7 +32,7 @@ def evaluate_primer(primer_fw: str, primer_rv: str) -> dict:
     if not hetero_ok:
         issues.append(
             f"Heterodimer: ΔG = {hetero_dg} cal/mol "
-            f"(threshold: {HETERO_THRESHOLD} cal/mol) – too stable"
+            f"(threshold: {HETERO_THRESHOLD} cal/mol): too stable"
         )
 
     self_fw_dg = sd_fw.dg
@@ -40,7 +40,7 @@ def evaluate_primer(primer_fw: str, primer_rv: str) -> dict:
     if not self_fw_ok:
         issues.append(
             f"Homodimer (forward): ΔG = {self_fw_dg} cal/mol "
-            f"(threshold: {HOMODIMER_THRESHOLD} cal/mol) – too stable"
+            f"(threshold: {HOMODIMER_THRESHOLD} cal/mol): too stable"
         )
 
     self_rv_dg = sd_rv.dg
@@ -48,7 +48,7 @@ def evaluate_primer(primer_fw: str, primer_rv: str) -> dict:
     if not self_rv_ok:
         issues.append(
             f"Homodimer (reverse): ΔG = {self_rv_dg} cal/mol "
-            f"(threshold: {HOMODIMER_THRESHOLD} cal/mol) – too stable"
+            f"(threshold: {HOMODIMER_THRESHOLD} cal/mol): too stable"
         )
 
     hairpin_fw_dg = hp_fw.dg
@@ -56,7 +56,7 @@ def evaluate_primer(primer_fw: str, primer_rv: str) -> dict:
     if not hairpin_fw_ok:
         issues.append(
             f"Hairpin (forward): ΔG = {hairpin_fw_dg} cal/mol "
-            f"(threshold: {HAIRPIN_THRESHOLD} cal/mol) – too stable"
+            f"(threshold: {HAIRPIN_THRESHOLD} cal/mol): too stable"
         )
 
     hairpin_rv_dg = hp_rv.dg
@@ -64,7 +64,7 @@ def evaluate_primer(primer_fw: str, primer_rv: str) -> dict:
     if not hairpin_rv_ok:
         issues.append(
             f"Hairpin (reverse): ΔG = {hairpin_rv_dg} cal/mol "
-            f"(threshold: {HAIRPIN_THRESHOLD} cal/mol) – too stable"
+            f"(threshold: {HAIRPIN_THRESHOLD} cal/mol): too stable"
         )
 
     all_ok = len(issues) == 0
