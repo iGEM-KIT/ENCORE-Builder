@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-from __future__ import annotations
-
 """Primer-Pipeline: Primer schneiden, Tm balancieren, bewerten, Extensions anhängen.
 
 Zwei Nutzungsarten, dieselbe Logik:
@@ -15,6 +13,9 @@ Pakets ``Biologik.primer_design`` ist):
     python -m Biologik.primer_design.primer_pipeline sequenz.fasta
     python -m Biologik.primer_design.primer_pipeline sequenz.fasta --json
 """
+
+from __future__ import annotations
+
 
 import argparse
 import json

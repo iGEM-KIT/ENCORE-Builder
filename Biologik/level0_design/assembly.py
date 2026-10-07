@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """Level-1- und Level-2-Assemblierung per Golden Gate.
 
 Level 0 -> 1 (BsaI): BsaI schneidet aus jedem Level-0-Plasmid das Fragment vom Level-1-N- bis zum Level-1-C-
@@ -13,6 +11,9 @@ BbLvl2C des Level-2-Backbones (pESC-HIS).
 
 Alle Sequenzen sind der Top-Strand, 5' links -> 3' rechts. Das Cargo-Modul liegt darauf antisense (jedes Teil als
 Reverse Complement), die zugehoerigen CDS-Features tragen deshalb complement()."""
+
+from __future__ import annotations
+
 
 from .genbank_writer import format_genbank_record, location_span, make_feature, shift_location
 from .parts_db import find_part
@@ -100,7 +101,7 @@ def assemble_level1_module(fragments: list, label: str, site: str, antisense: bo
             seq = f["sequence"]
         else:
             if seq[-4:] != f["sequence"][:4]:
-                raise ValueError(f"{fr['type']}: Overhang {f['sequence'][:4]} passt nicht zum Vorgaenger ({seq[-4:]}).")
+                raise ValueError(f"{fr['type']}: overhang {f['sequence'][:4]} does not match the predecessor ({seq[-4:]}).")
             base = len(seq) - 4
             seq += f["sequence"][4:]
         ia, ib = f["insert"]
@@ -174,7 +175,7 @@ def clone_fragment_into_backbone(backbone: dict, fragment: str, features: list, 
     n0, n1 = location_span(oh5["location"])
     c0, c1 = location_span(oh3["location"])
     if fragment[:4] != seq[n0 - 1:n1] or fragment[-4:] != seq[c0 - 1:c1]:
-        raise ValueError(f"Die Overhangs des Fragments ({fragment[:4]}/{fragment[-4:]}) passen nicht zu "
+        raise ValueError(f"The overhangs of the fragment ({fragment[:4]}/{fragment[-4:]}) do not match "
                          f"{backbone['id']} ({seq[n0 - 1:n1]}/{seq[c0 - 1:c1]}).")
     new_seq = seq[:n0 - 1] + fragment + seq[c1:]
     tail_shift = len(fragment) - (c1 - n0 + 1)
@@ -193,7 +194,7 @@ def clone_fragment_into_backbone(backbone: dict, fragment: str, features: list, 
         elif keep_label and label == keep_label and (lo < n0 or hi > c1):
             loc = f["location"] if lo < n0 else shift_location(f["location"], tail_shift)
             if not _site_intact(new_seq, loc, keep_enzyme):
-                raise ValueError(f"{keep_enzyme}-Stelle {loc} ist nach dem Klonieren nicht intakt.")
+                raise ValueError(f"{keep_enzyme} site {loc} is not intact after cloning.")
         if loc is not None:
             quals = [(k, v) for k, vals in f["qualifiers"].items() if k != "translation" for v in vals]
             out.append({"type": f["type"], "location": loc, "qualifiers": quals})
@@ -203,7 +204,7 @@ def clone_fragment_into_backbone(backbone: dict, fragment: str, features: list, 
     for f in out:
         a, b = location_span(f["location"])
         if a < 1 or b > len(new_seq):
-            raise ValueError(f"Feature {f['location']} liegt ausserhalb des Plasmids.")
+            raise ValueError(f"Feature {f['location']} lies outside the plasmid.")
 
     definition = (f"{backbone['label']} with {what}: the {c1 - n0 + 1} bp between {oh5['label']} and {oh3['label']} "
                   f"(stuffer / test cassette) replaced by {len(fragment)} bp.")
@@ -278,7 +279,7 @@ def assemble_level2(modules: list, name: str, backbone: dict | None) -> dict:
             base, seq = 0, frag
         else:
             if seq[-4:] != frag[:4]:
-                raise ValueError(f"Level 2: Overhang {frag[:4]} von {m['label']} passt nicht zum Vorgaenger ({seq[-4:]}).")
+                raise ValueError(f"Level 2: overhang {frag[:4]} of {m['label']} does not match the predecessor ({seq[-4:]}).")
             base = len(seq) - 4
             seq += frag[4:]
         shift = base - 4                                  # Level-1-Koordinate -> Level-2-Koordinate

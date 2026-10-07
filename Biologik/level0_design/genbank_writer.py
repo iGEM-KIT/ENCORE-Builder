@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """Minimaler GenBank-Flatfile-Schreiber (keine externe Abhaengigkeit noetig,
 passend zum Rest des Repos; siehe commec-service/app.py fuer dieselbe
 Stdlib-only-Philosophie). Ersetzt den bisherigen reinen FASTA-Export: FASTA
@@ -11,6 +9,9 @@ zu erhalten statt sie beim Speichern zu verlieren.
 Ein "Feature" ist hier ein einfaches dict: {"type", "location", "qualifiers"}
 mit qualifiers als Liste von (key, value)-Paaren (Reihenfolge bleibt erhalten,
 value=None bedeutet ein Flag-Qualifier ohne Wert, z.B. /pseudo)."""
+
+from __future__ import annotations
+
 
 import re
 import textwrap
@@ -107,3 +108,11 @@ def format_backbone_record(entry: dict) -> str:
     ]
     name = entry["id"].split("-")[0]
     return format_genbank_record(name, entry["sequence"], features, entry.get("circular", True), entry.get("label", ""))
+
+
+def level0_record_name(label: str, slot: int, module: str, kind: str = "") -> str:
+    """Name eines Level-0-Records, an dem man Type und Site direkt erkennt: z.B. Level0.2_NCS_Cargo / Level0.2_NCS_NC
+    (mit `kind="Primers"`: Level0.2_Primers_NCS_Cargo). `module` ist "cargo"/"nc" (oder "cargo_site"/"nc_site")."""
+    site = "Cargo" if module.startswith("cargo") else "NC"
+    clean = re.sub(r"[^A-Za-z0-9.-]+", "-", label.replace("×", "x")).strip("-") or "part"
+    return "_".join(filter(None, (f"Level0.{slot}", kind, clean, site)))

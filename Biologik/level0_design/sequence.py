@@ -1,6 +1,7 @@
+"""Hilfsfunktionen für Cargo-Validierung."""
+
 from __future__ import annotations
 
-"""Hilfsfunktionen für Cargo-Validierung."""
 
 # In diesem Ordner wird die vom Benutzer frei eingegebene Cargo-Sequenzen (Gene of Interest) verarbeitet.
 # Es sind kleine, unabhängige Funktionen aufgeführt, auf denen die Validierung der Cargo-Sequenzen aufbaut. 

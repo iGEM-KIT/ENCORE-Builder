@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """Loader fuer Biologik/level0_design/parts/: die Sequenz-Datenbank fuer
 Golden-Gate-Standardteile (Level-0-Inserts: Shells, Cargos, Linker, Marker, TPs, NCS-Spacer;
 Promotoren, Terminatoren, Level-0/1/2-Ziel-Backbones, Type-Overhang-Adapter).
@@ -10,6 +8,9 @@ Selector gibt es hier KEINEN Build-Schritt zu einem generierten JS-Bundle:
 das laeuft serverseitig in Python (cli.py wird pro Request neu gestartet),
 daher werden die JSON-Dateien bei jedem Aufruf frisch von der Platte gelesen; eine neue/geaenderte Datei wirkt sofort, ohne Neustart oder Build.
 """
+
+from __future__ import annotations
+
 
 import json
 from pathlib import Path
@@ -39,10 +40,10 @@ def _read_kind(kind: str) -> list[dict]:
         try:
             entry = json.loads(path.read_text(encoding="utf-8"))
         except json.JSONDecodeError as error:
-            raise ValueError(f"parts/{kind}/{path.name} ist kein gueltiges JSON: {error}") from error
+            raise ValueError(f"parts/{kind}/{path.name} is not valid JSON: {error}") from error
         entry_id = entry.get("id")
         if not entry_id:
-            raise ValueError(f"parts/{kind}/{path.name} hat kein \"id\"-Feld.")
+            raise ValueError(f"parts/{kind}/{path.name} has no \"id\" field.")
         if entry_id in seen_ids:
             raise ValueError(f"parts/{kind}: id \"{entry_id}\" kommt doppelt vor (zuletzt in {path.name}).")
         seen_ids.add(entry_id)
@@ -95,3 +96,8 @@ def find_inserts(category: str, part: str | None = None, site: str | None = None
             continue
         out.append(entry)
     return out
+
+
+def find_library_cargo(sequence: str) -> dict | None:
+    """Der Cargo-Eintrag der Bibliothek, dessen Sense-Sequenz genau `sequence` ist (ein Toolkit-Teil, keine Nutzereingabe), sonst None."""
+    return next((e for e in find_inserts("cargo") if e["sequence"] == sequence), None)

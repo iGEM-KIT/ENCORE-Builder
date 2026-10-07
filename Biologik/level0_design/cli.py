@@ -22,9 +22,10 @@ import json
 import sys
 
 from .data import get_libraries
-from .design import build_genbank, codon_optimize_part, codon_summary, design_construct
+from .design import build_genbank, design_construct
 from .mrna_dimer import check_mrna_structure
 from .sequence import validate_cargo
+from .user_codons import codon_optimize_part, codon_summary
 
 
 def _read_payload() -> dict:

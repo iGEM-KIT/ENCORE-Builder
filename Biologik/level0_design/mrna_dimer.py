@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 """mRNA-Selbststruktur (optional, braucht ViennaRNA): nicht nur fuer die Cargo,
 sondern fuer JEDE vom Nutzer selbst eingegebene Sequenz (Cargo, eigene Shell,
 eigenes Modul), siehe cli.py cmd_validate().
@@ -33,6 +31,9 @@ Das ist eine thermodynamische MFE-Abschaetzung, KEINE Bindungswahrscheinlichkeit
 im kinetischen/Konzentrations-Sinn (dafuer fehlen intrazellulaere
 Konzentrationen und Kinetik-Daten, die dieses Tool nicht hat).
 """
+
+from __future__ import annotations
+
 
 import random
 

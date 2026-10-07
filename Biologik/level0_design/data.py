@@ -1,6 +1,7 @@
+"""Statische Daten und Konstanten für das Level-0-Design."""
+
 from __future__ import annotations
 
-"""Statische Daten und Konstanten für das Level-0-Design."""
 
 from .parts_db import find_inserts, load_parts
 from .genbank_writer import format_backbone_record

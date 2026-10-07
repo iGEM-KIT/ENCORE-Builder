@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-from __future__ import annotations
-
 """Sequenz-Beschaffung für das Primerdesign.
 
 Die Sequenz kann aus zwei Quellen kommen:
@@ -13,6 +11,9 @@ Deshalb ist das Einlesen in drei Teile zerlegt: ``parse_fasta`` (reiner Text,
 keine Datei-IO), ``read_fasta_sequence`` (Datei -> Sequenz, unverändertes
 Verhalten) und ``resolve_sequence`` (nimmt entgegen, was da ist).
 """
+
+from __future__ import annotations
+
 
 from pathlib import Path
 

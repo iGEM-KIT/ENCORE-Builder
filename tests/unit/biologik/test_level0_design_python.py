@@ -7,8 +7,10 @@ import sys
 import pytest
 
 from Biologik.level0_design.codon import cai, find_forbidden, optimize_cds, translate
-from Biologik.level0_design.design import (attach_adapter, build_genbank, codon_optimize_part, design_construct,
-                                           make_primer_pair)
+from Biologik.level0_design.adapters import attach_adapter
+from Biologik.level0_design.design import build_genbank, design_construct
+from Biologik.level0_design.primers import make_primer_pair
+from Biologik.level0_design.user_codons import codon_optimize_part
 from Biologik.level0_design.genbank_writer import location_span
 from Biologik.level0_design.parts_db import load_parts
 from Biologik.level0_design.sequence import is_protein, reverse_complement, validate_cargo
@@ -421,8 +423,10 @@ def test_level0_primers_carry_the_adapter_flanks_and_anneal_to_the_insert():
 
 
 def test_level0_primers_need_a_real_long_enough_insert(monkeypatch):
-    import Biologik.level0_design.design as design_module
-    monkeypatch.setattr(design_module, 'find_inserts', lambda *args, **kwargs: [])          # no inserts -> placeholders
+    import Biologik.level0_design.constructs as constructs_module
+    import Biologik.level0_design.parts_db as parts_db_module
+    monkeypatch.setattr(constructs_module, 'find_inserts', lambda *args, **kwargs: [])      # no inserts -> placeholders
+    monkeypatch.setattr(parts_db_module, 'find_inserts', lambda *args, **kwargs: [])
     design = _design(cargoSeq=_long_cargo())
     placeholder = next(c for c in design['level0Constructs'] if not c['isReal'])
     assert placeholder['primers']['possible'] is False
@@ -434,10 +438,10 @@ def test_level0_primers_need_a_real_long_enough_insert(monkeypatch):
 
 
 def test_level0_primers_flag_internal_restriction_sites(monkeypatch):
-    import Biologik.level0_design.design as design_module
+    import Biologik.level0_design.user_codons as user_codons_module
     cds = _long_cargo()
     cds = cds[:60] + 'GAAGAC' + cds[66:]                 # BbsI-Stelle mitten im Insert
-    monkeypatch.setattr(design_module, 'codon_optimize_part',
+    monkeypatch.setattr(user_codons_module, 'codon_optimize_part',
                         lambda sequence, module, slot, protein=False: optimize_cds(sequence) | {'sequence': sequence, 'optimized': False})
     design = _design(cargoSeq=cds)                       # ohne Optimierung bleibt die Stelle, und die Primer warnen davor
     pr = next(c for c in design['level0Constructs'] if c['module'] == 'cargo_site' and c['slot'] == 3)['primers']
@@ -574,10 +578,10 @@ def test_level2_is_the_bbsi_assembly_of_the_three_level1_modules():
 
 
 def test_internal_restriction_sites_are_reported_on_level1(monkeypatch):
-    import Biologik.level0_design.design as design_module
+    import Biologik.level0_design.user_codons as user_codons_module
     cds = _long_cargo()
     cds = cds[:60] + 'GGTCTC' + cds[66:]
-    monkeypatch.setattr(design_module, 'codon_optimize_part',
+    monkeypatch.setattr(user_codons_module, 'codon_optimize_part',
                         lambda sequence, module, slot, protein=False: optimize_cds(sequence) | {'sequence': sequence, 'optimized': False})
     cargo = _design(cargoSeq=cds)['level1Constructs'][0]     # ohne Optimierung bleibt die Stelle
     assert any('BsaI' in s and 'GFP' in s for s in cargo['internalSites'])
