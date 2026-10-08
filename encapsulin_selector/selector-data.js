@@ -8,6 +8,7 @@ window.ENCAPSULIN_SELECTOR_DATA = {
     "alpha_policy": "Physical filtering uses the assemblies sheet. Candidate-level search uses databank. Incomplete pore/evidence/audit sheets are not used for hard filtering.",
     "candidate_count": 74,
     "assembly_count": 51,
+    "sequence_count": 74,
     "candidates_with_curated_assemblies": 18
   },
   "candidates": [
@@ -43,7 +44,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A010Z2Q7",
       "curator_notes": "Predicted Type 1 encapsulin shell protein from Cryptosporangium arvum. No direct experimental shell characterization identified. Pending systematic genomic-context cargo audit.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A024K4U0",
@@ -77,7 +79,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A024K4U0",
       "curator_notes": "Predicted Type 1 encapsulin shell protein from Mycobacterium triplex. No direct experimental shell characterization identified. Pending systematic genomic-context cargo audit.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A051TTE2",
@@ -111,7 +114,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A051TTE2",
       "curator_notes": "Unreviewed predicted Type 1 shell (locus K875_05177). Taxonomic context places the source strain within the M. avium complex / M. colombiense rather than M. tuberculosis H37Rv; do not treat as a duplicate of I6WZG6.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A064CFW5",
@@ -145,7 +149,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A064CFW5",
       "curator_notes": "Potential peroxidase cargo candidate Y900_009670 identified by genomic adjacency to predicted shell gene Y900_009675; not experimentally demonstrated. Pending systematic genomic-context cargo audit.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A066Z7H2",
@@ -179,7 +184,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A066Z7H2",
       "curator_notes": "Unreviewed predicted Type 1 shell from Kitasatospora cheerisanensis KCTC 2395. No direct characterization identified. Pending systematic genomic-context cargo audit.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A069RM29",
@@ -213,7 +219,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A069RM29",
       "curator_notes": "Unreviewed predicted Type 1 shell from Peptoclostridium litorale DSM 5388. No direct characterization identified. Pending systematic genomic-context cargo audit.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A072NMH9",
@@ -247,7 +254,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A072NMH9",
       "curator_notes": "Unreviewed predicted Type 1 shell from Schinkia azotoformans MEV2011. Formerly reported as Bacillus azotoformans MEV2011. No direct characterization identified.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A076EZF5",
@@ -281,7 +289,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A076EZF5; InterPro PIRSF019254; Rahmanpour & Bugg 2013 (R. opacus B4 homologous system)",
       "curator_notes": "Unreviewed predicted Type 1 shell from Rhodococcus opacus. Type 1 encapsulin-DypB systems are described in other R. opacus strains, but those observations were not assigned directly to A0A076EZF5. Pending systematic genomic-context cargo audit.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A077LYF1",
@@ -315,7 +324,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A077LYF1; InterPro PIRSF019254",
       "curator_notes": "Unreviewed predicted Type 1 shell from Nostocoides japonicum T1-X7. InterPro/PIRSF019254 also classifies it as a Type 1 shell. Formerly classified as Tetrasphaera japonica.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A0B2BNB7",
@@ -349,7 +359,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A0B2BNB7",
       "curator_notes": "Predicted Type 1 encapsulin shell protein from Mumia flava. No direct experimental shell characterization identified. Pending systematic genomic-context cargo audit.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A0B5DEK1",
@@ -383,7 +394,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A0B5DEK1",
       "curator_notes": "Unreviewed predicted Type 1 shell from Streptomyces nodosus. Literature on \"encapsulated Streptomyces nodosus\" refers to artificial immobilization of cells in alginate capsules and is unrelated to encapsulin nanocompartments.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A0B5IIS0",
@@ -417,7 +429,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A0B5IIS0",
       "curator_notes": "Predicted Type 1 shell from Streptomyces vietnamensis GIMV4.0001T. No direct experimental shell characterization identified. Pending systematic genomic-context cargo audit.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A0B8N630",
@@ -451,7 +464,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A0B8N630",
       "curator_notes": "Predicted Type 1 shell from Nocardia seriolae. Proteome context is consistent with strain N-2927 (NBRC 110360), but no direct shell characterization was identified.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A0B8ZXE8",
@@ -485,7 +499,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A0B8ZXE8",
       "curator_notes": "Predicted Type 1 shell from Brevibacterium linens. Q45296 is a same-species structurally characterized entry; equivalence was not established, so no properties were transferred.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A0D0PGX2",
@@ -519,7 +534,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A0D0PGX2",
       "curator_notes": "Predicted Type 1 shell from Kitasatospora griseola (syn. Streptomyces griseolosporeus). No direct experimental shell characterization identified.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A0D1L751",
@@ -553,7 +569,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A0D1L751",
       "curator_notes": "Predicted Type 1 shell from Mycolicibacterium llatzerense. No direct characterization identified. Taxonomic naming differs between LPSN and UniProt/NCBI.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A0D1VV73",
@@ -587,7 +604,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A0D1VV73",
       "curator_notes": "Predicted Type 1 shell from Aneurinibacillus migulanus (syn. Bacillus migulanus). No direct experimental shell characterization identified.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A0D5NS11",
@@ -621,7 +639,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A0D5NS11",
       "curator_notes": "Predicted Type 1 shell from Paenibacillus beijingensis. No direct experimental shell characterization identified.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A0D8BGZ0",
@@ -655,7 +674,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A0D8BGZ0",
       "curator_notes": "Predicted Type 1 shell from Frankia torreyi. No direct experimental shell characterization identified.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A0F5HPP7",
@@ -689,7 +709,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "Giessen et al. 2019 eLife 8:e46070 (PMC6668986); PDB 6NJ8",
       "curator_notes": "Largest confirmed encapsulin in this set: T=4, 240 subunits, 42 nm, 9.6 MDa. Both 3- and 5-fold pores are negatively charged. Melting temperature reported as 86.6 °C.",
       "missing_fields_for_curation": null,
-      "assembly_count": 7
+      "assembly_count": 7,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A0M0F5E2",
@@ -723,7 +744,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A0M0F5E2",
       "curator_notes": "Unreviewed UniProt Type 1 encapsulin shell protein prediction. No direct structural or biophysical characterization identified. Literature on C. cellulans F16 concerns a distinct xylanosome-like complex and was not assigned to this encapsulin.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A1G9WS71",
@@ -757,7 +779,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "PDB 9I8E/9I8F (deposited); RSC Materials Advances 2025 DendroEnc study",
       "curator_notes": "DendroEnc: T=4, 240 subunits, ~40 nm. Legacy row reports a ~1.0 nm pore. Heterologous cargo loading was demonstrated via a C-terminal targeting peptide.",
       "missing_fields_for_curation": null,
-      "assembly_count": 2
+      "assembly_count": 2,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A1H8IZ71",
@@ -791,7 +814,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A1H8IZ71; genome annotation for L. thermophila (BacDive/IMG)",
       "curator_notes": "Unreviewed predicted Type 1 shell. Shell annotation is also present in the L. thermophila genome annotation. No direct structural characterization identified; host growth temperature was not assigned as shell thermostability.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A1I3S7Z3",
@@ -825,7 +849,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A1I3S7Z3",
       "curator_notes": "Unreviewed predicted Type 1 shell. No direct PDB/EMDB, T-number, shell diameter, pore or loading characterization identified. Host thermophily was not assigned as shell thermostability.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A1M7LGP9",
@@ -859,7 +884,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A1M7LGP9; Anuchina et al. 2025, bioRxiv 10.1101/2025.09.13.676036",
       "curator_notes": "Unreviewed predicted Type 1 shell. A double ferritin-like protein from C. acetigignens was experimentally studied and is a plausible cargo candidate, but direct assignment to this shell requires confirmation. Host thermophily was not assigned as shell thermostability.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A1Q8Q3M0",
@@ -893,7 +919,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A1Q8Q3M0",
       "curator_notes": "Unreviewed predicted Type 1 shell. No direct structural characterization identified. Reports that the organism is capsule-forming refer to a bacterial cell capsule and are unrelated to encapsulin nanocompartments.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A1Y2N7J2",
@@ -927,7 +954,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A1Y2N7J2",
       "curator_notes": "Predicted Type 1 shell from Pseudonocardia autotrophica (syn. Amycolata autotrophica / Nocardia autotrophica). No direct experimental shell characterization identified.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A2I0SNU0",
@@ -961,7 +989,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A2I0SNU0",
       "curator_notes": "Predicted Type 1 encapsulin shell protein from Streptomyces populi. No direct experimental shell characterization identified. Pending systematic genomic-context cargo audit.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A2T2X7V6",
@@ -995,7 +1024,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A2T2X7V6",
       "curator_notes": "Unreviewed predicted Type 1 shell. No direct characterization identified. Host acidophily/thermotolerance was not assigned as a shell stability property.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A4R6RVW8",
@@ -1029,7 +1059,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A4R6RVW8",
       "curator_notes": "Predicted Type 1 encapsulin shell protein from Labedaea rhizosphaerae. No direct experimental shell characterization identified. Pending systematic genomic-context cargo audit.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A502IA18",
@@ -1063,7 +1094,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A502IA18; GenBank WP_113757162.1; Babar et al. 2023",
       "curator_notes": "Curator-selected replacement for A0A075R6D8. This accession corresponds to the experimentally investigated ~30 kDa putative encapsulating protein from Brevibacillus laterosporus Bl 1821L. Purified preparations showed globular/capsid-like structures by TEM; no quantitative shell metrics were curated.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 1
+      "assembly_count": 1,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A511V6Y5",
@@ -1097,7 +1129,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A511V6Y5",
       "curator_notes": "Unreviewed predicted Type 1 shell from Aneurinibacillus danicus. No direct characterization identified. Isolation/cultivation temperature was not assigned as shell thermostability.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A5A7NS64",
@@ -1131,7 +1164,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A5A7NS64",
       "curator_notes": "Unreviewed predicted Type 1 shell from Zafaria cholistanensis. No direct characterization identified. Host thermotolerance/halotolerance was not assigned as a shell stability property.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A7V9Z0Q3",
@@ -1165,7 +1199,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A7V9Z0Q3",
       "curator_notes": "Unreviewed predicted Type 1 shell (locus HNQ85_002226). No direct characterization identified. Taxonomy may require later update from [Anoxybacillus] calidus to Paranoxybacillus calidus.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A8J8KA31",
@@ -1199,7 +1234,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A8J8KA31",
       "curator_notes": "Unreviewed predicted Type 1 shell from Calidifontibacillus erzurumensis. No direct characterization identified. Host cultivation at 55 °C was not assigned as shell thermostability.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A938BNS5",
@@ -1233,7 +1269,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A938BNS5",
       "curator_notes": "Unreviewed predicted Type 1 shell from a Candidatus Tanganyikabacteria bacterium recovered from Lake Tanganyika metagenome-assembled genomes. No direct characterization identified.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A951QF54",
@@ -1267,7 +1304,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A951QF54",
       "curator_notes": "Unreviewed predicted Type 1 shell from Drouetiella hepatica Uher 2000/2452. No direct characterization identified; the source genome was recovered in a metagenomic sequencing project.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0A9Y2KYQ9",
@@ -1301,7 +1339,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0A9Y2KYQ9",
       "curator_notes": "Unreviewed predicted Family 1 shell from Parasedimentitalea psychrophila. No direct characterization identified. Host psychrophily was not assigned as shell stability.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0AAT8XUH9",
@@ -1335,7 +1374,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "Jones, Andreas & Giessen 2024 Nat Commun 15:2558 (10.1038/s41467-024-46880-x, PMID 38519509); PDB 8U50/8U51/8U4Z",
       "curator_notes": "T=1, 24 nm. Two open pores are reported: 5-fold ~0.9 nm and 3-fold ~0.3 nm. The 5-fold pore has a negative-exterior to positive-interior charge gradient.",
       "missing_fields_for_curation": null,
-      "assembly_count": 1
+      "assembly_count": 1,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0ABN3ZYW6",
@@ -1369,7 +1409,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0ABN3ZYW6",
       "curator_notes": "Unreviewed predicted Type 1 shell from Geobacillus thermoleovorans CCB_US3_UF5. No direct characterization identified. Host cultivation at 60 °C was not assigned as shell thermostability.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0ABP7DFF1",
@@ -1403,7 +1444,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0ABP7DFF1",
       "curator_notes": "Unreviewed predicted Type 1 shell from Arthrobacter ginkgonis. A Family 1 shell annotation is also present in the genome; no direct structural characterization identified.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0ABQ6QMW9",
@@ -1437,7 +1479,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0ABQ6QMW9",
       "curator_notes": "Unreviewed predicted Family 1 shell from Corallococcus caeni. No direct characterization identified; available literature primarily concerns taxonomy and draft genome sequencing.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0ABS5L717",
@@ -1471,7 +1514,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0ABS5L717",
       "curator_notes": "Unreviewed predicted Type 1 shell from Catenulispora pinistramenti. No direct characterization identified; available literature concerns taxonomy, genomics and biosynthetic potential.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0ABS9H0C8",
@@ -1505,7 +1549,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0ABS9H0C8",
       "curator_notes": "Unreviewed predicted Type 1 shell from Pseudalkalibacillus berkeleyi. No direct characterization identified. Former taxonomic names and host growth range were not treated as shell properties.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0ABT4AA91",
@@ -1539,7 +1584,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0ABT4AA91",
       "curator_notes": "Unreviewed predicted Family 1 shell from Archangium lansingense. No direct characterization identified. Archangium lansingense is the corrected species spelling used in the curated note.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0ABT5CZW5",
@@ -1573,7 +1619,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0ABT5CZW5",
       "curator_notes": "Unreviewed predicted Family 1 shell. UniProt protein existence is inferred from homology. No direct characterization identified; the species has been transferred to Allostigmatella ashevillensis while UniProt retains Stigmatella ashevillensis.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0ABU5HDM0",
@@ -1607,7 +1654,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0ABU5HDM0",
       "curator_notes": "Unreviewed predicted Family 1 shell from Hyalangium rubrum. No direct characterization identified. Hyalangium rubrum is the corrected species name.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0ABU9D8Y7",
@@ -1641,7 +1689,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0ABU9D8Y7",
       "curator_notes": "Unreviewed predicted Family 1 shell from Thermithiobacillus plumbiphilus. No direct characterization identified; host sulfur-oxidizing physiology was not assigned to the shell.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0ABW2RFE6",
@@ -1675,7 +1724,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0ABW2RFE6",
       "curator_notes": "Unreviewed predicted Type 1 shell from Laceyella putida. No direct characterization identified. Former taxonomic name and host cultivation temperature were not assigned as shell properties.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0ABY8J3I8",
@@ -1709,7 +1759,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0ABY8J3I8",
       "curator_notes": "Unreviewed predicted Type 1 shell (locus P9989_19335) from Halobacillus naozhouensis. No direct characterization identified; host salt tolerance was not assigned as shell stability.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0ABZ0HWD7",
@@ -1743,7 +1794,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt A0ABZ0HWD7",
       "curator_notes": "Unreviewed predicted Family 1 shell (locus RZS28_08075) from Methylocapsa polymorpha RX1. A different encapsulin from related M. acidiphila has been characterized, but those measurements were not transferred.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A0R4H0",
@@ -1777,7 +1829,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "Cryo-EM M. smegmatis DyP encapsulin: PNAS 2021 (10.1073/pnas.2025658118, PMC8072242); PDB 7BOJ",
       "curator_notes": "Family 1, T=1, ~24 nm, ~2.5 nm shell thickness. Pentameric pore ~0.68 nm; additional holes are reported at threefold and twofold-related interfaces.",
       "missing_fields_for_curation": null,
-      "assembly_count": 1
+      "assembly_count": 1,
+      "sequence_count": 1
     },
     {
       "candidate_id": "A5IJ00",
@@ -1811,7 +1864,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": null,
       "curator_notes": "No direct experimental shell structure located for A5IJ00/T. petrophila. Structural properties of Q9WZP2 in the legacy row are homolog-based inference and must not be treated as direct measurements.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "B1L7S2",
@@ -1845,7 +1899,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": null,
       "curator_notes": "No direct experimental shell structure located for B1L7S2. Structural properties of Q9WZP2 in the legacy row are homolog-based inference and must not be treated as direct measurements.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "C0ZVK4",
@@ -1879,7 +1934,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "Tamura et al. 2015 Biotechnol Bioeng 112:13-20 (10.1002/bit.25322)",
       "curator_notes": "C0ZVK4 is the R. erythropolis PR4 encapsulin gene adjacent to DyP C0ZVK5. The 60-mer/28 nm physical characterization was performed on the very closely related N771 encapsulin; treat these values as close-homolog evidence, not direct C0ZVK4 measurements.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "D0LZ74",
@@ -1913,7 +1969,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "Ross et al. 2022 Sci Adv 8:eabj4461 (10.1126/sciadv.abj4461, PMID 35080974); PDB 7ODW/7OE2/7OEU",
       "curator_notes": "T=1. The 5-fold pore is dynamic, with closed (7OE2) and open (7OEU) states; the open state is ~1.5 nm. Shell diameter ~21 nm is reported for empty and EncFtn-loaded particles.",
       "missing_fields_for_curation": null,
-      "assembly_count": 2
+      "assembly_count": 2,
+      "sequence_count": 1
     },
     {
       "candidate_id": "I3E3I1",
@@ -1947,7 +2004,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "PDB 9FY6 (deposited); thesis / subsequent BmEnc characterization",
       "curator_notes": "BmEnc is reported as T=4. No quantitative shell diameter or pore dimension was curated in the source row. CLP-mediated cargo loading has been investigated.",
       "missing_fields_for_curation": "shell_diameter;pore_data",
-      "assembly_count": 1
+      "assembly_count": 1,
+      "sequence_count": 1
     },
     {
       "candidate_id": "I3NID5",
@@ -1981,7 +2039,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "PMC8049743 (MAP2121c/SrpI homolog study)",
       "curator_notes": "MAP2121c is a pathogenic-mycobacterial SrpI homolog previously studied as a highly antigenic protein and directly associates with MAP2120c cysteine desulfurase. Legacy structural values derive from the SrpI homolog system.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "I6WZG6",
@@ -2015,7 +2074,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "Mtb-Enc.DyP crystal: Microorganisms 2024 (10.3390/microorganisms12122465, PMC11676171); TEM ~25 nm: eLife 2021 (10.7554/eLife.74358)",
       "curator_notes": "T=1, 60 subunits, ~24-25 nm. 5- and 3-fold pore dimensions are reported; no clear pore was identified at the twofold symmetry point in the cited structural description. A0A045HTX8 was excluded as a redundant former accession.",
       "missing_fields_for_curation": null,
-      "assembly_count": 6
+      "assembly_count": 6,
+      "sequence_count": 1
     },
     {
       "candidate_id": "K5BEG2",
@@ -2049,7 +2109,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "PDB 6I9G (deposited); primary M. hassiacum encapsulin characterization",
       "curator_notes": "T=1, 60 protomers, 23 nm shell. Legacy pore range 0.5-0.9 nm. Shell thickness 2-2.5 nm; oligomeric shell stable up to 50 °C and resistant to trypsin and proteinase K.",
       "missing_fields_for_curation": null,
-      "assembly_count": 1
+      "assembly_count": 1,
+      "sequence_count": 1
     },
     {
       "candidate_id": "K7RV67",
@@ -2083,7 +2144,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "Giessen 2024 ChemBioChem (10.1002/cbic.202400535, PMC11664910); PDB 8DN9/8DNA/8DNL",
       "curator_notes": "T=1, 60 protomers, ~24 nm. Strongly pH-responsive 5-fold pore dynamics; both states observed at pH 7.5 and only the closed state at pH 3.0. Overall exterior surface is negatively charged.",
       "missing_fields_for_curation": null,
-      "assembly_count": 1
+      "assembly_count": 1,
+      "sequence_count": 1
     },
     {
       "candidate_id": "P46841",
@@ -2117,7 +2179,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt P46841",
       "curator_notes": "Reviewed Type 2A shell annotation. UniProt reports T=1/24 nm and probable CyD encapsulation by similarity; keep those claims explicitly marked as by similarity.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "P61996",
@@ -2151,7 +2214,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt P61996; Menon et al. 2009",
       "curator_notes": "Reviewed putative Type 4B A-domain encapsulin from Pyrococcus furiosus. The 99-aa length is characteristic of Family 4B. PF1875 co-fractionated with upstream GAPDH PF1874, but shell assembly and cargo encapsulation were not demonstrated.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "P61997",
@@ -2185,7 +2249,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt P61997",
       "curator_notes": "Reviewed putative Type 4B A-domain encapsulin from Pyrococcus woesei. The 99-aa length is characteristic of Family 4B and does not indicate a fragment. The protein is encoded downstream of GAPDH, but shell assembly and cargo encapsulation have not been demonstrated.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "Q0SE23",
@@ -2219,7 +2284,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt/UniParc Q0SE23; Rahmanpour & Bugg 2013",
       "curator_notes": "Experimentally characterized Type 1 shell from Rhodococcus jostii RHA1 (RHA1_ro02408). Q0SE23 is obsolete in UniProtKB and retained in UniParc UPI0000DBA11E. Native shells were ~22 nm by DLS; DypB loading and pH-dependent disassembly/reassembly were reported.",
       "missing_fields_for_curation": "T_number;pore_data",
-      "assembly_count": 2
+      "assembly_count": 2,
+      "sequence_count": 1
     },
     {
       "candidate_id": "Q1D6H4",
@@ -2253,7 +2319,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "McHugh et al. 2014 eLife (PDB 4PT2); Eren et al. 2022 (PDB 7S20); EncD: PNAS 2024 (10.1073/pnas.2400426121)",
       "curator_notes": "Predominant T=3 (~94% native), 180 subunits, 32 nm external / 26 nm internal. EncA can also form a minor T=1 (~18 nm); T=1 is only formed in the absence of a co-expressed cargo protein. 2-fold pore closed; 3-fold pore electropositive outside/electronegative inside; 5-fold electronegative outside/neutral inside.",
       "missing_fields_for_curation": null,
-      "assembly_count": 8
+      "assembly_count": 8,
+      "sequence_count": 1
     },
     {
       "candidate_id": "Q1Q6L7",
@@ -2287,7 +2354,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt Q1Q6L7; Giessen & Silver 2017; Tracey et al. 2026",
       "curator_notes": "Reviewed experimentally characterized Type 1 encapsulin from Kuenenia stuttgartiensis. Unusual N-terminal diheme-cytochrome-encapsulin fusion; full-length cEnc forms ~33 nm capsids and NIR-domain loading was demonstrated. A construct lacking the cytochrome domain forms ~29 nm capsids.",
       "missing_fields_for_curation": "pore_data",
-      "assembly_count": 2
+      "assembly_count": 2,
+      "sequence_count": 1
     },
     {
       "candidate_id": "Q2RVS0",
@@ -2321,7 +2389,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "R. rubrum encapsulin literature; PDB 9RY4",
       "curator_notes": "Rhodospirillum rubrum Type 1 encapsulin. T=1 and ~24 nm particle size are reported. Legacy row flags pore behavior as dynamic but does not isolate a numerical pore diameter.",
       "missing_fields_for_curation": null,
-      "assembly_count": 2
+      "assembly_count": 2,
+      "sequence_count": 1
     },
     {
       "candidate_id": "Q45296",
@@ -2355,7 +2424,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "Valdes-Stauber & Scherer 1994 AEM 60:3809-3814 (10.1128/AEM.60.10.3809-3814.1994); PDB 7BCV",
       "curator_notes": "First encapsulin historically described. T=1; shell diameter ~22.8 nm in the cited reconstruction. Legacy pore range 0.5-0.8 nm. Cargo identity for the exact strain should remain cautiously interpreted.",
       "missing_fields_for_curation": null,
-      "assembly_count": 2
+      "assembly_count": 2,
+      "sequence_count": 1
     },
     {
       "candidate_id": "Q48899",
@@ -2389,7 +2459,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt Q48899",
       "curator_notes": "Reviewed Type 2A shell annotation from Mycobacterium avium. UniProt reports T=1, ~24 nm and probable CyD encapsulation by similarity; no direct structural characterization was curated.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "Q55032",
@@ -2423,7 +2494,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "Nichols/LaFrance et al. 2021 eLife (10.7554/eLife.59288); PDB 6X8M (holo)/6X8T (apo)",
       "curator_notes": "Family 2A (SrpI), T=1, 60 subunits, 24.5 nm reported. The 5-fold pore is ~0.37 nm and positively charged. N-terminal cargo loading is the key Family-2A distinction.",
       "missing_fields_for_curation": null,
-      "assembly_count": 2
+      "assembly_count": 2,
+      "sequence_count": 1
     },
     {
       "candidate_id": "Q743F5",
@@ -2457,7 +2529,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "UniProt Q743F5",
       "curator_notes": "Reviewed Type 1 shell annotation from Mycolicibacterium paratuberculosis. Legacy shell size 23-24 nm and DyP loading context are retained as annotation/context; no direct PDB was curated.",
       "missing_fields_for_curation": "T_number;shell_diameter;pore_data",
-      "assembly_count": 0
+      "assembly_count": 0,
+      "sequence_count": 1
     },
     {
       "candidate_id": "Q8U1L4",
@@ -2491,7 +2564,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "Akita et al. 2007 J Mol Biol 368:1469-1483 (10.1016/j.jmb.2007.02.075); PDB 2E0Z; fusion-Flp review PMC9944552",
       "curator_notes": "Shell-cargo fusion, not a plain shell. T=3, 180 subunits, ~30-32 nm reported; the legacy row reports ~0.5 nm pores and pore locations at 2-/3-/5-fold-related sites.",
       "missing_fields_for_curation": null,
-      "assembly_count": 1
+      "assembly_count": 1,
+      "sequence_count": 1
     },
     {
       "candidate_id": "Q9WZP2",
@@ -2525,7 +2599,8 @@ window.ENCAPSULIN_SELECTOR_DATA = {
       "curation_source": "Sutter et al. 2008 Nat Struct Mol Biol 15:939-947 (10.1038/nsmb.1473); PDB 3DKT; pore ~3 A from ACS Appl Bio Mater 2024 (10.1021/acsabm.3c01153); FLP/FMN: Sci Rep 2021 (10.1038/s41598-021-01932-w)",
       "curator_notes": "T=1/60 subunits, 23-24 nm reported. 5-fold pore ~3 A (0.3 nm), narrow and dynamic; engineered pore variants exist. Reference encapsulin.",
       "missing_fields_for_curation": null,
-      "assembly_count": 9
+      "assembly_count": 9,
+      "sequence_count": 1
     }
   ],
   "assemblies": [
@@ -3821,6 +3896,1044 @@ window.ENCAPSULIN_SELECTOR_DATA = {
         "approximate": false,
         "kind": "point"
       }
+    }
+  ],
+  "sequences": [
+    {
+      "sequence_link_id": "A0A010Z2Q7_seq1",
+      "candidate_id": "A0A010Z2Q7",
+      "protein_accession": "WP_035851135.1",
+      "nucleotide_accession": "NZ_KK073874.1",
+      "cds_start": 2980712,
+      "cds_end": 2981512,
+      "strand": "+",
+      "cds_length_nt": 801,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_KK073874.1?report=genbank&log$=seqview&from=2980712&to=2981512",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "GTGAACAACCTGTACCGCGAGCTCGCACCGATCTCCGACGCCGCCTGGGCCGACATCGAGACCGAGGCCAAGCGCACGTTCACCCGCCACGTCGCCGCCCGCCGGGTCGTCGACGTGCTCGGTCCGTCCGGTGAGGAGCTGTCCGCCGTCGGCACCGGGCACCTGACCGAACTCACGGCACCGGCCGAGGGGGTGCTCGCCCGCAAGCGGGTCGTGCAGCCGATCGTGGAGTTCCGCGTGCCGTTCGTCGTCGACCGCCAGGCCGTGGACGACGTGGAGCGCGGCGCGAAGGACTCCGACTGGCAGCCGGTGAAGGACGCCGCGAAGGCGCTGGCGTTCGCCGAGGACCGCGCGATCCTCGACGGGTACGCGGCCGCGAACGTCACCGGTCTGCGGCCGGGCAGCTCGAACTCCGCGATCGCGCTGCCGGCCGACGTCCGCGAATACCCGAACGCGGTCGCCCAGGCGATCACGGCGCTGCGCCTGGCCGGTGTGGACGGCCCGTACAGCCTCCTGCTCTCGGCCGAGGCCTACACCGCCGTGGCCGAGACCGCCGACCACGGCTACCCGATCCACGAGCACATCGCCCGGGTGCTGCGCGACGGCGAGATCATCTGGGCGCCCGCCATCGACGGCGCGGTCGTGCTCTCCACCCGCGGCGGCGACTACGAGCTCCACCTCGGCCAGGACGTGTCGATCGGCTACCTCTCGCACGACGCGAACAGCATCGAGCTGTACTTCCAGGAATCCCTGACGTTCATCGTCCAGACCACCGAGGCCGCGGTGAACCTCACGGCCTGA"
+    },
+    {
+      "sequence_link_id": "A0A024K4U0_seq1",
+      "candidate_id": "A0A024K4U0",
+      "protein_accession": "WP_036471626.1",
+      "nucleotide_accession": "NZ_HG964446.1",
+      "cds_start": 5651357,
+      "cds_end": 5652157,
+      "strand": "+",
+      "cds_length_nt": 801,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_HG964446.1?report=genbank&log$=seqview&from=5651357&to=5652157",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGAAGAACAACCTCTACCGCGAACTAGCGCCGATCACCGACGCCGCATGGGCCGAAATCGAATTGGAGGCGACGCGGACGTTCAAACGGCACATCGCGGGGCGGCGGGTGGTCGACGTGAGCGAGCCCGGCGGTCCGGTCACCGCCGCGGTCAGCACCGGACGCCTACAGGACGTGGCGGCGCCCACCGACGGTGTGATTGCGCACCTACGGGCCAGCAAACCGCTTGTCCGCCTGCGGGTTCCATTCACATTGTCACGTGACGAGATCGACGACGTCGAGCGCGGCTCGCAGGACTCCGACTGGGACCCGGTGAAAGCCGCCGCCAAGAAGCTGGCGTTCGTCGAGGACCGCGCCATCTTCGAGGGCTACCCCGCCGCGTCGATCGACGGGATCCGCAACTGCAGCTCGAACCCGGCGCTGATGTTGCCCGACGACCCTCGCGCGATTCCCGACATCATCACGCAGGCGCTGTCCGAGCTGCGGCTGGCCGGGGTCGACGGCCCGTATTCGGTGCTGCTGTCTGCCGATATCTACACCAAGGTCAGCGAAACCACCGAGCACGGCTATCCGATCCTCGAGCACATCAACCGCCTGGTGAACGGCGACATCATCTGGGCGCCCGCCATCGACGGCGCGTTCGTGCTGACCACCCGCGGCGGTGACTTCGATCTGCAATTGGGCACCGACGTCTCCATCGGCTACACCAACCACGACGCCGACAACGTGCAGCTGTATCTGCAGGAGACGATGACGTTCCTGTGCTACACCGCCGAGGCGTCGGTCGCCCTGGGCACCTAG"
+    },
+    {
+      "sequence_link_id": "A0A051TTE2_seq1",
+      "candidate_id": "A0A051TTE2",
+      "protein_accession": "WP_044487416.1",
+      "nucleotide_accession": "NZ_KK328284.1",
+      "cds_start": 5528988,
+      "cds_end": 5529785,
+      "strand": "+",
+      "cds_length_nt": 798,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_KK328284.1?report=genbank&log$=seqview&from=5528988&to=5529785",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGAACAACCTCTACCGCGACCTGGCACCGGTCACCGACGCCGCTTGGGAAGAAATCGAATTGGAGGCGACCCGCACCTTCAAGCGCCACATCGCCGGGCGCCGGGTTGTCGACGTCAGCGAGCCCGGCGGCCCGGTGACGGCCGCGGTGAGCACCGGACGGCTGGCCAGCGTGGCGTCCCCCACCGACGGCGTCGAGGCACACCTGCGGGAAAGCAAACCGCTTGTCCGGCTGCGGGTTCCGTTCACATTGTCGCGTTACGAGATCGACAACGTCGAGCGGGGCGCCAACGACTCCGACTGGGACCCGGTCAAGGAGGCGGCCAAGAAGTTGGCGTTCGTGGAAGACCGGGCCATCTTCGAGGGCTACGCCGCGGCGTCCATCGAGGGCATCCGCTCGGCCAGCTCGAACAAGTCCCTGACCCTGCCGGCGGATCCGCGCGAGATTCCCGACGTCATCACCCAGGCGATCTCCGAACTCCGGCTGGCCGGTGTCGACGGCCCGTACTCGGTGCTGCTGTCCGCGGACGTCTACACGAAGGTCAGCGAGACGACCGAACACGGCTATCCGATCCTCGAACACATCGACCGGCTGGTCCCCGGAGACATCATCTGGGCGCCGGCCATCGACGGCGCCTTCGTGCTGACCACCCGCGGCGGCGACTTCGATCTACAGCTCGGGCACGACGTGTCGATCGGATACACCAGCCATGACGCGGACACCGTGCAGCTCTATCTTCAGGAGACGCTGACCTTCCTGTGCTACACCGCCGAGGCGTCCGTCCCGCTCAGCCCGTAG"
+    },
+    {
+      "sequence_link_id": "A0A064CFW5_seq1",
+      "candidate_id": "A0A064CFW5",
+      "protein_accession": "WP_036341619.1",
+      "nucleotide_accession": "NZ_JALN02000001.1",
+      "cds_start": 1956881,
+      "cds_end": 1957678,
+      "strand": "+",
+      "cds_length_nt": 798,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_JALN02000001.1?report=genbank&log$=seqview&from=1956881&to=1957678",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGAACAACCTCTACCGCGAGCTCGCTCCGATCACCGAATCGGCTTGGAGTGAAATCGAATTGGAGGCCAGCCGGACGTTCAAGCGGCATATTGCAGGCCGTCGCGTCGTCGACGTCAGCGAGCCTGGAGGTCCGGTGACGGCCGGGGTGAGCACCGGTCATCTGCGCGACGTGGCGGCGCCGGCCGACGGCGTGCTGGCGCACCTTCGGGAATCCAAGCCGCTGGTTCGGCTGCGGGTGCCGTTCACGGTGTCGCGCACCGCGATCGACGACGTGGAGCGCGGTGCGCAGGACTCGGACTGGGATCCGGTCAAGGCCGCGGCCAAGAAGCTGGCGTTCATCGAGGACCGCGCGATCTTCGAGGGCTACCAGGAGGCCTCGATCGACGGTATTCGGATGTGCAGCTCGAACCCGGCGTTGACCCTGCCGGAGGATGCCCGCGAGTACCCCGACGTCTTCGCCCAGGCGCTCTCGGAACTTCGGCTGGCCGGCGTGGACGGTCCCTACTCGGTGTTGCTGTCCGCCGACGCCTACACCAAGGTCAGTGAAACCACCGAGCACGGCTATCCGCTCCTGGAGCACCTCAACCGGCTGGTCGACGGTGAGATCATCTGGGCGCCCGCGATCGACGGCGCGTTCCTGCTGAGCACCCGCGGCGGCGACTTCGACCTGCAGCTGGGCACCGACGTCGCGATCGGCTACCTGAGCCATGACGCGGAGACGGTGCAGCTGTACCTGGAGGAAACGCTGACGTTCCTGTGCTACACCGCTGAGGCGTCGGTCGCCCTGACCGCCTGA"
+    },
+    {
+      "sequence_link_id": "A0A066Z7H2_seq1",
+      "candidate_id": "A0A066Z7H2",
+      "protein_accession": "WP_035861155.1",
+      "nucleotide_accession": "NZ_KK853997.1",
+      "cds_start": 2025732,
+      "cds_end": 2026532,
+      "strand": "-",
+      "cds_length_nt": 801,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_KK853997.1?report=genbank&log$=seqview&from=2025732&to=2026532",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "TCAGTGCGAGGTGAGGGCGACCGCGGCCTCGGCGGTGTGCAGTTGGAAGGTGAGCGACTCCTGCAGGTACAGGTGCACGGTGGCGTCGTCGTGCGAGAGGTAGCCGATGGACAGGTCCTCGCCGAGGTGCAGCTCGAAGTCGCCGCCGCGCGCGGAGAGCAGCACCGCGCCCTCGACGGCGGGCGCCCAGATGATCTCGCCGTCGAGCAGCCGGGCCAGGTGGTTGTGGACCGGGTAGCCGTGGTCGGAGGTCTCGTTGACGGCGGTGTGGGTGTCGGCGCCGAGCAGCAGCGAGTAGGGGCCGCCGACGCCGGCCAGGCGCAGCGCGGTGAGGGCCCGGCTGACGGCGTTGGGGTAGTCGCGGACGTCCTCGGGGAGGGCGACCGGGTGGTTGCTGGAGCCGTCCCGGATGCCGGTGATGCCGGCGGCGGCGTAGCCGTCGAAGATGGCCCGGTCCTCGGCGAGGGCGATGGTGCGGGCGGCGTCCTTGACCGGGTCCCAGTCGGAGTCCTTGGAGCCGCGTTCGACGTCGTCCACGGCGGCCCGGGTGACGGTGAACGGGACGCGGAGCTCGACCAGCGGCTGGCACTCCCGGGCCCGGGCCCGGATGCCGTTGCCGGGGGCGGCGATGTCGGCGAGGTGGCCGGTGCCGACCGCGGCGAGTTCCGGGCCGTCGGGGCCGAGCAGGTCGACGACCCGGCGGCCGGCCAGGTGCAGGGTGAAGGTGCGCCGGGCCTCTTCCTCGATCTCGGCCCAGGCGGCGGCGGAGACGGGCGCCAGTTCGCGGTGCAGGTTGTTCAC"
+    },
+    {
+      "sequence_link_id": "A0A069RM29_seq1",
+      "candidate_id": "A0A069RM29",
+      "protein_accession": "WP_038265412.1",
+      "nucleotide_accession": "NZ_FSRH01000002.1",
+      "cds_start": 20994,
+      "cds_end": 21788,
+      "strand": "+",
+      "cds_length_nt": 795,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_FSRH01000002.1?report=genbank&log$=seqview&from=20994&to=21788",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGGATATTTTAAAAAGGGAATTGGCTCCTATTATAAATGAGGTTTGGGCGGAAATAGACTCCAGGGCAGCAAAGGTGCTTCAAACCTATCTTTCGGCAAGAAAAGTTGTAAATGTTGACGGTCCAAAGGGGTGGGACTACACTGCCATAGCCGAGGGAAGACTTGATGTCAAAGAGGAAAAAGACGGCGTGAAAATGGGCATATACAGGGTGATGCCTCTACTAGAAGCGAGAGCTGAATTTGAACTGGACAGATGGGAGCTTGACAACCATGCAAGGGGAGCTAAGGACATAGACTTTTCATCACTCGAAGAGGCTACAAGGAAAATAGCCATGTTCGAGGACGATGTTATATATAATGGACTTGATGAAGCTTGCATAATAGGGCTAAAGGATGCGTGCAAAAATCCTCCTATAGACATGGAAGACGGGGAAGAAGGTATAATGGATGCCGTTTCAAAGGGAATGCTGACGCTTCAGGATGGATTTGCCCAAAAACCATATACTCTAATAGTTGGAGAAAAGGGCTGGAGAAGAATAAATTCAAAGGTACAGGGATATCCTCTTGCCGACAGAATAAGAAACATGATAGGGGGAGAAATAATATTCAGCCATGTTGTTGGAGATGCTCTTTTGCTTCCTCAGGATCATGAAGATCTTGAAATGACGATAGGAAGGGATCTTTCCATAGGATACAGCGAACACAGCGCCAAGAAGGTGAAGCTTTTCCTTACTGAATCCTTTACATTTAGGGTTTTGGCGAATGACATAATAGTAAAATTCAACCTTGTATAA"
+    },
+    {
+      "sequence_link_id": "A0A072NMH9_seq1",
+      "candidate_id": "A0A072NMH9",
+      "protein_accession": null,
+      "nucleotide_accession": null,
+      "cds_start": null,
+      "cds_end": null,
+      "strand": null,
+      "cds_length_nt": 0,
+      "source_nucleotide": null,
+      "source_database": null,
+      "notes": null,
+      "genomic_sequence": null
+    },
+    {
+      "sequence_link_id": "A0A076EZF5_seq1",
+      "candidate_id": "A0A076EZF5",
+      "protein_accession": "WP_005251300.1",
+      "nucleotide_accession": "NZ_CAJUXZ010000001.1",
+      "cds_start": 1944893,
+      "cds_end": 1945699,
+      "strand": "+",
+      "cds_length_nt": 807,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_CAJUXZ010000001.1?report=genbank&log$=seqview&from=1944893&to=1945699",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGAGTGATTCGAGCAATCTGCACCGCAACCTGGCGCCCGTCACCGAGGTTGCCTGGCAGCAGATCGGCGAAGAGGCCGCCCGCACGTTCAAACGGCATGTCGCGGGGCGGCGTGTCGTCGACGTCGCGGGACCGTTCGGATACTCCTACTCGGCCCACAACCTCGGCCGGGTCACTCCGATCAAGACGTCGGACAGCAGGATCCGGGCGCAGCAGCGGCAGGTGGACCCGCTCGTCGAACTCCGGTTCCCGTTCACCCTCAGCCGCGCCGAGGTCGACGACGTCGCCCGGGGTTCCCTCGACTCCGACTGGCAGCCCGTCAAGGACGCCGCGAAGGCCGTCGCGTTCGCCGAAGACCAGTCGATCTTCCAGGGATTCGACGAGGCGGGGATCCGCGGACTCGGACCGTCCAGCGACAACCCGGTTCTCAGTCTGCCGGAGGATCCGCTGCTCATCCCCGACGCCGTCGCGTCCGCACTGTCGGCGCTGCGACTCGCCGGTGTCGAGGGACCGTATTCGGTGGTGCTCGACGCCGACGCGTACACCGCGGTCAGCGAGACCCGCGACGAGGGACATCCCGTGTTCCACCACCTGCGCGACCTGGTCACCGGCGACATCATCTGGGCACCCGCCATCAGCGGCGGGTACGTGCTGTCCACCCGCGGCGGCGACAACCAGCTGACCCTCGGCACGGACCTGTCGATCGGCTACGACAGCCACACCGCCACCGATGTCACGCTCTACCTCGAAGAGACGTTCACGTTCGCCTCGCTCACCGCGGAGGCGGCAGTCGTCCTCGCACGCTGA"
+    },
+    {
+      "sequence_link_id": "A0A077LYF1_seq1",
+      "candidate_id": "A0A077LYF1",
+      "protein_accession": "WP_048553857.1",
+      "nucleotide_accession": "NZ_HF570958.1",
+      "cds_start": 3428867,
+      "cds_end": 3429682,
+      "strand": "-",
+      "cds_length_nt": 816,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_HF570958.1?report=genbank&log$=seqview&from=3428867&to=3429682",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "TCAGGAGGTGGGGGCCGCCGGGTCGATGACGACGCTGGACTCCGCCGTGAAGGCCTGGAAGACGAAGGACTCCTGGAGGTAGAGGTCGATGGTCTGGGCGTCGTGGGCGAGGTAGCCGATCGAGAGGTCCTGGCCCAGGGTCAGCCGGTAGTCGCCGCCCCGCGTGGAGACGAGCAGGCCGCCGGTGATGGCGGGCGCCCAGATGACCTCGCCCTCGCCGAGGAGGCGGGCGACGTGGCCGAGGACCGGGTACCCGTGGTCGGTCATCTCGGCGACCGCGGTGTAGGCCTCGGCCGAGAGCAGCAGGCTGTACGGCCCGTCGACACCCGCGAGACGCAGCGCGCTCAGCGCCTGGGCGACGGCGTCGGGCACGGTGCGGACGTCAGCCGGGAGGGTGAGGTGCGGGTTGGAGCTGCCCGGCTCGATGCCCTCGATCGAGGCGGCCGCGACGCCCTCGACGATCGCCCGGTCCTCGGCGAAGGCGATGGTGCGGGCGGCGTCCTTGACGGGCTGCCAGTCCGAGTCCTCGGCCCCTCGCTCGACGTCGTCGACGGCCGCCCGGGTCACGGTGAACGGGACCCGCACCTCGATGAGGGGCTGCACCTCCCGGACCCGCACCGTCACTCCGTCGGCGGCGGGCTCCAGGTCACGGACGTGCCCGGTCCCCACGGCCGAGAGGTCCGTGCCCTCGGGGCCGGACACGTCGACGACGCGGCGCCCCGCGACATGGCGGGTGAACGTGCGGCGCGCCTCCTCCTCGATCTGGGCCCACGCCGCGTCGGTGATCGGTGCCAGCGCTCGATACAGGTTGTTCAC"
+    },
+    {
+      "sequence_link_id": "A0A0B2BNB7_seq1",
+      "candidate_id": "A0A0B2BNB7",
+      "protein_accession": "WP_039341644.1",
+      "nucleotide_accession": "NZ_PGEZ01000001.1",
+      "cds_start": 1493168,
+      "cds_end": 1493971,
+      "strand": "+",
+      "cds_length_nt": 804,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_PGEZ01000001.1?report=genbank&log$=seqview&from=1493168&to=1493971",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGAACAACCTGCACCGCTCACTCGCCCCGATCTCAGACGCCGCCTGGTCGGAGATCGAGGAGGAGGCGGCCCGTACCTTCCGGCGCAATCTCGCCGGCCGCCGGGTCGTCGACGTGCACGACCCGCAGGGGGTCGGCTTCGCCGGCCTGTCCACCGGCCACCGCGGCGACGCACGCACGGACGCGAACGGCGTGGAGGCGCGGCGTCGCGAGGTCGCACCGGTCGCCGAGCTGCGAGTGACGTTCGACCTGGGCCGCGAGGACATCGACGACGTCGAGCGCGGCTCGCAGGACTCCGACTGGCAGCCGGTGAAGGACGCCGCCCGCGCGCTCGCGTTCGCCGAGGACCAGGCGCTGTTCGCGGGCCTCGGCGACGTCGGGATCCGCGGGATCGTCGAGACGTCGAGCAACCCCGCGCTCGAGCTCCCCGAACGCGTCGTCGACTACCCCGACGCCGTCGCCCAGGCGCTGAGCCAGCTGCGGCTCGTCGGAGTCGAGGGGCCGTACGCGTTGCTGCTGAGCGCCGACGCGTACACCGCCGTGAACGAGACGACGGACCACGGCTATCCGGTCCACAACCAGCTCTCGCGCATGGTCGACGACCACGTCGTCTGGGCACCGGCACTGTCGGGGGCGGTGGTGCTCTCGACCCGGGGCGGCGACTTCGACATGCACCTGGGACAGGACACGTCGATCGGCTACCTGCACCACGACGACGAGTCCGTGACGCTCTACCTGCAGGAGTCCTTCGCGTTCCTCCCGCTCACCGACGAGGCTTCGGTCGTCATCAAGGCGCGCGCATGA"
+    },
+    {
+      "sequence_link_id": "A0A0B5DEK1_seq1",
+      "candidate_id": "A0A0B5DEK1",
+      "protein_accession": "WP_043447910.1",
+      "nucleotide_accession": "NZ_CP009313.1",
+      "cds_start": 297221,
+      "cds_end": 298018,
+      "strand": "-",
+      "cds_length_nt": 798,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_CP009313.1?report=genbank&log$=seqview&from=297221&to=298018",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "TCAGGAGGTGAATGCCACCACGGCCTCATCCGTGTACACCAGGAAAGTCAAAGTCTGACGGAAGTACATCTCGATCTGGTTCGCATCGTAGGCGGTGTAGCCGATCGCGAGGTCCTCACCGAGGCGCAGTTCGAAGTCGCCGCCCCGGGTGGACAGAAGGAAGGCGCCGTCGATCGCGGGTGCCCAGACGGGCGGCCCGTCCAGCAAGCGACCGAGATGCTCGGCGATGGGATAGCCGTGGTCGGACGTCTCGCTCACCGCGGTGTACGCATCGGCGCCCAGCACCAGCGAGTAGGGGCCGGCGACCCCGGCCAGGCGCAGCGTCGTCAGAGCCCGGCTGACGGCATCCGGGTAATTGCGGGGCTCGGTCGGGAGGCTGACCACGGGATTGGAGGTGCGCCGCCGTAGCCCGTCGATGCCCGCTGCCGCGTATCCTTCGAAGACGGCCCGGTCCTCGGCGAAGGCCATGGCGCGCACCGCGTCCTTGACGGGCTGCCAGTCGGAGTCCTGAGCACCGCGCTCGACGTTGTCCACCGCGTCGCGGGTGACCTTGAAGGGGACGCGGAGTTCGACCAGAGGTTGCACCTGACGCAGTCGCGCGAAGACGCCCTGTGCGGGAGCATCGATGGCGGTGAGATGACCGGTGCCGGCTGCCGCCAGCGTGGGTCCATCGGGTCCGGTCACGTCCACGACCCGGCGGCCCCCGACGTTGCGCTGGAAGGTGCGACGGGCCTCGTCCTCGATCTGTGCCCACGCCTGGGGTGTGATGGGGGCGAGTTCGCGGTGGAGGTTGTTCAT"
+    },
+    {
+      "sequence_link_id": "A0A0B5IIS0_seq1",
+      "candidate_id": "A0A0B5IIS0",
+      "protein_accession": "WP_041132208.1",
+      "nucleotide_accession": "NZ_CP010407.1",
+      "cds_start": 7092107,
+      "cds_end": 7092922,
+      "strand": "+",
+      "cds_length_nt": 816,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_CP010407.1?report=genbank&log$=seqview&from=7092107&to=7092922",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGACGTCCCCCGAGTCCACCAGCAACCTCCACCGCGAACTCGCCCCGATCACCGCCGCAGCGTGGGCCGAGATCGAGGAGGAGGCCCGCCGCACCTTCCGCCGCAACGTCGCCGGCCGCCGCGTCGTCGACGTCCCCGACCCGGCCGGGCCGGAGCTCTCCGCCGTCGGCACCGGCCACCTCTCCGACCTGACGGCGCCCGCACCCGGCGTCACGGCACGGCTCCGCGAGGCCCGGCCCCTCGTCGAGCTCAGGGTGCCGTTCACCGTCGACCGGGCCGCCGTCGACGACGTCGAGCGCGGCTCGAAGGACTCCGACTGGCAGCCCGTCAAGGACGCGGCCCGCGTCCTGGCGCTCATCGAGGACCGCATGGTCTTCGAGGGGTACGAGGCCGCCGGGGTCGAAGGGCTGCGCGCCCGCAGCTCCAACGCGGTGCTGCGGCTGCCCACCGAACCCCGCGACTACCCCGACGCCGTCAGCCGGGCCCTCACCGCCCTGCGGCTCGCCGGCGTCGACGGCCCGTACGCGCTGCTGCTCGGCGCCGACCAGTACCGGGCCGTCAGCGAGACCTCCGACCACGGCTATCCGATCGCGGCCCACCTCGCCCGGATGCTCGACGGCTCCCCGATCTGGGCGCCCGCCCTCGACGGCGGCTTCGTCCTCTCCACCCGGGGCGGCGACTTCGAACTGCGCATCGGCCAGGACGTGGCGATCGGCTACACCTCGCACGACGCGACCGGCGTCGAGCTGTACCTCCAGGAGACCCTGACGTTCCTCACGTACACGGACGAGGCCGTCGTCGTCCTGGAGCCCTGA"
+    },
+    {
+      "sequence_link_id": "A0A0B8N630_seq1",
+      "candidate_id": "A0A0B8N630",
+      "protein_accession": "WP_033085708.1",
+      "nucleotide_accession": "NZ_AP017900.1",
+      "cds_start": 7293684,
+      "cds_end": 7294481,
+      "strand": "+",
+      "cds_length_nt": 798,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_AP017900.1?report=genbank&log$=seqview&from=7293684&to=7294481",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGAACAACCTGCATCGCGAACTCGCGCCCATCACCTCCGAGGCCTGGTCGGCCATCGAGGAGGAGGCGACGCGAACCTTCAAGCGGCACATCGCCGGTCGCCGCGTGGTGGACCTGTCGGGTCCGCACGGCACCGGCTTCTCCGCGGTCGGGCTGGGCCGCACCGCCGCCATCAACTCCCCCGGTGACGGCGTGCAGGCCCGCCAGCGCGTGGTACTGCCGCTGATCGAGTTGCGGGTGCCGTTCACGCTGACCCGCGAGGAACTCGACAATGTGGAGCGCGGGGCCCGCGACACCGATCTGGACGCGGTCAAGGAGGCCGCCAAGAAGATCGCCTTCGCCGAGGACCGCGCCATTTTCGAGGGCTATCCCGCGGCCGGTATCACCGGTATCCGGGCCTCCACCTCGTGCGAGCCGGTGAAGCTGCCGGGCGATCCGCGCCTGGCGCCGGAGGCGGTCGCGCAGGCGCTGAGCAAGCTGCGCCTGGCCGGTGTGGGCGACCCGTACTCGGTGCTGCTGTCGGCCGACCTGTTCACCGCGGTGAGCGAGACCTCCGACCACGGGCACCCGATCCGCACGCACATCGAGCGGCTCATCGACGGCGACATCATCTGGGCCCCGGCCATCGACGGCGCGTTCGTACTGTCCACGCGCGGTGGCGATTTCGATCTCCAGCTGGGTCAGGACCTGTCGATCGGCTACCTCTCGCACGATGCCCAGTCGGTGCAGCTGTACTTCCAGGAGAGCCTGACGTTCCTGGTGTACACGGCGGAGGCGGCGGTCGCGCTCGAGGCGTGA"
+    },
+    {
+      "sequence_link_id": "A0A0B8ZXE8_seq1",
+      "candidate_id": "A0A0B8ZXE8",
+      "protein_accession": "WP_039211685.1",
+      "nucleotide_accession": "NZ_JTJZ01000022.1",
+      "cds_start": 334803,
+      "cds_end": 335603,
+      "strand": "-",
+      "cds_length_nt": 801,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_JTJZ01000022.1?report=genbank&log$=seqview&from=334803&to=335603",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "TCAGGGGTGCAGGGGGACGCTGGATTCGTCGGTGAGTGCGAGGAAGCCGAAGGTCTCCTGCAGGTACAGGTCGACGGTCTCACCGTCGTGGCCTCTGTAGCCGATCGACAGATCCTGGCCCAGGTGGAGTTCGTAGTCGCCGCCGCGGGTGGACACGAGCAGGGCACCCTCGAGCGCCGGCGCCCAGACGATCTCCCCAGCGCCGAGCTGACGGGAGAGGTGATCGCGGACCGGGAAGCCATGGTCGGTCGATTCGGAGACCTTCGTGTACTCGGCCTCAGACAGCAGAAGGCTGTAGGGCCCGTCGACTCCGGCCGTGCGCAGGCTCGACAGCGCCTGCGCCACCGCGTCCGCATAGTCCTCGACCGAATCGGGCAGGGTGACGGCGACGTTCGACGAGTTCGGGACGATGCCGCCGATGCCCGCGGAGTCGAGTCCGTGGAGGATCGCCCGGTCCTCGGCCAGCGCGATCGTCGTGGCCGCGTCCTTGACCGGCTGCCAGTCCGAATCACCGGAGCCGCGCGCAACATCGTCGATGGCCTCACGTGTGACCGTGAACGGGGCGCGCAGTTCGACAAATTCCTGCACGATGCGCTGCCGAATGTGCAGACCCGAGGAATACGACTGCACGTGACGGATATGTCCCGTGGTCACCGAGGAGGTCTCGAAGCCGCTCGGTCCCTCGACGTCGACGATGCGCCGACCGGCGATATTGCGCTTGAAGGTGCGCCTGGCCTCCTCCTCGATCTCCGCCCAGGCCGGGCCGGTGATGGGAGCTAGTTCGCGATAGAGGTTGTTCAC"
+    },
+    {
+      "sequence_link_id": "A0A0D0PGX2_seq1",
+      "candidate_id": "A0A0D0PGX2",
+      "protein_accession": "WP_043913228.1",
+      "nucleotide_accession": "NZ_JBFBDQ010000004.1",
+      "cds_start": 175607,
+      "cds_end": 176407,
+      "strand": "-",
+      "cds_length_nt": 801,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_JBFBDQ010000004.1?report=genbank&log$=seqview&from=175607&to=176407",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "TCAGGATGAGGTGAGCGACACCGAGGCCTCGGGGGTGTGGAGCTGGAAGGTGAGGGACTCCTGGAGGTAGAGGTGGACGGTGGTGTCGTCGTGGGAGAGGTAGCCGATCGACAGGTCCTCGCCGAGGTGGAGTTCGAAGTCGCCGCCGCGGGCGGAGAGCAGGATGGCGCCCTCGACGGCGGGGGCCCAGATGATCTCGCCGTCGAGGAGGCGGGCGAGGTGGTTGTGGACGGGGTAGCCGTGGTCGGAGGTCTCGTTGACGGCGGTGTAGGTGTCGGCGCCGAGCAGCAGGGAGTAGGGGCCGCCGACGCCGGCCAGGCGCAGCGCGGTGAGGGCGCGGCTGACGGCGTTGGGGTAGTCGCGGACGTCGGCGGGCAGGGCGACGGGGTGGTTGCTGGAGCCGTCGCGGATGCCGGTGATGCCCGCGGCGGCGTAGCCGTCGAAGAGGGCGCGGTCCTCGGCGAGGGCGATGGTGCGGGCGGCGTCCTTGACCGGGTCCCAGTCGGAGTCCTTGGAGCCGCGTTCGACGTCGTCGACGGCGGCCCGGGTGACGGTGAACGGGACGCGCAGCTCGACCAGTGGCTGGCACTCCCGGGCGCGGGCCCGGACGCCGTTGGTGGGGGCGGCGATGTCGGCGAGGTGGCCGGTGCCGACCGCGGCGAGTTCCGGCCCGTCGGGGCCGAGCAGGTCGACCACCCGGCGGCCGGCCAGGTGCAGGGTGAAGGTGCGCCGGGCCTCCTCCTCGATTTCGGCCCAGGCGGCGGCGGAGACGGGCGCCAGCTCGCGGTGCAGGTTGTTCAC"
+    },
+    {
+      "sequence_link_id": "A0A0D1L751_seq1",
+      "candidate_id": "A0A0D1L751",
+      "protein_accession": "WP_043987920.1",
+      "nucleotide_accession": "NZ_JXST01000051.1",
+      "cds_start": 13090,
+      "cds_end": 13887,
+      "strand": "-",
+      "cds_length_nt": 798,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_JXST01000051.1?report=genbank&log$=seqview&from=13090&to=13887",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "TCAGCTGTCGAGCGCGACCGACGCCTCGGCGGTGTAGCACAGGAACGTCAGCGTCTCCTGCAGGTACAGCTGCACCGAATCGGCATCGTGGGACAGGTATCCGATGGTCACGTCGGTGCCCAGTTGCAGATCGAAATCGCCGCCGCGCGTGGACAATACGAACGCGCCGTCGATGGCGGGTGCCCAGATGATCTCGCCGTCCACCAGCCGGTTCAGGTGCTCCAGCAGCGGGTAGCCATGCTCGGTGGTCTCGGTGACCTTGGTGTAGGCCTCCGCCGACAGCAGCACCGAGTACGGCCCGTCCACACCGGCCAGCCGGAGCTCCGACAACGCCTGCGAGATCACGTCGGGGTAGCCGCGCGGATCACTAGGCAATGCCAGCGCCGGGTTGGAACCGGAGGCGCGGATGCCTTCGATCTGTGCGTCCGCGTAGCCCTCGAAGATCGCGCGGTCCTCGGCGAAGGCCAGCTTCTTGGCGGCGTCCTTGACTGGATCCCAGTCGGAGTCCTGCGCGCCGCGCTCGACGTCGTCGATTGCCGTGCGCGACACCGTGAACGGCACGCGCAGCCGCACCAGCGGCCGGGACTCGCGCAGGTGCGCCTGGACGCCCTCGGCCGGCGAGGCGACGTCCACCAGATGGCCGGTGCCGACGGCGGCGGCTGTCGGGCCGTTCGGGCCGCTCACGTCGACGACGCGGCGACCGGCGATGTGCCGCTTGAACGTCCGCGCGGCTTCCTCTTCGATCTGCGCCCAGGCGGCGGAGGTGACGGGAGCCAGTTCGCGGTACAGGTTGTTCAT"
+    },
+    {
+      "sequence_link_id": "A0A0D1VV73_seq1",
+      "candidate_id": "A0A0D1VV73",
+      "protein_accession": "WP_043068885.1",
+      "nucleotide_accession": "NZ_BJOA01000154.1",
+      "cds_start": 14434,
+      "cds_end": 15288,
+      "strand": "-",
+      "cds_length_nt": 855,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_BJOA01000154.1?report=genbank&log$=seqview&from=14434&to=15288",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "CTATTTATCAGTATCCGGGTCTTCAATTGTGCAGATGGAGCTTGGACGCTTTATGCGAAGGACGATTGCTTCATAAACTCGGAACAGATGGTTCATATGCTCGGTATCAAGATATGCGGTATAGAAGTCTTCTGCAATTGCCAAGTCCAAATTATGTTGGCCTGTAGCTATAATAACACCGGCCTTTCCTTTAATTTCCGGAGACTGAAATACGCCATCTGTAATCAGTTCGCGAATGTGTTCGATTTCCAAAACATTAGTGCCCGGGTGAACACGATGAAGAAGAGAGTATAGTGCAGGAGAGAGGACCATAGCATAAGGTCCGTTATGCCCTATTTGTTGCAGCTTGCCGATAGCATCAACCGTGTCCTCAAAAGCTTTACCTGGTTTCATCCATTCATCCCGAATATGGGTCAACCTTCCCTTCACGTTCATGAGGCCCGGTAATTCAAATTGAGAAAACCCGTTGAAAATAAGGTCATCTTCTAGTCGGGCACATTGAACAGCAGCGTTAGCTGCGGCACTCATATCGATAGGGATTCCTAACGTTTTAGCCTGCTCAAGGTCGCGCCAATACAGGATAAAATCTTTATACAACATAGGAATGGATAAATTAACACGACGGGTTGGCTGAGATAATTCCAGAGATTCTCCGCGAAGACTGATGCCGCCTCCGTGTGATTCTTCAAAAATGTCATTGCTTACGCTCTGAATGCCTTCGCCTAAAGGACCGTAGATATCAATAAAACGGCGACCGACAAGCTGCCTTCTGGCTGCCTCGATTACAGTGGACTCCAATCGTGTCCATTCCGACCGATCGAAAGGAGAAGTGGAGAATTTTCCTTCTTTATCCAT"
+    },
+    {
+      "sequence_link_id": "A0A0D5NS11_seq1",
+      "candidate_id": "A0A0D5NS11",
+      "protein_accession": "WP_045673370.1",
+      "nucleotide_accession": "NZ_CP011058.1",
+      "cds_start": 3510366,
+      "cds_end": 3511211,
+      "strand": "+",
+      "cds_length_nt": 846,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_CP011058.1?report=genbank&log$=seqview&from=3510366&to=3511211",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGGCAAACAAAGTCGATATTTATCCCGACTCCCCGCTAAATGCGGCGCAATGGGAGCAAATGAATGAAACCATTATTGAGGCCGCCCGCAAACAATTGATCGGCAGACGGTTTATCGAAATCTATGGTCCGATCGGAGAAGGCATCCAGTCGATCAATGTCGACATCTTCGACGAACTTCAGGGCGGGGGAATCGACGTTCACGGCAGTAAACTTGAACTTTCCGTCCCAAGCCGGAGAAGGAACTTGACCATACCGATGCTGTACAAAGATTTTACGCTGTATCGAAGAGATTTTGAATTGGCGAAAAGTCTTTCCATCCCGCTTGACTTAAGTCCGGCTGCCAATGCGGCAACGCAGTGCGCAAGACTTGAGGATGAGCTGATCTTCCAAGGCTCGGAAGAATTCGATCTTCCCGGGTTAATGAATGTTAAAGGCCGTCTGACCCACATTATCGAGAATTGGATGGAATCGGGAAAAGCGTTTGAAGATGTCGTAGAGGCAACCCGTAAATTACAGCAGGTGGGACAAACCGGGCCGTACGCGCTTGTGTTGTCGCCCGAATTATACGCATCGTTGCATCGTGTCCATCAAGGAACCAATGTTCTGGAGATCGAGCATGTGAAGGAGCTCGTAACCGACGGCGTATTCCAGTCTCCGTCGCTTAAAGGCCGATCCGGAGTGATGGTCAATACAGGGCGCCACAATTTTGACTTGGTCATCGCCGAGGATTTCGACAGCGCCTTCCTTGATTCGGAACATTTGAATTTTCTGTTCCGGGTTTATGAGACGATCGTGCTCCGCATCAAGCGGCCAATTGCGATTTGTACGTTTGAAGAAGCTTAA"
+    },
+    {
+      "sequence_link_id": "A0A0D8BGZ0_seq1",
+      "candidate_id": "A0A0D8BGZ0",
+      "protein_accession": "WP_044884680.1",
+      "nucleotide_accession": "NZ_JYFN01000012.1",
+      "cds_start": 5554,
+      "cds_end": 6372,
+      "strand": "-",
+      "cds_length_nt": 819,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_JYFN01000012.1?report=genbank&log$=seqview&from=5554&to=6372",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "CTACGCGCCCCCGGCGGCCGGCACGAGCGCGACGGCCGCGTCGGGCTCGGTGACCCGGAAGGTGAAGCTCTCCTCCAGGTACAGGTCGACGGTGTCCGCAGTGTGGGCCGCATACCCGATCGAGAGGTCCTGGCCCGACTCGAGCACGAAGTCGCCGCCACGCAGGCTGAGCACGACCGCTCCGGTGACGCCGGGGGCCTGCACGACGGGCCCGTCGAGGATGTGCTGGAGGTGGGTGAGCAGCAGGTAGCCGCCGTGCTCGGCGGTCTCGATCACCGCGGTGTAGCTGTCCGGCTCGAGGGCCAGGGCGTACGGTCCGGCGATGCCGGCGCGGCGCAGCAGGGCGACGGCCTTGGCCACGGTGCGCGGGTAGGTGTCGGTCCCCGCCGCCAGCGGGAGCTGGGGATGTGCCGACGCCTGCGTGATGCCGACCAGGCCGGCCTCCTGGTAGCCGTGGAAGACCACCGAGTTCTCGGTGACGGCGATGCGGCGCACCGCCTCCTCCAGCGGCGCGAGATCGAGGTCGTCGGCGCCGCGGTCGGCGTCGGCGAGCTGGGCGCGATCGAGGGTGAAGCCGACGCGCAGCTCGATGACCGGCTGCACCTGGCGGACCCGGGCCTGCACCCCGGCCGCCGGCGGCGAGGACAGCGCCGCCACCCGACCCAGCGGGGTGGCGGAGTACTCCCAGCCGTGCGGCCCGGCGAAGTCCACCACCTTGCGGGCGGCCAGGTTCGTCGTGAGGCGGGCCTTCGCCTCGTCGTCCACCGCCTTCCAGGCAGCGTCCGTCAGCGGGGCGTGGCCGCGCAGCAGATGATTCAC"
+    },
+    {
+      "sequence_link_id": "A0A0F5HPP7_seq1",
+      "candidate_id": "A0A0F5HPP7",
+      "protein_accession": "WP_039238471.1",
+      "nucleotide_accession": "NZ_JWIQ02000107.1",
+      "cds_start": 3505,
+      "cds_end": 4353,
+      "strand": "-",
+      "cds_length_nt": 849,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_JWIQ02000107.1?report=genbank&log$=seqview&from=3505&to=4353",
+      "source_database": "NCBI RefSeq",
+      "notes": "UniProt A0A0F5HPP7 includes multiple strain designations; this nucleotide record corresponds specifically to the QY95_01592 locus in NZ_JWIQ02000107.1.",
+      "genomic_sequence": "TTATTCTTCCGGATCAATCAGCGTGCAAATAGCCGCTGGGCGTTTAATTCGAAGGACGACAGTTTCATACACTCGGAAGGGGTGGTTCATTCCTTCTTCTCCTAGATAAGCTGTTTCAAAATCTTCTGAAATAGCTAAATCAAGGTTGTTGCGCCCTGTATTGACGATCACCCCAGACTTTCCTTTCAGTACAGGTGACTGGAACACACCGGCTGTAATCAGCTCGCGTACATGCTCGATCTCTAGTACATTTGTATCTTTATGTACACGGTGTAGAAGAGAGTACAGCTCTGGGGATAATACAAGTGCATAGGGGCCGTTATGGTTCATTTCAAGTAATTTGTTTCTTGCTTCAACGATGTCTTGAAAGGCGTTTCCAGACTCGTACCAATTGCCAATTAAATGAGTCAAGCGGCCTTTGACATTCATTAATCCAGGAATATCGAATTCCTTGGAACCGTGAAAAATCATCTGATCCTCTAGAAAAGCCACATCACGAGCTGCATTGGCAGCAACGGAAAAGTCAATCGGTATGTCTAGTGCTTTAGACTGCTCCAAGTCGCGCCAATACAGTACAAAATCCTTGTAAAGCATAGGAATAGTATAGTTGACGCGTCTGCTGGATTCTACTTCCGTATCAAAAGAGCCTTGAAAGTCCATTTTTGCTTCATGGCTCTCCATAAAGATATCATTAAATACACTTTGCATTCCTCTTCCAAGCGGTCCATATAACTCGATAAAGCGGCGGCCGACTAACTGACGGCGGGCTGCTTCAATGACGGTCTGATCAAGCTGGTTGAAATCCTGGTCTGTTAATGGAGAATCTGGATAAAGCTGCGATTTATTCAT"
+    },
+    {
+      "sequence_link_id": "A0A0M0F5E2_seq1",
+      "candidate_id": "A0A0M0F5E2",
+      "protein_accession": "WP_231581840.1",
+      "nucleotide_accession": "NZ_KQ435291.1",
+      "cds_start": 197821,
+      "cds_end": 198681,
+      "strand": "-",
+      "cds_length_nt": 861,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_KQ435291.1?report=genbank&log$=seqview&from=197821&to=198681",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "TCAGCGCGTGAGGTGGACGGACGCCTCGGCGGTGTAGGTCTGGAACGTGAGCGAGGCGAGCAGGTAGAGGCGCACCTCGTCGGCGGTGTGGTCGAGGTAGCCGATGGACACGTCCTGCCCGATCGTCAGCTCGTGGTCCCCGCCGCGCGTGGTGAGCAGGTAGCCGCCGCGCAGCGCGGGCGCCCACACGATGTCTCGCTGCACCATGCGCTCGAGCTGCTCGCGGATCGGGTACCCGTGGTCGCGGGTCTCGGACACCGCGGTGTACAGGTCGGCGTCGAGCACGAGCGCGTACGGTCCCTCCACCCCCGCGAGGCGCAGCTCGGTCTGCGCGGCCGCGACGGCGTCCGGCAGATCGCGCGGGTCGGTGGGGACCGCGATCGGGGGGTTGTCCGACCCGGGACCGATGCCGCGGATCCCGGCGGCCGCGTACCCCTCGAACACGGCGCGGTCCTCGGCGCGTGCGAGCGCGGTGGCCGCGTCCTTGACGGGCTGCCAGTCCGAGTCCTTGGAGCCTCGCGCGACGTCGTCGACCGCCTGCCGGGACACCGTGAACGGCACCTGGAGCTCGACGAGCGGCACGACGTCGCGCAGGCGCGCCCGGATGCCGTCGTGCGGCGCCTCGACGTCGGTGACGTGGCCCGTCCGGGCGGACGCCGTGCCGAAGCCGAGCGGGCCCGTCACGTCGACCACGCGCCGCCCGGCGACGTTGCGCACGAACGTGCGCCGCGCCTCGTCGGCGATCTCCTCCCACGCCGCGTCGGTGACGGGCGCGAGCCAGCGGTGCAGGTTCGAGTCCCCGGGCGCGCCGGCGCCGCTCGTGGGGACGACCGAGCCCAGGTCCGGTTCCGAGGTGCTCAC"
+    },
+    {
+      "sequence_link_id": "A0A1G9WS71_seq1",
+      "candidate_id": "A0A1G9WS71",
+      "protein_accession": "WP_092074293.1",
+      "nucleotide_accession": "NZ_FNHB01000008.1",
+      "cds_start": 73938,
+      "cds_end": 74774,
+      "strand": "+",
+      "cds_length_nt": 837,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_FNHB01000008.1?report=genbank&log$=seqview&from=73938&to=74774",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "GTGGACTTTTTAGATCGCAACGCTGCGCCGCTGAATGAAGGCGAATGGCAGCGTATTGATGAAGCTGTTGTCAGCACTGCCCGCCGTACCTTGGTAGCCCGGCGGATCATTGATGTCCTGGGACCGCTTGGTTCGGGCGTGTATAGCATTCCTTACTCGGTCTTTAGCGGAAAATCCCCGACAGGAATTGATATGGTTGGGGAAAATGAAGAATTTGTCGTTGAAGCCAGCCGGCGGGCGACGATTAATTTACCTATTTTGTATAAAGATTTTAAAATTATGTGGCGGGATGTTGAAGCTGACCGGCATTTGGGCTTGCCGATTGATGTAAGCACTGCCGCCGTTGCCGGCAACTTTGTCGCTGTGCAGGAAGATCATCTGATTTTTAACGGCAATGTCGAATTGGGGCATGATGGCCTGTTTACTGTAAAAGACCGTCAGACTGTAGCGATCAGTGACTGGAATGAAACCGGCGCCGCTCTGGCCGATGTGGTCAAGGCAGTCGGTGCTTTAAGTCAGGCTGGTCATTACGGGCCTTATGCCATGGTAGTAAGCCCCGTGCTGTTTGGCCGGATGATCAGAGTGTTTGGCAATACCGGCATGCTCGAGCTTGATCAGGTCAAAGCGCTCATCACCGGCGGGGTTCATTACTCTAATGTCATCGGCGGTTCCAAGGCCGTAGTGGTCGCCACCGGCTCGCAAAACCTCAATCTCGCCCTGGGTCAGGATATGGTAACCGCCTACATGGGTCCGACCAGCATGAATCATGTATTCCGCGTACTGGAAACAGCAGCTCTCCTGGTACGCCGTCCGGACGCCATCTGTACAATCGAATAA"
+    },
+    {
+      "sequence_link_id": "A0A1H8IZ71_seq1",
+      "candidate_id": "A0A1H8IZ71",
+      "protein_accession": "WP_089972676.1",
+      "nucleotide_accession": "NZ_FOCQ01000020.1",
+      "cds_start": 1189,
+      "cds_end": 2046,
+      "strand": "+",
+      "cds_length_nt": 858,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_FOCQ01000020.1?report=genbank&log$=seqview&from=1189&to=2046",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGGATAAAGTCACGCGTTTCCCGGAAGTTCCATTTAACGAAGAACAATGGGAGTCTTTAGAGACGACTGTGATTGAAAGCGCCAGAAGGCAACTGGTCGGAAGACGATTTATCGATATTTACGGCCCGCTGGGCGAAGGCGTTCAGACAGTAGTGAATGACATCTTTGAGAGACCGGAAACGGGGAAACTCAGCCTGCACGGGGAGGTTCCGGATCTGTCCCAGCCCACGGGTCGCGTCAATTTGACCATCCCCATGTTGTACAAGGATTTTATTTTGTACTGGCGCGACATTCAACAAAGCAAATCCATGGATATTCCGATTGATTTTTCACCGGCCGCCAATGCCGCCCAGCAATGTGCCCTGCTGGAAGACGACTTGATTTTCAACGGCTCCGATCAATTTAACCTTCCCGGCCTGATGAACGTTAAAGGAAGGTTAACCCACATTCGCAGCGATTGGATGAAATCAGGCAACGCCTTCACCGATGTGGTGGAAGCAAGGAATAAATTATTAAGCATGGGCCACAGCGGTCCATATGCTCTGGTGGTGTCTCCTTCTCTCTATGCTTTATTGCACCGTGTGCACGAAGGAACGCATGTCCTGGAAATCGAGCATGTCCGCGAATTAATGACGGACGGAATTTATCAGTCCCCTGTGATTTCCGGTGAGGCCGGGGTTGTCGTAGCCACCGGAAGGCAAAACCTCGATCTGGCCATTGCCGAAGACTTTGACACCGTTTTTCTTGATGTTGAAAACATGAATTACCTGTTCCGGGTGTATGAAGCTCTCGTCCTTCGAATTAAACGCCCGAGCGCCATTTGCACGTTGGAGGATCCGGAGGGCAACACCAAGTGA"
+    },
+    {
+      "sequence_link_id": "A0A1I3S7Z3_seq1",
+      "candidate_id": "A0A1I3S7Z3",
+      "protein_accession": "WP_093230618.1",
+      "nucleotide_accession": "NZ_FORR01000012.1",
+      "cds_start": 18492,
+      "cds_end": 19349,
+      "strand": "+",
+      "cds_length_nt": 858,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_FORR01000012.1?report=genbank&log$=seqview&from=18492&to=19349",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGGATAAAATAACACGTTTTCCGGAAGCACCCTTTGATGCCGATCAATGGGAATCTTTAGAGGCGACTGTTATTGAAAGCGCCAGAAGACAATTAGTCGGAAGAAGATTTATTGATATTTATGGACCGCTTGGTGAAGGAGTTCAAACGGTTGTTAATGATATCTTTGAAAGACCGGAAATGGGTAATCTGAGTCTGCATGGTGAAGTATCAGGTCTTTCCCTTTCTACAAGCCGTGTCAATCTTACCATTCCCATGTTGTATAAGGATTTTATTTTGTACTGGCGTGACATTCAACAAAGCAAATCTTTAGATATTCCGATTGATTTTTCGCCAGCTGCAAATGCTGCTCAACAATGTGCACTGCTAGAAGACAACTTGATTTTTAACGGATCCAATCAATTTAATCTGCCAGGGCTGATGAACGTCAAAGGACGATTAACCCACATTCGCAGCGATTGGATGAAGTCAGGCAATGCTTTCTCGGATGTGGTGGAAGCAAGGAATAAATTATTAAGCATGGGACATACCGGACCCTTTGCTTTAGTGGTCTCCCCGTCTCTTTATGCTTTATTGCACCGTGTTCACGAAGGAACCCATGTCCTCGAAATTGAACATGTTCGCGAATTAGTAACGGATGGCGTTTATCAATCTCCTGTGATTTCTGGTGAAGCTGGTGTTGTCGTAGCTACAGGCAGACAAAACCTTGATCTTGCGATTGCCGAAGACTTTGATACCATTTTTCTTGATACAGAAAATATGAACTATCTATTTCGTGTCTACGAATCCCTTGTTCTTCGTATTAAACGGCCAAGCGCCATTTGTACATTAGAAGATCCGGATGGTAAAAGCAAATAG"
+    },
+    {
+      "sequence_link_id": "A0A1M7LGP9_seq1",
+      "candidate_id": "A0A1M7LGP9",
+      "protein_accession": "WP_084098969.1",
+      "nucleotide_accession": "NZ_FRCR01000012.1",
+      "cds_start": 28955,
+      "cds_end": 29830,
+      "strand": "+",
+      "cds_length_nt": 876,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_FRCR01000012.1?report=genbank&log$=seqview&from=28955&to=29830",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "GTGAAGGGAGGAAGCGCGGAAATTCCGCGAAAAATTATGGCTGATTATTTAAATCGCTCTCAATCACCCCTTACCGAAGAGCAATGGGAAAGCATGGAGAAAGTCGTTGTAGAGACGGCAAAGAAGCATTTGATAGGCAGGAGGTTCCTAAGCCTCTACGGGCCCCTGGGAGCGGGAGTTCAATACCTCGACTTTAAGGCTTATGCGGGAGACTTTAAAGCGGTGGTAGACTTTGTGGGCGACGGGGACGAAGGTACATTATATTCTCCCTCAAGGCAAATAAAGCAGATTCCGATGATATATAAGGACTTTAAAATCGAATGGCGTGACCTGGAAACTTATGCTGCACAAGGACTCCCTATGGACACGACTGCAGCCGCAATGAGCGCCGCTTTCGTCGCAGAAATGGAAGACGACCTCATATTCAATGGTAGTCCTCAATTCGGCATAGAAGGACTCCTCACGGCACAGGGGAGGTCTTTCATCAAAATCGGAAATTGGGATGAAGAAGTCTCTGCTTATGAGGACATACTCAAAGCGGCAGAAACCCTTTCGGCCAAGGGCTTCCGCGAGCCTTACGCCTTAGTGTTAAGCCCGAAGCTGTATTCGAAATTACTTAAGCCCTACAAAAACACCCAATATTTAGAGATAGACCTGGTAAGAAAGGCTGTTACTGAATGCATATATAAATCTCCTGTTATTAAGGGTGATAAGGCGGTACTCATCTCAATCGATGCTGAGTACGTGGATTTAGCAGTGGCGCAAGATATCACCTTAGCATTCCTAGAGACATCGAAAATGAATCATTACTTTAGGGTATTTGAACTCGTCATGCCGAGGATTAAAGTCCCGGCTGCAATATGCACGATAGAGTGA"
+    },
+    {
+      "sequence_link_id": "A0A1Q8Q3M0_seq1",
+      "candidate_id": "A0A1Q8Q3M0",
+      "protein_accession": "WP_075398990.1",
+      "nucleotide_accession": "NZ_MSDU01000027.1",
+      "cds_start": 29299,
+      "cds_end": 30153,
+      "strand": "-",
+      "cds_length_nt": 855,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_MSDU01000027.1?report=genbank&log$=seqview&from=29299&to=30153",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "TTATTCATCGTCTTTCGGATCAGCGAATGTGCAGATCGCAGACGGACGCTTAATGCGAAGGACAGCCGTCTCAAACACGCGGAATGGATGGTTCATTCCTTCTTCGCCAAGGTAAGCTGTTTCAAAGTCTTCTGAAATCGCCAGGTCAAGATTATTACGGCCTGTGTTTACCAGTACACCTGTCTTGCCTTTCAGCACAGGTGACTGAAAAACCCCGTCTGTCACAAGCTCACGCACATGTTCAATCTCCAGCACATTCGTATCGCGGTGAACCCGGTGCAGCAATGCATATAGCTCAGGTGACAGCACGAGCGCATATGGGCCGTTATGGTTCATTTCCATTAGCTTTCCACGCGCCTCTACGACATCCTGGAATGCAGTGCCGGATTCATACCAGTTGCTGATTAAATGTGTCTGGCGGCCCTTTACATTCATCAGTCCCGGAATATCGAACTGCTTTGCGCCGTGGAAAATCATTTCATCTTCCAGAAGAGCCACATCGCGCGCCGCGTTCGCAGCGGAGGAAAAATCCATCGGAATATCCAGCGTTTTTGCCTGTTCAATATCGCGCCAGTATAAAACAAAATCTTTATACAAAAGCGGAATCGTGTAATTAACGCGTTTCGCTGATTCGATTTCCGTATCAAACGATCCTTGAAAGTCCATATGGGCTTCGCTTTTTTCAGCATAAATATCTGTGTGGATGCTTTGTACGCCACGGCCGAGCGGACCGTACAATTCAATAAAGCGTCGTCCTGTCAGCTGTTTTTTCGCCGCATCGATAATGACGCGGTCCAATTCGTCAAAATCACCTGCTGATAGTGGCGCATCCGGATATAATTGAGCTTTATTCAT"
+    },
+    {
+      "sequence_link_id": "A0A1Y2N7J2_seq1",
+      "candidate_id": "A0A1Y2N7J2",
+      "protein_accession": "WP_232021020.1",
+      "nucleotide_accession": "NZ_AP018920.1",
+      "cds_start": 3742186,
+      "cds_end": 3743007,
+      "strand": "+",
+      "cds_length_nt": 822,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_AP018920.1?report=genbank&log$=seqview&from=3742186&to=3743007",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "GTGACCGTGCAGGACCACCTTCTCCGCGACAAGGCCCCGATCCCGGTCACCGCCTGGAAGGCGATCGACGACGAGGCGCGCGAGCGGCTCACCCCGCTGCTGGCCGGACGCCGGCTCGCCGACTGGGGCGGGACGTCCGGCTGGAACGCGTCGTCGGTCTCCACCGGGCGGTCGCACCGGCTGGACGGCCCGCCGCCCGGGGTGAAGGCCGAGGGGTTCCGGGCGCGGCTGCGCGAGGTGCAGCCGCTGGCCGAGTTCCGGGTGCCGTTCACGGTGTCCCGCGAGGAGATCGAGGACATCCAGCGGGGTGCGCAGGATCCCGAGTTCGACGACCTGGCCCGGGCCGCCCGGGAAGCCGCCGAGGTGGAGAACCGGACGCTGTTCCACGGCTGGCCGGAGGCCGGCATCGGGGGCATCGCGGCGTCGACGCCGTACGACGTGCTGTCTCTCGGCGCCGAGCCCGACCACTATCCGGCGGTCGTCGCGCGTGCAGTCGATGTGTTGCGCCGCAACGGGATCGAGGGGCCTTTCGCGCTGGCGGTGGCACCCGAGGGCTTCACCCGGATCGCCGAGACGGCCGAGCACGGCGGGTTCCCACTGTTCGACCACCTGACCCGGATCCTGGGCGGGCAGATCCTGCGGGCGCCCGGCCTGGACGGTGCGCTCGTGGTGTCCCAGCGCGGTGGGGACTTCGTGCTCGACGTCGGGCAGGACCTGGCGATCGGCTACACCGATCACGACGCCGACGACGTGCACCTCTACCTGGAGGAGTCGTTCACCTTCCGGGTCACCGAGCCGGACGCGGCGGTCGTACTGCGCTGA"
+    },
+    {
+      "sequence_link_id": "A0A2I0SNU0_seq1",
+      "candidate_id": "A0A2I0SNU0",
+      "protein_accession": "WP_103550563.1",
+      "nucleotide_accession": "NZ_JBHJSK010000014.1",
+      "cds_start": 92783,
+      "cds_end": 93661,
+      "strand": "-",
+      "cds_length_nt": 879,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_JBHJSK010000014.1?report=genbank&log$=seqview&from=92783&to=93661",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "TCAGACCGTGTCCCCGTCCCTTTCCCCGTCCGTACCGGTCCACGGGTCGAGCGCCACCACGGCCTCGTCCGTGTGGACGAGGAACGTCAGGGTCTGGCGGAAGTACAGGTCGATGCCGGTGGCGTCGTGGGCGGTGTAACCGATGGCGAGATCCTCGCCGAGGCGCAGTTCGTAGTCGCCGCCCCGGGTGGTGAGCAGGAAGGCGCCCTCCACGGCGGGCGCCCAGATCAGCCGGCCGTCGAGCAGCCGGCCGAGGTGGGCGGCGACGGGGTAGCCGTGGTCGGAGGTCTCGCTGACCGCCGTGTACGCCTCCGCGCCCAGCAGCAGCGCGTACGGGCCCTGCACCCCGGCCAGCCGGAGGGTGCTCAGGGCACGGCTGACGGCGTCCGGGAAGTCGCGCGGCTCCGCGGGAAGGCTGAGCACGGGGTTGGAGGTGCGGGCGCGGAGACCGTCGACACGGGCCTCTGCGTATCCGTCGAAGACGGTCCGGTCCTCGGCGAACGCCATGGTGCGCGCCGCGTCCTTGACCGGCTGCCAGTCGGAGTCCTTGGCACCCCGGTCCACGTCGTCGACGGCGTCGCGGCTCACCCGGAACGGCACCGTCAGCTCGACCAGGGGCTGGACCTGGCGCAGCCGGGCCGCGACACCGGGCGACGGCCCGTCGATGCGGGACAGGTGACCGGTCCCCACGGCGGCGAGCGCGGGACCGTCGGGGCCCGTGACGTCCACGACACGGCGGCCGGCGAGGTTGCGCCGGAAGGTCCGGCGCGCCTCGTCCTCGATCTCGGCCCACGCGGCGGGCGTGACGGGGGCGAGTTCACGGTGCAGGTTGCCGGTCCCGGCAGCTCCGGCGGCGGTGTCCTCGGGGGTGGTCGTCAT"
+    },
+    {
+      "sequence_link_id": "A0A2T2X7V6_seq1",
+      "candidate_id": "A0A2T2X7V6",
+      "protein_accession": null,
+      "nucleotide_accession": null,
+      "cds_start": null,
+      "cds_end": null,
+      "strand": null,
+      "cds_length_nt": 0,
+      "source_nucleotide": null,
+      "source_database": null,
+      "notes": "UniProtKB entry removed; sequence retained in UniParc as UPI000D43B0E4. No nucleotide/RefSeq cross-reference has yet been unambiguously recovered for locus C7B43_05800.",
+      "genomic_sequence": null
+    },
+    {
+      "sequence_link_id": "A0A4R6RVW8_seq1",
+      "candidate_id": "A0A4R6RVW8",
+      "protein_accession": "TDP91083.1",
+      "nucleotide_accession": "SNXZ01000009.1",
+      "cds_start": 73818,
+      "cds_end": 74696,
+      "strand": "-",
+      "cds_length_nt": 879,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/SNXZ01000009.1?report=genbank&log$=seqview&from=73818&to=74696",
+      "source_database": "INSDC/GenBank",
+      "notes": null,
+      "genomic_sequence": "CTACTCGGTGAGCGCGACGACGGCGTCGGGCTCGACGACCCGGAAGGTGAAGCTCTCCTCGAGGTAGAGGTGCGCGGTGTCGGCGTCGCAGTGGCTGTAGCCCACGGAGATGTCCTGGCCCAGGTGCAGCTGGAAGTGCCCCTCGTCGAGGCTCACCACGAGCGCGCCGGTCAGCCCGGGGGAGCGCACGACCTTGCCGCCGCCGAGGATGCGGCGCAGGTGGTCGAGCACCAGCAGCCCGCCGTGCTCGGTGCTCTCCACGATCCGCTCGTACCCGGCGGGCCCGATGGCCAGCGCGTACGGGCCACCGATGCCCGCGTTGCGCAGCGTGTCGACGGCCTTGGCCGCCACCTGCGGGTACTCCGTCGGGTCCGCGCCCAGCGGCAGGCCCCGGTGGGTGGAGCTGTCGACGAGGCCGGTGATGTCGGCCCCCGCCCACCCGTGGAAGACCGCGCGGTTCTCCAGCAGCGCCAGCTCACGGGCGGCCCGGCCGAGGTCGTCGAGGTCGAGGTCGTCCGCGCCGCGCTCGGCGTTCTCCAGCTCGACCCGGGACACCGTGAACGGCACCCGGACCTCGGCCAGCGCCAGCACGTGCCGCAACCGCAGCCGCACGCCCTCACCGGTCTCACCCGCGGTGGTCTGGTCGAGCGGGCGCACCCGGCCGAGGTTCACCGACGAGAAGTCCCAGCCGTGCGGACCGGAGACGTCCACGAGCCGGCGGGCAGCGAGGTTGGGCGCGAGCCGGGACCGGGCCTCGTCGTCGATCTGCTCCCAGGCCGCCCCGGTGATCGGGGCGAGCTCGCGCATCAGGTGGTTCATGCTCACGCCCACCCCCTCGCTGACGCTCCGGGCCGGCGTGAGCCGGCTCGCTGTGTCCAT"
+    },
+    {
+      "sequence_link_id": "A0A502IA18_seq1",
+      "candidate_id": "A0A502IA18",
+      "protein_accession": "QDX91138.1",
+      "nucleotide_accession": "CP033464.1",
+      "cds_start": 19592,
+      "cds_end": 20434,
+      "strand": "+",
+      "cds_length_nt": 843,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/CP033464.1?report=genbank&log$=seqview&from=19592&to=20434",
+      "source_database": "INSDC/GenBank",
+      "notes": null,
+      "genomic_sequence": "ATGGATAAAGCACAGAAATTCCCAGACTCCCCATTGTCAAAGGAAGAATGGCGTCAATTAGACGATACCATTGTTGAAATGGCTCGTCGTCAACTCGTAGGTCGTCGATTCATTGACATTTACGGCCCACTAGGAGAAGGTATTCAAACCATTACCAACGATATTTATGATGAATCTCGTTTCGGAAATATGAGTTTGCGCGGTGAATCACTAGAATTAACACAGCCAAGTAAACGAGTTAGCTTAACGATTCCGATCGTGTACAAAGATTTCATGCTGTACTGGCGCGATATGGCACAAGCCCGCACATTGGGTATGCCAATTGATCTCAGCTCTGCGGCAAATGCTGCCAGTAGTTGCGCTCTTATGGAAGATGATATGATCTTTAATGGTAGCCCTGAGTTTGACTTGCCAGGTATCATGAATGTAAAAGGACGTCTCACGCATATTAAGAGCGACTGGATGGAATCAGGCAATGCTTTTGCCGATATCGTAGAAGCTAGAAATAAGCTGTTAAAAATGGGCCACAGCGGTCCATATGCCCTTGTTGTATCCCCAGAGCTGTATTCTTTGCTCCACCGTGTACACAAAGGCACCAATGTCCTTGAAATTGATCACGTTCGCAACTTGGTTACAGACGGTGTATTCCAATCTCCTGTAATCAAAGGCGGTGTTCTAGTAGCTACAGGAAGACATAACCTAGACCTTGCGATTGCTGAGGATTTTGATTCAGCTTTCCTAGGAGACGAACAAATGAACAGCCTCATGCGCGTATATGAGTGTGCTGTTCTACGCATTAAGCGTCCAAGTGCAATTTGCACATTGGAAATGACAGAAGAATAG"
+    },
+    {
+      "sequence_link_id": "A0A511V6Y5_seq1",
+      "candidate_id": "A0A511V6Y5",
+      "protein_accession": "WP_146809005.1",
+      "nucleotide_accession": "NZ_BJXX01000050.1",
+      "cds_start": 10864,
+      "cds_end": 11718,
+      "strand": "-",
+      "cds_length_nt": 855,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_BJXX01000050.1?report=genbank&log$=seqview&from=10864&to=11718",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "TTATTTCCCGTCATCAGCGTCTTCAAGTGTACAAATGGCACTTGGACGTTTGATTCGAAGAGCGATGGCCTCATAAACCCGGAAAAGGTGATTCATGTGCTCGGTATCAAGATAGGCGGTATCAAAATCTTCGGCGATCGCCAAATCCAAGTTATGCTGGCCTGTGGCTACGATAACACCGGCCTTTCCTTTGATTTCCGGCGATTGGAATACGCCGTCTGTAATTAGTTCGCGAATATGTTCAATTTCTAACACGTTTGTTCCCGGATGAACACGATGGAGGAGCGAGTAAAGCGCAGGGGACAGTACCATCGCGTAAGGACCGGTATGTCCTACTTGCTGCAGTTTGCTGATAGCGTCGACTACATCTTCAAAAGCTTTGCCCGGTTTCATCCATTCATCGCGAATATGGGTGAGGCGCCCTTTCACATTCATTAAGCCCGGCAGCTCAAATTCGGAAAAACCGTTGAAGATGAGATTATCCTCGAGGCGGGCGCACTGGACAGAAGCATTGGCCGCAGGGCTCATATCGATTGGAATTCCCAGCGTTTTGGCCTGCTCAAGATCGCGCCAGTACAGAATGAAATCCTTATATAACATTGGGATGGACAAATTAACCCGGCGGGTTGACTGGGATAGTTCCAGTGATTCCCCGCGCAGGCTGATCCCCCCGCTTTGCGATTCTTCAAAGATATCGTTGCTTACGCTTTGAATCCCTTCACCTAAAGGGCCGTAAATATCGATGAAGCGACGTCCGACAAGTTGTCGTCTGGCTGTCTCGATTACGGTCGCTTCCAGCCTGCTCCATTCCTGATGGCTTAGCGGGGAGTCAGGGAATTTGCTTTTTTTATCCAT"
+    },
+    {
+      "sequence_link_id": "A0A5A7NS64_seq1",
+      "candidate_id": "A0A5A7NS64",
+      "protein_accession": "WP_149957257.1",
+      "nucleotide_accession": "NZ_BKDJ01000011.1",
+      "cds_start": 13748,
+      "cds_end": 14629,
+      "strand": "+",
+      "cds_length_nt": 882,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_BKDJ01000011.1?report=genbank&log$=seqview&from=13748&to=14629",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGAGCGCCAACCATTTGCTGCGTGAGAACGCCCCGATCTCCGAGGCAGGGTGGAGCTTCCTGGACCGGGAGGCTACGTCCCGCCTTGCCGTGGCGCTGGGGGCACGGAAACTGGTGGACTTCCACGGACCGCTGGGCTGGGAGTATTCGGCCACGCCCTTGGGGCGCGTGGAGCCGTTGGCCGGCCCGCAGGACGGCCTGCGGGCCCTTCGCCGCCGGGTGCTTCCGCTGGTGGAGGTGCGGGCCGACTTCGAGGTCTCGCGGGCGGAACTGATGGACATCGACCGCGGAGTCCTGGACGCCTCCCTGCCCGGGCTGGATGCCGCCGCCCTGCGCATCGCCGCGGCGGAGAACACCGCCGTTTTCCACGGCTGGGCCAACGCCGGCATCCTCGGCATCACCGAGGCCACCCCCCACGAACCGGTACCGCGCGTAGAGGACTTCAACGACTACCCCAAGCGGGTGGCGCATGCGGTGTCCGTCCTGCGCCAGGCAGGGATCGGAGGCCCCTTCGGGCTGGCCCTGGGCCCGGGGCACTATACCGCGGTCGTGGAGGCCACCGAACGGGGCGGGTACCTGCTCTCCGAGCACCTTTCCACCATCCTGGAAGGCCCCCTCGTGTGGGTCCCCGGCGTCACAGGCGCCGTGGTGGTGAGCCTGCGCGGCGGCGACTTCCGCTTCGAGGCCGGCCAGGACCTGTCCCTGGGCTACCAGGGGCACGACGACGACTCGGTGCACCTCTATCTCGAGGAATCGTTCAGCTTCCTGGTCGCCACCCCGGAGGCCGCCATCCACCTCAGCAGCGCCGCCGGAAGAACCCGGGGCGGCGACGCCGGGGCGGCCGGAGGGGAAGCGGTCCCCGCGGAGGACTTCGAGGACTGA"
+    },
+    {
+      "sequence_link_id": "A0A7V9Z0Q3_seq1",
+      "candidate_id": "A0A7V9Z0Q3",
+      "protein_accession": "WP_181537743.1",
+      "nucleotide_accession": "NZ_JACDUU010000005.1",
+      "cds_start": 62087,
+      "cds_end": 62938,
+      "strand": "+",
+      "cds_length_nt": 852,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_JACDUU010000005.1?report=genbank&log$=seqview&from=62087&to=62938",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGGATAAAGCAATAATCTATTCTGAATCTACGTTAAGTAGTGAACAATGGAGAGAGTTGGATCAAACAGTCATCGATAGTGCTCGGAGGCAACTAGTAGGCAGAAGATTTATTGATATATATGGACCACTTGGTGAAGGAGTTCAATCCGTTGCGAATGACGTATATGAAAACCCTGAAAGTGGGGAAATCAGCTTTCATGGTGGAGAACTAAATCTTTCAGAGCCAACACGTCGTGTGCATTTGACGATTCCGCTTATACATAAAGACTTTATTTTGTATTGGCGTGATATTCAACTGGCGAAACAGCTTGCTAGTCCTATTGACTTTTCAGCCGCTTCAAATGCTGCTCAGCAGTGTGCATTACTAGAGGATGATTTAATTTTTAATGGATCTACTCCATTTGATCTTCCTGGGATTATGAATGTAAAAGGAAAGATTGCTCACATACGTAGCGACTGGATGAAATCAGGAAACGCTTTTGCCGATGTGGTGGAAGCCCGAAATAAACTATTGCAACTAGGACATACAGGTCCATATGCTTTAGTCCTTTCACCTGAATTGTATGCTCTCATTCATAGAGTTCATGAGGGGACCCATGTACTGGAAATTGAACATATTAGAGAGTTAATGCCTGCAGGTATTTATCAAACACCAGTGATTAAGGGCAAAAGAGGTGTAGTGATTGATGTTGGAAAACAAAATATAGACTTAGCTATTGCCGTAGATTTTCAAACGGTGTTTTTAGATGTCGAGAACATGAATTATATTTTCCGTGTTTATGAGTCAGTTGTACCGAGAATAAAACGTCCAAGCGCTATCTGTACGTTAGAAGATCCAGAGGGAGAATAA"
+    },
+    {
+      "sequence_link_id": "A0A8J8KA31_seq1",
+      "candidate_id": "A0A8J8KA31",
+      "protein_accession": "WP_173729445.1",
+      "nucleotide_accession": "NZ_JABTTE010000001.1",
+      "cds_start": 100221,
+      "cds_end": 101072,
+      "strand": "-",
+      "cds_length_nt": 852,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_JABTTE010000001.1?report=genbank&log$=seqview&from=100221&to=101072",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "TTATGATGATTTTGGATCTTCAAGCGTACAGATCGCACTTGGTCGTTTAATTCTTGGAACAATTGTTTCATAAATGCGGAAAAGATGGTTCATTTGCTCTTCGTCCATATAAGCTATATCAAAATCTTCTGCAATAGCTAAATCAACATTTTGTCGCCCCGTTGCAATAAGAACGCCTGCATCTCCTTTAATTACAGGTGATTGGTAAACGCCATCTGTTACAAGCTCGCGAATATGTTCAATTTCCAGCACATTTGTACCTTGGTGAACACGATGCATAAGGGCGTACAATTGAGGAGAAACAATTAGCGCATATGGACCGGTATGTCCCATTTGCATTAATTTGTTCCTCGCTTCGACAATATCTTGGAAGGCATGTCCGGTTTTCTTCCAATCGCCACGAATATGTGTAATCCGACCTTTAACATTCATTAGTCCTTTAATATTAAATTGTTCTGAGCCGTTAAAAATTAAGTCGTCTTCTAAAAGTGCAAGCTGTGTTGCTGCATTTGCAGCTGTTGAAAAGTCGATGGGAATATCGAGAGTTCGTGCATGGGCAATATCACGCCAATAAAGCTTAAAATCTTTATAGAGAAGAGGGATTGTTAAATTTTCACGTTTTACTGGATTAGACACTTCTAATGTATCACCATGTAAACTAATTGTGCCTACATCTGATTCTTCATATACGTCGTTCATAATCGCTTGCACTCCACCGCCAAGAGGCCCGTATATGTCTAGAAAACGTCTGCCGATCAGAGTCCGTCTAGCATGGTGGATCACAAGTTCTTGTAAGTCATTCCATTCTTTTTCGGTTAAAGGTGTTCCTGAATAGTGATTTGTCATACTCAT"
+    },
+    {
+      "sequence_link_id": "A0A938BNS5_seq1",
+      "candidate_id": "A0A938BNS5",
+      "protein_accession": null,
+      "nucleotide_accession": null,
+      "cds_start": null,
+      "cds_end": null,
+      "strand": null,
+      "cds_length_nt": 0,
+      "source_nucleotide": null,
+      "source_database": null,
+      "notes": "UniProtKB entry removed; sequence retained in UniParc as  UPI001D8A3635. No nucleotide record has yet been unambiguously recovered.",
+      "genomic_sequence": null
+    },
+    {
+      "sequence_link_id": "A0A951QF54_seq1",
+      "candidate_id": "A0A951QF54",
+      "protein_accession": null,
+      "nucleotide_accession": null,
+      "cds_start": null,
+      "cds_end": null,
+      "strand": null,
+      "cds_length_nt": 0,
+      "source_nucleotide": null,
+      "source_database": null,
+      "notes": "UniProtKB entry removed; sequence retained in UniParc as  UPI001D71A671. No nucleotide record has yet been unambiguously recovered.",
+      "genomic_sequence": null
+    },
+    {
+      "sequence_link_id": "A0A9Y2KYQ9_seq1",
+      "candidate_id": "A0A9Y2KYQ9",
+      "protein_accession": "WP_270919989.1",
+      "nucleotide_accession": "NZ_CP127247.1",
+      "cds_start": 2732168,
+      "cds_end": 2733055,
+      "strand": "+",
+      "cds_length_nt": 888,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_CP127247.1?report=genbank&log$=seqview&from=2732168&to=2733055",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGAGCGAAACGTTAAACTGGAATGACGATCAATGGAACAAGGTCCGCCAGACCGTTCACGATCAGGCGTTGCGCGCTCGCGTCGCAGCTTCGTTTCTGCCTCTGTTCGGACCTTTGCCCAACGATGCGCAAATGGTGCCGTCCAACACACTGAAATACCACAGCCCAGGTTCGGGGAGCGTCGGTCGAATGCGCATTGACGACTACACGTCAATTCGGCTGACTTCGCTTTCCGTGAATGTCTATCTCAAGAATGCGCAGGTCGCTGATCCTGAACTGACCAGCGCGCTTATCATGTTTCGCCGCGCCGCCAACATTATTGCGCGTGTCGAGGATGCAATCATTTTCAACGGTCAAGAAGACACTAACGATGGTCCCAAGAGCGATGCCGGGATTAGTATCGCCGATAAAGTCTGGCGCGTCAGCGGCGGGCAGAAAACGCTGGGCCTGATCAAGGAGGGCGAGGACGCAAACAAGCAAAAGATTGAGCCAGACAATGAAGATTCTGATACGGGGCAACAGGTATTTCATGCCGTTGTGAACGCGATCCAAAAAATCGAGAAGCAAGGCTATCACGGCCCCTTTGCCTGCGTGATGTCCGATAGTCTATTTACTGCGATCACCAAGCCAATGCCGGCGTCGATGATCCTGCCGCGTGACAGCATCCTGCCTTTCCTCGATGCACCACTTCTACGTTCCAGTGCCTTGCCCGACGGAAAGGCCATTGTTGTGTCGCTTCACGGTGCCCCGGTCGAGATTGTCGTCCCCAACGACATCTCGGTGCGTCACCTGCAGACGACCCCCGAGGCAGAGCATGTCTTTCGGGTGCAGCAACGTTTTGTCCTGCGCATCAAAGAGCCAGGAGCGATCGCGACAATCTTCAAGTAA"
+    },
+    {
+      "sequence_link_id": "A0AAT8XUH9_seq1",
+      "candidate_id": "A0AAT8XUH9",
+      "protein_accession": "WP_152135172.1",
+      "nucleotide_accession": "NZ_WERP01000028.1",
+      "cds_start": 6806,
+      "cds_end": 7612,
+      "strand": "-",
+      "cds_length_nt": 807,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_WERP01000028.1?report=genbank&log$=seqview&from=6806&to=7612",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "TCAATCTTCAGAAGGCAGTAATGATACAACGGCTTCTGAAGTGAGCGTTCTGAAAGTAAAACTTTCCTGCAGATACAGCTCGACATGTGTAGCTGTATGGCTCAGGTAACCAATTGAAATATCCTGGCCGATATCCATCGCAAAATCACCACCACGGGTCGATAACAACACTCCCCCTTCAATCGCCGGCGCCCAGACAATCTCGCCATCGATAAGACGGTGGATATGCTGTAATACAGGATATCCGTCTTCATTTCCACTGGTAATCAATGTATAGGCATTTTCACCCAACACCAGATGGTAGGGACCATTCACTCCCGCAACTCGTAACTGATCCAGCGCCCGAGCGATGACATCGGGATATCCTGATGCAGCGACAGGTAGCGTCAGAGGAGAATTGCTGGATTGCGGCCGGATGCCACCAATACCGGCCGCCGCGTAGCCATCAAAAACAGCACGGTCTTCAGCTCCGGCAATTTTACGGGCCGCTTCTTTTAGCGGGGACCAGTCCGAATCCTGGGACCCTCGCTCAACATCATCAATTGCCTGGCGTGTTAATATAAACGGCACCCTGAATTCAACCACTGGCTGCGACTGACGTTTCACGGCCCCCACACTATCACCAGGCCCCTCCAGGCGGGTCACATGGCCGGTCCCAACGGCCGAAAATGCAGGGCCCTGAGGGTCGGATACATCCACGACACGTCGTGCGGCAAGGAAACGTTTAAGTGTGCGGCTCGCCTCTTCTTCAATCTGTTCCCATGCAGCATCAGAAACGGGCGCGAGTTCACGATGTAAATTATTCAT"
+    },
+    {
+      "sequence_link_id": "A0ABN3ZYW6_seq1",
+      "candidate_id": "A0ABN3ZYW6",
+      "protein_accession": "WP_011230417.1",
+      "nucleotide_accession": "NC_016593.1",
+      "cds_start": 1015578,
+      "cds_end": 1016432,
+      "strand": "-",
+      "cds_length_nt": 855,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NC_016593.1?report=genbank&log$=seqview&from=1015578&to=1016432",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "TCATGCTGACTCGTTCGGATCCTCGAGCGTGCAGATGGCGCTTGGACGTTTGATGCGCGGCACAACCGATTCGTAGACACGGAACAAGTAGTTCATGTTTTCCGTATCTAAAAACGCGGTTTGCACATCGACGGCAACAGCGAGGTCGATGTTTTGCCGCCCTGTGTCAATGACGACCCCGCGTTTGCCTTTAATGACCGGAGTTTGGTAAATGCCGGCGGTCATCAGCTCGCGGATGTGCTCAATTTCAAGCACGTGCGTTCCTTCATGGACGCGGTGGATCAACGCATACAATTCCGGCGACAAGACGAGCGCGTATGGGCCGGTATGGCCGAGCTGAAGCAGCTTGTTGCGTGCTTCGACGACGTCAGTAAAGGCGTTGCCCGATTTCATCCAATCGCTGCGAATGTGGGCGATTTTTCCTTTGACGTTCATAATGCCCGGCACATCAAATTCAGTTGAACCATTGAAAATCAAATCGTCCTCAAGCAGCGCGCACTGCTGGGCGGCGTTGGCGGCGGCGGAAAAGTCGATCGGGCTGCCGAGCTGTTTCGCCTGTTCAATGTCACGCCAGTACAAAATAAAGTCTTTATACAAAAGCGGGATCGTTAAATGCACGCGGCGCGCCGGCTCGGAAAGGCTCAGCTCTTTGCCGTGGAAGCTCATGTCCCCCTGTTCCGGGTTCATATAAATATCGTTGGCGACCGACTGGACACCTTCGCCGAGCGGACCGTACAAATCGATAAATCGGCGGCCGACGAGCTGGCGCCGCGCCGTTTCAATGACCAGTTCGTCAAGCTCGCCCCATTGGCTGCTTGTGAGCGGGGCTTCTGGATACAGCTTCGTTTTATCCAT"
+    },
+    {
+      "sequence_link_id": "A0ABP7DFF1_seq1",
+      "candidate_id": "A0ABP7DFF1",
+      "protein_accession": "WP_345154340.1",
+      "nucleotide_accession": "NZ_BAABEO010000034.1",
+      "cds_start": 223638,
+      "cds_end": 224519,
+      "strand": "+",
+      "cds_length_nt": 882,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_BAABEO010000034.1?report=genbank&log$=seqview&from=223638&to=224519",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "GTGAGCACCAACCATTTGCTGCGGGAGAACGCCCCGATCTCCGAGGCCGGGTGGCGGTTCCTGGACCGGGAAGCCACGTCCCGCCTCTCGGTGGCGCTGGGGGCCCGGAAACTGGTGGACTTCTTCGGCCCGCTGGGCTGGGAGTATTCGGCCACGCCGCTGGGGCGCGTGGAGGCCTTGGCCGGTCCGCAGGAGGGACTGCGTGCCCTGCGCCGCCGGGTGCTTCCGCTCGTGGAGGTGCGGGCCGACTTCGAAGTATCGCGCGCGGAACTGATGGACATCGACCGCGGGGTCTTCGACGCTTCCCTACCCGGGCTGGACGACGCCGCGCTGCGCATCGCTGCAGCGGAGAACACCGCGGTTTTCCACGGCTGGGAGAACGCCGGCATCATCGGCATCACCGAGGCCACGCCCCACGCGCCGGTGCCGCGCGTCGAGGACTTCAATGACTATCCCAAGCGCGTGGCGCACGCCGTGTCCGTCCTGCGCCAGGCGGGCATCGGAGGCCCGTTCGGGCTGGCCTTGGGCCCGGGACACTACACCGCCGTCGTCGAGGCCACCGAACGCGGAGGATACCTGCTCTCCGAGCACCTCACCAGCATCCTGGAGGGCCCCCTGGTGTGGGTGCCCGGCATCACGGGCGCCGTCGTGCTGAGCCTGCGTGGAGGCGATTTCCGCTTCGAGGCCGGACAGGACCTGTCCCTGGGCTACCAGGGGCACGACGACGAGACCGTGCACCTCTACCTGGAGGAATCGTTCAGCTTCCTGGTGGCCACCCCGGAGGCGGCCATCCACCTCAGGAGCGCTGACGGGGGAGACCGCGGCAGCCAGCACGCCTGGACCGGGGACAAGGAGGTCCCGGAGGAGGACTTCGAGGACTGA"
+    },
+    {
+      "sequence_link_id": "A0ABQ6QMW9_seq1",
+      "candidate_id": "A0ABQ6QMW9",
+      "protein_accession": "WP_171421589.1",
+      "nucleotide_accession": "NZ_BTTX01000002.1",
+      "cds_start": 106982,
+      "cds_end": 107854,
+      "strand": "-",
+      "cds_length_nt": 873,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_BTTX01000002.1?report=genbank&log$=seqview&from=106982&to=107854",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "CTAACGGCGCGCCGGGGGAGCGGCCGGAACGGCGCCTTCCAGCGTGCAGATGGCGTCCGGGTGCTTGATGCGCAGCAGCAGTGACTCCAGCACCCGGAACGGGTGGTTCATCTTGCTGGCGCCCAGGTAGGCCGCGACCATGTCCATGGCCACCGCCAGGTCCATGTTCTCCCGGCCCGTGGACACCACCACGCCCGACTCGCCGCGCAGGCGGTTGGACTGGTAGACGCCGTCGGACGCGAGCTGGCTGATGGTCTGGATCTCCAGCACGCCCGTCTTCTCGTAGATGCGGTGCAGCTGCGAGTAGAGGCGCGGCGACAGCACCACGGCGTAGGGCCCGAAGTGGCCGGCCTCGTTGAGCTTGCGCGTGGCCTCCACGATGGTCTGGAAGCCGCCGCCCGGCGCCGTCCAGTCCCCCAGCGTGGCGGTGAGCCGGCCGTTGGCCGTCATCAGGCCCTCGTAGCCCAGGCGCTGGTCGCCGTAGAAGATGAGCTCGTCTTCCTGCTGCGCGCACAGCGCGGCGGCGCCGGCGGCGGCGGACACGTCCAGCGGCATGTTGTGCGTGCGCGCGGCCTCGATGTCCCGCCAGTGCAGCAGGAAGTCCTTGTAGATGATCGGGATGGTCTTGAACTTGCGCACGTCGGTGAAGACCATCGCGGTCTCCTGCTCCCCGACGATGTCCACCGCGCCCGGGGACACGCCCTGGAACTCGTCGTAGGCCACGGTCTGCACGCCCGCGCCCAGCGGCCCGTAGATGTCCAGGATGCGGCGGCCCACCAGCGACCGGCGCGCCACCTGGATCACCGTCTCGTTGAGGCGCGCCCACTCCTCTTCGCGCAGCGGGTTCTCGGCATGTCCAAGGAAGTCAGGCAT"
+    },
+    {
+      "sequence_link_id": "A0ABS5L717_seq1",
+      "candidate_id": "A0ABS5L717",
+      "protein_accession": "WP_212021334.1",
+      "nucleotide_accession": "NZ_JAAFYZ010000324.1",
+      "cds_start": 5600,
+      "cds_end": 6463,
+      "strand": "+",
+      "cds_length_nt": 864,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_JAAFYZ010000324.1?report=genbank&log$=seqview&from=5600&to=6463",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGAACAACCTGCACCGCGACCTCGCCCCGGTCAGCGACGCCGCCTGGGAGCAGATCGAGGAGGAGGCGCGCCGCACCGTGCTGCGGTACCTGGCCTTCCGGCGCGTGGTGGACGTCAGCGGCCCGGACGGCACCACGCTGGCGGCCGTCGGCGACGGCCACACCGCGCCCATCGCCGCCCCGCACGACGGCGTGCAGGCCCGGCTGCGCAGCGCCAGGCCGCTGGTCGAGGTGCGGATCCCGTTCGAGCTGGACCGGACCGACATCGACGACGTGGAGCGCGGCGCCCAGGACAGCGACTGGCAGCCGGTGAAGGACGCGGCCAAGATCGCCGCGTTCACCGAGGACCGGGCCATCGCCGACGGCTACGCCGCGGCCGGGATCACCGGCCTGCGGCCGTTCGCCAGCAACGCGGCGATGCCGCTGCCGGCGGACCCGGTGGACTACCCGACCACCGTGGCCCGGATGGCCACCCAGCTGAAGCTGGCCGGTGTCGAAGGGCCCTACCACCTGGTGCTCGGCGCCGACGCCTACCAGGCGCTGTCGGACGCGGTGGACCACGGCTACCCGGTCGCCGAGCACGTGGCCCGGCTGATCGACGGCGACGTGATCTGGGCCCCGGCGATCACCGGCGGCGTGCTGCTGTCCTCCCGCGGCGGCGACTACCAGCTGCAGCTCGGGCAGGACCTGTCGATCGGGTACGAGTCGCACACCGCGGACAAGGTGCGGCTGTACTTCACGCAGTCGTTCACGTTCCTGCCCTACACCGCCGAGGCCGCGGTGCCGCTGGGCGGCACCCCCGCCGGGCTCGGCACCGGCTCGGGCACCGGCAAGGAAGGCAAGTCCGCTAAGCGGTCGCGGTGA"
+    },
+    {
+      "sequence_link_id": "A0ABS9H0C8_seq1",
+      "candidate_id": "A0ABS9H0C8",
+      "protein_accession": "WP_236332668.1",
+      "nucleotide_accession": "NZ_JAKIJS010000001.1",
+      "cds_start": 1109216,
+      "cds_end": 1110067,
+      "strand": "+",
+      "cds_length_nt": 852,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_JAKIJS010000001.1?report=genbank&log$=seqview&from=1109216&to=1110067",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGAATAAAGTACAGTTATTTGCAGATTCACCATTATCAGATCAAGATTGGCAACAACTAGATGCGACGATTTTCGATAGTATTAAAAGACAACTGGTAGGGCGTAGGTTCATTGATATTTATGGGCCATTAGGAGCTGGTGTACAAACCGCAACTAATGATGTGTATCAAGAAAAAGAACTCGGATCTATGGGATACCATGGCGAAAGTTTAGAGCTTACTGAACCGAGTAAGCGTGTAAACTTAACGATTCCGCTACTTTATAAAGATTTCATGTTATATTGGCGCGATATTGAACAAGCGAAAACCTTAGACCTACCTGTTGATTTTTCTGTAGCTGCAAATGCTGCCGCTCAGTCTGCTTTACTTGAGGACGATATGATTTTCAATGGGGCGAAGAAATTTAACCTTGAAGGGCTAATGAATGTGAAAGGTAGACTTACACATATTCGCGAGGATTGGATGAAATCCGGAAATGCGTTTATGGATATCGTTGAAGCAAGAAATAAACTATTGAAGATGGGGCACAGCGGACCATATGCTCTTGTTCTCTCACCTTCGTTATATGCATTAATTCATCGTGTTCATGAAGGAACACACGTGCTTGAAATCGAACACATTCGAGAACTTGTGACGGATGGGATTTATCAATCTCCCGTCATTCAGGAAGATTCGGGTGTACTCATCGCAACTGGAAGAGAAAACCTCGATCTTGCAATAGCTGAAGATTTCGATTCTGCATTTATGGATACAGAGAACATGAACTACCTATTCCGTGTTTACGAAAGTACTGTCCTTAGAATTAAGCGACCTTCTGCAATTTGTACGCTTGATTCACCTACAAAAAAGTAG"
+    },
+    {
+      "sequence_link_id": "A0ABT4AA91_seq1",
+      "candidate_id": "A0ABT4AA91",
+      "protein_accession": "WP_267537354.1",
+      "nucleotide_accession": "NZ_JAPNKA010000001.1",
+      "cds_start": 7333985,
+      "cds_end": 7334842,
+      "strand": "+",
+      "cds_length_nt": 858,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_JAPNKA010000001.1?report=genbank&log$=seqview&from=7333985&to=7334842",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGCCTGACTTCCTTGGACATGCCGAGAACCCACTGCGCGAGGACGAGTGGGCCCGCCTCAACGAGACCGTCATCCAGGTCGCCCGCCGCTCGCTCGTCGGCCGTCGCATCCTGGACATCTACGGCCCGCTGGGTGCCGGCGTGCAGACTGTCCCCCATGACGAGTACACCGGCGTCAGCCCGGGCGCGGTGGACATCGTCGGCGAGCAGGAGACGGCCTCCGTCTTCACCGACGCGCGCAAGTTCAAGACGATCCCCATCATCTACAAGGACTTCCTGCTGCACTGGCGCGACATCGAGGCCGCGCGCCTGCACAACATGCCCCTGGACGTCTCCGCCGCCGCCGGCGCCGCCGCCCTGTGTGCCCAGCAGGAAGACGAGCTCATCTTCTACGGTGACCCCAAGCTCGGCCACGAGGGGCTGATGAACGCCACCGGCCGCCTCACCGTGCCGCTCGGCGACTGGACCACCCCCGGTGCCGGCTACCTGGCCATCGTCGAGGCCACCCGCCGGCTCAATGAGTCGGGCCACTACGGCCCCTATGCCGTCGTTCTCTCGCCCCGCCTCTACTCGCTGCTGCACCGCATCTTCGAGAAGACGGGCGTGCTGGAGATCGAGACCATCCGTCAGCTCGCCTCGGACGGCGTCTTCCAGTCCAACCGGCTGCGCGGCGACTCGGGCGTGATCGTCTCCACCGGCCGCGAGAACATGGATCTCGCGGTGGCCATGGACATGGTCGCCGCCTATCTGGGCGCCTCGCGGATGAACCACCCCTTCCGCGTGCTGGAGTCGCTGATCCTCCGCATCAAGCACCCCGACTCCATCTGCACCCTGGAATCCGCGCCGAGCCGCGGCTAG"
+    },
+    {
+      "sequence_link_id": "A0ABT5CZW5_seq1",
+      "candidate_id": "A0ABT5CZW5",
+      "protein_accession": "WP_272134116.1",
+      "nucleotide_accession": "NZ_JAQNDM010000001.1",
+      "cds_start": 177999,
+      "cds_end": 178862,
+      "strand": "+",
+      "cds_length_nt": 864,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_JAQNDM010000001.1?report=genbank&log$=seqview&from=177999&to=178862",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGCCTGACTTTCTGGGACATGCCGAGAACCCCCTCCGTGAAGAGGAGTGGGCCCGACTGAACGAGACCGTCATCCAGGTGGCGCGCCGCTCGCTCGTCGGCCGCCGCATCCTCGACATCTATGGGCCGCTGGGCGCGGGCGTCCAGTCGGTGCCCCACGACGAGTACCAGGGGGTCTCCTCCGGGGCCATTGACATCGTCGGCGAGCAGGAGACCGCCACGGTCTTCACCGACGTGCGCAAGTTCAAGACGATCCCCATCATCTATAAGGACTTCCTGCTGCACTGGCGCGACATCGAGGCGGCCCGCATCCACAACATGCCGCTGGACGTGTCCGCCGCCGCCGGGGCCGCCGCCCTCTGCGCGCAGCAGGAGGACGAGCTCATCTTCTACGGAGACCCCAAGCTCGGCCACGAGGGGTTGATGACGGCCACCGATCGCCTCACGGTCCCCCTGGGTGACTGGGCCACGCCGGGCGCCGGCTTCATGGCCATCGCCGAGGCCTCCCGGAAGCTCAACGAGCACGGCCATTTCGGCCCCTACGCCGTGGTGCTCTCACCCCGGCTGTACTCCCTGCTGCACCGCATCTTCGAGAAGACGGGCGTGCTGGAGATCGAAACCATCCGTCAGCTCGCCTCGGACGGCGTGTTCCAGTCCAACCGTCTCCGGGGAGACTCCGGCGTGGTGGTGTCCACGGGCCGTGAGAACATGGACTTGACCGTGGCCATGGACATGGTCACCGCCTACCTGGGCGCCTCGCGCATGAACCACCCGTTCCGGGTGCTGGAGGCGCTCATCCTGCGCATCAAGCACCCGGACTCCATCTGTACGCTCGAAGCCCCTCCCCTCGTGGTCGGCAAGTAA"
+    },
+    {
+      "sequence_link_id": "A0ABU5HDM0_seq1",
+      "candidate_id": "A0ABU5HDM0",
+      "protein_accession": "WP_321550286.1",
+      "nucleotide_accession": "NZ_JAXIVS010000015.1",
+      "cds_start": 152242,
+      "cds_end": 153099,
+      "strand": "+",
+      "cds_length_nt": 858,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_JAXIVS010000015.1?report=genbank&log$=seqview&from=152242&to=153099",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGCCTGACTTCCTTGGACATGCCGAGAACCCCCTGCGCGAGGAGGAGTGGGCGCGCCTGAACGAGACCGTCATCCAGGTCGCGCGCCGTTCCCTCGTGGCCCGTCGCATCCTGGACATCTATGGCCCGCTGGGCGCGGGCGTGCAGACGGTGCCCCACGACGAGTACCAGGGCGTGTCCCCGGGCGCCGTGGACATCGTCGGCGAGCAGGAGACGGCCACCGTCTTCACCGACGCTCGCAAGTTCAAGACGATCCCCATCATCTACAAGGACTTCCTGCTGCACTGGCGGGACATCGAGGCGGCGCGCATCCACAACATGCCGCTGGACGTGTCGGCCGCCGCCGGCGCCGCCGCCCTCTGCGCGCAGCAGGAAGACGAGCTCATCTTCTACGGGGATCCGAAGCTCGGCCACGAGGGGCTGATGACGGCCAACGGCCGGCTCACCGTGCCGCTGGGCGACTGGAGCACCCCGGGCGCCGGCTACATGGCCATCGTCGAGGCCACTCGGAAGCTCAACGAGCACGGCCACTACGGGCCCTATGCCGTGGTGCTCTCGCCGCGCCTGTTCTCGCTGCTGCACCGCATCTTCGAGAAGACGGGCGTGCTCGAGATCGAGACCATCCGCCAGCTCGCCTCGGACGGCGTCTTCCAGTCCAACCGGCTGCGCGGCGACTCGGGCGTGGTGGTGTCCACGGGCCGCGAGAACATGGATCTGGCCGTGGCCATGGACATGGTCACCGCCTACCTGGGCGCCTCGCGCATGAATCACCCCTTCCGCGTGCTCGAGGCGCTCATCCTGCGCATCAAGCACCCGGACGCCATCTGCACGCTCGAAGGCGGCGCCCCCCGCAAGTAA"
+    },
+    {
+      "sequence_link_id": "A0ABU9D8Y7_seq1",
+      "candidate_id": "A0ABU9D8Y7",
+      "protein_accession": "WP_341371051.1",
+      "nucleotide_accession": "NZ_JBBPCO010000008.1",
+      "cds_start": 138203,
+      "cds_end": 139072,
+      "strand": "-",
+      "cds_length_nt": 870,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_JBBPCO010000008.1?report=genbank&log$=seqview&from=138203&to=139072",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "TCAGCCAGACTGCTTTGGGTGGCGTCCGACTTCGGCGTTGGCATCGGTGTTGCTTGAGCTTTGTTCCTGCGTGCCTGCCGGGCGGATGGTGCAGATCGCGCCGGGGGCATCCACTTTCAGGACCAGGGATTCCCGTACCGAGAAGTAGAAATGCGCGGGATCGGCCAGCGTATAATCCACATGCAGGTCCTCGCCGATCAGCAGGGTACCCGCCTCGGGGCTGAGCACGACCGCCCCCGGCATGTCGGCCTTGAAGATGCCGGCGGTGCAGATCTCCTTGAGATGCTCGGCCTGCACCAGATCACTGCCATCGGGGTAGCGGCGAAACAGCAGGTTGTGCAGGCGCGGCGCCAGCGCCAGGGCATAGGGCCCGCGATATCCCCGCTCATCGAGCAGGGTGACGGCGTCGAGCACGTCCCGGAGCACCTGTTCCACATTGCACCAGTCGCCGCCGTCCAGATGATTGCGGCCTTCCACGGTGCTCAGGCCGGGTAGTCCCAGTGCGGCATCACCTTGATAGATCAGGGCCTCCTCGCGTGCGCAGACCGAGAGCGTGGCCTGGCGCACCGGGGTCAGATCCAGCGGCATGCCCTGTTCCAGATGTGCCGCCACCTGGCGGCGACCCAGCGCGAAACGGCGGAAGATCAGGGGGACGCTCAGCGAGCGGGACACCACGGTGATGGCGTCATGATCGTTATCGTGATGTCGCAGGTCATCATTGCCGACCTCCAGGGCCGTGAATCCCTCGCCAAAGGGCCCCTCCACCGGCAGGATGCGGCGTGCGGTCAGGACTTCCCGGGCGGCCGCGGCAATGACTGTTTCCATGCGGCTTGCAATGCTGTCATCAAAGTGCGGAATGCTGATCTCCAT"
+    },
+    {
+      "sequence_link_id": "A0ABW2RFE6_seq1",
+      "candidate_id": "A0ABW2RFE6",
+      "protein_accession": "WP_379862820.1",
+      "nucleotide_accession": "NZ_JBHTBW010000002.1",
+      "cds_start": 42301,
+      "cds_end": 43158,
+      "strand": "+",
+      "cds_length_nt": 858,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_JBHTBW010000002.1?report=genbank&log$=seqview&from=42301&to=43158",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGGACAAACTACAACGCTTTCCGGATGCGCCTTTTAATGCTGAGCAATGGGAATCTTTAGAGCAGACGGTCATTGAAAGCGCCAAAAGGCAATTGGTCGGAAGAAGATTCATCGATATTTACGGGCCGCTTGGCGAAGGGGTCCAAACCGTTGTGAATGACATCTTCGCAAGGCCGGAAATGGGAAATCTGAGCCTGCATGGTGAAGAGACGGGCCTTTCCCAGCCAACCAGCCGAGTCAACCTTACGATCCCCATGTTGTATAAAGATTTTATTTTGTACTGGCGCGACATCCAACAAAGCAAATCGATGGACATGCCCATTGATTTTTCACCCGCCGCCAATGCCGCGCAGCAATGCGCACTGCTGGAAGACGACCTGATTTTCAACGGTTCCAATCTATTCCACCTGCCGGGGCTGATGAATGTGAAAGGGCGGTTAACCCACATTCGCAGCGATTGGATGAAGTCCGGCAACGCGTTCTCGGATGTGGTGGAAGCAAGGAACAAATTGTTAAGCATGGGGCATTCCGGTCCTTATGCGTTAGTGGTGTCCCCATCGCTATACGCCTTGTTGCACCGTGTGCACGAAGGAACCCATGTCCTTGAAATCGAACACGTTCGCGAATTGATGACAGACGGCGTGTATCAATCCCCCGTCATTACCGGCGAAGCCGGCGTCGTCATCGCCACGGGTAGGCAAAATCTCGATCTGGCGATCGCCGAAGACTTTGACACGGTTTTTCTTGACTATGAAAACATGAACTACCTCTTCCGGGTCTATGAATGCCTTGCCCTCCGGATTAAGCGCCCAAGTGCCATTTGCACATTGGAAGACCCCAACGGCAACAACCAGTAA"
+    },
+    {
+      "sequence_link_id": "A0ABY8J3I8_seq1",
+      "candidate_id": "A0ABY8J3I8",
+      "protein_accession": "WFT77053.1",
+      "nucleotide_accession": "CP121671.1",
+      "cds_start": 3772456,
+      "cds_end": 3773361,
+      "strand": "-",
+      "cds_length_nt": 906,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/CP121671.1?report=genbank&log$=seqview&from=3772456&to=3773361",
+      "source_database": "INSDC/GenBank",
+      "notes": null,
+      "genomic_sequence": "TTAGAACTTCCCTCCGGCATTTGACTCATTCCCTTCCTCTTGGTTGTTGCCATTTTCGAGTGTACAGATTGCCGAAGGACGCTTTATCCTTGGAACGAGACATTCCATTACTCGGAAATAACTGTTCATGGTCTCATCATTTAAGAAAGAGATAGATACATCCTGACCAATGGCTATATCGACATTTTGCTCACCAGTTGCCACGATAACCCCGCACCCATTTCGGATTTGGGATGATTGATATATTCCATCTTCAAACAAGTTCCGAACATGCTCAATCTCCAGCACCTTTGAATTGCCGTGCACCTGGTGCAACCGGGCATAAGCGTCAGGCGACAAGGCCATGGCAAAAGGCCCCGTGTGCCCGTTTTTGATCAAGCGATTCCGAGCATCTACGATATTTTGAAACGCCATACCTTCTTGACGAGACCAATCGCTGCACTTCAAGGTTTCTCTGCCACTTACATTCATTAATCCGGGAATGTTCAGCGATTTCGCCCCATTAAATATCAGATCATCTTCCTTCAGTGCTACATCATTTGCCGCACTAGCCGCCGCGGAAAAGTCCAGCGGTTTGCCTGTTTCTCTCGCATGCTCGACATCCCGCCAATAGATAACAAAGTCTTTATATAATATTGGAATAACCAGAGTATTACTCTGGCTCGGTTTTGCTACATCCATTTCGTCTCCATGCATGCTTATACTCGCAGGTTTCGGTTCAAGATAAACCGGATTGCTGATCGATTGCGCCCCAGATCCAATAGGTCCATATATATCTAGAAATCTGCTCGCCACGATATGGTCTCGAACTGTTTCAGTGACGGTCTCCCGCAAATGACTCCACTGTCTCTGCGTTAATAACCCCCGCGGAGAACTACGCCCTGATTTTCTGCTCGCCACGTTCAT"
+    },
+    {
+      "sequence_link_id": "A0ABZ0HWD7_seq1",
+      "candidate_id": "A0ABZ0HWD7",
+      "protein_accession": "WP_407340804.1",
+      "nucleotide_accession": "NZ_CP136862.1",
+      "cds_start": 1743646,
+      "cds_end": 1744575,
+      "strand": "+",
+      "cds_length_nt": 930,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_CP136862.1?report=genbank&log$=seqview&from=1743646&to=1744575",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGAGCGACTGCGGACCGGGCCTGACCGACGATCAATGGGAAAAGATCCGCCAGATCGTTCATGACGATGCTCTACGCGCCCGTGAGGCGGCGTCGTTTCTGCCTCTCTATGGGCCGTTGCCCGGCTCAACGGTGACCGTGCCGCAGGACCGCCTTTCCTTCGAGCCATTGCCCGACGGGCTCTCCGGCGAGGCGTCGCCCTCCGCGGCGACGGGCGCCACGCAACAGTACATGCGGGTGGATGACTACGACCAGCTCCGCATCGCGACCGTGGCCGTCAATGTGTACCTCAAGAATCATATGATCGCGGATCCCGAACTGGCGGCAGCCTCCGTCCTGTTCTCACGCGCCGCGAAGATTGTCGCGCGGGTCGAGGACTCGATCATCTTCAACGGCTGGCCCTCGAACCTCCAGCATGTGCGGCCGGTCTACACTATCACGGGGGCGAACAGCTATGACGGCCTTGTCAGCCACGCCCGCGAATCGTCGCCGCAGATCGATGACGCGAACCCTGGGGTGTTTGGACCTGACGTGTTCCGCGCAGTCGTCAGCGCAATTGCCGACCTCGAAAGGCGGGGTTACTACAAACCCTATGCGTGCGTTCTCGCCAACGATCTCTTTACGGAGATCAATAGGCCGATCCAGAACTCGATGGTTCTGCCGGCCGAAAGCATCCCGCCCTTCCTTGATGGGCCACTGCTGCGGTCCAGCAGTCTTCAGCTGGGAAAGGGCCTGGTGATCTCGCTGCAAGGCAATCCGGTCGAAATCGTCGTGCCGAACGACATTTCGGTCCGCTATCTCCAAGGGATGCTTGACGGCCAGCACGCGTTCCGTATTGCACAGCGTTTCGTGCTGCGGGTCAAGGATTGGGACGCGGTCGCCCTCATCCAGCGTAAGGCTCCCCCCTCCGGCATCGCCGGCGATGCCTGA"
+    },
+    {
+      "sequence_link_id": "A0R4H0_seq1",
+      "candidate_id": "A0R4H0",
+      "protein_accession": "WP_003897233.1",
+      "nucleotide_accession": "NC_008596.1",
+      "cds_start": 5897635,
+      "cds_end": 5898432,
+      "strand": "+",
+      "cds_length_nt": 798,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NC_008596.1?report=genbank&log$=seqview&from=5897635&to=5898432",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGAACAACCTCTATCGCGACCTCGCCCCGATCACCGAATCCGCTTGGGCCGAGATCGAACTGGAGGCGACCCGCACGTTCAAGCGTCACATCGCCGGACGCCGGGTGGTCGACGTCAGCGGGCCCAACGGTCCGACGACCGCGAGCGTCAGCACGGGTCATCTGCTCGACGTGAGCCCGCCCGGCGACGGCGTCATCGCGCATCTTCGCGATGCCAAACCGCTCGTGCGCCTGCGGGTGCCGTTCACGGTGGCGCGCAGGGACATCGACGACGTCGAGCGCGGCTCGCAGGACTCCGACTGGGATCCGGTCAAGGACGCCGCCAAGAAGCTCGCGTTCGTCGAGGACCGCGCGATCTTCGAGGGCTATGCCGCCGCGTCGATCGAGGGCATCCGCAGTTCCAGCTCCAACCCCGCGCTCGCACTGCCCGACGACGCCCGCGAGATCCCCGACGTGATCGCCCAGGCCCTCTCCGAGCTGCGTCTGGCCGGTGTCGACGGGCCCTACTCGGTGCTGCTCTCGGCCGAGACCTACACCAAGGTCAGCGAGACCACCGCACACGGATATCCGATCCGCGAGCACATCAACCGCCTCGTCGACGGTGAGATCATCTGGGCGCCCGCGATCGACGGTGCGTTCGTGTTGTCAACGCGCGGCGGTGATTTCGACCTGCAGCTCGGCACCGACGTGTCCATCGGCTACCTGTCCCATGACGCCGAGGTGGTCCACCTCTACATGGAGGAGACCATGACGTTCCTGTGCTACACCGCTGAGGCCTCTGTCGCGCTGACCCCCTGA"
+    },
+    {
+      "sequence_link_id": "A5IJ00_seq1",
+      "candidate_id": "A5IJ00",
+      "protein_accession": "WP_011942839.1",
+      "nucleotide_accession": "NC_009486.1",
+      "cds_start": 138776,
+      "cds_end": 139573,
+      "strand": "+",
+      "cds_length_nt": 798,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NC_009486.1?report=genbank&log$=seqview&from=138776&to=139573",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGGAATTTCTGAAAAGATCCTTTGCTCCTCTGACAGAAAAACAGTGGCAGGAGATAGACAACAGAGCAAGAGAGATCTTCAAAACACAGCTCTACGGAAGGAAATTCGTCGATGTGGAAGGTCCCTACGGCTGGGAGTACGCTGCCCATCCACTCGGGGAAGTTGAGGTGCTTTCAGACGAGAACGAAGTGGTGAAGTGGGGATTGAGGAAGTCTCTGCCGCTCATCGAACTGAGGGCAACGTTCACTCTCGATCTGTGGGAACTCGACAACCTCGAGAGAGGAAAACCGAACGTGGATCTTTCCAGCTTAGAAGAAACGGTGAGAAAGGTTGCGGAATTTGAAGACGAAGTGATATTCAGAGGATGTGAAAAATCGGGTGTTAAAGGCCTTCTTTCCTTCGAAGAGAGGAAAATCGAATGTGGAAGCACACCGAAAGACCTCCTCGAAGCCATAGTGAGGGCTCTTTCGATCTTCTCAAAAGATGGTATAGAGGGCCCTTACACACTCGTCATAAACACGGACAGATGGGTCAGCTTCCTGAAGGAAGAGGCAGGGCATTACCCCCTCGAGAAGAGAGTGGAAGAATGCCTCAGGGGTGGCAAGATCATAACCACACCGAGGATCGAGGATGCCCTCGTCGTTTCCGAACGTGGAGGAGATTTCAAATTGATCCTCGGACAGGATCTCTCGATAGGGTACGAAGACAGAGAAAAAGACGCGGTGAGGCTTTTCATAACGGAGACGTTCACCTTCCAGGTTGTCAACCCGGAGGCTTTGATTCTTCTAAAGTTCTGA"
+    },
+    {
+      "sequence_link_id": "B1L7S2_seq1",
+      "candidate_id": "B1L7S2",
+      "protein_accession": "WP_004080898.1",
+      "nucleotide_accession": "NC_010483.1",
+      "cds_start": 137480,
+      "cds_end": 138277,
+      "strand": "+",
+      "cds_length_nt": 798,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NC_010483.1?report=genbank&log$=seqview&from=137480&to=138277",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGGAATTTCTGAAAAGATCCTTTGCTCCTCTGACAGAAAAACAGTGGCAGGAGATAGACAACAGAGCAAGAGAGATCTTCAAAACACAGCTCTACGGAAGGAAATTCGTCGATGTGGAAGGTCCCTACGGCTGGGAGTACGCTGCCCATCCACTCGGGGAAGTTGAGGTGCTTTCAGACGAGAACGAAGTGGTGAAGTGGGGATTGAGGAAGTCTCTGCCGCTCATCGAACTGAGGGCAACGTTCACTCTCGATCTGTGGGAACTCGACAACCTCGAGAGAGGAAAACCGAACGTGGATCTTTCCAGCTTAGAAGAAACGGTGAGAAAGGTTGCGGAATTTGAAGACGAAGTGATATTCAGAGGATGTGAAAAATCGGGTGTTAAAGGCCTTCTTTCCTTCGAAGAGAGGAAAATCGAATGTGGAAGCACACCGAAAGACCTCCTCGAAGCCATAGTGAGGGCTCTTTCGATCTTCTCAAAAGATGGTATAGAGGGCCCTTACACACTCGTCATAAACACGGACAGATGGATCAACTTCCTGAAGGAAGAGGCAGGGCATTACCCCCTCGAGAAGAGAGTGGAAGAATGCCTCAGGGGTGGCAAGATCATAACCACACCGAGAATCGAGGATGCCCTCGTCGTTTCTGAGCGTGGAGGGGATTTCAAATTGATCCTTGGACAGGATCTCTCGATAGGGTACGAAGACAGGGAAAAAGACGCGGTGAGGCTTTTCATAACGGAGACGTTCACCTTCCAGGTTGTCAACCCGGAGGCCTTGATTCTTCTAAAGTTCTGA"
+    },
+    {
+      "sequence_link_id": "C0ZVK4_seq1",
+      "candidate_id": "C0ZVK4",
+      "protein_accession": "WP_020909834.1",
+      "nucleotide_accession": "NC_012490.1",
+      "cds_start": 6469849,
+      "cds_end": 6470643,
+      "strand": "-",
+      "cds_length_nt": 795,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NC_012490.1?report=genbank&log$=seqview&from=6469849&to=6470643",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "TCACGCAAGTGAGACAACGGCTTCGCTGGTGTACATGAGGAACGTCATCGATTCCTGGAAGTACAGCTCGACGGAGTTCGCATCGTGCGAGAGGTAACCGATGGACAGGTCCTGGCCCAGATGCAGCTCGTAGTCACCACCACGCGTCGACAGCAGGAAAGCGCCGTCGATGGCCGGGGCCCAGATGATCTCGCCGTCGAGAACGCGTCGCAGGTGCTCGCGGATGGGGTAGCCGTGATCGGAGGTCTCGTTGATCGCGGTGAACGCGTCGGCGTTCAGGAGCAATGAGTACGGTCCGTTGACACCGGCCAGGCGCAGCGACGTGATCGCCTGGCTGATGGCTTCCGGGTAGTCCTTGGCGTCGATGGGGAGCTTCAATTCCGGGTTGGAACCGCTCGCCCGCACGCCGGTGATGCTGGCTGCGGGGTATCCCTCGAAGATGGCGCGGTCCTCGGCGAACGCGATCTGCTTGGCGGCATCCTTGACCGGCTGCCAGTCGGAGTCCTTGGCGCCGCGCTCGACGTCGTCGATGGCCTGACGGCTGACGGTGAACGGGACCCGCAGTTCGATGACCGGCTGCGACTGACGAGCGTGTGCGATGACGCCGTCGGCCAAGGGATTGATCGGCACCTGATGTCCGAGCGGGATGGCCGCAAGATCGTCACCCGACGGGCCCTCCACGTCCACCACACGACGACCGGCGACGTGGCGCTTGAAGGTACGGCTCGCCTCTTCTTCGATCTCGGCCCAGGCTGCTGCCGAAATGGGTGCTAGGTCGCGGTGCAGGTTTGTCAT"
+    },
+    {
+      "sequence_link_id": "D0LZ74_seq1",
+      "candidate_id": "D0LZ74",
+      "protein_accession": "WP_012828935.1",
+      "nucleotide_accession": "NC_013440.1",
+      "cds_start": 5285325,
+      "cds_end": 5286125,
+      "strand": "+",
+      "cds_length_nt": 801,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NC_013440.1?report=genbank&log$=seqview&from=5285325&to=5286125",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGGATCTACTCAAGCGACATCTCGCCCCCATCGTTCCCGACGCCTGGTCCGCCATCGACGAAGAGGCCAAGGAGATTTTTCAGGGACACCTGGCCGGCCGCAAGCTGGTCGATTTCCGCGGCCCCTTCGGCTGGGAGTACGCGGCCGTCAACACCGGCGAGCTGCGTCCCATCGACGACACGCCCGAGGACGTGGACATGAAGCTGCGCCAGGTGCAGCCGCTCGCCGAGGTGCGGGTGCCGTTCACGCTCGACGTCACCGAGCTCGACTCCGTGGCCCGCGGCGCCACCAACCCCGACCTCGACGATGTCGCCCGCGCCGCCGAGCGCATGGTCGAGGCCGAGGATTCGGCCATCTTCCACGGCTGGGCGCAGGCCGGCATCAAGGGCATCGTCGACTCGACGCCGCACGAGGCCCTTGCCGTGGCCAGCGTCAGCGACTTCCCCCGGGCCGTGCTCTCGGCCGCCGACACGCTGCGCAAGGCCGGCGTCACCGGGCCCTACGCTCTGGTCCTCGGCCCCAAGGCCTACGACGACCTGTTCGCGGCCACTCAGGACGGCTACCCCGTGGCCAAGCAGGTGCAGCGCCTGGTGGTCGACGGCCCGCTGGTGCGCGCCAACGCGCTCGCCGGCGCGCTGGTGATGTCGATGCGCGGCGGCGACTACGAGCTGACCGTGGGCCAGGATCTGTCCATCGGCTACGCCTTCCACGACCGCAGCAAGGTCGAGCTATTCGTCGCCGAGTCGTTCACCTTCCGCGTGCTCGAGCCCGGCGCCGCCGTGCACCTGCGCTACGCCTGA"
+    },
+    {
+      "sequence_link_id": "I3E3I1_seq1",
+      "candidate_id": "I3E3I1",
+      "protein_accession": "WP_003348282.1",
+      "nucleotide_accession": "NZ_ADWW01000003.1",
+      "cds_start": 304005,
+      "cds_end": 304853,
+      "strand": "-",
+      "cds_length_nt": 849,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_ADWW01000003.1?report=genbank&log$=seqview&from=304005&to=304853",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "TTACTCTCCCCCGTCTTCTAATGTACATATGGCAGAAGGGCGTTTAATCCGTAAAACAACCGTTTCATACACACGGAAAGGATGGTTCATTCCTTCTTCTCCCAAATATGCTGTATCAAAATCCTCTGAAACAGCAAGATCCAGATTATTTCGCCCTGTATTGACGAGGACTCCCGTTTTTCCTTTTAGAACCGGGGTTTGGAACACCCCATCTGTAACAAGCTCACGAACATGCTCAATTTCTAAAACGTTCGTATCTTTATGTACACGGTGCAACAATGAATATAACTCTGGTGATAAAACAAGAGCAAACGGCCCATTATGTTTCATCTCAAGTAATTTGTTTCTTGCTTCCACTACATCTTGAAAAGCGTTTCCTGATTCGTACCAATTTCCTATCAAGTGTGTTGATCGGCCTTTTACATTCATTAAACCGGGAATATCAAATTCCTTTGATCCGTAAAAAATCATCTGGTCCTCTAATATTGCCACATCACGGGCAGCGTTTGCTGCTGCGGAAAAATCAATAGGGATATCTAAAACTTTTGCCTGTTCTAAATCACGCCAATATAGAACGAAATCTTTGTAAAGTAATGGGATTGTGTAATTTACCCGTTTACTAGTCTCGATGTCTGTATCAAATGATCCTTGAAAATCCATTTTTGCTTCATAGTTTTCAATAAATACGTCATTAAAAATACTCTGTATTCCTCTTCCAAGCGGACCGTACAATTCGATAAAACGGCGTCCAATCAATTGTCTACGTGCAGTGTCAATGACTGTTTGATCTAATTGTGAGAAATCTTGATCTGTTAATGGTGAATCTGGAAATAGTTGAGTCTTGCCCAT"
+    },
+    {
+      "sequence_link_id": "I3NID5_seq1",
+      "candidate_id": "I3NID5",
+      "protein_accession": "WP_003872495.1",
+      "nucleotide_accession": "NC_002944.2",
+      "cds_start": 2349935,
+      "cds_end": 2350858,
+      "strand": "-",
+      "cds_length_nt": 924,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NC_002944.2?report=genbank&log$=seqview&from=2349935&to=2350858",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "TCACTTGTACTCATGGAACTGATCCACCGCGACGTCGTCGAGCACGGCGAGCGCGTCATCGGTCAGGACGGCCAGGGAGGTGTACAGCGTGACCAGGTAGGTCGCGATCGCCGACTGGTTGATGCCGGTGAACCGCACCGACAGCCCCGGCGCCTGCTCCCCGACCAGGCCGGGCTGGAACAGCCCGACGACGCCCTGACGTTCCTCGCCGGTGCGGACCAGGATGAACTTCGTCTTGCCGTCCTCCACCGGCACCTTGTCCGACGGGATCAGCGGAATACCGCGCCAGGTGATGAACTGGGCGCCGAACAGGCTCACCACCGGCGGCGGCACCCCCCGGTAGGTGGCCTCGCGCCCGAACGCCGCGATGCCCAGCGGGTGGGTCAGGAAGAAACTGGGCGTCTTCCACACCTTGGTGATCAGCGCGTCGAGGTCGTCGGGCGTGGGAGCCCCGGCCAGCGTCTGGATCGTCTGCTCCGGCGTCGCCTGGGCCAGCAGCCCATACTCGGGGCTGTTGATCAGCTCCAGCTCCTGGCGCTCCTTGATGGTCTCGATGGTCAGCCGCAGCTGCTGGGCGATCTGATCGTGCGGGCTCGAGTACAGGTCGGAGACCCGGGTGTGGATGTCGACCAGCGTGGAAATGCTGCGCAGCGTGTACTCGCGCGGGCTGGTCTCGTAGTCCACATAGGTCTGCGGTAGCGGCTCTTCACTGCCGGCGCCGGCCTCGGCCTTGATGGCGACCTGCTCGGGATTGACCACCCGGTTCACCCGGTAGATGCCCGCCTCCACCGGAACCCAGTTCAGCAGGTGCAGCAGCCAGCGCGGCGTGATCGTCGAGAGCTGGGGGACGGTCTTGGTTGCGTTGGCGAGTTGCCTGGCAGCCAGATCACCAAGTGCTTGAGACTCATTTTGAGCCGACGTCAT"
+    },
+    {
+      "sequence_link_id": "I6WZG6_seq1",
+      "candidate_id": "I6WZG6",
+      "protein_accession": "NP_215313.1",
+      "nucleotide_accession": "NC_000962.3",
+      "cds_start": 891472,
+      "cds_end": 892269,
+      "strand": "-",
+      "cds_length_nt": 798,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NC_000962.3?report=genbank&log$=seqview&from=891472&to=892269",
+      "source_database": "NCBI RefSeq",
+      "notes": "Historical gene-specific accession: Y12820; corresponding complete-genome INSDC accession: AL123456.3. Both refer to the same H37Rv cfp29 locus represented here by RefSeq NC_000962.3.",
+      "genomic_sequence": "TTAGTGGCTGAGCGCGACCGACGCCTCGGCGGTGTAGCAAAGGAACGTCAGCGTCTCCTGCAGGTAGAGGCGCACGGTGTCCGTGTCGTGGCTGGCGTACCCGATTGCAACGTCGGTGCCCAGCTGTAGGTCGAAGTCGCCGCCTCGAGTGGTCAGCACGAACGCGCCGTCGATGGCCGGGGCCCAAATGATGTCCCCGTCCACCAGCCGGTTCAGATGCTCACGGATGGGATAGCCGTGATCGGAAGTCTCGCTAACCTTGGTGTAGACGTCAGCAGAGAGCAACACCGAATACGGTCCGTCCACACCGGCCAACCGCAGTTCGGACAATGCCTGGGAGATGACATCAGGGATTTCACGGGGATCCTCGGGCAACGTCAGCGCCGGGTTCGAACTCGCGCTGCGGATCCCTTCGATTGATGCGGCGCTGTAGCCTTCGAATATTGTGCGGTCCTCGACGAAGGCCAGCTTCTTGGCCGCCTCCTTTACCGGTTCCCAATCGGAGTCCTTAGAGCCACGTTCCACGTCGTCGATCTCGTTGCGCGACAGGGTAAACGGAACCCGTAGCCGGACAAGGGGTTTGCTGGCCCGCAGGTGGGCGATCACGCCGTTGGTTGGTGCCTTAACATCGATCAGCCGGCCGGTGCTGACCGCCGCGGTGACGGGCCCCCCGGGATCACTGACATCGACCACCCGGCGCCCGGCGATGTGTCGCTTGAACGTCCGCGCCGCCTCCAATTCGATTTCCGCCCAAGCGGCTTCGGTGACCGGTGCCAAATCGCGGTAGAGATTGTTCAT"
+    },
+    {
+      "sequence_link_id": "K5BEG2_seq1",
+      "candidate_id": "K5BEG2",
+      "protein_accession": "WP_005630281.1",
+      "nucleotide_accession": "NZ_AMRA01000102.1",
+      "cds_start": 66801,
+      "cds_end": 67598,
+      "strand": "+",
+      "cds_length_nt": 798,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_AMRA01000102.1?report=genbank&log$=seqview&from=66801&to=67598",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGAACAACCTGTATCGCGAACTCGCGCCGGTCACCGATGCCGCGTGGCATGAGATCGAGACCGAGGCCATCCGCACGTTCAAGCGGCACATCGCCGGCCGGCGCGTCGTCGACGTCAGCGAGCCCAGCGGCCCGGTGACGGCCGCGGTCAGCACCGGTCATCTGCGCGATATCAGCCCGCCCGGCGACGGGGTGGTCGCGCATCTGCGGGAGAGCAAACCGCTGGTGCGCCTGCGGGTGCCGTTCACCGTCACCCGCAGCGCGATCGACGACGTCGAGCGGGGATCGCAGGACTCCGACTGGGACCCGGTCAAGGCGGCCGCCAAGAAGCTGGCGTTCGTCGAGGACCGCGCGATCTTCGAGGGGTACCCGGCGGCGCAGATCGACGGCATCCGCCAGTGCACGTCGAATCCGGTGCTGCAGTTGCCCGACGATGCCCGCGACATCACCGACGTGATCGCCCAGGCGCTGTCGGAGCTGCGGCTCGCGGGTGTGGACGGGCCGTACTCGGTGCTGCTGTCGGCGGAGGTCTACACCAAGGTCAGCGAGACCACCGAGCACGGCTATCCGATCCGCGAGCACCTCAACCGACTGGTCGACGGCGACATCATCTGGGCGCCCGCGATCGACGGGGCGTTCGTATTGTCAACGCGCGGAGGCGATTTCGATCTGCGGCTGGGCACCGACGTTTCGATCGGTTACCTGTCGCACGACGCCGAGACCGTGCAGTTGTACCTCGAGGAGACGCTGACGTTCTTGTGCTACACCTCCGAGGCCTCGGTCGCCCTCACGCCCTAG"
+    },
+    {
+      "sequence_link_id": "K7RV67_seq1",
+      "candidate_id": "K7RV67",
+      "protein_accession": "WP_015069749.1",
+      "nucleotide_accession": "NC_019395.1",
+      "cds_start": 1107336,
+      "cds_end": 1108130,
+      "strand": "-",
+      "cds_length_nt": 795,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NC_019395.1?report=genbank&log$=seqview&from=1107336&to=1108130",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "TCAGACCAGCGCCACCGCGGCGTCGGGCTGGTGGACCCGGAAGGTGAAGGACTCCTCGAGATACAGGGTGACGGTCTGCGCGTCATGGGACAGGTAGCCGATCGAGACGTCGCGGCCCAGGAAGAGGCACGAGTCCCCGCCCCGCCTCGAGACCACCAGCGCGCACCGGGCGGCCGGCGCCCACAGCACCTCGCCGCCCGACAGCAGCTGGGTGAGGTGATCGACGACCGGGACGCCGTGGTCGGTGGTCTCCGAGACCTGCGTGTAGAGCTGTTGGGGCAGCACCAGGTCGTAGGGCCCCTCGACGTCGGCCAGCCGCAGGACATTGCAGGCGCCGGAGACGGCGTCGTCGATCTGCTCGAGCTCGGCGGGCATCTGGACGGGCTGGTGCACCGACGCCTCGCTGAGCCCGGTGATCCCGGCCTCCTCCCAGCCGTGCAGGATCGCGGTGTCCTCGGTGTCGACCAGCTTGGCGACGGCGTCGTCGACAGGGTCCCAGGTGAGATCGACGGCCCCGCGCTCGACGTCGTCGATATCGGCGCGCGAGACGGTGAACGGCACGCGGACCTGAACGAGCGGCTGGACGCGGTACACGCTGGTCTGGACGCCGTCGGTCTGCGAGCCGGTCTCGAGATGGCCCAGGCTCACCGAGCCCAGGGTCGGGCCGGCGGGCTCGGGGACGTCGACGACGCGACGCCCGGCGGCCCGCAGCGAGAAGGTGTCGCGGGCCTCGTCGTCGATCTGCTTCCAGGCCGCCTCGGATATCGGGGCGAGTTCACGGTGCAGGTTGTTCAT"
+    },
+    {
+      "sequence_link_id": "P46841_seq1",
+      "candidate_id": "P46841",
+      "protein_accession": "WP_010907959.1",
+      "nucleotide_accession": "NC_002677.1",
+      "cds_start": 998972,
+      "cds_end": 999895,
+      "strand": "+",
+      "cds_length_nt": 924,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NC_002677.1?report=genbank&log$=seqview&from=998972&to=999895",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGACGTCGGCTCAGAATGAGTCTCAGGCACTCGGCGATCTTGCTGCCGGGCAACTAGCCAACGCGACAAAAACTGTACCACAGCTCTCAACTATTACGCCGCGTTGGTTGCTGCATTTGCTCAACTGGGTTCCGGTGGAAGCGGGTGTCTATCGGGTGAACCGCGTGGTCAACCCCGAGCGGGTTGCAGTCAAAGCCGAGGCTGGCGCCGGCACCGAGGCACCGCTGCCGGAGACCTTCGTCGACTACGAGACCAGTCCGCGGGAATACACGCTGCGCACGATTTCGACGTTGCTAGATATTCACACACGGGTGTCGGATCTATACTCCAGCCCACATGACCAGATTACCCAACAACTGCGGCTGACCATCGAGACCATCAAGGAAAGGCAGGAGTGCGAGCTGGTCAACAGTCCCGAGTTCGGGTTGCTCGCGCAGGTGACTCCGGAGCAGACGATCCGGACTTTTGCCGGTGCTCCCACGCCCGACGACCTTGACGCACTGATTACCAAGGTCTGGAAGATGCCGAGCTTTTTCCTGACGCATCCGCAGGGCATCGCCGCGTTCGGCCGCGAGGCCACCTACCGTGGTGTGCCGCCCGTAGTCGTGAGCCTGTTCGGCGCACAGTTCATCACCTGGCGTGGCATTCCGCTGATCCCGTCGGACAAAGTCCCGGTGCAGGACGGTGAAACCAAGTTCATCTTGGTGCGCACTGGTGAGGAACGTCAGGGCGTGGTTGGGCTGTTCCAACCGGGCTTGGTCGGTGAGCAGGCGCCGGGACTGTCGGTGCGGTTCACTGGCATCAACCAGGCAGCGATCGCGACCTACTTGGTCACCCTCTACACGTCCTTGGCTGTCCTCACTGACGATGCGTTGGCTGTGCTTGACAACGTAGCTGTGGATCAGTTCCATGAGTACAAGTGA"
+    },
+    {
+      "sequence_link_id": "P61996_seq1",
+      "candidate_id": "P61996",
+      "protein_accession": "WP_011013014.1",
+      "nucleotide_accession": "NC_003413.1",
+      "cds_start": 1729289,
+      "cds_end": 1729588,
+      "strand": "+",
+      "cds_length_nt": 300,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NC_003413.1?report=genbank&log$=seqview&from=1729289&to=1729588",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGGAGAACAACAACATAATGTCCCAAGTCAAGGAAATTATTGAAGCTGCAATAAAGGAATTAGAAGATGACGGATTTGAGCCAGATATAATCTTAGCTGGCCCTATCTTTATAAGATATCTACCCGAAGATGTCAGACTGAAAGTTTATGAAATTGAGGAACTAGGAAGTGATGCAATTATAGCAGATTCTAAGTATCTCGGCCAAATTAAGAAAGCAGCCAAAAGAATATCAATTGATCCTCTTCTCCAAGAAAAAGAATGGGAAAAGATAATTGAAGAGATACCTACTCAAGAATAG"
+    },
+    {
+      "sequence_link_id": "P61997_seq1",
+      "candidate_id": "P61997",
+      "protein_accession": "WP_011013014.1",
+      "nucleotide_accession": "NZ_AP042435.1",
+      "cds_start": 1331600,
+      "cds_end": 1331899,
+      "strand": "+",
+      "cds_length_nt": 300,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_AP042435.1?report=genbank&log$=seqview&from=1331600&to=1331899",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGGAGAACAACAACATAATGTCCCAAGTCAAGGAAATTATTGAAGCTGCAATAAAGGAATTAGAAGATGACGGATTTGAGCCAGATATAATCTTAGCTGGCCCTATCTTTATAAGATATCTACCCGAAGATGTCAGACTGAAAGTTTATGAAATTGAGGAACTAGGAAGTGATGCAATTATAGCAGATTCTAAGTATCTCGGCCAAATTAAGAAAGCAGCCAAAAGAATATCAATTGATCCTCTTCTCCAAGAAAAAGAATGGGAAAAGATAATTGAAGAGATACCTACTCAAGAATAG"
+    },
+    {
+      "sequence_link_id": "Q0SE23_seq1",
+      "candidate_id": "Q0SE23",
+      "protein_accession": null,
+      "nucleotide_accession": null,
+      "cds_start": null,
+      "cds_end": null,
+      "strand": null,
+      "cds_length_nt": 0,
+      "source_nucleotide": null,
+      "source_database": null,
+      "notes": null,
+      "genomic_sequence": null
+    },
+    {
+      "sequence_link_id": "Q1D6H4_seq1",
+      "candidate_id": "Q1D6H4",
+      "protein_accession": "WP_026114001.1",
+      "nucleotide_accession": "NC_008095.1",
+      "cds_start": 4140372,
+      "cds_end": 4141235,
+      "strand": "-",
+      "cds_length_nt": 864,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NC_008095.1?report=genbank&log$=seqview&from=4140372&to=4141235",
+      "source_database": "NCBI RefSeq",
+      "notes": "MXAN_3556 is an old locus tag; current RefSeq locus tag: MXAN_RS17240",
+      "genomic_sequence": "CTAGCGACGTTCCGTGGCGCCGGCGCCCTCCAGCGTGCAGATGGCGTCCGGGTGCTTGATGCGCAGCAGCAGCGCCTCCAGCACGCGGAACGGGTGGTTCATCCTCGACGCGCCCAGGTACGCCGCCACCATGTCCATGGACACTGCGAGGTCCATGTTCTCCCGGCCGGTGGACACCACCACGCCGGACTCCCCGCGCAGGCGGTTGGACTGGTAGACGCCGTCCGACGCGAGCTGGCGGATGGTCTCAATCTCCAGTACGCCCGTCTTCTCGTAGATGCGGTGCAGCTGCGAGTACAGCCGCGGCGAGAGCACGACGGCGTAGGGGCCGAAGTGGCCCTGCTCGTTGAGCTTGCGCGTGGCCTCGACGATGGCCTGGAAACCGCCACCCGGCGACGTCCAGTCACCCAGCGGCACCGTGAGCCGGCCGTTGGCCGTCATCAGGCCTTCGTAGCCCAGGCGCGCGTCGCCGTAGAAGATGAGTTCGTCTTCCTGCTGCGCGCACAGCGCGGCGGCGCCTGCGGCGGCCGACACGTCCAGTGGCATGTTGTGCGTGCGCGCGGCCTCGATGTCGCGCCAGTGCAGCAGGAAGTCCTTGTAGATGATGGGGATGGTCTTGAACTTGCGAGCATCGGTGAAGACCATCGCGGTCTCCTGCTCGCCGACGATGTCCACGGCGCCGGGTGAAACGCCCTGGAACTCGTCGTAGGGAACCGTCTGCACCCCGGCGCCCAGCGGCCCGTAGATGTCCAGGATGCGCCGGCCCACCAGCGAACGCCGGGCGACCTGGATGACAGTCTCGTTCAGACGCGCCCACTCCTCTTCGCGGAGCGGGTTCTCGGCATGTCCAAGGAAGTCAGGCAT"
+    },
+    {
+      "sequence_link_id": "Q1Q6L7_seq1",
+      "candidate_id": "Q1Q6L7",
+      "protein_accession": "CAJ73225.1",
+      "nucleotide_accession": "CT573071.1",
+      "cds_start": 217487,
+      "cds_end": 218578,
+      "strand": "+",
+      "cds_length_nt": 1092,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/CT573071.1?report=genbank&log$=seqview&from=217487&to=218578",
+      "source_database": "INSDC/GenBank",
+      "notes": null,
+      "genomic_sequence": "ATGGTTATGGGTATTTTAAATACATTTAAAAAAGTATATGCAGTGACGGGTTTTTTTGCCTTGTTAGCAGTATTTTCTCTATCGCAGGTGGGGTCCTCTGCTTTTGCCGCGTGTGCAAAAGTAGATGATTGCTTTTCGTGTCATACCACACAAGAATTAAATGCAGTCCATAAAAATACTCCATACCAGGGACAAAGCTGTATTGTGTGTCACAAAGCTTTTGCTGCAGATGATACATGCTCAGACGCAAAAGATGGTAGATTCGCAAAAATTTCATCTGAAATAAACATCAACAAAGAAGATTGGAACAAAATTCAACGTGCAGTCCATGAGACAACAGAAAAGCATCTTGTAGGGAGAAAATTCTTAAACATTTACGGACCACTTGGAACAGGCGCCCAGAGTGTGCCACTTGATACGTATGGCCTGCCATCATGGGCAAGCATTGATATGCTGGGCGAGGGCAATGAGGCGATACATCCCCTTAAGAGGGAAATTGCTCAAATATACCTTATTTACAAAGACTTTTGGCTTTTCCGGAGAGATATTGAGTTCAGCAAAAAGTGTGAGACGCCCATTGATATAAGTGCTGCAATAGGAGCTGCGGTGTCTGTTTCCAGGAAAGAGGACGACATGGTTTTTAACGGTTTGTCTGAGATGGGCATTCCGGGGCTTTTGACTGCAAGCGGCAGGAATATAATGAAACTCAGTGATTGGTCAGTTATTGGAAACGGCTTTCAGGATGTTGTATTGGCAGTAGAGAAACTGACAAGCAGGGGTTTTAATGGCCCGTTTGCTTTGGTAGTGAGTCCAAAGTTGTATGCATATCTCCACAGGGTTTATGAGCGTACAGGACAATTAGAGATACAGGGGGTAAAAGAGTTGGTAAACGGGGGTGTTTATCAGAGCTACGTTTTTAATAAAGATGTGGCGCTCGTAATTGCAACGGGCAGTCTGAATATGGACCTTGCCGTAGGGAGCAATTATAAAGTAGAGTACTGGGGCCCTCAGGATCTGAACCACCGGTTCAGGGTTGTGGGGAGTTCTGTGCTCAGGATTAAATGTCCGCAGGCAATTTGTACATTGGAGTAG"
+    },
+    {
+      "sequence_link_id": "Q2RVS0_seq1",
+      "candidate_id": "Q2RVS0",
+      "protein_accession": "WP_011388729.1",
+      "nucleotide_accession": "NC_007643.1",
+      "cds_start": 1159249,
+      "cds_end": 1160091,
+      "strand": "+",
+      "cds_length_nt": 843,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NC_007643.1?report=genbank&log$=seqview&from=1159249&to=1160091",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "ATGAACGATCTGATGCGTGACTTGGCGCCGATCTCGGCCAAGGCCTGGGCGGAAATTGAAACGGAAGCGCGCGGGACCCTGACGGTCACCCTGGCGGCGCGCAAGGTGGTGGACTTCAAGGGACCGCTGGGCTGGGACGCCTCGTCGGTGTCCTTGGGGCGGACCGAGGCTTTGGCCGAGGAGCCCAAGGCGGCGGGAAGCGCCGCCGTGGTCACGGTGCGCAAGCGCGCCGTTCAGCCGCTGATCGAGCTCTGCGTGCCTTTCACTTTGAAGCGCGCCGAGTTGGAGGCGATCGCCCGCGGCGCGTCGGATGCCGATCTTGATCCGGTGATCGAGGCCGCCCGCGCCATCGCCATCGCCGAGGACCGCGCCGTGTTCCACGGCTTCGCCGCCGGCGGCATCACCGGCATCGGCGAAGCCTCGGCCGAGCATGCCCTGGATCTGCCCGCCGACCTCGCCGATTTCCCCGGCGTGCTGGTGCGCGCTCTGGCGGTGCTGCGCGATCGCGGCGTCGATGGCCCTTACGCCCTGGTGCTGGGCCGCACCGTCTATCAGCAGCTGATGGAAACCACCACGCCGGGCGGCTATCCGGTGCTTCAGCACGTGCGCCGGCTGTTCGAAGGCCCGCTGATCTGGGCCCCGGGTGTCGATGGCGCGATGCTGATCAGCCAGCGCGGCGGCGATTTCGAACTGACCGTTGGCCGCGATTTCTCGATCGGCTATCACGATCACGACGCCCAGTCCGTGCATCTTTATCTGCAAGAAAGCATGACCTTCCGCTGCCTTGGCCCCGAAGCCGCCGTGCCGCTGCGTGGCCTGTCCCAGGCCGCCACCAAGGCATAA"
+    },
+    {
+      "sequence_link_id": "Q45296_seq1",
+      "candidate_id": "Q45296",
+      "protein_accession": "WP_101555098.1",
+      "nucleotide_accession": "NZ_CP026734.1",
+      "cds_start": 23313,
+      "cds_end": 24113,
+      "strand": "+",
+      "cds_length_nt": 801,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_CP026734.1?report=genbank&log$=seqview&from=23313&to=24113",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "GTGAATAACCTCTATCGCGAGCTTGCCCCCATCCCCGGCCCGGCCTGGGCGGAGATCGAGGAGGAGGCTCGACGGACATTCAAACGCAATATCGCCGGCCGCCGGATCGTCGATGTCGCAGGGCCCACGGGCTTCGAGACCTCCGCGGTGACCACTGGCCACATCCGAGACGTCCAGTCGGAGACGAGCGGACTGCAGGTTAAGCAGCGCATCGTGCAGGAATACATCGAGCTGCGGACCCCATTCACCGTGACTCGGCAGGCCATCGATGACGTGGCCCGCGGGTCCGGTGACTCGGACTGGCAGCCCGTCAAGGATGCGGCCACGACGATCGCGATGGCTGAAGATCGGGCCATTCTCCACGGGCTCGATGCGGCCGGGATCGGCGGAATCGTTCCCGGCAGCTCGAATGCCGCAGTGGCCATCCCCGACGCCGTCGAGGACTTCGCGGACGCCGTCGCCCAGGCGCTGAGTGTGCTGCGCACGGTGGGAGTCGACGGGCCCTACAGCCTGTTGCTCTCCTCCGCGGAGTACACCAAGGTCTCCGAGTCCACCGACCACGGCTACCCGATCCGCGAGCACCTCTCCCGGCAGCTCGGCGCCGGAGAGATCATCTGGGCGCCCGCGCTCGAAGGGGCGCTGCTCGTCTCCACGCGCGGGGGTGACTACGAGCTCCACCTCGGCCAGGACCTGTCGATCGGTTACTACAGCCACGACAGCGAGACCGTCGAACTCTATCTGCAGGAGACCTTCGGATTCCTCGCGCTGACCGACGAATCCAGTGTGCCTTTGAGCCTCTGA"
+    },
+    {
+      "sequence_link_id": "Q48899_seq1",
+      "candidate_id": "Q48899",
+      "protein_accession": "AAC18618.1",
+      "nucleotide_accession": "U43835.1",
+      "cds_start": null,
+      "cds_end": null,
+      "strand": null,
+      "cds_length_nt": null,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/U43835.1",
+      "source_database": "INSDC/GenBank",
+      "notes": "No RefSeq nucleotide/protein cross-reference is provided for Q48899 in  UniProt; the original INSDC/GenBank record U43835 and translated protein AAC18618.1 are used instead.",
+      "genomic_sequence": "CACGAAAGGATCACGATGACGTCGGCTCAAAATGAGTCTCAAGCACTTGGTGATCTGGCTGCCAGGCAACTCGCCAACGCAACCAAGACCGTCCCCCAGCTCTCGACGATCACGCCGCGCTGGCTGCTGCACCTGCTGAACTGGGTTCCGGTGGAGGCGGGCATCTACCGGGTGAACCGGGTGGTCAATCCCGAGCAGGTCGCCATCAAGGCCGAGGCCGGCGCCGGCAGCGAAGAGCCCGTACCGCAGACCTATGTGGACTACGAGACCAGCCCGCGCGAGTACACGCTGCGCAGTATTTCCACGCTGGTCGACATCCACACCCGGGTCTCCGACCTGTACTCGAGCCCGCACGATCAGATCGCCCAGCAGCTGCGGCTGACCATCGAGACCATCAAGGAGCGTCAGGAGCTGGAGCTGATCAACAGCCCCGAGTATGGCCTGCTGGCCCAGGCGACGGGAAGGCAGACGATCCAGACGCTGGCCGGGGCTCCCACGCCCGACGACCTCGACGCGCTGATCACCAAGGTGTGGAAGACGCCCAGTTTCTTCCTGACCCACCCGCTGGGCATCGCGGCGTTCGGGCGCGAGGCCACCTACCGGGGGGTGCCGCCGCCGGTGGTGAGCCTGTTCGGACCGACCCAGTTCATCACCTGGCACGGTATCCGGCTCCCGTCGGACAAGGTGCCGGTGGAGGACGGCAAGACGAAGTTCATCCTGGTCCGCACCGGCGAGGAACGTCAGGGCGTCGTCGGGCTGTTCCAGCCCGGCCTGGTCGGGGAGCAGGCACCGGGGCTGTCGGTGCGGTTCACCGGCATCAACCAGTCGGCGATCGCGACCTACCTGGTCACGCTGTACACCTCCCTGGCCGTCCTGACCGATGACGCGCTGGCCGTGCTCGACGACGTCGCGGTGGATCAGTTCCATGAGTACAAGTGAGTACCGAGCGGTAGACGCCGAAA"
+    },
+    {
+      "sequence_link_id": "Q55032_seq1",
+      "candidate_id": "Q55032",
+      "protein_accession": "WP_011055154.1",
+      "nucleotide_accession": "NC_004073.2",
+      "cds_start": 26975,
+      "cds_end": 27895,
+      "strand": "-",
+      "cds_length_nt": 921,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NC_004073.2?report=genbank&log$=seqview&from=26975&to=27895",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "TTAGTTGTAGCGATAGGTGTGGTACTGAGTGACATCGACGTTGTCCAGCACCGCTAACGCATCGTCCGTCAGCACCGCCAGCGAGCAGTAGAGCGACACCAAATAGCTGGCTAAGGCTTTGCGATTAATGCCCATAAAACGTACCGATAAACCCATGCCCTGCTCACCCGGCAGATTGGGTTGATAAAGACCCACAACGCCCTGCCGACTTTCCCCCACACGCAGGAGCAGGATTTTGGTCTTGCCATTCTCCAGTGGCACTTTGTCCGACGGAATCAGTGGCACGCCTCGCCAAGTGATGAATGAGGAGCCGAACAGAGAAACCGTGGCAGGCGGAACTCCTCGGCGTGTGCATTCCCGACCAAAAGCTGCGATCGCCTGCGGATGAGCCAGGAAAAAGGCCGGCTCTTTCCAAACGCGAATCAAGAGCTCATCCAGATCATCTGGTGTTGGTGCACCATTGCGGGTGTGGACTAATTGCCCTGGTGCCACATTATTCAGCAGTCCATATTCGCGGCTATTGATCAGCTCGCTTTCCTGCCGCTCCTTCATAATCTCGATCGTCAGCCGCAACTGCTCACGGATTTGATCGTGGGGATTGCTGTATAGATCTGAGATGCGGGTATGGACATCCACTACCGTATTGACGGCGCTGAGCAAATACTCGCGGGGATTATCGATGTAATCGACAAAGGTTTCGGGCAGCTCTGACTCATCTCGTTCCGAGCAGGCCACCGTAATCTGCGAAGCGTCTTTAACTTGGTTGACGCGGTAGATACCCGCTTCCACTGGCGTCCAGTGCAACAGCCGCACCAACCACCGGGGGGTAATGGTGCGAAGCTGCGGAACGGTTTTGGTCGCGTTGGCTAACTGGCGTGCAGCAACATCACGCAACGCTAACTGCGGGGCGTTATCAGTCAT"
+    },
+    {
+      "sequence_link_id": "Q743F5_seq1",
+      "candidate_id": "Q743F5",
+      "protein_accession": "WP_003875791.1",
+      "nucleotide_accession": "NC_002944.2",
+      "cds_start": 653470,
+      "cds_end": 654267,
+      "strand": "-",
+      "cds_length_nt": 798,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NC_002944.2?report=genbank&log$=seqview&from=653470&to=654267",
+      "source_database": "NCBI RefSeq",
+      "notes": null,
+      "genomic_sequence": "TCACGAGGTCAGCGGGACGGCGGCCTCGGCGGTGTAGCACAAGAAGGTCAGCGTCTCCTGCAGGTACAGCTGCACGGTGTCCGCGTCGTGACTGGTGTAGCCGATCGACACGTCGGTCCCGAGTTGCAGGTCGAAGTCGCCGCCGCGGGTGGTCAGCACGAAAGCACCGTCGATGGCCGGCGCCCAGATGATGTCGCCGGGAACCAGCCGGTCGATGTGTTCGAGGATCGGATAGCCGTGTTCGGTGGTCTCGCTGACCTTGGTGTAGACGTCGGCGGACAGCAGCACCGAGTAGGGGCCGTCGACACCGGCCAGCCGGAGTTCGGAGATCGCCTGGGTGATCACGTCCGGAATCTCGCGGGGGTCTGCCGGCAGGGCCAGCGGCTTGTTCGAGCTGGCCGAACGGATGCCGTCGATCGACGCGGCCGCGTAGCCCTCGAAGATGGCCCGGTCTTCCACGAACGCCAACTTCTTGGCGGCCTCCTTGACCGGATCCCAGTCCGAGTCGTTGGCGCCGCGCTCGACGTTGTCGATCTCGTAACGCGACAAGGTGAACGGAACCCGCAGCCGGACAAGGGGTTTGCTGGCCCGCAGGTGGGCCACCACACCGTTGGTGGGTGCCTCGACGTCGATCAGTCGGCCGGTGCTGACCGCCGCGGCGGCCGGACCGCCGGGCTCGCTCACGTCGACCACCCGCCGGCCGGCGACATGGCGCTTGAAGGTCCGGCTGGCCTCCAATTCGATTTCACCCCAAGCGGCTTCGGTGACCGGTGCCAGATCGCGGTAGAGGTTGTTCAT"
+    },
+    {
+      "sequence_link_id": "Q8U1L4_seq1",
+      "candidate_id": "Q8U1L4",
+      "protein_accession": null,
+      "nucleotide_accession": null,
+      "cds_start": null,
+      "cds_end": null,
+      "strand": null,
+      "cds_length_nt": 0,
+      "source_nucleotide": null,
+      "source_database": null,
+      "notes": null,
+      "genomic_sequence": null
+    },
+    {
+      "sequence_link_id": "Q9WZP2_seq1",
+      "candidate_id": "Q9WZP2",
+      "protein_accession": "WP_004080898.1",
+      "nucleotide_accession": "NC_021214.1",
+      "cds_start": 808697,
+      "cds_end": 809494,
+      "strand": "-",
+      "cds_length_nt": 798,
+      "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NC_021214.1?report=genbank&log$=seqview&from=808697&to=809494",
+      "source_database": "NCBI RefSeq",
+      "notes": "Current RefSeq locus tag: TMARI_RS04015; historical locus tag: TM_0785",
+      "genomic_sequence": "TCAGAACTTTAGAAGAATCAAGGCCTCCGGGTTGACAACCTGGAAGGTGAACGTCTCCGTTATGAAAAGCCTCACCGCGTCTTTTTCCCTGTCTTCGTACCCTATCGAGAGATCCTGTCCAAGGATCAATTTGAAATCCCCTCCACGCTCAGAAACGACGAGGGCATCCTCGATTCTCGGTGTGGTTATGATCTTGCCACCCCTGAGGCATTCTTCCACTCTCTTCTCGAGGGGGTAATGCCCTGCCTCTTCCTTCAGGAAGTTGATCCATCTGTCCGTGTTTATGACGAGTGTGTAAGGGCCCTCTATACCATCTTTTGAGAAGATCGAAAGAGCCCTCACTATGGCTTCGAGGAGGTCTTTCGGTGTGCTTCCACATTCGATTTTCCTCTCTTCGAAGGAAAGAAGGCCTTTAACACCCGATTTTTCACATCCTCTGAATATCACTTCGTCTTCAAATTCCGCAACCTTTCTCACCGTTTCTTCTAAGCTGGAAAGATCCACGTTCGGTTTTCCTCTCTCGAGGTTGTCGAGTTCCCACAGATCGAGAGTGAACGTTGCCCTCAGTTCGATGAGCGGCAGAGACTTCCTCAATCCCCACTTCACCACTTCGTTCTCGTCTGAAAGCACCTCAACTTCCCCGAGTGGATGGGCAGCGTACTCCCAGCCGTAGGGACCTTCCACATCGACGAATTTCCTTCCGTAGAGCTGTGTTTTGAAGATCTCTCTTGCTCTGTTGTCTATCTCCTGCCACTGTTTTTCTGTCAGAGGAGCAAAGGATCTTTTCAGAAATTCCAT"
     }
   ]
 };
