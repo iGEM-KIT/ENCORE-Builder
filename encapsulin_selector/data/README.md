@@ -80,6 +80,9 @@ The sequence record may contain:
 - `source_database`: source database, e.g. `NCBI RefSeq`
 - `notes`: additional curation information
 - `genomic_sequence`: nucleotide sequence stored in genomic-record orientation
+  `genomic_sequence` is stored 5'→3' in reference-genome orientation.
+For negative-strand CDSs, the coding sequence in 5'→3' orientation is obtained
+by reverse complementing `genomic_sequence`.
 
 Unknown values should normally be `null`. If no genomic sequence is currently
 available, `genomic_sequence` can be `null` and `cds_length_nt` is `0` in the
