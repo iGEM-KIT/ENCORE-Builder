@@ -9,6 +9,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/site.css">
 <style>
+  /* Primer structure check (hairpin / self-dimer / primer-primer dimer) in the Level 0 popup */
+  .pstruct{margin-top:8px;font-size:12px}
+  .pstruct table{width:100%;border-collapse:collapse}
+  .pstruct th,.pstruct td{padding:3px 8px;text-align:left;font-weight:400;border-bottom:1px solid var(--line-soft)}
+  .pstruct thead th{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--teal-deep);font-weight:600}
+  .pstruct .pfig{font-family:'JetBrains Mono';color:var(--ink-soft)}
+  .pst{display:inline-flex;align-items:center;font-weight:700;font-size:10.5px;padding:1px 7px;border-radius:999px}
+  .pst.ok{background:rgba(0,158,115,.14);color:#0a6b4a}
+  .pst.bad{background:rgba(213,94,0,.16);color:#9a4100}
+  [data-theme="dark"] .pst.ok{background:rgba(0,158,115,.22);color:#7ee0bd}
+  [data-theme="dark"] .pst.bad{background:rgba(213,94,0,.22);color:#f0a883}
+
   /* Biosecurity screening (COMMEC) status; a passive header badge, not a
      button: it only reports whether the sidecar is reachable right now, it
      doesn't toggle anything. Same dot-language everywhere on the site
@@ -381,30 +393,8 @@
   thead th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--teal-deep);font-weight:600;padding:0 12px 9px;border-bottom:1px solid var(--line)}
   tbody td{padding:11px 12px;border-bottom:1px solid var(--line-soft);vertical-align:top}
   tbody tr:last-child td{border-bottom:0}
-  .mrna-risk{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:12px;padding:3px 9px;border-radius:999px}
-  .mrna-risk.low{background:rgba(0,158,115,.14);color:#0a6b4a}
-  .mrna-risk.moderate{background:rgba(230,159,0,.16);color:#8a5a00}
-  .mrna-risk.high{background:rgba(213,94,0,.16);color:#9a4100}
-  .mrna-risk.na{background:var(--card-2);color:var(--muted)}
-  [data-theme="dark"] .mrna-risk.low{background:rgba(0,158,115,.22);color:#7ee0bd}
-  [data-theme="dark"] .mrna-risk.moderate{background:rgba(230,159,0,.22);color:#f0c060}
-  [data-theme="dark"] .mrna-risk.high{background:rgba(213,94,0,.22);color:#f0a883}
-
-  /* Compact version of the same mRNA self-fold/self-dimer check, shown right under a sequence
-     field: same idea as the length/aa/GC line, just for a slower (backend-only) result that
-     arrives a moment later once the debounced server check returns. */
-  .mrna-mod{margin-top:8px;font-size:12.5px}
-  .mrna-mod .mrna-inline{margin-top:3px}
-  .mrna-inline{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin-top:6px;font-size:11.5px;color:var(--muted)}
-  .mrna-inline .mrna-item{display:inline-flex;align-items:center;gap:5px}
-  .mrna-inline .mrna-risk{padding:1px 7px;font-size:10.5px}
-  .mrna-inline .mrna-figs{font-family:'JetBrains Mono';color:var(--ink-soft)}
-  .mrna-inline .mrna-spin{width:11px;height:11px;border-radius:50%;border:2px solid var(--line);border-top-color:var(--teal-deep);flex:none;animation:mrnaspin .7s linear infinite}
-  @keyframes mrnaspin{to{transform:rotate(360deg)}}
-
   /* Biosecurity screening (COMMEC): same low/moderate/high badge language as
-     the mRNA risk chips, reused here for Pass/Warning/Flag so the two checks
-     read as one visual system. */
+     the low/moderate/high badge language, used here for Pass/Warning/Flag. */
   .biosec-badge{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:12px;padding:3px 9px;border-radius:999px}
   .biosec-badge.low{background:rgba(0,158,115,.14);color:#0a6b4a}
   .biosec-badge.moderate{background:rgba(230,159,0,.16);color:#8a5a00}
@@ -561,7 +551,7 @@
     <span class="flowarrow">→</span>
     <div class="flowstep"><span class="dot" style="background:var(--teal)"></span>Modules</div>
     <span class="flowarrow">→</span>
-    <div class="flowstep"><span class="dot" style="background:var(--orange)"></span>Order</div>
+    <div class="flowstep"><span class="dot" style="background:var(--orange)"></span>Overview</div>
   </div>
   <a class="prereq" href="/guide.html" aria-label="Before you start, open the guide with all rules and notes">
     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
@@ -584,7 +574,7 @@
     <div class="s-step" data-target="sec-1"><button class="s-node"><span class="s-dot">2</span><span class="s-text"><span class="t">Cargo Site</span><span class="sub">Cargo &amp; modules</span></span></button><span class="s-line"></span></div>
     <div class="s-step" data-target="sec-2"><button class="s-node"><span class="s-dot">3</span><span class="s-text"><span class="t">Promoter</span><span class="sub">Drives both modules</span></span></button><span class="s-line"></span></div>
     <div class="s-step" data-target="sec-3"><button class="s-node"><span class="s-dot">4</span><span class="s-text"><span class="t">Result</span><span class="sub">Modules</span></span></button><span class="s-line"></span></div>
-    <div class="s-step" data-target="sec-4"><button class="s-node"><span class="s-dot">5</span><span class="s-text"><span class="t">Order</span><span class="sub">Stock, oligos, primers, DNA</span></span></button></div>
+    <div class="s-step" data-target="sec-4"><button class="s-node"><span class="s-dot">5</span><span class="s-text"><span class="t">Overview</span><span class="sub">Stock, oligos, primers, DNA</span></span></button></div>
   </nav>
 </aside>
 <!-- ============ TOP BAR: progress + live construct map ============ -->
@@ -630,7 +620,6 @@
               <span class="hint" id="shellLen">0 bp</span></span>
             <textarea id="shellSeq" placeholder="Paste the CDS of your nanocompartment shell (DNA, A/T/G/C) or its amino acid sequence; start and stop codon optional, the builder adds them …"></textarea>
             <div class="seqmeta" id="shellMeta"></div>
-            <div id="shellMrna" class="mrna-inline"></div>
           </label>
           <div id="shellStopArea"></div>
         </div>
@@ -683,7 +672,6 @@
               <span class="hint" id="cargoLen">0 bp</span></span>
             <textarea id="cargoSeq" style="display:none" placeholder="Paste your own cargo CDS (DNA, A/T/G/C) or its amino acid sequence; start and stop codon optional, the builder adds them …"></textarea>
             <div class="seqmeta" id="cargoMeta"></div>
-            <div id="cargoMrna" class="mrna-inline"></div>
           </label>
           <div id="cargoStopArea"></div>
           <div class="termlab gap"><span class="tbadge">N</span>N-terminus of the cargo<small>Type 0.4 &amp; 0.5 · fused in front of the cargo</small></div>
@@ -829,10 +817,6 @@
                     <div class="levellabel"><h4>Nanocompartment module</h4><span class="l0m-badge sense">sense strand</span></div>
                     <div class="strandwrap"><div class="strand" id="lvl1nc"></div></div>
                   </div>
-                  <div class="levelblock" id="modMrnaBlock" style="display:none">
-                    <div class="levellabel"><h4>mRNA of the modules</h4><button class="info" type="button" data-info="moduleMrna" aria-label="About the mRNA check of the modules">i</button></div>
-                    <div id="modMrna"></div>
-                  </div>
                                     <div class="lvlinfo" id="l1fold"><button class="info" type="button" data-info="level1" aria-label="How this level works">i</button><span>How this level works</span></div>
 
                   <div class="lvlsubhead">Destination plasmid</div>
@@ -899,7 +883,7 @@
 
           <div class="nav">
             <button class="btn btn-ghost" id="back3">Back</button>
-            <button class="btn btn-primary" id="next3">Continue to order</button>
+            <button class="btn btn-primary" id="next3">Continue to overview</button>
           </div>
         </div>
       </div>
@@ -912,7 +896,7 @@
         <span class="num-badge">5</span>
         <div class="htext">
           <div class="eyebrow">Step 5</div>
-          <h2>Order</h2>
+          <h2>Overview</h2>
           <p>What to order as oligos or primers, and the sequences as DNA. Your own sequences are codon-optimized for <i>S. cerevisiae</i>; the sequences below are the optimized ones.</p>
         </div>
       </div>
@@ -1107,7 +1091,6 @@ try{
    DNA if >= 90 % of the letters are A/C/G/T/U/N, else protein. A protein is back-translated by the builder (S. cerevisiae codon usage). */
 const isProteinText = s => { const l=(s||'').toUpperCase().replace(/^>.*$/gm,'').replace(/[^A-Z*]/g,''); return l.length>0 && l.replace(/[^ACGTUN]/g,'').length/l.length<0.9; };
 const cleanProtein = s => (s||'').toUpperCase().replace(/^>.*$/gm,'').replace(/[^ACDEFGHIKLMNPQRSTVWY*]/g,'');
-let moduleMrnaToken = 0;                       // see loadModuleMrna()
 const clean = s => isProteinText(s) ? cleanProtein(s) : (s||'').toUpperCase().replace(/[^ATGC]/g,'');
 const seqBp = s => isProteinText(s) ? 3*s.replace(/\*/g,'').length : s.length;           // DNA length (a protein: after back-translation)
 const seqLenLabel = s => isProteinText(s) ? `${s.replace(/\*/g,'').length} aa → ${seqBp(s)} bp` : `${s.length} bp`;
@@ -1207,14 +1190,6 @@ const INFO = {
           <p><b>What is kept out.</b> An exact search then corrects as few codons as needed so that <b>no BsaI site (GGTCTC / GAGACC) and no BbsI site (GAAGAC / GTCTTC)</b> remains (also not across the seam to the overhang adapter and the neighbouring part) and no run of 7 identical bases appears. Without that the Golden Gate digest would cut your part.</p>
           <p>A DNA sequence that is already well adapted (CAI ≥ 0.85) and free of those sites is kept as entered.</p>
           <p><b>Amino acid sequences.</b> Instead of DNA you can paste a protein sequence (one-letter code, no stop codon). It is detected automatically (a sequence whose letters are at least 90 % A/C/G/T is read as DNA, anything else as protein) and back-translated with the same codon choice and the same site-free rule.</p>` },
-  moduleMrna: { title:'mRNA of the modules', img:'Diagram: mRNA from the first coding part to the first stop codon',
-    body:`<p>Self-fold and self-dimer of the <b>complete cargo module and nanocompartment module</b>: the mRNA that is really translated, not just one part. It runs from the <b>first coding part</b> to the <b>first stop codon</b> (included) in the reading frame, with the short junctions between the parts. <b>NCS spacers are left out</b>: those in front of the ORF, and behind the stop codon. An NCS with stop codon only counts up to its stop codon.</p>
-          <p>The 5′ and 3′ untranslated regions of promoter and terminator are not part of the check. Method and risk levels as for single sequences (ViennaRNA, ΔG compared with shuffled sequences, z-score); see the info next to your own sequences. The cargo module is checked in its own reading direction (Type 0.5 to 0.1).</p>` },
-  mrnaStructure: { title:'mRNA self-fold &amp; self-dimer', img:'Diagram: mRNA hairpin and mRNA-mRNA duplex',
-    body:`<p>A scanning ribosome can be blocked two ways: the mRNA <b>folds back on itself</b> (a hairpin, within one molecule), or <b>two copies of the same mRNA</b> hybridise with each other (a dimer). Either can prevent translation.</p>
-          <p>Checked for every sequence you paste yourself (cargo, your own shell, or your own sequence in a module) as a minimum free energy (ΔG, kcal/mol) via <code>ViennaRNA</code> (<code>RNAfold</code> for self-fold, <code>RNAduplex</code> for self-dimer) on its coding (sense) direction, since that is exactly the mRNA sequence (U instead of T).</p>
-          <p>ΔG alone isn't comparable between different cargos; longer/GC-richer sequences always fold more. So the real sequence's ΔG is compared against several randomly shuffled versions of the same length and base composition, giving a <b>z-score</b>: how many standard deviations more structured the real sequence is than chance. z ≤ −2 is flagged moderate, z ≤ −3 high.</p>
-          <p>This is a thermodynamic estimate, not a literal binding probability; that would need intracellular concentration and kinetics data this tool doesn't have. Skipped above a length where ViennaRNA gets too slow for a live check.</p>` },
 };
 
 /* ---------- Color key (CSS variables, so theme/CB take effect) ---------- */
@@ -1375,14 +1350,11 @@ function handleShellInput(){
 function renderShellValidation(v){
   $('#shellMeta').innerHTML = seqMetaHtml(v);
   $('#shellStopArea').innerHTML = seqNotesHtml(v, 'No stop codon found: the shell sequence is ready.');
-  $('#shellMrna').innerHTML = seqMrnaHtml(v);
   state.customNc.valid = v.ok;
   applyCustomNc();
 }
-/* Server validation answers (incl. the slow ViennaRNA mRNA-structure panel) are deterministic per
-   sequence, so they are cached in sessionStorage: after a page refresh the full result renders at once
-   instead of ~700 ms later; which also kept inserting the mRNA panel above the restored scroll position
-   and nudged it. */
+/* Server validation answers are deterministic per sequence, so they are cached in sessionStorage:
+   after a page refresh the full result renders at once instead of ~700 ms later. */
 const VAL_KEY=buildKey('val');
 function valCacheGet(kind,seq){ try{ return (JSON.parse(sessionStorage.getItem(VAL_KEY)||'{}'))[(kind||'cargo')+':'+seq]||null; }catch(e){ return null; } }
 function valCachePut(kind,seq,v){
@@ -1403,14 +1375,12 @@ function scheduleServerShellCheck(seq){
   const token=++shellCheckToken;
   const hit=valCacheGet('shell',seq); if(hit){ renderShellValidation(hit); return; }
   shellCheckTimer=setTimeout(async ()=>{
-    $('#shellMrna').innerHTML = MRNA_LOADING_HTML;
     try{
       const v=await validateCached(api,seq,'shell');
       if(token!==shellCheckToken || seq!==clean(state.customNc.seqRaw)) return;
       renderShellValidation(v);
     }catch(err){
       console.warn('[ENCORE] /api/cargo/validate (shell) failed: keeping the local check', err);
-      if(token===shellCheckToken) $('#shellMrna').innerHTML = '';
     }
   }, 400);
 }
@@ -1545,26 +1515,10 @@ function seqNotesHtml(v, okText){
   if(notes.length) return notes.map(t=>`<div class="stopwarn">${ICON_WARN}<div>${t}</div></div>`).join('');
   return `<div class="stopok">${ICON_OK}<div>${okText}</div></div>` + codonLineHtml(v.codonOptimization, false);
 }
-/* mRNA self-fold/self-dimer for THIS field's sequence; same info as the Step 4 block, just
-   compact and inline, right under the field (like the length/aa/GC line). Only ever comes from
-   the server (no JS equivalent to ViennaRNA), so it's empty until the debounced check returns,
-   and stays empty entirely offline or once ViennaRNA isn't installed server-side (mirrors how the
-   primer3-only checks are simply absent in that case, elsewhere in this page). */
-const MRNA_LOADING_HTML = `<span class="mrna-item"><span class="mrna-spin"></span>Checking mRNA self-fold/self-dimer: can take a few seconds for longer sequences…</span>`;
-function seqMrnaHtml(v){
-  const st = v.mrnaStructure;
-  if(!st) return '';
-  if(!st.available) return `<span title="${st.reason||''}">mRNA structure: not checked</span>`;
-  const chip = (label, check) => `<span class="mrna-item">${label} <span class="mrna-risk ${check.risk||'na'}">${check.risk||'n/a'}</span>`
-    + ` <span class="mrna-figs">ΔG ${check.deltaG}</span></span>`;
-  return chip('Self-fold', st.selfFold) + chip('Self-dimer', st.selfDimer)
-    + `<button class="info" data-info="mrnaStructure" style="margin-left:-4px">i</button>`;
-}
 function renderCargoValidation(v){
   $('#cargoMeta').innerHTML = seqMetaHtml(v);
   // The stop-codon / frame check only makes sense for a CDS the user typed in; the library examples are ours.
   $('#cargoStopArea').innerHTML = state.cargoFromPreset ? '' : seqNotesHtml(v, 'No stop codon found: sequence is ready for fusion.');
-  $('#cargoMrna').innerHTML = seqMrnaHtml(v);
   state.cargoValid = v.ok;
   refreshNext1();
   updateConstructStrip();
@@ -1581,14 +1535,12 @@ function scheduleServerCargoCheck(seq){
   const token=++cargoCheckToken;
   const hit=valCacheGet('cargo',seq); if(hit){ renderCargoValidation(hit); return; }
   cargoCheckTimer=setTimeout(async ()=>{
-    $('#cargoMrna').innerHTML = MRNA_LOADING_HTML;
     try{
       const v=await validateCached(api,seq,undefined);
       if(token!==cargoCheckToken || seq!==state.cargoSeq) return;   // outdated
       renderCargoValidation(v);
     }catch(err){
       console.warn('[ENCORE] /api/cargo/validate failed: keeping the local check', err);
-      if(token===cargoCheckToken) $('#cargoMrna').innerHTML = '';
     }
   }, 400);
 }
@@ -1725,7 +1677,6 @@ function slotCardHtml(mod,n){
       <input type="text" class="slotlabel" placeholder="Name (optional)" maxlength="60">
       <textarea class="slotseq" placeholder="CDS of your part (DNA, A/T/G/C) or its amino acid sequence; start and stop codon optional, the builder adds them …"></textarea>
       <div class="seqmeta slotmeta"></div>
-      <div class="slotmrna mrna-inline"></div>
       <div class="slotnotes"></div>
     </div>
   </div>`;
@@ -1763,7 +1714,6 @@ function renderSlotValidation(mod,n,v){
   const el=slotEl(mod,n);
   el.querySelector('.slotmeta').innerHTML=seqMetaHtml(v);
   el.querySelector('.slotnotes').innerHTML=seqNotesHtml(v, 'No stop codon found: the sequence is ready.');
-  el.querySelector('.slotmrna').innerHTML=seqMrnaHtml(v);
   slotsOf(mod)[n].valid=v.ok;
   updateConstructStrip(); refreshNav(mod);
 }
@@ -1776,14 +1726,12 @@ function scheduleServerSlotCheck(mod,n,seq){
   const token=(slotCheckTokens[id]=(slotCheckTokens[id]||0)+1);
   const hit=valCacheGet('part',seq); if(hit){ renderSlotValidation(mod,n,hit); return; }
   slotCheckTimers[id]=setTimeout(async ()=>{
-    const mrnaEl=slotEl(mod,n).querySelector('.slotmrna'); mrnaEl.innerHTML=MRNA_LOADING_HTML;
     try{
       const v=await validateCached(api,seq,'part');
       if(token!==slotCheckTokens[id] || seq!==clean(slotsOf(mod)[n].seqRaw||'')) return;
       renderSlotValidation(mod,n,v);
     }catch(err){
       console.warn('[ENCORE] /api/cargo/validate (part) failed: keeping the local check', err);
-      if(token===slotCheckTokens[id]) mrnaEl.innerHTML='';
     }
   }, 400);
 }
@@ -2050,17 +1998,16 @@ function resetBuilder(){
       el.querySelector('.slotsel').value='none';
       el.querySelector('.slotcustom').style.display='none';
       el.querySelector('.slotlabel').value=''; el.querySelector('.slotseq').value='';
-      el.querySelector('.slotmeta').innerHTML=''; el.querySelector('.slotnotes').innerHTML=''; el.querySelector('.slotmrna').innerHTML=''; });
+      el.querySelector('.slotmeta').innerHTML=''; el.querySelector('.slotnotes').innerHTML=''; });
     enforceSlotRules(mod);
   });
 
   // derived output
   $('#cargoLen').textContent='0 bp';
-  ['#ncMeta','#shellMeta','#shellStopArea','#shellMrna','#cargoMeta','#cargoStopArea','#cargoMrna','#lvl0strand','#lvl1cargo','#lvl1nc','#lvl2strand',
-   '#lvl1promo','#modMrna','#biosecNoteText','#biosecChips','#plat0feats','#plat1feats','#plat2bfeats','#ordOligoList','#ordPrimerList','#ordDsList','#ordOligoActions','#ordPrimerActions','#ordDsActions']
+  ['#ncMeta','#shellMeta','#shellStopArea','#cargoMeta','#cargoStopArea','#lvl0strand','#lvl1cargo','#lvl1nc','#lvl2strand',
+   '#lvl1promo','#biosecNoteText','#biosecChips','#plat0feats','#plat1feats','#plat2bfeats','#ordOligoList','#ordPrimerList','#ordDsList','#ordOligoActions','#ordPrimerActions','#ordDsActions']
     .forEach(sel=>{ const el=$(sel); if(el) el.innerHTML=''; });
 
-  moduleMrnaToken++; $('#modMrnaBlock').style.display='none';
   $('#plat0title').textContent=''; $('#plat0explain').textContent=''; $('#plasmid0').innerHTML='';
   $('#plat1title').textContent=''; $('#plat1explain').textContent=''; $('#plasmid1').innerHTML=''; $('#l1bulk').style.display='none';
   $('#plat2btitle').textContent=''; $('#plat2bexplain').textContent=''; $('#plasmid2b').innerHTML=''; $('#l2bulk').style.display='none';
@@ -2292,6 +2239,18 @@ function primerHtml(p, clamp){
   return `<div class="l0m-primer"><div class="pn">${esc(p.name)}<small>${p.length} nt · anneal ${p.annealLength} nt · Tm ${p.tm} °C</small></div>`+
     `<div class="ps"><span class="l0m-end">5′ </span><span class="clamp">${clamp}</span><span class="flank">${flank}</span><span class="ann">${p.anneal}</span><span class="l0m-end"> 3′</span></div></div>`;
 }
+/* Hairpin (self-fold), self-dimer and primer-primer dimer of the finished primers (primer3, ΔG in kcal/mol); only exists when
+   primer3 designed the pair, so with the Wallace fallback the block is left out. */
+function primerStructureHtml(st){
+  if(!st) return '';
+  const badge = ok => `<span class="pst ${ok?'ok':'bad'}">${ok?'ok':'too stable'}</span>`;
+  const cell = x => `<span class="pfig">ΔG ${x.deltaG}</span> ${badge(x.ok)}`;
+  return `<div class="pstruct"><table><thead><tr><th>Structure check</th><th>Forward</th><th>Reverse</th></tr></thead><tbody>`+
+    `<tr><td>Self-fold (hairpin)</td><td>${cell(st.hairpin.forward)}</td><td>${cell(st.hairpin.reverse)}</td></tr>`+
+    `<tr><td>Self-dimer</td><td>${cell(st.selfDimer.forward)}</td><td>${cell(st.selfDimer.reverse)}</td></tr>`+
+    `<tr><td>Primer-primer dimer</td><td colspan="2">${cell(st.heteroDimer)}</td></tr>`+
+    `</tbody></table></div>`;
+}
 function renderL0Primers(c){
   const pr=c.primers, sec=$('#l0mPrimSec'), body=$('#l0mPrimBody');
   // Primers only exist for your own sequences that are long enough for PCR; otherwise the section just says so.
@@ -2308,6 +2267,7 @@ function renderL0Primers(c){
   if(pr.issues.length) warn+=`<div class="l0m-warn">${pr.issues.map(esc).join('<br>')}</div>`;
   body.innerHTML = `<div class="l0m-prim">${primerHtml(f,pr.clamp)}${primerHtml(r,pr.clamp)}</div>`+
     `<div class="l0m-legend"><span style="color:var(--muted)">${pr.clamp}</span> clamp · <span class="oh">BbsI site + overhangs (adapter ${esc(c.adapter)})</span> · <span class="ins">annealing part</span></div>`+
+    primerStructureHtml(pr.structure)+
     `<p class="l0m-note">${notes.join(' · ')}</p>`+warn+
     `<div class="l0m-actions"><button class="chip" type="button" id="l0mCopyPrim">Copy primers</button><button class="chip primary-chip" type="button" id="l0mDlPrim">Download primers + PCR product (.gb)</button></div>`;
   $('#l0mDlPrim').onclick = ()=>downloadText(`${fileSlug(c.label)}_${fileSlug(c.type)}_primers.gb`, pr.genbank);
@@ -2829,32 +2789,6 @@ async function compute(){
   renderAll(lastResult);
 }
 
-/* mRNA self-fold / self-dimer of the two complete modules; own request after the design is shown (ViennaRNA needs a few seconds).
-   A newer design makes an older answer obsolete (token). */
-const MODULE_MRNA_NAMES = { cargo:'Cargo module', nc:'Nanocompartment module' };
-function moduleMrnaHtml(key, r){
-  const name = MODULE_MRNA_NAMES[key];
-  if(!r || !r.available) return `<div class="mrna-mod"><b>${name}</b><div class="mrna-inline"><span title="${esc((r&&r.reason)||'')}">mRNA structure: not checked${r&&r.reason ? ' (' + esc(r.reason) + ')' : ''}</span></div></div>`;
-  const chip = (label, check) => `<span class="mrna-item">${label} <span class="mrna-risk ${check.risk||'na'}">${check.risk||'n/a'}</span> <span class="mrna-figs">ΔG ${check.deltaG}</span></span>`;
-  const parts = (r.parts||[]).filter(l=>l!=='NCS').join(' + ');
-  return `<div class="mrna-mod"><b>${name}</b><div class="mrna-inline"><span>${parts} · ${r.length} nt ${r.endsWithStop ? 'up to the stop codon' : 'no stop codon, up to the last coding part'}:</span>${chip('Self-fold', r.selfFold)}${chip('Self-dimer', r.selfDimer)}</div></div>`;
-}
-async function loadModuleMrna(){
-  const api=window.ENCORE_API, box=$('#modMrna'), block=$('#modMrnaBlock');
-  if(!api || !api.available || !box) return;
-  const token=++moduleMrnaToken;
-  block.style.display=''; box.innerHTML = `<div class="mrna-inline">${MRNA_LOADING_HTML}</div>`;
-  try{
-    const r=await api.mrnaFromState(state);
-    if(token!==moduleMrnaToken) return;
-    box.innerHTML = moduleMrnaHtml('cargo', r.cargo) + moduleMrnaHtml('nc', r.nc);
-  }catch(err){
-    if(token!==moduleMrnaToken) return;
-    console.warn('[ENCORE] /api/mrna failed', err);
-    box.innerHTML = `<div class="mrna-inline"><span>mRNA structure of the modules: not checked</span></div>`;
-  }
-}
-
 function renderAll(res){
   const m=res.model;
 
@@ -2869,7 +2803,6 @@ function renderAll(res){
   renderLevel0Extras(res);
   renderLevel2Plasmid(res);
   renderOrder(res);
-  loadModuleMrna();
 }
 
 /* ===================== Stepper scroll-spy ===================== */
@@ -3096,8 +3029,6 @@ window.ENCORE_API = (function(){
     design: (decisions) => post('/design', decisions),
     // Convenience: translate the prototype's `state` object into a design request.
     designFromState: (s) => post('/design', { ...requestFromState(s), genbank: true }),
-    // mRNA self-fold / self-dimer of the complete cargo and NC module (own request: ViennaRNA takes a few seconds).
-    mrnaFromState: (s) => post('/mrna', requestFromState(s)),
   };
   // Passive health check. `ready` resolves either way, so the app can await it
   // once and then look at `available` instead of racing the check.

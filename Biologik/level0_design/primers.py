@@ -171,10 +171,12 @@ def design_level0_primers(shown: dict, label: str, slot: int, module: str):
         tm_f, tm_r, method = round(result["tmFw"], 1), round(result["tmRv"], 1), "primer3-nn"
         q5 = round(result["q5AnnealingTemp"], 1)
         issues = list(result["issues"])
+        structure = _structure_checks(result["evaluation"])
     else:
         anneal_f, anneal_r, balanced = _wallace_anneal(insert)
         tm_f, tm_r, method, q5 = wallace_tm(anneal_f), wallace_tm(anneal_r), "wallace", None
         issues = [] if balanced else [_WALLACE_HINT]
+        structure = None
 
     def primer(name: str, ext: str, anneal: str, tm) -> dict:
         return {"name": name, "sequence": ext + anneal, "extension": ext, "anneal": anneal,
@@ -191,7 +193,24 @@ def design_level0_primers(shown: dict, label: str, slot: int, module: str):
         "productLength": len(PCR_CLAMP) * 2 + shown["length"],
         "tmMethod": method, "q5AnnealingTemp": q5,
         "valid": not issues, "issues": issues,
+        "structure": structure,
         "internalSites": sites,
+    }
+
+
+def _structure_checks(evaluation: dict) -> dict:
+    """Self-fold (hairpin), self-dimer (homodimer) and primer-primer dimer (heterodimer) of the finished primers, from the
+    primer3 evaluation of the complete oligos (clamp + adapter flank + annealing part). ΔG in kcal/mol, `ok` = below the thresholds
+    of Biologik/primer_design/evaluate_primer.py."""
+    def kcal(dg) -> float:
+        return round(dg / 1000, 1)
+
+    return {
+        "hairpin": {"forward": {"deltaG": kcal(evaluation["hairpin_fw_dG"]), "ok": evaluation["hairpin_fw_ok"]},
+                    "reverse": {"deltaG": kcal(evaluation["hairpin_rv_dG"]), "ok": evaluation["hairpin_rv_ok"]}},
+        "selfDimer": {"forward": {"deltaG": kcal(evaluation["self_fw_dG"]), "ok": evaluation["self_fw_ok"]},
+                      "reverse": {"deltaG": kcal(evaluation["self_rv_dG"]), "ok": evaluation["self_rv_ok"]}},
+        "heteroDimer": {"deltaG": kcal(evaluation["hetero_dimer_dG"]), "ok": evaluation["hetero_ok"]},
     }
 
 

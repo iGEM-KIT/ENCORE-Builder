@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import NamedTuple
 
-from .adapters import adapter_id_for, attach_adapter, rotate_built
+from .adapters import adapter_id_for, attach_adapter, rotate_built, spacer_mode
 from .assembly import level1_fragment
 from .cloning import clone_into_level0_backbone
 from .data import NOMINAL_BP, STOP_CODONS
@@ -203,7 +203,7 @@ def _build_construct(part: Part, module: str, n: int, codon: dict | None, backbo
     if antisense:
         seq = reverse_complement(seq)
     adapter_id = adapter_id_for(module, n)
-    built = attach_adapter(adapter_id, seq)  # top strand of the Level 0 plasmid, 5' left -> 3' right
+    built = attach_adapter(adapter_id, seq, spacer_mode(module, n))  # top strand of the Level 0 plasmid, 5' left -> 3' right
     built["stops"] = []
     if "stop codon" in part.what:
         _mark_stop(built, seq, module)

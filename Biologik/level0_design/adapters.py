@@ -9,10 +9,56 @@ from .parts_db import find_part
 from .sequence import reverse_complement
 
 
-def attach_adapter(adapter, insert_seq: str) -> dict:
+def spacer_mode(module: str, slot: int) -> str:
+    """Where the 2-nt frame spacer sits relative to the insert, on the top strand of the Level 0 plasmid:
+    "before" (nanocompartment site: overhang, spacer, part), "after" (cargo site, Type 0.1 to 0.4: part, spacer, overhang; the
+    cargo module is the reverse complement of that layout, so in its reading direction the spacer again follows the overhang) or
+    "drop" (cargo Type 0.5: it is the first part in reading direction, no part precedes it, the junction to the promoter
+    has no spacer)."""
+    if module != "cargo":
+        return "before"
+    return "drop" if slot == 5 else "after"
+
+
+def _relocate_spacer(entry: dict, mode: str) -> dict:
+    """Copy of the adapter `entry` with the frame spacer behind the insert placeholder ("after": the two blocks swap places,
+    everything else stays) or left out entirely ("drop": everything behind shifts by the spacer length)."""
+    sp = entry.get("frame_spacer")
+    if mode == "before" or not sp:
+        return entry
+    sp_a, sp_b = location_span(sp["location"])
+    ins_a, ins_b = location_span(entry["insert"]["location"])
+    if sp_b + 1 != ins_a:
+        raise ValueError(f"Adapter {entry['id']}: the frame spacer does not sit directly in front of the insert placeholder.")
+    seq, n = entry["sequence"], sp_b - sp_a + 1
+    entry = {**entry, "insert": dict(entry["insert"]), "frame_spacer": dict(sp)}
+    if mode == "after":
+        entry["sequence"] = seq[:sp_a - 1] + seq[ins_a - 1:ins_b] + seq[sp_a - 1:sp_b] + seq[ins_b:]
+        new_insert, new_spacer = f"{sp_a}..{sp_a + (ins_b - ins_a)}", f"{sp_a + (ins_b - ins_a) + 1}..{ins_b}"
+        relocated = {sp["location"]: new_spacer, entry["insert"]["location"]: new_insert}
+        entry["features"] = [{**f, "location": relocated.get(f["location"], f["location"])} for f in entry["features"]]
+        entry["insert"]["location"], entry["frame_spacer"]["location"] = new_insert, new_spacer
+        return entry
+    entry["sequence"] = seq[:sp_a - 1] + seq[ins_a - 1:]
+
+    def moved(item: dict) -> dict:
+        a, _ = location_span(item["location"])
+        return {**item, "location": shift_location(item["location"], -n) if a > sp_b else item["location"]}
+
+    entry["features"] = [moved(f) for f in entry["features"] if f["location"] != sp["location"]]
+    entry["overhangs"] = [moved(o) for o in entry["overhangs"]]
+    entry["bbsi_sites"] = [moved(b) for b in entry["bbsi_sites"]]
+    entry["insert"]["location"] = shift_location(entry["insert"]["location"], -n)
+    entry["frame_spacer"] = None
+    entry["length_bp"] = len(entry["sequence"])
+    return entry
+
+
+def attach_adapter(adapter, insert_seq: str, spacer: str = "before") -> dict:
     """Attaches the overhang flanks of a Type adapter (parts/type_overhangs/) to a CDS or part sequence:
     the 4-nt placeholder ("Insert", e.g. AAAA) is replaced by the sequence.
 
+    `spacer` is where the frame spacer goes ("before" the insert as stored, "after" it, or "drop", see `spacer_mode`).
     `adapter` is the id ("0.1", "0.1rc", "0.2", ...) or the already loaded entry. The sequence is inserted
     unchanged; the orientation (for the rc adapters of the cargo site) is up to the caller. All features after
     the insert are shifted by the length difference; at the end every overhang and every BbsI site is checked
@@ -20,6 +66,7 @@ def attach_adapter(adapter, insert_seq: str) -> dict:
     entry = adapter if isinstance(adapter, dict) else find_part("type_overhangs", adapter)
     if not entry or not entry.get("sequence"):
         raise ValueError(f"Unknown or empty overhang adapter: {adapter!r}")
+    entry = _relocate_spacer(entry, spacer)
     adapter_id, seq = entry["id"], entry["sequence"]
 
     cds = (insert_seq or "").upper()
@@ -76,19 +123,22 @@ def adapter_id_for(module: str, slot: int) -> str:
     return f"0.{slot}rc" if module == "cargo" and slot in (1, 5) else f"0.{slot}"
 
 
-def adapter_contexts(adapter_id: str, antisense: bool) -> tuple:
+def adapter_contexts(adapter_id: str, antisense: bool, slot: int | None = None) -> tuple:
     """Neighbour context of a part sequence on the sense strand of the part: (left variants, right variants). Needed so that the
-    codon optimization does not create a BsaI/BbsI site across the seam to the adapter. On the right there are two variants: the
-    adapter itself (Level 0) and the overhang with the GC spacer of the next part (Level 1). In the cargo module the part sits
-    as a reverse complement in the adapter, so left and right swap sides."""
+    codon optimization does not create a BsaI/BbsI site across the seam to the adapter. Two variants each: the adapter itself
+    (Level 0) and the overhang with the GC spacer of the neighbouring part (Level 1). In the cargo module the part sits as a
+    reverse complement in the adapter with its spacer behind it (see `spacer_mode`), so left and right swap sides."""
     entry = find_part("type_overhangs", adapter_id)
     start, end = location_span(entry["insert"]["location"])
     left = entry["sequence"][:start - 1]
     right = entry["sequence"][end:]
-    rights = [right, right[:4] + "GC"]
-    if antisense:
-        return [reverse_complement(r) for r in rights], [reverse_complement(left)]
-    return [left], rights
+    if not antisense:
+        return [left], [right, right[:4] + "GC"]
+    spacer = entry["frame_spacer"]["sequence"] if entry.get("frame_spacer") else ""
+    left = left[:len(left) - len(spacer)] if spacer and left.endswith(spacer) else left   # the spacer moves behind the insert
+    lefts = [left] + ([spacer + left[-4:]] if slot is None or slot > 1 else [])
+    rights = [right if slot == 5 else spacer + right, right[:4] if slot == 5 else spacer + right[:4]]
+    return [reverse_complement(r) for r in rights], [reverse_complement(l) for l in lefts]
 
 
 def flip_location(location: str, length: int) -> str:

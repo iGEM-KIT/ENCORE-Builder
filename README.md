@@ -105,7 +105,7 @@ user has to confirm explicitly before they can continue.
 
 **Runs as a second container by default**, because COMMEC needs Conda and
 BLAST/HMMER. That does not fit into the slim main image and is not
-installed automatically (unlike primer3-py/ViennaRNA), hence the
+installed automatically (unlike primer3-py), hence the
 separate sidecar container instead of a built-in check. Deliberately no longer
 plain opt-in: a safety check that had to be switched on manually
 would too easily be forgotten or skipped in everyday use. If `commec` is

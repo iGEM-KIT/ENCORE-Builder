@@ -116,7 +116,7 @@
       <li><b>Cargo Site</b>: your gene of interest (or a library cargo) and the modules around it.</li>
       <li><b>Promoter</b>: the promoter that drives both modules.</li>
       <li><b>Modules</b>: the Golden Gate assembly Level 0 → 1 → 2 with sequences, plasmids and downloads.</li>
-      <li><b>Order</b>: what to order as oligos, primers or DNA.</li>
+      <li><b>Overview</b>: what to order as oligos, primers or DNA.</li>
     </ol>
     <p class="note">A step unlocks when the previous one is complete. You can go back at any time; your inputs stay.</p>
   </section>
@@ -140,8 +140,8 @@
           <td>You do not have to remove them yourself: the codon optimization removes every BsaI (GGTCTC / GAGACC) and BbsI (GAAGAC / GTCTTC) site without changing the protein; see below.</td></tr>
       <tr><td><span class="tag auto">Automatic</span> <b>Biosecurity screening</b></td>
           <td>Every sequence you enter yourself is screened with COMMEC before the design is calculated. A hit never blocks you silently: you review it and confirm before continuing. Toolbox parts are not screened. If the screening service is not reachable, the builder tells you and goes on.</td></tr>
-      <tr><td><span class="tag info">Info</span> <b>mRNA structure</b></td>
-          <td>For each of your own sequences the builder shows the risk of mRNA self-fold and self-dimer (ΔG and a z-score against shuffled sequences). This is an estimate for your information; it does not block anything.</td></tr>
+      <tr><td><span class="tag info">Info</span> <b>Primer structure</b></td>
+          <td>For every primer pair of a Level 0 part the popup shows hairpin, self-dimer and primer-primer dimer (ΔG in kcal/mol, primer3). This is an estimate for your information; it does not block anything.</td></tr>
     </table>
   </section>
 

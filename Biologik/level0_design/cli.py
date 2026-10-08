@@ -22,7 +22,6 @@ import sys
 from .codon import back_translate
 from .data import get_libraries
 from .design import build_genbank, design_construct
-from .mrna_dimer import check_mrna_structure, module_mrna
 from .sequence import clean_protein, clean_seq, is_protein, validate_cargo
 from .user_codons import codon_optimize_part, codon_summary
 
@@ -60,34 +59,17 @@ def cmd_validate(payload: dict) -> dict:
     valid answer with ``ok: false`` in the validation object.
 
     Only if the sequence is fusion ready (``ok: True``) the preview of the codon optimization
-    (``codonOptimization``) and the mRNA self structure check are added (needs ViennaRNA, see mrna_dimer.py);
-    a sequence that is not fusion ready still changes anyway, so folding it would be a
-    waste of computing time.
+    (``codonOptimization``) is added; a sequence that is not fusion ready still changes anyway.
     """
     kind = payload.get("kind") if payload.get("kind") in ("shell", "part") else "cargo"
     validation = validate_cargo(payload.get("cargoSeq", ""), kind=kind)
     if validation["ok"]:
         # Every entered sequence is codon-optimized when the construct is built (S. cerevisiae, without BsaI/BbsI sites). Here the preview
-        # (context: cargo -> Type 0.3 of the cargo module, shell -> Type 0.3 of the NC module, own part -> slot 4 of the NC module);
-        # the mRNA structure is checked on the optimized sequence, because that is what gets built.
+        # (context: cargo -> Type 0.3 of the cargo module, shell -> Type 0.3 of the NC module, own part -> slot 4 of the NC module).
         module, slot = {"cargo": ("cargo", 3), "shell": ("nc", 3)}.get(kind, ("nc", 4))
         optimized = codon_optimize_part(validation["clean"], module, slot, validation["isProtein"])
-        validation = {**validation, "codonOptimization": codon_summary(optimized),
-                      "mrnaStructure": check_mrna_structure(optimized["sequence"])}
+        validation = {**validation, "codonOptimization": codon_summary(optimized)}
     return {"validation": validation}
-
-
-def cmd_mrna(payload: dict) -> dict:
-    """mRNA self-fold / self-dimer of the two complete modules (cargo and nanocompartment) of a design: from the first coding part to the
-    first stop codon, NCS spacers left out (see mrna_dimer.module_mrna). Takes the same payload as `design`. Separate from `design`, because
-    ViennaRNA needs a few seconds for long modules and the design should not wait for it."""
-    design = design_construct(payload)
-    modules = {c["site"]: c for c in design["level1Constructs"]}
-    out = {}
-    for key, site in (("cargo", "cargo_site"), ("nc", "nc_site")):
-        module = modules[site]
-        out[key] = {"label": module["label"], **module_mrna(module.get("shown") or module)}
-    return {"mrna": out}
 
 
 def cmd_to_dna(payload: dict) -> dict:
@@ -101,7 +83,6 @@ COMMANDS = {
     "design": cmd_design,
     "libraries": cmd_libraries,
     "validate": cmd_validate,
-    "mrna": cmd_mrna,
     "to_dna": cmd_to_dna,
 }
 

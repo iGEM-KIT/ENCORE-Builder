@@ -1,4 +1,1 @@
 primer3-py
-# Optional: mRNA self-fold / self-dimer check for the cargo (Biologik/level0_design/mrna_dimer.py).
-# Missing it is not an error; that check is just left out, like primer3 above.
-ViennaRNA

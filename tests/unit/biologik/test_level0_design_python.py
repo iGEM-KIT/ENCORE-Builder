@@ -700,14 +700,31 @@ def test_junction_codons_are_never_stops_in_either_reading_direction():
 def test_frame_spacers_are_annotated_in_constructs_and_plasmids():
     design, _ = _frame_design()
     for construct in design['level0Constructs']:
-        assert '/label="Frame spacer"' in construct['genbank']
-        assert '/label="Frame spacer"' in construct['plasmid']['genbank']
-    for module in design['level1Constructs']:
-        if module['site'] != 'promoter':
-            assert module['genbank'].count('/label="Frame spacer"') == 5
-            assert module['plasmid']['genbank'].count('/label="Frame spacer"') == 5
-    assert design['level1Constructs'][0]['shown']['genbank'].count('/label="Frame spacer"') == 5
-    assert design['level2Construct']['plasmid']['genbank'].count('/label="Frame spacer"') == 10
+        # the cargo Type 0.5 is the first part in reading direction: nothing precedes it, so it carries no spacer
+        has_spacer = not (construct['module'] == 'cargo_site' and construct['slot'] == 5)
+        assert ('/label="Frame spacer"' in construct['genbank']) == has_spacer
+        assert ('/label="Frame spacer"' in construct['plasmid']['genbank']) == has_spacer
+    cargo_module, _, nc_module = design['level1Constructs']
+    assert cargo_module['genbank'].count('/label="Frame spacer"') == 4 and cargo_module['plasmid']['genbank'].count('/label="Frame spacer"') == 4
+    assert nc_module['genbank'].count('/label="Frame spacer"') == 5 and nc_module['plasmid']['genbank'].count('/label="Frame spacer"') == 5
+    assert cargo_module['shown']['genbank'].count('/label="Frame spacer"') == 4
+    assert design['level2Construct']['plasmid']['genbank'].count('/label="Frame spacer"') == 9
+
+
+def test_cargo_spacer_sits_behind_the_part_on_the_plasmid_top_strand_and_follows_the_overhang_in_reading_direction():
+    design, _ = _frame_design()
+    cargo_module, _, nc_module = design['level1Constructs']
+    top = cargo_module['sequence']                                         # plasmid top strand: Type 0.1 ... 0.5 left to right
+    parts = cargo_module['parts']
+    for left, right in zip(parts, parts[1:]):
+        gap = top[left['end']:right['start'] - 1]                          # between two parts: spacer, then overhang
+        assert gap[:2] == 'GC' and len(gap) == 6
+    shown = cargo_module['shown']
+    for left, right in zip(shown['parts'], shown['parts'][1:]):            # reading direction: overhang, then spacer
+        assert shown['sequence'][left['end']:right['start'] - 1][-2:] == 'GC'
+    nc = nc_module['sequence']
+    for left, right in zip(nc_module['parts'], nc_module['parts'][1:]):
+        assert nc[left['end']:right['start'] - 1][-2:] == 'GC'
 
 
 # ---------------------------------------------------------------------------------------------------------
@@ -995,7 +1012,7 @@ def test_library_parts_and_library_cargo_are_never_codon_optimized():
     assert not gene['isUser'] and gene['codon'] is None
 
 
-def test_validate_previews_the_codon_optimization_and_checks_the_optimized_mrna():
+def test_validate_previews_the_codon_optimization():
     out = json.loads(_run_cli('validate', {'cargoSeq': SITE_CDS}).stdout)
     codon = out['validation']['codonOptimization']
     assert codon['status'] == 'optimized' and codon['sitesRemoved'] and codon['sitesLeft'] == []
@@ -1065,7 +1082,7 @@ def test_custom_shell_can_be_a_protein_too():
 
 def test_validate_previews_a_protein_back_translation():
     out = json.loads(_run_cli('validate', {'cargoSeq': PROTEIN}).stdout)['validation']
-    assert out['isProtein'] and out['codonOptimization']['fromProtein'] and out['mrnaStructure'] is not None
+    assert out['isProtein'] and out['codonOptimization']['fromProtein']
 
 
 def test_to_dna_gives_the_screening_a_dna_form_of_every_input():
@@ -1152,36 +1169,11 @@ def test_parts_and_constructs_tell_whether_their_plasmid_is_built():
     assert status[('cargo_site', 3)] is None                                              # your own cargo has no plasmid
 
 
-# ---------------------------------------------------------------------------------------------------------
-# mRNA of the complete modules: first coding part to the first stop codon, NCS spacers left out
-
-def test_module_mrna_runs_from_the_first_coding_part_to_the_first_stop_codon_without_ncs():
-    from Biologik.level0_design.cli import cmd_mrna
-    from Biologik.level0_design.mrna_dimer import module_mrna
-    payload = dict(nanocompartment='tmari', cargoSeq=_long_cargo(), cargoLabel='G',
-                   cargoSlots={'2': {'kind': 'ncsstop'}}, ncSlots={'4': {'kind': 'ncsstop'}})
-    design = design_construct(payload)
-    modules = {c['site']: c for c in design['level1Constructs']}
-    cargo_view, nc_view = modules['cargo_site']['shown'], modules['nc_site']
-    for view, central in ((cargo_view, 'G'), (nc_view, 'E-Tm')):
-        parts = {p['label'] + str(i): p for i, p in enumerate(view['parts'])}
-        mrna = module_mrna(view)
-        first = next(p for p in view['parts'] if p['label'] == central)
-        assert mrna['sequence'].startswith('ATG') and mrna['sequence'] == view['sequence'][first['start'] - 1:first['start'] - 1 + mrna['length']]
-        assert mrna['endsWithStop'] is True and mrna['sequence'][-3:] in ('TAA', 'TAG', 'TGA')
-        assert mrna['parts'] == [central, 'NCS']                       # NCS in front of the ORF and behind the stop left out; the stop NCS counts up to its stop
-        assert not {'TAA', 'TAG', 'TGA'} & set(_orf_codons(mrna['sequence'])[:-1]) and mrna['length'] % 3 == 0
-    # without any stop codon the mRNA ends with the last coding part, an NCS behind it is not included
-    plain = {c['site']: c for c in design_construct(dict(payload, cargoSlots={}, ncSlots={}))['level1Constructs']}['nc_site']
-    mrna = module_mrna(plain)
-    last_coding = next(p for p in plain['parts'] if p['label'] == 'E-Tm')
-    assert mrna['endsWithStop'] is False and mrna['parts'] == ['E-Tm'] and mrna['sequence'].endswith(plain['sequence'][last_coding['end'] - 3:last_coding['end']])
-
-
-def test_mrna_command_checks_both_modules_when_viennarna_is_there():
-    pytest.importorskip('RNA')
-    from Biologik.level0_design.cli import cmd_mrna
-    result = cmd_mrna(dict(nanocompartment='tmari', cargoSeq=_long_cargo(), cargoSlots={}, ncSlots={}))['mrna']
-    assert set(result) == {'cargo', 'nc'}
-    for r in result.values():
-        assert r['available'] and r['selfFold']['deltaG'] <= 0 and r['selfDimer']['deltaG'] <= 0
+def test_level0_primers_carry_the_structure_check_of_the_finished_primers():
+    pytest.importorskip('primer3')
+    design = _design(cargoSeq=_long_cargo())
+    own = next(c for c in design['level0Constructs'] if c['isUser'] and c['primers']['possible'])
+    st = own['primers']['structure']
+    for key in ('hairpin', 'selfDimer'):
+        assert set(st[key]) == {'forward', 'reverse'} and all(isinstance(v['ok'], bool) for v in st[key].values())
+    assert isinstance(st['heteroDimer']['deltaG'], float)

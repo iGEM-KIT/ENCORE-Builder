@@ -8,7 +8,7 @@ over HTTP.
 
 Why a container of its own instead of part of the main image: commec needs
 Conda and BLAST/HMMER, which is too heavy to install automatically like
-primer3-py/ViennaRNA. Details and setup: see the section
+primer3-py. Details and setup: see the section
 "Biosecurity screening" in the [main README](../README.md).
 
 ## Database scope (important!)

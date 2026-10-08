@@ -3,11 +3,11 @@
  *
  * COMMEC is deliberately NOT part of this Node/Python stack: it needs Conda
  * and BLAST/HMMER (see commec-service/README.md), far too heavy to install
- * automatically like primer3-py/ViennaRNA. Instead it runs
+ * automatically like primer3-py. Instead it runs
  * as its own container (commec-service/), which starts together with the app by
  * default through Docker Compose (COMMEC_URL points to it by default).
  *
- * Just like primer3/ViennaRNA when missing, this check degrades gracefully:
+ * Just like primer3 when missing, this check degrades gracefully:
  * if COMMEC_URL is not set or the service is not (yet) reachable
  * (e.g. while the container is still starting up), {available:false, reason}
  * is returned instead of an error; the design stays usable, only without the

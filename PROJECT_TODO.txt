@@ -30,7 +30,6 @@ Design logic entirely in Python:  Biologik/level0_design/
   - oligos.py        oligo pairs for parts below 150 bp
   - assembly.py      Level 1/2 assembly (BsaI/BbsI)
   - genbank_writer.py GenBank flat file writer (no external dependency)
-  - mrna_dimer.py    optional mRNA self-folding/dimer check (ViennaRNA)
   - cli.py           JSON stdin/stdout adapter (design/libraries/validate/to_dna)
 Primer thermodynamics: Biologik/primer_design/ (primer3-py, with Wallace fallback)
 
@@ -211,8 +210,7 @@ from the database are not touched.
     (cargo validation, Level 0 layout, slot rules, marker placement,
     codon optimization, protein input, CLI commands) and runs against the current
     cargoSlots/ncSlots structure (pip install pytest; pytest tests/unit/biologik -q).
-[ ] No test covers Biologik/primer_design/ (primer3 path) or
-    mrna_dimer.py.
+[ ] No test covers Biologik/primer_design/ (primer3 path).
 [ ] No frontend test (JS in frontend/index.html, encapsulin_selector/).
     At this size (a single large HTML/JS file without a build step)
     at least a Playwright/E2E smoke test is worthwhile for the core flow

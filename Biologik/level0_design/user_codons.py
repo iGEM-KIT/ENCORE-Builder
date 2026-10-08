@@ -10,7 +10,7 @@ from .parts_db import find_library_cargo
 def codon_optimize_part(sequence: str, module: str, slot: int, protein: bool = False) -> dict:
     """Codon optimization (S. cerevisiae, without BsaI/BbsI sites) of a sense sequence entered by the user that is built into `module`
     ("cargo"/"nc") at Type 0.<slot>. See codon.optimize_cds. With `protein=True`, `sequence` is an amino acid sequence."""
-    lefts, rights = adapter_contexts(adapter_id_for(module, slot), module == "cargo")
+    lefts, rights = adapter_contexts(adapter_id_for(module, slot), module == "cargo", slot)
     return optimize_cds(sequence, lefts, rights, protein)
 
 
