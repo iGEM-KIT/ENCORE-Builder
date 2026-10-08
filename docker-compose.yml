@@ -14,13 +14,25 @@ services:
 
   # Biosecurity screening sidecar (COMMEC, "Common Mechanism", IBBIS); starts
   # by default with plain `docker compose up`, so screening can't accidentally
-  # be skipped. Builds a curated ~1.2GB database on first build (see
+  # be skipped. Downloads the commec databases (~6GB download, ~40GB on disk) on its first start (see
   # commec-service/README.md), so the first `docker compose up --build` takes
   # a while longer. Not meant to be a tamper-proof gate (it's self-hosted,
   # open-source software: a determined user could still disable it locally),
   # just the honest default so normal usage always includes the check.
   commec:
     build: ./commec-service
+    # commec 2.1.0 only exists for x86_64 (emulated on Apple Silicon)
+    platform: linux/amd64
     ports:
       - "8787:8787"
+    environment:
+      # Run the taxonomy steps too: the best_match databases come with `commec setup` anyway. (Measured: 200 bp ~12 s,
+      # 2.7 kb ~17 s; with "true" commec only checks the biorisk list, about half as long.)
+      - COMMEC_SKIP_TAXONOMY=false
+    volumes:
+      # the databases (about 40 GB on disk) are downloaded on the first start and kept here
+      - commec-db:/databases
     restart: unless-stopped
+
+volumes:
+  commec-db:

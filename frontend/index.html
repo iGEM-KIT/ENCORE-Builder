@@ -1883,8 +1883,11 @@ function collectUserSequences(){
   return items;
 }
 
+/* commec 2.x writes "Pass (Skipped Taxonomy)" / "Skip ..." instead of "Pass" / "Skip": only the word in front counts. */
+const biosecBase = s => (s||'').replace(/\s*\(.*\)\s*$/, '').trim();
+const biosecSkipped = s => /^skip/i.test(biosecBase(s)) || /skipped/i.test(s||'');
 const biosecRiskClass = status => {
-  const s=(status||'').toLowerCase();
+  const s=biosecBase(status).toLowerCase();
   if(s==='pass'||s==='skip') return 'low';
   if(s==='warning'||s==='mixed') return 'moderate';
   return 'high'; // flag / error / anything unexpected; treat as the strongest signal
@@ -1902,8 +1905,8 @@ const biosecRiskClass = status => {
    the taxonomy databases (protein_taxonomy/nucleotide_taxonomy no longer
    "Skip"). */
 function biosecEffectiveStatus(status){
-  if(status.protein_taxonomy==='Skip' && status.nucleotide_taxonomy==='Skip') return status.biorisk || 'Pass';
-  return status.screen_status;
+  if(biosecSkipped(status.protein_taxonomy) && biosecSkipped(status.nucleotide_taxonomy)) return biosecBase(status.biorisk) || 'Pass';
+  return biosecBase(status.screen_status);
 }
 
 const BR_ICON = {
