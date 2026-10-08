@@ -65,7 +65,7 @@ const assemblies = readJsonDir(resolve(dataDir, 'assemblies')).map((a) => ({
   ...a,
   _shell_diameter: deriveShellDiameter(a.shell_diameter_nm),
 }))
-
+const sequences = readJsonDir(resolve(dataDir, 'sequences'))
 // Check consistency instead of silently building a broken database.
 const errors = []
 const candidateIds = new Set()
