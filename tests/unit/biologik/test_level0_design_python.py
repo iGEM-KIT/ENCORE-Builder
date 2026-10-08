@@ -22,7 +22,7 @@ def test_validate_cargo_takes_a_trailing_stop_codon_off_instead_of_rejecting_it(
 
     assert cargo['ok'] is True and cargo['errors'] == []
     assert cargo['trailingStop'] == 'TAG' and cargo['clean'] == 'ATGAAATTTGAAATGAAATTTGAAATGAAATTT' and cargo['length'] == 33
-    assert len(cargo['warnings']) == 1 and 'Stop codon at the end' in cargo['warnings'][0]
+    assert len(cargo['warnings']) == 1 and 'removes the stop codon at the end' in cargo['warnings'][0]
     protein = validate_cargo('MKFEMKFEMKFEMKF*', min_bp=30)
     assert protein['ok'] is True and protein['clean'] == 'MKFEMKFEMKFEMKF' and protein['trailingStop'] == '*'
 
@@ -1034,7 +1034,7 @@ def test_validate_cargo_accepts_a_protein_and_counts_the_dna_it_becomes():
     v = validate_cargo(PROTEIN)
     assert v['ok'] and v['isProtein'] and v['aa'] == len(PROTEIN) and v['length'] == 3 * len(PROTEIN) and v['clean'] == PROTEIN
     assert validate_cargo('>name\n' + PROTEIN[:60] + ' 1\n' + PROTEIN[60:])['clean'] == PROTEIN        # header, spaces, digits dropped
-    assert validate_cargo(PROTEIN + '*')['ok'] and validate_cargo(PROTEIN + '*')['clean'] == PROTEIN and 'Stop codon' in validate_cargo(PROTEIN + '*')['warnings'][0]
+    assert validate_cargo(PROTEIN + '*')['ok'] and validate_cargo(PROTEIN + '*')['clean'] == PROTEIN and 'removes the stop codon' in validate_cargo(PROTEIN + '*')['warnings'][0]
     assert validate_cargo('MKV*LL' * 6)['warnings'][0].startswith('Stop (*) at residue 4')
     assert validate_cargo('MKVLLAGHE')['ok'] is False and 'too short' in validate_cargo('MKVLLAGHE')['errors'][0]
     assert validate_cargo('MKVLLAGHE', kind='part')['ok']                                            # no minimum for own parts

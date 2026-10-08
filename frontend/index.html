@@ -199,11 +199,15 @@
   .helplink svg{flex:none;margin-top:2px}
   .helplink a{color:var(--teal-deep);font-weight:600;white-space:nowrap}
 
-  .stopwarn,.stopok{display:flex;gap:9px;align-items:flex-start;border-radius:10px;padding:11px 13px;font-size:12.5px;margin-top:12px}
+  .stopwarn,.stopok,.stophint{display:flex;gap:9px;align-items:flex-start;border-radius:10px;padding:11px 13px;font-size:12.5px;margin-top:12px}
   .stopwarn{background:rgba(213,94,0,.12);border:1px solid rgba(213,94,0,.5);color:#9a4100}
   [data-theme="dark"] .stopwarn,[data-theme="dark"] .seqmeta .err{color:#f0a883}
   .stopok{background:var(--teal-soft);border:1px solid var(--teal-deep);color:var(--teal-deep)}
-  .stopwarn svg,.stopok svg{flex:none;margin-top:1px}
+  .stophint{background:rgba(230,159,0,.14);border:1px solid rgba(230,159,0,.5);color:#8a5a00}
+  [data-theme="dark"] .stophint{color:#f0c060}
+  .hint-btn{display:inline-block;margin-top:8px;padding:5px 11px;border-radius:999px;border:1px solid rgba(230,159,0,.7);background:transparent;color:inherit;font:inherit;font-weight:700;font-size:12px;cursor:pointer}
+  .hint-btn:hover{background:rgba(230,159,0,.22)}
+  .stopwarn svg,.stopok svg,.stophint svg{flex:none;margin-top:1px}
 
   .nav{display:flex;justify-content:flex-end;align-items:center;margin-top:22px;gap:12px}
   .btn{border:0;border-radius:11px;padding:12px 22px;font-family:'Space Grotesk';font-weight:600;font-size:14.5px;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:8px}
@@ -1154,7 +1158,8 @@ const INFO = {
           <p><b>Checks.</b> Heterodimers, homodimers and hairpins are evaluated by primer3 on the <i>complete</i> primer, because the 5′ extension changes the secondary structure. Anything critical is listed as a warning. The <b>Q5 annealing temperature</b> is the lower Tm of the pair minus 2 to 5 °C (the hotter the primers, the smaller the offset).</p>
           <p><b>5′ extension.</b> Each primer carries, in front of the annealing part, the <b>TTTT clamp</b>, the adapter flank of this Type (BbsI site, the Level 0 and Level 1 overhangs, for Type 0.1/0.5 also the Level 2 overhang) and the 2-nt frame spacer. The PCR product therefore is exactly the Level 0 construct, ready for BbsI cloning into the backbone.</p>
           <p><b>Why the TTTT clamp?</b> Restriction enzymes cut badly when their recognition site sits at the very end of a DNA fragment. The four extra bases give BbsI room to bind and cut; they are cut off again and never end up in the plasmid. A/T-only bases add no extra GC-rich structure to the primer.</p>
-          <p><b>Only when it makes sense.</b> Primers are designed for your own sequences of at least 150 bp. Shorter parts are ordered as an oligo pair, toolbox parts are ordered as DNA. If the insert already contains a BbsI or BsaI site, you get a warning; it has to be domesticated first. Without <code>primer3</code> only a rough Wallace estimate (2 °C per A/T, 4 °C per G/C) is shown.</p>` },
+          <p><b>Only when it makes sense.</b> Primers are designed for your own sequences of at least 150 bp. Shorter parts are ordered as an oligo pair, toolbox parts are ordered as DNA. If the insert already contains a BbsI or BsaI site, you get a warning; it has to be domesticated first. Without <code>primer3</code> only a rough Wallace estimate (2 °C per A/T, 4 °C per G/C) is shown.</p>
+          <p><b>Basis of the calculation.</b> <b>Tm:</b> <code>primer3-py</code> (<code>calc_tm</code>), nearest-neighbour thermodynamics (SantaLucia 1998) with primer3's defaults (50 mM monovalent ions, 1.5 mM Mg²⁺, 0.6 mM dNTP, 50 nM oligo). <b>Length balancing:</b> a plain search from 25 down to 18 nt (see above). <b>Structure checks</b> (shown in the table below the primers): <code>calc_hairpin</code>, <code>calc_homodimer</code> and <code>calc_heterodimer</code> of primer3 give the free energy ΔG of the most stable structure on the <i>complete</i> primer. A structure counts as <i>too stable</i> if ΔG is below −3 kcal/mol (hairpin) or −9 kcal/mol (self-dimer, primer-primer dimer) <i>and</i> it melts above 45 °C, because colder structures do not matter during PCR. <b>Q5 annealing temperature:</b> a simple rule of thumb (lower Tm minus 2 to 5 °C), not the NEB online calculator. <b>Oligo pairs</b> (parts under 150 bp) are not calculated at all: the top strand is the part plus the 5′ overhang, the bottom strand its complement. Without primer3 the Wallace rule (2 °C per A/T, 4 °C per G/C) is used and the structure table is left out.</p>` },
   level0: { title:'Level 0 · individual parts', img:'Diagram: ten parts, one plasmid each',
     body:`<p>Level 0 parts are cloned <b>separately</b>; one plasmid each. They are not joined yet: the <b>Type number</b> alone fixes where each part ends up once BsaI assembles them into the Level 1 module.</p>` },
   level1: { title:'Level 1 · modules (BsaI)', img:'Diagram: BsaI assembly of five Level 0 parts',
@@ -1170,26 +1175,30 @@ const INFO = {
           <p>You provide the coding sequence (CDS). It is directed into the compartment via the targeting peptide.</p>` },
   stop: { title:'Start and stop codon', img:'Diagram: TP-linker-cargo reading frame',
     body:`<p>The cargo is fused with the linker and targeting peptide into <b>one continuous protein</b>.</p>
-          <p>You do not have to add a start or stop codon: the builder puts an <b>ATG</b> in front of the first coding part of each ORF and a <b>stop codon</b> behind the last one in the outer slot (Type 0.5 of the NC module, Type 0.1 of the cargo module). Behind the shell or the cargo the stop stays in the <b>NCS with stop codon</b> (Type 0.4 or 0.2). A stop codon you enter at the end is removed; an ATG you enter is kept (not doubled).</p>` },
+          <p>You do not have to add a start or stop codon: the builder puts an <b>ATG</b> in front of the first coding part of each ORF and a <b>stop codon</b> behind the last one in the outer slot (Type 0.5 of the NC module, Type 0.1 of the cargo module). Behind the shell or the cargo the stop stays in the <b>NCS with stop codon</b> (Type 0.4 or 0.2). A stop codon you enter at the end is removed; an ATG you enter is kept (not doubled).</p>
+          <p><b>Basis of the checks.</b> Everything is simple sequence logic, no model: the input is read as DNA if at least 90 % of its letters are A/C/G/T, otherwise as protein; the length must be a multiple of 3; every codon in the reading frame is compared with TAA, TAG and TGA to find in-frame stops; GC content = (G+C) ÷ length; amino acids = length ÷ 3. A terminal stop codon is cut off, and an ATG at the start is not doubled.</p>` },
   commec: { title:'Biosecurity screening (COMMEC)', img:'Diagram: your sequence → COMMEC → curated biorisk database',
     body:`<p><b>COMMEC</b> (<i>Common Mechanism</i>, from IBBIS, the International Biosecurity and Biosafety Initiative for Science) is an open-source tool that checks DNA for similarity to known biosecurity concerns. It is the same kind of check DNA synthesis providers run before they ship an order.</p>
           <p><b>What is screened:</b> only sequences you typed or pasted yourself (cargo, your own shell, your own module parts). Toolkit parts are not screened.</p>
           <p><b>Against which database:</b> this installation uses COMMEC's curated <b>Biorisk + Low-concern</b> database (about 1.2&nbsp;GB): known toxins, virulence factors and regulated pathogens, plus a list of harmless related sequences so common genes are not over-flagged.</p>
           <p><b>Not included:</b> the full protein (NR, ~530&nbsp;GB) and nucleotide (NT, ~580&nbsp;GB) taxonomy databases. So there is no best-match against arbitrary organisms; only direct hits against the curated list count, and only a real biorisk hit raises a warning here.</p>
-          <p>A hit never blocks you silently: you review it and confirm before continuing. The screening runs locally in its own container and is a helper check, not a replacement for your institution's biosafety review.</p>` },
+          <p>A hit never blocks you silently: you review it and confirm before continuing. The screening runs locally in its own container and is a helper check, not a replacement for your institution's biosafety review.</p>
+          <p><b>Basis of the check.</b> Your sequence is compared by sequence similarity (profile HMM searches with HMMER and BLAST-type alignments) against the curated COMMEC databases; the result (Pass, Warning, Flag) is taken over unchanged from COMMEC (version 2.1.0, IBBIS). The builder calculates nothing itself here: it only decides, from COMMEC's biorisk field, whether to show a warning.</p>` },
   promoter: { title:'Bidirectional promoter', img:'Diagram: GAL1-10 transcribing both ways',
     body:`<p><b>GAL1-10</b> is a bidirectional yeast promoter: it drives <b>two genes at once</b> in opposite directions. Both transcripts <b>start (5′) at the promoter</b> and run outward.</p>
           <p>The nanocompartment module is read off the <b>sense (plus) strand</b> (to the right), the cargo module off the <b>antisense (minus) strand</b> (to the left); that is why they point away from each other. Inducible via galactose.</p>` },
   levels: { title:'Level 0 → 1 → 2', img:'Diagram: hierarchical Golden Gate assembly',
     body:`<p><b>Domestication (BbsI):</b> external sequences are cloned into standardized Level 0 parts using BbsI; internal sites are removed and the fixed 4 nt fusion overhangs are added.</p>
           <p><b>Level 0 → 1 (BsaI):</b> several Level 0 parts are assembled via BsaI into one module (cargo module, NC module).</p>
-          <p><b>Level 1 → 2 (BsaI):</b> the modules plus the promoter form the finished construct in the target vector.</p>` },
+          <p><b>Level 1 → 2 (BsaI):</b> the modules plus the promoter form the finished construct in the target vector.</p>
+          <p><b>Basis of the assembly.</b> The builder simulates Golden Gate cloning as sequence assembly, not as a reaction: each part carries its two 4-nt overhangs, the right overhang of one part must be identical to the left overhang of the next (otherwise the design stops with an error), and the parts are joined through them. Internal BsaI (GGTCTC / GAGACC) and BbsI (GAAGAC / GTCTTC) sites are searched on both strands and reported. Between two fused parts the 4-nt overhang plus the 2-nt GC frame spacer add 6 nt, so the reading frame is kept; the overhangs and the GC spacer are chosen so that none of the junction codons is a stop codon, read in either direction. Enzyme kinetics, efficiency or mis-ligation are not simulated.</p>` },
   codonOpt: { title:'Codon optimization for <i>S. cerevisiae</i>', img:'Diagram: synonymous codons, restriction sites removed',
     body:`<p>Every sequence you enter yourself (cargo, your own shell, your own sequence in a module) is <b>translated and back-translated</b> with the codon usage of <i>Saccharomyces cerevisiae</i> (Kazusa table). The <b>protein stays exactly the same</b>; only synonymous codons change. Library parts are toolkit sequences and are never touched.</p>
           <p><b>How codons are chosen.</b> Each codon is drawn at random, weighted by how often yeast uses it (frequency to the power of 3, so frequent codons dominate), and codons below 10&nbsp;% of their amino acid's usage are never used. That gives a high <b>CAI</b> (codon adaptation index, 1 = only the most frequent codons) of about 0.85 to 0.9 at a natural GC content of about 35 to 40&nbsp;%; the same range the VectorBuilder optimizer gives for the same sequences. The draw is seeded with your sequence, so the same input always gives the same result.</p>
           <p><b>What is kept out.</b> An exact search then corrects as few codons as needed so that <b>no BsaI site (GGTCTC / GAGACC) and no BbsI site (GAAGAC / GTCTTC)</b> remains (also not across the seam to the overhang adapter and the neighbouring part) and no run of 7 identical bases appears. Without that the Golden Gate digest would cut your part.</p>
           <p>A DNA sequence that is already well adapted (CAI ≥ 0.85) and free of those sites is kept as entered.</p>
-          <p><b>Amino acid sequences.</b> Instead of DNA you can paste a protein sequence (one-letter code, no stop codon). It is detected automatically (a sequence whose letters are at least 90 % A/C/G/T is read as DNA, anything else as protein) and back-translated with the same codon choice and the same site-free rule.</p>` },
+          <p><b>Amino acid sequences.</b> Instead of DNA you can paste a protein sequence (one-letter code, no stop codon). It is detected automatically (a sequence whose letters are at least 90 % A/C/G/T is read as DNA, anything else as protein) and back-translated with the same codon choice and the same site-free rule.</p>
+          <p><b>Basis of the calculation.</b> Codon usage: Kazusa <i>S. cerevisiae</i> table (frequency per 1000 codons). <b>CAI</b> (codon adaptation index) after Sharp &amp; Li (1987): the geometric mean of w = codon frequency ÷ frequency of the most frequent synonymous codon. <b>Choice of codons:</b> weighted random draw (frequency³), seeded by a hash of your sequence, so it is reproducible. <b>Site removal:</b> dynamic programming over all codon choices, i.e. the fewest changes that leave no BsaI/BbsI site on either strand (including the seam to the adapter) and no run of 7 or more identical bases; not a greedy fix. <b>GC content</b> = (G+C) ÷ length. The optimizer is our own implementation; it is not a copy of a commercial tool, only tuned to give a similar CAI and GC range.</p>` },
 };
 
 /* ---------- Color key (CSS variables, so theme/CB take effect) ---------- */
@@ -1349,7 +1358,7 @@ function handleShellInput(){
 }
 function renderShellValidation(v){
   $('#shellMeta').innerHTML = seqMetaHtml(v);
-  $('#shellStopArea').innerHTML = seqNotesHtml(v, 'No stop codon found: the shell sequence is ready.');
+  $('#shellStopArea').innerHTML = seqNotesHtml(v, 'No stop codon found: the shell sequence is ready.', '#shellSeq');
   state.customNc.valid = v.ok;
   applyCustomNc();
 }
@@ -1442,7 +1451,10 @@ function handleCargoInput(){
    Biologik/level0_design/sequence.py, so the local preview and the server
    answer can be rendered by one function. The server stays the authority;    scheduleServerCargoCheck() overwrites this result as soon as it arrives. */
 /* Same wording as _stop_message() in sequence.py. */
-const stopMessage = stop => `Stop codon at the end (${stop}) was removed: the builder adds start and stop codon itself where the ORF begins and ends.`;
+const stopMessage = (stop, hasStart=false) => {
+  const parts = (stop ? [`removes the stop codon at the end (${stop})`] : []).concat(hasStart ? ['does not double the start codon (ATG)'] : []);
+  return `The builder ${parts.join(' and ')}: it adds start and stop codon itself where the ORF begins and ends.`;
+};
 function validateCargoLocal(raw, kind='cargo'){
   if(isProteinText(raw)) return validateProteinLocal(raw, kind);
   let seq=clean(raw);
@@ -1460,7 +1472,7 @@ function validateCargoLocal(raw, kind='cargo'){
     if(internalStops.length) warnings.push(`Possible in-frame stop codon at position ${internalStops[0].pos+1} (${internalStops[0].codon}).`);
     if(invalidChars>0) warnings.push(`${invalidChars} invalid character(s) were ignored.`);
   }
-  if(trailingStop) warnings.push(stopMessage(trailingStop));
+  if(trailingStop || seq.startsWith('ATG')) warnings.push(stopMessage(trailingStop, seq.startsWith('ATG')));
   return { clean:seq, length, aa:Math.floor(length/3), gc:gc(seq), invalidChars,
            notMultipleOfThree, trailingStop, internalStops, ok:errors.length===0, errors, warnings };
 }
@@ -1482,6 +1494,7 @@ function validateProteinLocal(raw, kind){
 }
 
 const ICON_WARN = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>';
+const ICON_INFO = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>';
 const ICON_OK   = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg>';
 
 function seqMetaHtml(v){
@@ -1509,16 +1522,36 @@ function codonLineHtml(c, final){
   if(c.status==='kept') return `<div class="stopok">${ICON_OK}<div>Codon usage: ${c.reason} ${info}</div></div>`;
   return `<div class="stopwarn">${ICON_WARN}<div>Codon optimization skipped: ${c.reason} ${info}</div></div>`;
 }
-function seqNotesHtml(v, okText){
-  const notes = v.errors.concat(v.warnings);
+function seqNotesHtml(v, okText, target){
   if(!v.length) return '';
-  if(notes.length) return notes.map(t=>`<div class="stopwarn">${ICON_WARN}<div>${t}</div></div>`).join('');
-  return `<div class="stopok">${ICON_OK}<div>${okText}</div></div>` + codonLineHtml(v.codonOptimization, false);
+  // The removed start/stop codon is a hint (orange), not a warning: nothing is wrong with the sequence, the builder just handles it.
+  // Its button takes the codons out of the input field itself; the check then runs again and shows "No stop codon found".
+  const isHint = t => /^The builder (removes the stop|does not double)/.test(t);
+  const problems = v.errors.concat(v.warnings.filter(t=>!isHint(t)));
+  const withStart = !v.isProtein && (v.clean||'').startsWith('ATG');
+  const btn = target ? `<br><button type="button" class="hint-btn" data-strip="${target}">Remove ${withStart && v.trailingStop ? 'start and stop codon' : withStart ? 'start codon' : 'stop codon'}</button>` : '';
+  const hints = v.warnings.filter(isHint).map(t=>`<div class="stophint">${ICON_INFO}<div>${t}${btn}</div></div>`).join('');
+  if(problems.length) return hints + problems.map(t=>`<div class="stopwarn">${ICON_WARN}<div>${t}</div></div>`).join('');
+  return hints + `<div class="stopok">${ICON_OK}<div>${okText}</div></div>` + codonLineHtml(v.codonOptimization, false);
 }
+/* Button in the hint: writes the sequence without its start codon (ATG) and stop codon back into the input field. */
+document.addEventListener('click', e=>{
+  const b=e.target.closest('[data-strip]'); if(!b) return;
+  const ta = b.dataset.strip==='slot' ? b.closest('.slotcustom').querySelector('.slotseq') : $(b.dataset.strip);
+  if(!ta) return;
+  let seq=clean(ta.value);
+  if(isProteinText(ta.value)){ if(seq.endsWith('*')) seq=seq.slice(0,-1); }
+  else {
+    if(endsWithStop(seq)) seq=seq.slice(0,-3);
+    if(seq.startsWith('ATG') && seq.length>3) seq=seq.slice(3);
+  }
+  ta.value=seq;
+  ta.dispatchEvent(new Event('input',{bubbles:true}));
+});
 function renderCargoValidation(v){
   $('#cargoMeta').innerHTML = seqMetaHtml(v);
   // The stop-codon / frame check only makes sense for a CDS the user typed in; the library examples are ours.
-  $('#cargoStopArea').innerHTML = state.cargoFromPreset ? '' : seqNotesHtml(v, 'No stop codon found: sequence is ready for fusion.');
+  $('#cargoStopArea').innerHTML = state.cargoFromPreset ? '' : seqNotesHtml(v, 'No stop codon found: sequence is ready for fusion.', '#cargoSeq');
   state.cargoValid = v.ok;
   refreshNext1();
   updateConstructStrip();
@@ -1713,7 +1746,7 @@ function handleSlotSeq(mod,n){
 function renderSlotValidation(mod,n,v){
   const el=slotEl(mod,n);
   el.querySelector('.slotmeta').innerHTML=seqMetaHtml(v);
-  el.querySelector('.slotnotes').innerHTML=seqNotesHtml(v, 'No stop codon found: the sequence is ready.');
+  el.querySelector('.slotnotes').innerHTML=seqNotesHtml(v, 'No stop codon found: the sequence is ready.', 'slot');
   slotsOf(mod)[n].valid=v.ok;
   updateConstructStrip(); refreshNav(mod);
 }
@@ -2249,7 +2282,7 @@ function primerStructureHtml(st){
     `<tr><td>Self-fold (hairpin)</td><td>${cell(st.hairpin.forward)}</td><td>${cell(st.hairpin.reverse)}</td></tr>`+
     `<tr><td>Self-dimer</td><td>${cell(st.selfDimer.forward)}</td><td>${cell(st.selfDimer.reverse)}</td></tr>`+
     `<tr><td>Primer-primer dimer</td><td colspan="2">${cell(st.heteroDimer)}</td></tr>`+
-    `</tbody></table></div>`;
+    `</tbody></table><p class="l0m-note" style="margin:4px 0 0">primer3 nearest-neighbour thermodynamics on the complete primers. Too stable: ΔG below −3 kcal/mol (hairpin) or −9 kcal/mol (dimers) and a structure Tm above 45 °C.</p></div>`;
 }
 function renderL0Primers(c){
   const pr=c.primers, sec=$('#l0mPrimSec'), body=$('#l0mPrimBody');
@@ -2937,6 +2970,24 @@ async function restoreSession(){
 window.addEventListener('pagehide', saveSession);
 document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='hidden') saveSession(); });
 
+/* ===================== Handoff from the Encapsulin Filter ===================== */
+/* The filter page ("Use this nanocompartment") leaves the shell CDS and a name in sessionStorage (same tab, same origin) and
+   opens the builder. Here it is taken over as "your own sequence" in step 1 and removed again, so a later refresh does not apply it twice. */
+const HANDOFF_KEY='encore.selector.handoff';
+function applySelectorHandoff(){
+  let h=null;
+  try{ h=JSON.parse(sessionStorage.getItem(HANDOFF_KEY)); sessionStorage.removeItem(HANDOFF_KEY); }catch(e){}
+  if(!h || !h.seq) return;
+  showBuilder();
+  const sel=$('#ncSelect');
+  sel.value=CUSTOM_NC; sel.dispatchEvent(new Event('change'));
+  $('#customNcLabel').value=h.label||''; state.customNc.label=h.label||'';
+  $('#shellSeq').value=h.seq;
+  handleShellInput();
+  history.replaceState(null,'','#step-1');
+  scrollToSection('sec-0');
+}
+
 /* ===================== Init ===================== */
 /* Header badge: is the optional COMMEC biosecurity-screening sidecar up right
    now? Purely informational (no click action); refreshed on load and every
@@ -2981,6 +3032,7 @@ async function boot(){
   initSlots();
   applyLocks(); updateStepperLocks(); updateProgress();
   await restoreSession();
+  applySelectorHandoff();
   refreshCommecStatus();
   setInterval(refreshCommecStatus, 30_000);
 }

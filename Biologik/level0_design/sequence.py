@@ -131,8 +131,8 @@ def validate_cargo(raw: str, min_bp: int = 30, kind: str = "cargo") -> dict:
             warnings.append(f"Possible in-frame stop codon at position {first['pos'] + 1} ({first['codon']}).")
         if invalid_chars > 0:
             warnings.append(f"{invalid_chars} invalid character(s) were ignored.")
-    if trailing_stop:
-        warnings.append(_stop_message(trailing_stop))
+    if trailing_stop or clean.startswith("ATG"):
+        warnings.append(_stop_message(trailing_stop, clean.startswith("ATG")))
 
     return {
         "clean": clean,
@@ -150,8 +150,10 @@ def validate_cargo(raw: str, min_bp: int = 30, kind: str = "cargo") -> dict:
     }
 
 
-def _stop_message(stop: str) -> str:
-    return f"Stop codon at the end ({stop}) was removed: the builder adds start and stop codon itself where the ORF begins and ends."
+def _stop_message(stop: str | None, has_start: bool = False) -> str:
+    # Present tense, the builder acts: it takes the stop codon off and does not double a start codon (constructs.py: _add_start_stop).
+    parts = ([f"removes the stop codon at the end ({stop})"] if stop else []) + (["does not double the start codon (ATG)"] if has_start else [])
+    return f"The builder {' and '.join(parts)}: it adds start and stop codon itself where the ORF begins and ends."
 
 
 def _validate_protein(raw: str, min_bp: int, kind: str) -> dict:

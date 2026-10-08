@@ -139,8 +139,14 @@ input:focus, select:focus { outline:3px solid var(--focus); border-color:var(--a
 .prop .k { display:block; color:var(--muted); font-size:.72rem; text-transform:uppercase; letter-spacing:.045em; }
 .prop .v { display:block; margin-top:2px; font-size:.9rem; overflow-wrap:anywhere; }
 .details { margin-top:12px; }
-.details summary { cursor:pointer; color:var(--sub-ink); font-weight:700; font-size:.86rem; }
+.details summary { cursor:pointer; color:var(--sub-ink); font-weight:700; font-size:.86rem; padding:8px 0; }
+.details[open] > summary { margin-bottom:8px; }
 .details p { color:var(--body-ink); font-size:.86rem; line-height:1.55; }
+/* collapsible sections: air to the text above and to the card edges */
+.candidate-card > .details { margin:0; padding:6px 20px; border-top:1px solid var(--line); }
+.candidate-card > .details .assembly-list { border:1px solid var(--line); border-radius:12px; margin:4px 0 12px; }
+.assembly-card .details { margin-top:16px; padding-top:4px; border-top:1px solid var(--line); }
+.assembly-card .details .property-grid { padding:4px 2px 8px; }
 
 .finder-grid { display:grid; grid-template-columns:300px 1fr; gap:22px; align-items:start; }
 .filter-panel { position:sticky; top:calc(var(--hdr-h) + 16px); }
@@ -194,3 +200,10 @@ input:focus, select:focus { outline:3px solid var(--focus); border-color:var(--a
 @media (max-width:640px) { .site-tabs { display:none; } }
 .hbtn { border:1px solid rgba(255,255,255,.24); background:rgba(255,255,255,.06); color:#E9F2EE; font-family:inherit; font-size:11.5px; font-weight:600; padding:7px 11px; border-radius:9px; cursor:pointer; transition:.15s; display:flex; align-items:center; gap:6px; }
 .hbtn:hover { background:rgba(255,255,255,.14); }
+
+/* "Use this nanocompartment": hands the sequence over to the builder */
+.use-nc { flex:none; cursor:pointer; border:0; border-radius:999px; padding:9px 16px; font:inherit; font-weight:700; font-size:.86rem; background:var(--accent); color:#fff; }
+.use-nc:hover { filter:brightness(1.1); }
+.use-nc-none { flex:none; color:var(--muted); font-size:.8rem; font-weight:650; padding-top:8px; }
+@media (max-width:760px) { .use-nc, .use-nc-none { margin-top:12px; } }
+:root[data-theme="dark"] .use-nc { color:#08201a; }

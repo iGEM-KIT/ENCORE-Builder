@@ -182,6 +182,8 @@ function sequenceCard(s) {
           <div class="chip">${esc(a.assembly_symmetry || "symmetry unknown")}</div>
         </div>
         <div class="why">${esc(assemblyWhy(a))}</div>
+        <details class="details">
+          <summary>Assembly details</summary>
         <div class="property-grid">
           ${property("Construct", a.construct)}
           ${property("T-number", a.T_number === null ? null : `T=${a.T_number}`)}
@@ -196,12 +198,37 @@ function sequenceCard(s) {
           ${property("Condition", a.condition)}
           ${property("Source", a.source)}
         </div>
-        <details class="details">
-          <summary>Notes</summary>
-          <p>${esc(display(a.notes))}</p>
+        <p><b>Notes:</b> ${esc(display(a.notes))}</p>
         </details>
       </article>`;
   }
+
+  // "Use this nanocompartment": hands the shell CDS and a name over to the builder (step 1, "your own sequence").
+  // genomic_sequence is stored in genomic-record orientation, so a "-" strand CDS is reverse-complemented first.
+  const revComp = seq => seq.split("").reverse().map(b => ({A:"T", T:"A", G:"C", C:"G"}[b] || "N")).join("");
+  function builderSequence(c) {
+    const rec = (sequencesByCandidate.get(c.candidate_id) || []).find(s => s.genomic_sequence);
+    if (!rec) return null;
+    const dna = rec.genomic_sequence.toUpperCase().replace(/[^ACGT]/g, "");
+    return rec.strand === "-" ? revComp(dna) : dna;
+  }
+  function builderName(c) {
+    return `${c.organism || c.protein_name || "Encapsulin"} ${c.candidate_id}`.slice(0, 60);
+  }
+  document.addEventListener("click", e => {
+    const btn = e.target.closest("[data-use-nc]");
+    if (!btn) return;
+    const c = candidates.find(x => x.candidate_id === btn.dataset.useNc);
+    const seq = c && builderSequence(c);
+    if (!seq) return;
+    try {
+      sessionStorage.setItem("encore.selector.handoff", JSON.stringify({label: builderName(c), seq, candidate_id: c.candidate_id}));
+    } catch (err) {
+      alert("The sequence could not be handed over to the builder (browser storage is blocked).");
+      return;
+    }
+    location.href = "/#step-1";
+  });
 
   function candidateCard(c, assemblySubset=null, stateMap=null) {
     const linked = assemblySubset ?? (byCandidate.get(c.candidate_id) || []);
@@ -229,6 +256,9 @@ function sequenceCard(s) {
               <span class="chip">${linked.length} curated ${linked.length === 1 ? "assembly" : "assemblies"}</span>
             </div>
           </div>
+          ${builderSequence(c)
+            ? `<button type="button" class="use-nc" data-use-nc="${esc(c.candidate_id)}">Use this nanocompartment</button>`
+            : `<span class="use-nc-none" title="No genomic sequence record for this candidate yet">No sequence to use</span>`}
         </div>
         <details class="details">
   <summary>Sequence data (${linkedSequences.length})</summary>

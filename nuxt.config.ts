@@ -6,6 +6,11 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   nitro: {
+    // The static pages and scripts (frontend/, encapsulin_selector/) carry no cache header of their own, so browsers cache
+    // them heuristically and keep showing an old version after an update. "no-cache" makes the browser ask the server
+    // each time (answered with a cheap 304 while nothing changed).
+    routeRules: { '/**': { headers: { 'cache-control': 'no-cache' } } },
+
     // The builder prototype lives in frontend/, not in public/. By itself Nuxt
     // only serves public/ statically; the page would not be reachable at all
     // and its relative /api calls (window.ENCORE_API) would go
