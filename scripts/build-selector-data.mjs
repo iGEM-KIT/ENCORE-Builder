@@ -134,6 +134,14 @@ const assembliesByCandidate = new Map()
 for (const a of assemblies) {
   assembliesByCandidate.set(a.candidate_id, (assembliesByCandidate.get(a.candidate_id) ?? 0) + 1)
 }
+const sequencesByCandidate = new Map()
+
+for (const s of sequences) {
+  sequencesByCandidate.set(
+    s.candidate_id,
+    (sequencesByCandidate.get(s.candidate_id) ?? 0) + 1
+  )
+}
 const candidatesOut = candidates.map((c) => ({
   ...c,
   assembly_count: assembliesByCandidate.get(c.candidate_id) ?? 0,
