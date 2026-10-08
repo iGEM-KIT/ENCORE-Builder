@@ -89,6 +89,32 @@ for (const a of assemblies) {
     errors.push(`Assembly "${a.assembly_id}" refers to unknown candidate_id "${a.candidate_id}".`)
   }
 }
+const sequenceIds = new Set()
+
+for (const s of sequences) {
+  if (!s.sequence_link_id) {
+    errors.push('Found a sequence without sequence_link_id.')
+    continue
+  }
+
+  if (s.sequence_link_id !== s.sequence_link_id.trim()) {
+    errors.push(
+      `sequence_link_id "${s.sequence_link_id}" has a leading/trailing space (almost always a typo).`
+    )
+  }
+
+  if (sequenceIds.has(s.sequence_link_id)) {
+    errors.push(`sequence_link_id "${s.sequence_link_id}" occurs twice.`)
+  }
+
+  sequenceIds.add(s.sequence_link_id)
+
+  if (!candidateIds.has(s.candidate_id)) {
+    errors.push(
+      `Sequence "${s.sequence_link_id}" refers to unknown candidate_id "${s.candidate_id}".`
+    )
+  }
+}
 for (const c of candidates) {
   if (c.reference_assembly_id && !assemblyIds.has(c.reference_assembly_id)) {
     errors.push(`Candidate "${c.candidate_id}" refers with reference_assembly_id to unknown assembly "${c.reference_assembly_id}".`)
