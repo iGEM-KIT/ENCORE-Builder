@@ -2,12 +2,20 @@
   const DATA = window.ENCAPSULIN_SELECTOR_DATA;
   const candidates = DATA.candidates;
   const assemblies = DATA.assemblies;
-
+const sequences = DATA.sequences ?? [];
   const byCandidate = new Map();
   assemblies.forEach(a => {
     if (!byCandidate.has(a.candidate_id)) byCandidate.set(a.candidate_id, []);
     byCandidate.get(a.candidate_id).push(a);
   });
+  const sequencesByCandidate = new Map();
+
+sequences.forEach(s => {
+  if (!sequencesByCandidate.has(s.candidate_id)) {
+    sequencesByCandidate.set(s.candidate_id, []);
+  }
+  sequencesByCandidate.get(s.candidate_id).push(s);
+});
   const candidateMap = new Map(candidates.map(c => [c.candidate_id, c]));
 
   const $ = id => document.getElementById(id);
@@ -56,7 +64,7 @@
   }
 
   $("datasetBadge").textContent =
-    `${DATA.meta.candidate_count} candidates • ${DATA.meta.assembly_count} curated assemblies`;
+    `${DATA.meta.candidate_count} candidates • ${DATA.meta.assembly_count} curated assemblies • ${DATA.meta.sequence_count} sequence records`;
   $("alphaNote").textContent = DATA.meta.status_note;
 
   // Mode switching
@@ -114,7 +122,50 @@
       .join(", ");
     return `<div class="prop"><span class="k">${esc(label)}</span><span class="v">${links}</span></div>`;
   }
+function sequenceCard(s) {
+  const sourceLink = s.source_nucleotide
+    ? `<a class="ext-link" href="${esc(s.source_nucleotide)}" target="_blank" rel="noopener">${esc(display(s.nucleotide_accession))}</a>`
+    : esc(display(s.nucleotide_accession));
 
+  return `
+    <article class="assembly-card">
+      <div class="assembly-top">
+        <div>
+          <div class="assembly-id">${esc(s.sequence_link_id)}</div>
+          <div class="chips">
+            <span class="chip">Sequence record</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="property-grid">
+        ${property("Protein accession", s.protein_accession)}
+        <div class="prop">
+          <span class="k">Nucleotide accession</span>
+          <span class="v">${sourceLink}</span>
+        </div>
+        ${property("Database", s.source_database)}
+        ${property("CDS start", s.cds_start)}
+        ${property("CDS end", s.cds_end)}
+        ${property("Strand", s.strand)}
+        ${property("CDS length", s.cds_length_nt ? `${s.cds_length_nt} nt` : null)}
+      </div>
+
+      ${s.genomic_sequence ? `
+        <details class="details">
+          <summary>Genomic sequence</summary>
+          <p style="overflow-wrap:anywhere;font-family:monospace;">${esc(s.genomic_sequence)}</p>
+        </details>
+      ` : ""}
+
+      ${s.notes ? `
+        <details class="details">
+          <summary>Sequence notes</summary>
+          <p>${esc(s.notes)}</p>
+        </details>
+      ` : ""}
+    </article>`;
+}
   function assemblyCard(a, refId, matchState="") {
     const variantChip = a.variant_status === "wild_type"
       ? `<span class="chip wt">WT</span>`
@@ -154,9 +205,13 @@
 
   function candidateCard(c, assemblySubset=null, stateMap=null) {
     const linked = assemblySubset ?? (byCandidate.get(c.candidate_id) || []);
+    const linkedSequences = sequencesByCandidate.get(c.candidate_id) || [];
     const assemblyHtml = linked.length
       ? linked.map(a => assemblyCard(a, c.reference_assembly_id, stateMap?.get(a.assembly_id) || "")).join("")
       : `<div class="empty-state">No curated assembly record is available for this candidate in the current dataset.</div>`;
+      const sequenceHtml = linkedSequences.length
+  ? linkedSequences.map(s => sequenceCard(s)).join("")
+  : `<div class="empty-state">No nucleotide sequence record is available for this candidate in the current dataset.</div>`;
     const ids = [c.gene, c.locus_tag, c.orf_name].filter(Boolean).join(" • ");
     const idDisplay = c.source_uniprot
       ? `<a class="ext-link" href="${esc(c.source_uniprot)}" target="_blank" rel="noopener">${esc(c.candidate_id)}</a>`
@@ -175,17 +230,28 @@
             </div>
           </div>
         </div>
-        <div class="assembly-list">${assemblyHtml}</div>
+        <details class="details">
+  <summary>Sequence data (${linkedSequences.length})</summary>
+  <div class="assembly-list">${sequenceHtml}</div>
+</details>
+
+<div class="assembly-list">${assemblyHtml}</div>
       </article>`;
   }
 
   // Direct search
   function candidateSearchText(c) {
     const linked = byCandidate.get(c.candidate_id) || [];
+    const linkedSequences = sequencesByCandidate.get(c.candidate_id) || [];
     return norm([
       c.candidate_id, c.entry_name, c.protein_name, c.organism, c.strain,
       c.genus, c.gene, c.locus_tag, c.orf_name, c.encapsulin_family,
-      ...linked.map(a => a.construct)
+      ...linked.map(a => a.construct),
+...linkedSequences.flatMap(s => [
+  s.protein_accession,
+  s.nucleotide_accession,
+  s.sequence_link_id
+])
     ].filter(Boolean).join(" | "));
   }
 
