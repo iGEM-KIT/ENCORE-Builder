@@ -180,7 +180,7 @@
       "on_stock": true,
       "registry_url": null,
       "notes": null,
-      "sequence": "CCCCGACACCCGCCAACACCCGCTGACGCGCCCTGACGG",
+      "sequence": "AACCCCGACACCCGCCAACACCCGCTGACGCGCCCTGACGG",
       "checks": {
         "bsai_sites": [],
         "bbsi_sites": []

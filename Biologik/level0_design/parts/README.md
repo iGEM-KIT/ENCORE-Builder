@@ -7,7 +7,7 @@ Every entry is a JSON file of its own, grouped by kind in a subfolder, exactly l
 | Folder              | Content |
 |---------------------|---------|
 | `level0_inserts/`   | the bare part sequence of each Level 0 plasmid: shells, cargos, linkers, markers, intein, targeting peptides, NCS (see below) |
-| `promoters/`        | promoters (sequence not stored yet -> placeholder) |
+| `promoters/`        | promoters (GAL1-10 is stored as a real sequence, 665 bp; a promoter without a sequence gets a placeholder) |
 | `terminators/`      | terminators, purely informational |
 | `level0_backbones/`, `level1_backbones/`, `level2_backbones/` | the destination backbones pAGM9121, pAGM1311, pESC-HIS |
 | `type_overhangs/`   | the seven overhang adapters (source of the overhangs and the frame spacer) |

@@ -8,7 +8,7 @@ from __future__ import annotations
 from .assembly import assemble_level1_module, assemble_level1_promoter, assemble_level2, finish_level1
 from .constructs import build_level0_constructs, resolve_seq
 from .data import CARGO_L1_FLANK, NOMINAL_BP, find_nanocompartment, find_promoter
-from .parts_db import load_parts
+from .parts_db import find_real_sequence, load_parts
 from .primers import make_primer_pair
 from .sequence import reverse_complement, validate_cargo
 from .slots import CUSTOM_NC_ID, build_custom_nanocompartment, build_modules, resolve_slots, slot_summary
@@ -90,7 +90,8 @@ def design_construct(decisions: dict = None):
         "targetingPeptide": nc["tp"],
         "cargo": {"label": cargo_label, "sequence": cargo["clean"], "sequenceAntisense": cargo_antisense, "bp": cargo_bp},
         "level0": {"cargoModule": cargo_module, "ncModule": nc_module},
-        "level2": {"promoter": {"id": promoter_entry["id"], "label": promoter_entry["label"], "bp": NOMINAL_BP["PROMO"]}},
+        "level2": {"promoter": {"id": promoter_entry["id"], "label": promoter_entry["label"],
+                                "bp": len(find_real_sequence("promoters", promoter_entry["id"]) or "") or NOMINAL_BP["PROMO"]}},
         "cargoSlots": slot_summary(cargo_slots),
         "ncSlots": slot_summary(nc_slots),
         "primers": primers,

@@ -4,7 +4,21 @@
     {
       "name": "nuxt-dev",
       "runtimeExecutable": "/Users/felixcuntz/.nvm/versions/node/v22.22.3/bin/node",
-      "runtimeArgs": ["/Users/felixcuntz/.nvm/versions/node/v22.22.3/bin/pnpm", "dev"],
+      "runtimeArgs": [
+        "/Users/felixcuntz/.nvm/versions/node/v22.22.3/bin/pnpm",
+        "dev"
+      ],
+      "port": 3000
+    },
+    {
+      "name": "nuxt-dev-commec",
+      "runtimeExecutable": "/usr/bin/env",
+      "runtimeArgs": [
+        "COMMEC_URL=http://localhost:8787",
+        "/Users/felixcuntz/.nvm/versions/node/v22.22.3/bin/node",
+        "/Users/felixcuntz/.nvm/versions/node/v22.22.3/bin/pnpm",
+        "dev"
+      ],
       "port": 3000
     }
   ]
