@@ -22,7 +22,7 @@ import sys
 from .codon import back_translate
 from .data import get_libraries
 from .design import build_genbank, design_construct
-from .mrna_dimer import check_mrna_structure
+from .mrna_dimer import check_mrna_structure, module_mrna
 from .sequence import clean_protein, clean_seq, is_protein, validate_cargo
 from .user_codons import codon_optimize_part, codon_summary
 
@@ -77,6 +77,19 @@ def cmd_validate(payload: dict) -> dict:
     return {"validation": validation}
 
 
+def cmd_mrna(payload: dict) -> dict:
+    """mRNA self-fold / self-dimer of the two complete modules (cargo and nanocompartment) of a design: from the first coding part to the
+    first stop codon, NCS spacers left out (see mrna_dimer.module_mrna). Takes the same payload as `design`. Separate from `design`, because
+    ViennaRNA needs a few seconds for long modules and the design should not wait for it."""
+    design = design_construct(payload)
+    modules = {c["site"]: c for c in design["level1Constructs"]}
+    out = {}
+    for key, site in (("cargo", "cargo_site"), ("nc", "nc_site")):
+        module = modules[site]
+        out[key] = {"label": module["label"], **module_mrna(module.get("shown") or module)}
+    return {"mrna": out}
+
+
 def cmd_to_dna(payload: dict) -> dict:
     """DNA form of every entered sequence (a protein is back-translated with the yeast codon table), e.g. for the
     biosecurity screening, which expects DNA."""
@@ -88,6 +101,7 @@ COMMANDS = {
     "design": cmd_design,
     "libraries": cmd_libraries,
     "validate": cmd_validate,
+    "mrna": cmd_mrna,
     "to_dna": cmd_to_dna,
 }
 

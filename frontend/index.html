@@ -393,6 +393,8 @@
   /* Compact version of the same mRNA self-fold/self-dimer check, shown right under a sequence
      field: same idea as the length/aa/GC line, just for a slower (backend-only) result that
      arrives a moment later once the debounced server check returns. */
+  .mrna-mod{margin-top:8px;font-size:12.5px}
+  .mrna-mod .mrna-inline{margin-top:3px}
   .mrna-inline{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin-top:6px;font-size:11.5px;color:var(--muted)}
   .mrna-inline .mrna-item{display:inline-flex;align-items:center;gap:5px}
   .mrna-inline .mrna-risk{padding:1px 7px;font-size:10.5px}
@@ -827,6 +829,10 @@
                     <div class="levellabel"><h4>Nanocompartment module</h4><span class="l0m-badge sense">sense strand</span></div>
                     <div class="strandwrap"><div class="strand" id="lvl1nc"></div></div>
                   </div>
+                  <div class="levelblock" id="modMrnaBlock" style="display:none">
+                    <div class="levellabel"><h4>mRNA of the modules</h4><button class="info" type="button" data-info="moduleMrna" aria-label="About the mRNA check of the modules">i</button></div>
+                    <div id="modMrna"></div>
+                  </div>
                                     <div class="lvlinfo" id="l1fold"><button class="info" type="button" data-info="level1" aria-label="How this level works">i</button><span>How this level works</span></div>
 
                   <div class="lvlsubhead">Destination plasmid</div>
@@ -1101,6 +1107,7 @@ try{
    DNA if >= 90 % of the letters are A/C/G/T/U/N, else protein. A protein is back-translated by the builder (S. cerevisiae codon usage). */
 const isProteinText = s => { const l=(s||'').toUpperCase().replace(/^>.*$/gm,'').replace(/[^A-Z*]/g,''); return l.length>0 && l.replace(/[^ACGTUN]/g,'').length/l.length<0.9; };
 const cleanProtein = s => (s||'').toUpperCase().replace(/^>.*$/gm,'').replace(/[^ACDEFGHIKLMNPQRSTVWY*]/g,'');
+let moduleMrnaToken = 0;                       // see loadModuleMrna()
 const clean = s => isProteinText(s) ? cleanProtein(s) : (s||'').toUpperCase().replace(/[^ATGC]/g,'');
 const seqBp = s => isProteinText(s) ? 3*s.replace(/\*/g,'').length : s.length;           // DNA length (a protein: after back-translation)
 const seqLenLabel = s => isProteinText(s) ? `${s.replace(/\*/g,'').length} aa → ${seqBp(s)} bp` : `${s.length} bp`;
@@ -1200,6 +1207,9 @@ const INFO = {
           <p><b>What is kept out.</b> An exact search then corrects as few codons as needed so that <b>no BsaI site (GGTCTC / GAGACC) and no BbsI site (GAAGAC / GTCTTC)</b> remains (also not across the seam to the overhang adapter and the neighbouring part) and no run of 7 identical bases appears. Without that the Golden Gate digest would cut your part.</p>
           <p>A DNA sequence that is already well adapted (CAI ≥ 0.85) and free of those sites is kept as entered.</p>
           <p><b>Amino acid sequences.</b> Instead of DNA you can paste a protein sequence (one-letter code, no stop codon). It is detected automatically (a sequence whose letters are at least 90 % A/C/G/T is read as DNA, anything else as protein) and back-translated with the same codon choice and the same site-free rule.</p>` },
+  moduleMrna: { title:'mRNA of the modules', img:'Diagram: mRNA from the first coding part to the first stop codon',
+    body:`<p>Self-fold and self-dimer of the <b>complete cargo module and nanocompartment module</b>: the mRNA that is really translated, not just one part. It runs from the <b>first coding part</b> to the <b>first stop codon</b> (included) in the reading frame, with the short junctions between the parts. <b>NCS spacers are left out</b>: those in front of the ORF, and behind the stop codon. An NCS with stop codon only counts up to its stop codon.</p>
+          <p>The 5′ and 3′ untranslated regions of promoter and terminator are not part of the check. Method and risk levels as for single sequences (ViennaRNA, ΔG compared with shuffled sequences, z-score); see the info next to your own sequences. The cargo module is checked in its own reading direction (Type 0.5 to 0.1).</p>` },
   mrnaStructure: { title:'mRNA self-fold &amp; self-dimer', img:'Diagram: mRNA hairpin and mRNA-mRNA duplex',
     body:`<p>A scanning ribosome can be blocked two ways: the mRNA <b>folds back on itself</b> (a hairpin, within one molecule), or <b>two copies of the same mRNA</b> hybridise with each other (a dimer). Either can prevent translation.</p>
           <p>Checked for every sequence you paste yourself (cargo, your own shell, or your own sequence in a module) as a minimum free energy (ΔG, kcal/mol) via <code>ViennaRNA</code> (<code>RNAfold</code> for self-fold, <code>RNAduplex</code> for self-dimer) on its coding (sense) direction, since that is exactly the mRNA sequence (U instead of T).</p>
@@ -2044,9 +2054,10 @@ function resetBuilder(){
   // derived output
   $('#cargoLen').textContent='0 bp';
   ['#ncMeta','#shellMeta','#shellStopArea','#shellMrna','#cargoMeta','#cargoStopArea','#cargoMrna','#lvl0strand','#lvl1cargo','#lvl1nc','#lvl2strand',
-   '#lvl1promo','#biosecNoteText','#biosecChips','#plat0feats','#plat1feats','#plat2bfeats','#ordOligoList','#ordPrimerList','#ordDsList','#ordOligoActions','#ordPrimerActions','#ordDsActions']
+   '#lvl1promo','#modMrna','#biosecNoteText','#biosecChips','#plat0feats','#plat1feats','#plat2bfeats','#ordOligoList','#ordPrimerList','#ordDsList','#ordOligoActions','#ordPrimerActions','#ordDsActions']
     .forEach(sel=>{ const el=$(sel); if(el) el.innerHTML=''; });
 
+  moduleMrnaToken++; $('#modMrnaBlock').style.display='none';
   $('#plat0title').textContent=''; $('#plat0explain').textContent=''; $('#plasmid0').innerHTML='';
   $('#plat1title').textContent=''; $('#plat1explain').textContent=''; $('#plasmid1').innerHTML=''; $('#l1bulk').style.display='none';
   $('#plat2btitle').textContent=''; $('#plat2bexplain').textContent=''; $('#plasmid2b').innerHTML=''; $('#l2bulk').style.display='none';
@@ -2815,6 +2826,32 @@ async function compute(){
   renderAll(lastResult);
 }
 
+/* mRNA self-fold / self-dimer of the two complete modules; own request after the design is shown (ViennaRNA needs a few seconds).
+   A newer design makes an older answer obsolete (token). */
+const MODULE_MRNA_NAMES = { cargo:'Cargo module', nc:'Nanocompartment module' };
+function moduleMrnaHtml(key, r){
+  const name = MODULE_MRNA_NAMES[key];
+  if(!r || !r.available) return `<div class="mrna-mod"><b>${name}</b><div class="mrna-inline"><span title="${esc((r&&r.reason)||'')}">mRNA structure: not checked${r&&r.reason ? ' (' + esc(r.reason) + ')' : ''}</span></div></div>`;
+  const chip = (label, check) => `<span class="mrna-item">${label} <span class="mrna-risk ${check.risk||'na'}">${check.risk||'n/a'}</span> <span class="mrna-figs">ΔG ${check.deltaG}</span></span>`;
+  const parts = (r.parts||[]).filter(l=>l!=='NCS').join(' + ');
+  return `<div class="mrna-mod"><b>${name}</b><div class="mrna-inline"><span>${parts} · ${r.length} nt ${r.endsWithStop ? 'up to the stop codon' : 'no stop codon, up to the last coding part'}:</span>${chip('Self-fold', r.selfFold)}${chip('Self-dimer', r.selfDimer)}</div></div>`;
+}
+async function loadModuleMrna(){
+  const api=window.ENCORE_API, box=$('#modMrna'), block=$('#modMrnaBlock');
+  if(!api || !api.available || !box) return;
+  const token=++moduleMrnaToken;
+  block.style.display=''; box.innerHTML = `<div class="mrna-inline">${MRNA_LOADING_HTML}</div>`;
+  try{
+    const r=await api.mrnaFromState(state);
+    if(token!==moduleMrnaToken) return;
+    box.innerHTML = moduleMrnaHtml('cargo', r.cargo) + moduleMrnaHtml('nc', r.nc);
+  }catch(err){
+    if(token!==moduleMrnaToken) return;
+    console.warn('[ENCORE] /api/mrna failed', err);
+    box.innerHTML = `<div class="mrna-inline"><span>mRNA structure of the modules: not checked</span></div>`;
+  }
+}
+
 function renderAll(res){
   const m=res.model;
 
@@ -2829,6 +2866,7 @@ function renderAll(res){
   renderLevel0Extras(res);
   renderLevel2Plasmid(res);
   renderOrder(res);
+  loadModuleMrna();
 }
 
 /* ===================== Stepper scroll-spy ===================== */
@@ -3033,6 +3071,13 @@ window.ENCORE_API = (function(){
     if(!r.ok){ const e = await r.json().catch(()=>({})); throw Object.assign(new Error(e.statusMessage||('HTTP '+r.status)), {status:r.status, data:e.data}); }
     return r.json();
   };
+  const requestFromState = s => ({
+    nanocompartment: s.nc && s.nc.id,
+    customNanocompartment: s.nc && s.nc.custom ? { label:s.nc.shell, seq:s.nc.seq } : undefined,
+    cargoSeq: s.cargoSeq, cargoLabel: s.cargoLabel,
+    promoter: s.promoter,
+    ncSlots: slotsPayload('nc'), cargoSlots: slotsPayload('cargo'),
+  });
   const post = (path, body) => json(base+path, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body||{}) });
   const api = {
     available: false,
@@ -3047,13 +3092,9 @@ window.ENCORE_API = (function(){
     commecStatus: () => json(base+'/cargo/commec-status'),
     design: (decisions) => post('/design', decisions),
     // Convenience: translate the prototype's `state` object into a design request.
-    designFromState: (s) => post('/design', {
-      nanocompartment: s.nc && s.nc.id,
-      customNanocompartment: s.nc && s.nc.custom ? { label:s.nc.shell, seq:s.nc.seq } : undefined,
-      cargoSeq: s.cargoSeq, cargoLabel: s.cargoLabel,
-      promoter: s.promoter,
-      ncSlots: slotsPayload('nc'), cargoSlots: slotsPayload('cargo'), genbank: true,
-    }),
+    designFromState: (s) => post('/design', { ...requestFromState(s), genbank: true }),
+    // mRNA self-fold / self-dimer of the complete cargo and NC module (own request: ViennaRNA takes a few seconds).
+    mrnaFromState: (s) => post('/mrna', requestFromState(s)),
   };
   // Passive health check. `ready` resolves either way, so the app can await it
   // once and then look at `available` instead of racing the check.

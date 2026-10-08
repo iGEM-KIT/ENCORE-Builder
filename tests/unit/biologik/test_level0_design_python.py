@@ -1150,3 +1150,38 @@ def test_parts_and_constructs_tell_whether_their_plasmid_is_built():
     status = {(c['module'], c['slot']): c['plasmidStatus'] for c in design['level0Constructs']}
     assert status[('nc_site', 4)] == 'not_built' and status[('nc_site', 3)] == 'stock'
     assert status[('cargo_site', 3)] is None                                              # your own cargo has no plasmid
+
+
+# ---------------------------------------------------------------------------------------------------------
+# mRNA of the complete modules: first coding part to the first stop codon, NCS spacers left out
+
+def test_module_mrna_runs_from_the_first_coding_part_to_the_first_stop_codon_without_ncs():
+    from Biologik.level0_design.cli import cmd_mrna
+    from Biologik.level0_design.mrna_dimer import module_mrna
+    payload = dict(nanocompartment='tmari', cargoSeq=_long_cargo(), cargoLabel='G',
+                   cargoSlots={'2': {'kind': 'ncsstop'}}, ncSlots={'4': {'kind': 'ncsstop'}})
+    design = design_construct(payload)
+    modules = {c['site']: c for c in design['level1Constructs']}
+    cargo_view, nc_view = modules['cargo_site']['shown'], modules['nc_site']
+    for view, central in ((cargo_view, 'G'), (nc_view, 'E-Tm')):
+        parts = {p['label'] + str(i): p for i, p in enumerate(view['parts'])}
+        mrna = module_mrna(view)
+        first = next(p for p in view['parts'] if p['label'] == central)
+        assert mrna['sequence'].startswith('ATG') and mrna['sequence'] == view['sequence'][first['start'] - 1:first['start'] - 1 + mrna['length']]
+        assert mrna['endsWithStop'] is True and mrna['sequence'][-3:] in ('TAA', 'TAG', 'TGA')
+        assert mrna['parts'] == [central, 'NCS']                       # NCS in front of the ORF and behind the stop left out; the stop NCS counts up to its stop
+        assert not {'TAA', 'TAG', 'TGA'} & set(_orf_codons(mrna['sequence'])[:-1]) and mrna['length'] % 3 == 0
+    # without any stop codon the mRNA ends with the last coding part, an NCS behind it is not included
+    plain = {c['site']: c for c in design_construct(dict(payload, cargoSlots={}, ncSlots={}))['level1Constructs']}['nc_site']
+    mrna = module_mrna(plain)
+    last_coding = next(p for p in plain['parts'] if p['label'] == 'E-Tm')
+    assert mrna['endsWithStop'] is False and mrna['parts'] == ['E-Tm'] and mrna['sequence'].endswith(plain['sequence'][last_coding['end'] - 3:last_coding['end']])
+
+
+def test_mrna_command_checks_both_modules_when_viennarna_is_there():
+    pytest.importorskip('RNA')
+    from Biologik.level0_design.cli import cmd_mrna
+    result = cmd_mrna(dict(nanocompartment='tmari', cargoSeq=_long_cargo(), cargoSlots={}, ncSlots={}))['mrna']
+    assert set(result) == {'cargo', 'nc'}
+    for r in result.values():
+        assert r['available'] and r['selfFold']['deltaG'] <= 0 and r['selfDimer']['deltaG'] <= 0
