@@ -1,0 +1,14 @@
+{
+  "sequence_link_id": "A0A2T2X7V6_seq1",
+  "candidate_id": "A0A2T2X7V6",
+  "protein_accession": null,
+  "nucleotide_accession": null,
+  "cds_start": null,
+  "cds_end": null,
+  "strand": null,
+  "cds_length_nt": 0,
+  "source_nucleotide": null,
+  "source_database": null,
+  "notes": "UniProtKB entry removed; sequence retained in UniParc as UPI000D43B0E4. No nucleotide/RefSeq cross-reference has yet been unambiguously recovered for locus C7B43_05800.",
+  "genomic_sequence": null
+}

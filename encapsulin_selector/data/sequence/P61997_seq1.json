@@ -1,0 +1,14 @@
+{
+  "sequence_link_id": "P61997_seq1",
+  "candidate_id": "P61997",
+  "protein_accession": "WP_011013014.1",
+  "nucleotide_accession": "NZ_AP042435.1",
+  "cds_start": 1331600,
+  "cds_end": 1331899,
+  "strand": "+",
+  "cds_length_nt": 300,
+  "source_nucleotide": "https://www.ncbi.nlm.nih.gov/nuccore/NZ_AP042435.1?report=genbank&log$=seqview&from=1331600&to=1331899",
+  "source_database": "NCBI RefSeq",
+  "notes": null,
+  "genomic_sequence": "ATGGAGAACAACAACATAATGTCCCAAGTCAAGGAAATTATTGAAGCTGCAATAAAGGAATTAGAAGATGACGGATTTGAGCCAGATATAATCTTAGCTGGCCCTATCTTTATAAGATATCTACCCGAAGATGTCAGACTGAAAGTTTATGAAATTGAGGAACTAGGAAGTGATGCAATTATAGCAGATTCTAAGTATCTCGGCCAAATTAAGAAAGCAGCCAAAAGAATATCAATTGATCCTCTTCTCCAAGAAAAAGAATGGGAAAAGATAATTGAAGAGATACCTACTCAAGAATAG"
+}
