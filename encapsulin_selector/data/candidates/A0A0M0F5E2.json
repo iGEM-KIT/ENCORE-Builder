@@ -29,5 +29,6 @@
   "evidence_record_count": 0,
   "curation_source": "UniProt A0A0M0F5E2",
   "curator_notes": "Unreviewed UniProt Type 1 encapsulin shell protein prediction. No direct structural or biophysical characterization identified. Literature on C. cellulans F16 concerns a distinct xylanosome-like complex and was not assigned to this encapsulin.",
-  "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info"
+  "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
+  "curation_source_doi": null
 }

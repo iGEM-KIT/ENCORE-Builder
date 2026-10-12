@@ -25,9 +25,10 @@
   "source_pdb": "3DKT;6WKV;7K5W;7KQ5;7LII;7LIJ;7LIK;7LIL;7LIM;7LIS;7LIT;7MU1;9Y8P",
   "source_emdb": "EMD-21810; EMD-22992;\nEMD-23379; EMD-23380;\nEMD-23381; EMD-23382;\nEMD-23383; EMD-23384;\nEMD-23385; EMD-24001;\nEMD-72682",
   "pdb_count": 13,
-  "pore_record_count": 1,
-  "evidence_record_count": 5,
+  "pore_record_count": 12,
+  "evidence_record_count": 22,
   "curation_source": "Sutter et al. 2008 Nat Struct Mol Biol 15:939-947 (10.1038/nsmb.1473); PDB 3DKT; pore ~3 A from ACS Appl Bio Mater 2024 (10.1021/acsabm.3c01153); FLP/FMN: Sci Rep 2021 (10.1038/s41598-021-01932-w)",
   "curator_notes": "T=1/60 subunits, 23-24 nm reported. 5-fold pore ~3 A (0.3 nm), narrow and dynamic; engineered pore variants exist. Reference encapsulin.",
-  "missing_fields_for_curation": null
+  "missing_fields_for_curation": null,
+  "curation_source_doi": "10.1038/nsmb.1473; 10.1021/acsabm.3c01153; 10.1038/s41598-021-01932-w"
 }

@@ -25,9 +25,10 @@
   "source_pdb": "4PT2;7S20;7S21;7S2T;7S4Q;8TK7;8V4N;8V4Q;8VJO;9B9I;9B9Q;9BC8",
   "source_emdb": "EMD-24814; EMD-24815; EMD-24816;EMD-24832; EMD-41322; EMD-42974;\nEMD-42975; EMD-43290;\nEMD-44383; EMD-44388;\nEMD-44427; EMD-5917",
   "pdb_count": 12,
-  "pore_record_count": 3,
-  "evidence_record_count": 12,
-  "curation_source": "McHugh et al. 2014 eLife (PDB 4PT2); Eren et al. 2022 (PDB 7S20); EncD: PNAS 2024 (10.1073/pnas.2400426121)",
+  "pore_record_count": 11,
+  "evidence_record_count": 20,
+  "curation_source": "McHugh et al. 2014 EMBO J (PDB 4PT2); Eren et al. 2022 (PDB 7S20); EncD: PNAS 2024 (10.1073/pnas.2400426121)",
   "curator_notes": "Predominant T=3 (~94% native), 180 subunits, 32 nm external / 26 nm internal. EncA can also form a minor T=1 (~18 nm); T=1 is only formed in the absence of a co-expressed cargo protein. 2-fold pore closed; 3-fold pore electropositive outside/electronegative inside; 5-fold electronegative outside/neutral inside.",
-  "missing_fields_for_curation": null
+  "missing_fields_for_curation": null,
+  "curation_source_doi": "10.15252/embj.201488566; 10.1016/j.str.2022.01.008; 10.1073/pnas.2400426121"
 }

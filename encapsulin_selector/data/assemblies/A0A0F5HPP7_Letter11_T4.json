@@ -16,5 +16,6 @@
   "method": "cryo-EM; SEC",
   "structure_id": "9ZW3",
   "source": "Siddiquee et al. 2026 (bioRxiv preprint)",
-  "notes": "Directed-evolution-derived 11-residue deletion variant. Letter11 forms a dimorphic homomeric population containing approximately 70% T=4 particles and approximately 30% T=3 particles. This row represents the T=4 fraction. PDB 9ZW3 / EMD-74904 was determined at 2.40 Å."
+  "notes": "Directed-evolution-derived 11-residue deletion variant. Letter11 forms a dimorphic homomeric population containing approximately 70% T=4 particles and approximately 30% T=3 particles. This row represents the T=4 fraction. PDB 9ZW3 / EMD-74904 was determined at 2.40 Å.",
+  "source_doi": "10.64898/2026.01.12.698938"
 }

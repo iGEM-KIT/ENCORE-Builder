@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_A_0013",
+  "candidate_id": "Q9WZP2",
+  "field_name": "assembly_observation",
+  "value_text": "construct=S3E pore variant; variant_status=engineered; assembly_symmetry=icosahedral; T_number=1; T_number_basis=inferred_from_subunit_count; shell_subunit_count=60; shell_diameter_nm=24; curated_notes=Engineered negatively charged pore variant. Intact T=1 shell retained. Fivefold pore diameter ~5.5 Å was calculated from the cryo-EM structure, not directly measured. Shell diameter of 24 nm observed by negative-stain TEM.",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Adamson et al. 2022",
+  "source_url": "https://doi.org/10.1126/sciadv.abl7346",
+  "method": "cryo-EM; negative-stain TEM; biophysical characterization",
+  "structure_id": "7LIL",
+  "condition": "recombinant cargo-free pore-engineered shell expressed in E. coli",
+  "used_in_databank": true,
+  "notes": "assemblies.assembly_id=Q9WZP2_S3E_T1",
+  "source_doi": "10.1126/sciadv.abl7346"
+}

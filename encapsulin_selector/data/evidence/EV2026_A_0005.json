@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_A_0005",
+  "candidate_id": "Q1D6H4",
+  "field_name": "assembly_observation",
+  "value_text": "construct=3×His-MxEnc (K199H/T200H/G201H); variant_status=engineered; assembly_symmetry=tetrahedral; T_number_basis=not_applicable; shell_subunit_count=36; inner_volume_A3=3.0004 × 105; curated_notes=36-mer assembly with tetrahedral symmetry rather than icosahedral symmetry; therefore T-number is not applicable. \nCoexists with the T=1 60-mer 3×His assembly.",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Szyszka et al. 2024",
+  "source_url": "https://doi.org/10.1073/pnas.2321260121",
+  "method": "cryo-EM / structural study",
+  "structure_id": "8V4Q",
+  "condition": "recombinant cargo-free mutant shell expressed in \nE. coli",
+  "used_in_databank": true,
+  "notes": "assemblies.assembly_id=Q1D6H4_3xHis_Tet",
+  "source_doi": "10.1073/pnas.2321260121"
+}

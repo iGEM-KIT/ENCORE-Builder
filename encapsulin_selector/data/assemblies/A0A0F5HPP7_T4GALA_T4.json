@@ -16,5 +16,6 @@
   "method": "cryo-EM; TEM; DLS",
   "structure_id": "7MH2",
   "source": "Jones et al. 2021",
-  "notes": "Engineered E-loop insertion variant designed for triggered reversible disassembly. T4GALA retains the global T=4 240-mer architecture and is approximately 42 nm in diameter, nearly identical to WT QtEnc, but cryo-EM shows substantial loss of ordered density around the engineered E-loop/GALA insertion site, consistent with increased local structural dynamics. PDB 7MH2 / EMD-23834."
+  "notes": "Engineered E-loop insertion variant designed for triggered reversible disassembly. T4GALA retains the global T=4 240-mer architecture and is approximately 42 nm in diameter, nearly identical to WT QtEnc, but cryo-EM shows substantial loss of ordered density around the engineered E-loop/GALA insertion site, consistent with increased local structural dynamics. PDB 7MH2 / EMD-23834.",
+  "source_doi": "10.1002/anie.202110318"
 }

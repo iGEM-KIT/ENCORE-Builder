@@ -26,8 +26,9 @@
   "source_emdb": null,
   "pdb_count": null,
   "pore_record_count": 0,
-  "evidence_record_count": 3,
+  "evidence_record_count": 1,
   "curation_source": "UniProt Q48899",
   "curator_notes": "Reviewed Type 2A shell annotation from Mycobacterium avium. UniProt reports T=1, ~24 nm and probable CyD encapsulation by similarity; no direct structural characterization was curated.",
-  "missing_fields_for_curation": "T_number;shell_diameter;pore_data"
+  "missing_fields_for_curation": "T_number;shell_diameter;pore_data",
+  "curation_source_doi": null
 }

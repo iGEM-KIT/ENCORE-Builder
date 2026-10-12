@@ -1,0 +1,21 @@
+{
+  "pore_record_id": "Q1D6H4_T3_loaded_p5",
+  "candidate_id": "Q1D6H4",
+  "assembly_id": "Q1D6H4_T3_loaded",
+  "construct": "EncA",
+  "variant_status": "wild_type",
+  "pore_type": "5fold",
+  "pore_state": "open",
+  "pore_diameter_nm": 0.7,
+  "diameter_basis": "reported_diameter",
+  "dynamic_status": "single_state_observed",
+  "charge_exterior": "negative",
+  "charge_interior": "neutral",
+  "pH": null,
+  "condition": "recombinant SNAP-tag-TP-loaded shell expressed in E. coli",
+  "method": "cryo-EM / structural study; electrostatic analysis",
+  "structure_id": "8TK7",
+  "source": "Kwon et al. 2023",
+  "source_doi": "10.1016/j.jsb.2023.108022",
+  "notes": "5-fold pore located at the center of the pentameric facet."
+}

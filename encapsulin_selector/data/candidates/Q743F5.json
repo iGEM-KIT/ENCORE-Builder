@@ -26,8 +26,9 @@
   "source_emdb": null,
   "pdb_count": null,
   "pore_record_count": 0,
-  "evidence_record_count": 2,
+  "evidence_record_count": 1,
   "curation_source": "UniProt Q743F5",
   "curator_notes": "Reviewed Type 1 shell annotation from Mycolicibacterium paratuberculosis. Legacy shell size 23-24 nm and DyP loading context are retained as annotation/context; no direct PDB was curated.",
-  "missing_fields_for_curation": "T_number;shell_diameter;pore_data"
+  "missing_fields_for_curation": "T_number;shell_diameter;pore_data",
+  "curation_source_doi": null
 }

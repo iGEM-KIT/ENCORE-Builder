@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_P_0092",
+  "candidate_id": "K7RV67",
+  "field_name": "pore_record",
+  "value_text": "construct=AaEnc shell; variant_status=wild_type; pore_type=5fold; pore_state=open; pore_diameter_nm=2; diameter_basis=reported_diameter; dynamic_status=demonstrated; charge_exterior=not_reported; charge_interior=not_reported; pH=7.5; condition=recombinant cargo-free WT shell expressed in E. coli; curated_notes=Paper-defined open conformation; ~32% of particles at pH 7.5.",
+  "value_numeric": 2.0,
+  "unit": "nm",
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Jones et al. 2023",
+  "source_url": "https://doi.org/10.1021/acs.biomac.2c01424",
+  "method": "cryo-EM; structural analysis",
+  "structure_id": "8DNL",
+  "condition": "recombinant cargo-free WT shell expressed in E. coli",
+  "used_in_databank": true,
+  "notes": "pores.pore_record_id=K7RV67_p5_wide_75; assembly_id=K7RV67_ref",
+  "source_doi": "10.1021/acs.biomac.2c01424"
+}

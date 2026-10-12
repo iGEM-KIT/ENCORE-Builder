@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_P_0085",
+  "candidate_id": "A0A0F5HPP7",
+  "field_name": "pore_record",
+  "value_text": "construct=Enc; variant_status=wild_type; pore_type=pseudo_3fold_PHH; pore_state=open; dynamic_status=single_state_observed; charge_exterior=negative; charge_interior=negative; condition=recombinant WT IMEF cargo-loaded compartment expressed in E. coli; curated_notes=Located at the interface between two hexameric and one pentameric capsomer.",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Giessen et al. 2019",
+  "source_url": "https://doi.org/10.7554/eLife.46070",
+  "method": "cryo-EM; structural/electrostatic analysis",
+  "structure_id": "6NJ8",
+  "condition": "recombinant WT IMEF cargo-loaded compartment expressed in E. coli",
+  "used_in_databank": true,
+  "notes": "pores.pore_record_id=A0A0F5HPP7_pseudo3; assembly_id=A0A0F5HPP7_ref",
+  "source_doi": "10.7554/eLife.46070"
+}

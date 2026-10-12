@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_P_0094",
+  "candidate_id": "K7RV67",
+  "field_name": "pore_record",
+  "value_text": "construct=AaEnc shell; variant_status=wild_type; pore_type=5fold; pore_state=open; dynamic_status=demonstrated; charge_exterior=not_reported; charge_interior=not_reported; pH=3.0; condition=recombinant cargo-free WT shell expressed in E. coli; curated_notes=Only the paper-defined closed conformation observed; structurally similar to 8DN9 (protomer RMSD 0.32 Å).",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Jones et al. 2023",
+  "source_url": "https://doi.org/10.1021/acs.biomac.2c01424",
+  "method": "cryo-EM; structural analysis",
+  "structure_id": "8DNA",
+  "condition": "recombinant cargo-free WT shell expressed in E. coli",
+  "used_in_databank": true,
+  "notes": "pores.pore_record_id=K7RV67_p5_narrow_30; assembly_id=K7RV67_ref",
+  "source_doi": "10.1021/acs.biomac.2c01424"
+}

@@ -29,5 +29,6 @@
   "evidence_record_count": 0,
   "curation_source": "UniProt A0A0B5DEK1",
   "curator_notes": "Unreviewed predicted Type 1 shell from Streptomyces nodosus. Literature on \"encapsulated Streptomyces nodosus\" refers to artificial immobilization of cells in alginate capsules and is unrelated to encapsulin nanocompartments.",
-  "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info"
+  "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
+  "curation_source_doi": null
 }

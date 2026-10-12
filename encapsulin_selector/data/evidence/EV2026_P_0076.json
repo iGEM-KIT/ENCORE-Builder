@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_P_0076",
+  "candidate_id": "I6WZG6",
+  "field_name": "pore_record",
+  "value_text": "construct=Enc; variant_status=wild_type; pore_type=3fold; pore_state=open; pore_diameter_nm=0.6; diameter_basis=reported_diameter; dynamic_status=single_state_observed; charge_exterior=not_reported; charge_interior=not_reported; condition=recombinant WT shell expressed in E. coli; low-pH disassembly followed by \nneutral-pH reassembly; curated_notes=Central 3-fold pore; reported diameter 6 Å. Pore described overall as slightly negatively charged.",
+  "value_numeric": 0.6,
+  "unit": "nm",
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Berger et al. 2025",
+  "source_url": "https://doi.org/10.1038/s42003-025-07660-5",
+  "method": "cryo-EM; structural/electrostatic analysis",
+  "structure_id": "7P1T",
+  "condition": "recombinant WT shell expressed in E. coli; low-pH disassembly followed by \nneutral-pH reassembly",
+  "used_in_databank": true,
+  "notes": "pores.pore_record_id=I6WZG6_p3; assembly_id=I6WZG6_ref",
+  "source_doi": "10.1038/s42003-025-07660-5"
+}

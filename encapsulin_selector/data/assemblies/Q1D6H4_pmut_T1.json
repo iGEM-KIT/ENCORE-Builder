@@ -1,7 +1,7 @@
 {
   "assembly_id": "Q1D6H4_pmut_T1",
   "candidate_id": "Q1D6H4",
-  "construct": "Mx_pmut (ΔI195-L202 + GG)",
+  "construct": "Mx_pmut (ΔI195–L202 + GG)",
   "variant_status": "engineered",
   "assembly_symmetry": "icosahedral",
   "T_number": 1,
@@ -16,5 +16,6 @@
   "method": "cryo-EM / negative-stain TEM",
   "structure_id": "9B9I",
   "source": "Kwon et al. 2024",
-  "notes": "Pore-engineered EncA lacking the I195-L202 pore loop, with two Gly residues introduced to form the shortened loop. Without cargo co-expression, Mx_pmut exclusively formed ~20 nm T=1 shells."
+  "notes": "Pore-engineered EncA lacking the I195–L202 pore loop, with two Gly residues introduced to form the shortened loop. Without cargo co-expression, Mx_pmut exclusively formed ~20 nm T=1 shells.",
+  "source_doi": "10.1021/acsnano.4c08186"
 }

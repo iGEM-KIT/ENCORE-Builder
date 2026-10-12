@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_P_0086",
+  "candidate_id": "D0LZ74",
+  "field_name": "pore_record",
+  "value_text": "construct=Enc:EncFtn; variant_status=wild_type; pore_type=5fold; pore_state=open; pore_diameter_nm=1.5; diameter_basis=reported_diameter; dynamic_status=demonstrated; charge_exterior=negative; charge_interior=positive; condition=recombinant EncFtn-loaded WT shell expressed in E. coli; curated_notes=Wide conformation; five-fold aperture expands to ~15 Å.",
+  "value_numeric": 1.5,
+  "unit": "nm",
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Ross et al. 2022",
+  "source_url": "https://doi.org/10.1126/sciadv.abj4461",
+  "method": "cryo-EM; focused 3D classification/refinement",
+  "structure_id": "7OEU",
+  "condition": "recombinant EncFtn-loaded WT shell expressed in E. coli",
+  "used_in_databank": true,
+  "notes": "pores.pore_record_id=D0LZ74_p5_wide; assembly_id=D0LZ74_ref",
+  "source_doi": "10.1126/sciadv.abj4461"
+}

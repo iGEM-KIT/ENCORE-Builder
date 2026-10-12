@@ -20,14 +20,15 @@
   "needs_review_flag": false,
   "entry_warning": null,
   "reference_assembly_id": null,
-  "loading_info": "Flp / ferritin-like protein: C-terminal extension-mediated.",
+  "loading_info": "Flp / ferritin-like protein - C-terminal extension-mediated.",
   "source_uniprot": "https://www.uniprot.org/uniprotkb/B1L7S2/entry",
   "source_pdb": null,
   "source_emdb": null,
   "pdb_count": null,
   "pore_record_count": 0,
-  "evidence_record_count": 3,
+  "evidence_record_count": 1,
   "curation_source": null,
   "curator_notes": "No direct experimental shell structure located for B1L7S2. Structural properties of Q9WZP2 in the legacy row are homolog-based inference and must not be treated as direct measurements.",
-  "missing_fields_for_curation": "T_number;shell_diameter;pore_data"
+  "missing_fields_for_curation": "T_number;shell_diameter;pore_data",
+  "curation_source_doi": null
 }

@@ -29,5 +29,6 @@
   "evidence_record_count": 0,
   "curation_source": "UniProt P61996; Menon et al. 2009",
   "curator_notes": "Reviewed putative Type 4B A-domain encapsulin from Pyrococcus furiosus. The 99-aa length is characteristic of Family 4B. PF1875 co-fractionated with upstream GAPDH PF1874, but shell assembly and cargo encapsulation were not demonstrated.",
-  "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info"
+  "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
+  "curation_source_doi": null
 }

@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_P_0060",
+  "candidate_id": "Q1D6H4",
+  "field_name": "pore_record",
+  "value_text": "construct=Mx_pmut (ΔI195–L202 + GG); variant_status=engineered; pore_type=5fold; pore_state=open; pore_diameter_nm=1.26; diameter_basis=reported_diameter; dynamic_status=single_state_observed; charge_interior=negative; condition=recombinant SNAP-tag-TP-loaded pore-engineered shell expressed in E. coli; curated_notes=atomic-model diameter 12.6 Å. HOLE minimum: 9.6 Å. Exterior less charged; interior/transit slightly negative.",
+  "value_numeric": 1.26,
+  "unit": "nm",
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Kwon et al. 2024",
+  "source_url": "https://doi.org/10.1021/acsnano.4c08186",
+  "method": "cryo-EM / structural study; electrostatic analysis; \natomic-model pore measurement; HOLE analysis",
+  "structure_id": "9B9Q",
+  "condition": "recombinant SNAP-tag-TP-loaded pore-engineered shell expressed in E. coli",
+  "used_in_databank": true,
+  "notes": "pores.pore_record_id=Q1D6H4_pmut_T3_p5; assembly_id=Q1D6H4_pmut_T3",
+  "source_doi": "10.1021/acsnano.4c08186"
+}

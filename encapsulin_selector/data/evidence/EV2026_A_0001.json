@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_A_0001",
+  "candidate_id": "Q1D6H4",
+  "field_name": "assembly_observation",
+  "value_text": "construct=EncA; variant_status=wild_type; assembly_symmetry=icosahedral; T_number=3; T_number_basis=directly_reported; shell_subunit_count=180; shell_diameter_nm=32; inner_diameter_nm=26; wall_thickness_nm=3; inner_volume_A3=3.09 × 106; curated_notes=Shell diameter (32 nm) and inner diameter (26 nm) from McHugh et al. 2014 / 4PT2; inner volume (3.09 × 10^6 Å³) from Eren et al. 2022 / 7S20. Wall thickness (3 nm) calculated as (32−26)/2. T=3 represented ~94% of EncA particles purified from M. xanthus. Among recombinant empty EncA shells expressed in E. coli, T=3 represented ~80% in McHugh et al. 2014 and ~64% in Eren et al. 2022. Yadav & Beck 2026 further demonstrated that WT EncA T=3 formation during reassembly is strongly condition-dependent: Tris at low ionic strength favors T=3, whereas increasing ionic strength can shift assembly toward T=1 or unassembled species. Once formed, T=3 shells are kinetically trapped and do not interconvert with T=1 upon buffer exchange.",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "McHugh et al. 2014; Eren et al. 2022; Yadav & Beck 2026",
+  "source_url": null,
+  "method": "cryo-EM / structural study",
+  "structure_id": "4PT2; 7S20",
+  "condition": "recombinant empty shell expressed in E.coli",
+  "used_in_databank": true,
+  "notes": "assemblies.assembly_id=Q1D6H4_T3",
+  "source_doi": "10.15252/embj.201488566; 10.1016/j.str.2022.01.008; 10.1002/pro.70756"
+}

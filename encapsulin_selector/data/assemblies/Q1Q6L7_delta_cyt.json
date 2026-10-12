@@ -16,5 +16,6 @@
   "method": "negative-stain TEM; SDS-PAGE",
   "structure_id": null,
   "source": "Giessen & Silver 2017",
-  "notes": "Structurally distinct engineered ΔCyt assembly. Removal of the N-terminal diheme cytochrome domain produced stable \n~29 nm capsids compared with 33 nm WT cEnc, showing that the native fusion domain influences global shell size. The study reports ~15 co-purifying NIR copies per 180-mer ΔCyt capsid when the isolated NIR cargo domain was coexpressed; 180 shell subunits are therefore recorded and T=3 is inferred from the 180-mer icosahedral architecture. The isolated NIR-loaded condition is not treated as a separate assembly because full-length NIR-HAO was insoluble and no distinct cage architecture was demonstrated."
+  "notes": "Structurally distinct engineered ΔCyt assembly. Removal of the N-terminal diheme cytochrome domain produced stable \n~29 nm capsids compared with 33 nm WT cEnc, showing that the native fusion domain influences global shell size. The study reports ~15 co-purifying NIR copies per 180-mer ΔCyt capsid when the isolated NIR cargo domain was coexpressed; 180 shell subunits are therefore recorded and T=3 is inferred from the 180-mer icosahedral architecture. The isolated NIR-loaded condition is not treated as a separate assembly because full-length NIR-HAO was insoluble and no distinct cage architecture was demonstrated.",
+  "source_doi": "10.1038/nmicrobiol.2017.29"
 }

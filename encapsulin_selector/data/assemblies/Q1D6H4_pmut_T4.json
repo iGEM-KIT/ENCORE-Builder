@@ -1,7 +1,7 @@
 {
   "assembly_id": "Q1D6H4_pmut_T4",
   "candidate_id": "Q1D6H4",
-  "construct": "Mx_pmut (ΔI195-L202 + GG)",
+  "construct": "Mx_pmut (ΔI195–L202 + GG)",
   "variant_status": "engineered",
   "assembly_symmetry": "icosahedral",
   "T_number": 4,
@@ -16,5 +16,6 @@
   "method": "cryo-EM / structural study",
   "structure_id": "9BC8",
   "source": "Kwon et al. 2024",
-  "notes": "Cargo-loaded Mx_pmut formed T=3 and T=4 shells. T=4 represented ~25% of the sample. Cargo loading was ~97%, with approximately 240 cargo copies per T=4 shell."
+  "notes": "Cargo-loaded Mx_pmut formed T=3 and T=4 shells. T=4 represented ~25% of the sample. Cargo loading was ~97%, with approximately 240 cargo copies per T=4 shell.",
+  "source_doi": "10.1021/acsnano.4c08186"
 }

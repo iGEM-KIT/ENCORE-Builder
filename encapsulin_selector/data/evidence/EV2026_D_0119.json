@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_D_0119",
+  "candidate_id": "I3E3I1",
+  "field_name": "loading_info",
+  "value_text": "IMEF-type native cargo system; CLP-mediated cargo loading. CLP-tagged heterologous cargo can be loaded in vitro into preassembled BmEnc shells.",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": null,
+  "source_url": null,
+  "method": null,
+  "structure_id": null,
+  "condition": null,
+  "used_in_databank": true,
+  "notes": "databank.candidate_id=I3E3I1",
+  "source_doi": null
+}

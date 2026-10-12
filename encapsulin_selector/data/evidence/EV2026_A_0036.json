@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_A_0036",
+  "candidate_id": "Q45296",
+  "field_name": "assembly_observation",
+  "value_text": "construct=B. linens encapsulin; variant_status=wild_type; assembly_symmetry=icosahedral; T_number=1; T_number_basis=directly_reported; shell_subunit_count=60; shell_diameter_nm=22.8; wall_thickness_nm=2.8-3.0; inner_volume_A3=~2.6 × 106; curated_notes=Canonical cargo-free WT T=1 assembly. Putri et al. 2017 directly characterized nonloaded B. linens encapsulin (nl-E) as an icosahedral T=1 shell with an outer diameter of 22.8 nm and an average shell thickness of 2.8-3.0 nm; the internal volume of the B. linens encapsulin particle was reported as ~2.6 × 10^6 Å^3. The inner diameter was reported to be identical to the DyP- and TFP-loaded maps, but no separate numerical inner-diameter value was given, so inner_diameter_nm is left blank. Native mass spectrometry in Snijder et al. 2016 directly detected the cargo-free 60-mer and lower-abundance assembly species. PDB 7BCV / EMD-12144 provides a 2.28 Å high-resolution cryo-EM structure of the recombinant apo shell and is an icosahedral homo-60-mer; Cuthbert et al. 2024 independently refers to 7BCV as apo-Enc. The nl-E preparation could contain nonspecifically packaged cellular material in a subset of particles, but no defined cognate cargo was present. The 30-mer, 58-mer and other lower-order species observed by native mass spectrometry are not treated as separate assemblies because they were not established as stable, structurally characterized nanocage states.",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Snijder et al. 2016; Putri et al. 2017; PDB 7BCV / EMD-12144 (Allende-Ballestero et al., to be published)",
+  "source_url": null,
+  "method": "cryo-EM; native mass spectrometry; AFM",
+  "structure_id": "7BCV",
+  "condition": "recombinant cargo-free WT B. linens encapsulin expressed in E. coli; nonloaded/apo (nl-E)",
+  "used_in_databank": true,
+  "notes": "assemblies.assembly_id=Q45296_ref",
+  "source_doi": "10.1021/acs.biomac.6b00469; 10.1021/acsnano.7b07669"
+}

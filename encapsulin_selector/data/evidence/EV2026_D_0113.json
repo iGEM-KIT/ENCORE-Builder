@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_D_0113",
+  "candidate_id": "Q55032",
+  "field_name": "loading_info",
+  "value_text": "Cargo: cysteine desulfurase (CyD); sulfur metabolism, induced by sulfate starvation; activity enhanced on encapsulation. Mechanism: cargo N-terminal targeting sequence (Family 2A).",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": null,
+  "source_url": null,
+  "method": null,
+  "structure_id": null,
+  "condition": null,
+  "used_in_databank": true,
+  "notes": "databank.candidate_id=Q55032",
+  "source_doi": null
+}

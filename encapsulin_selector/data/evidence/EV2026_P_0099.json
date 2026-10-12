@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_P_0099",
+  "candidate_id": "A0R4H0",
+  "field_name": "pore_record",
+  "value_text": "construct=CFP-29 shell; variant_status=wild_type; pore_type=5fold_adjacent; pore_state=open; pore_diameter_nm=0.22; diameter_basis=narrowest_point; dynamic_status=single_state_observed; condition=native WT DyP-loaded encapsulin purified from M. smegmatis mc2 155; curated_notes=Five-fold minor pore; electrostatic charges vary with modeled pH.",
+  "value_numeric": 0.22,
+  "unit": "nm",
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Cuthbert et al. 2024",
+  "source_url": "https://doi.org/10.3390/microorganisms12122465",
+  "method": "cryo-EM structure reanalysis; MOLE; APBS",
+  "structure_id": "7BOJ",
+  "condition": "native WT DyP-loaded encapsulin purified from M. smegmatis mc2 155",
+  "used_in_databank": true,
+  "notes": "pores.pore_record_id=A0R4H0_p5_adjacent; assembly_id=A0R4H0_ref",
+  "source_doi": "10.3390/microorganisms12122465"
+}

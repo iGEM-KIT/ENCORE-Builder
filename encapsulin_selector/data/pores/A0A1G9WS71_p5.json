@@ -1,0 +1,21 @@
+{
+  "pore_record_id": "A0A1G9WS71_p5",
+  "candidate_id": "A0A1G9WS71",
+  "assembly_id": "A0A1G9WS71_ref",
+  "construct": "DendroEnc shell",
+  "variant_status": "wild_type",
+  "pore_type": "5fold",
+  "pore_state": "open",
+  "pore_diameter_nm": 1.0,
+  "diameter_basis": "reported_diameter",
+  "dynamic_status": "single_state_observed",
+  "charge_exterior": "not_reported",
+  "charge_interior": "not_reported",
+  "pH": null,
+  "condition": "recombinant cargo-free WT DendroEnc expressed in E. coli",
+  "method": "cryo-EM; structural analysis",
+  "structure_id": "9I8E",
+  "source": "Pecanac et al. 2025",
+  "source_doi": "10.1039/D5MA00268K",
+  "notes": "Pore lined by hydrophilic Thr/Asn residues; no hydrophobic inner barrier."
+}

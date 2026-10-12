@@ -20,14 +20,15 @@
   "needs_review_flag": false,
   "entry_warning": null,
   "reference_assembly_id": "D0LZ74_ref",
-  "loading_info": "Cargo: ferritin-like protein (EncFtn), 4 decamers in tetrahedral arrangement (symmetry mismatch with shell). Mechanism: cargo C-terminal TP (GSLGIGSLR).",
+  "loading_info": "Cargo: ferritin-like protein (EncFtn) - 4 decamers in tetrahedral arrangement (symmetry mismatch with shell). Mechanism: cargo C-terminal TP (GSLGIGSLR).",
   "source_uniprot": "https://www.uniprot.org/uniprotkb/D0LZ74/entry",
   "source_pdb": "7ODW;7OE2;7OEU",
   "source_emdb": "EMD-12853; EMD-12859;\nEMD-12864",
   "pdb_count": 3,
   "pore_record_count": 2,
-  "evidence_record_count": 6,
+  "evidence_record_count": 5,
   "curation_source": "Ross et al. 2022 Sci Adv 8:eabj4461 (10.1126/sciadv.abj4461, PMID 35080974); PDB 7ODW/7OE2/7OEU",
   "curator_notes": "T=1. The 5-fold pore is dynamic, with closed (7OE2) and open (7OEU) states; the open state is ~1.5 nm. Shell diameter ~21 nm is reported for empty and EncFtn-loaded particles.",
-  "missing_fields_for_curation": null
+  "missing_fields_for_curation": null,
+  "curation_source_doi": "10.1126/sciadv.abj4461"
 }

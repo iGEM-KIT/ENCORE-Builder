@@ -1,0 +1,21 @@
+{
+  "pore_record_id": "Q2RVS0_EncFtn_p5_open",
+  "candidate_id": "Q2RVS0",
+  "assembly_id": "Q2RVS0_T1_EncFtn_loaded",
+  "construct": "Enc",
+  "variant_status": "wild_type",
+  "pore_type": "5fold",
+  "pore_state": "open",
+  "pore_diameter_nm": null,
+  "diameter_basis": null,
+  "dynamic_status": "demonstrated",
+  "charge_exterior": null,
+  "charge_interior": null,
+  "pH": 8.0,
+  "condition": "recombinant WT Enc coexpressed with cognate EncFtn in E. coli; EncFtn-loaded",
+  "method": "cryo-EM; symmetry expansion; focused refinement",
+  "structure_id": "9S05",
+  "source": "McIver et al. 2026",
+  "source_doi": "10.1016/j.jsb.2026.108357",
+  "notes": "Focused open 5-fold conformation; a second, paper-defined closed conformation was resolved (9RZU)."
+}

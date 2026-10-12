@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_P_0090",
+  "candidate_id": "Q45296",
+  "field_name": "pore_record",
+  "value_text": "construct=Enc; variant_status=wild_type; pore_type=3fold; pore_state=open; diameter_basis=range; dynamic_status=single_state_observed; charge_exterior=not_reported; charge_interior=not_reported; condition=nonloaded WT encapsulin (nl-E); curated_notes=Pores ~5–8 Å in diameter at/around the 3-fold axes (EMD-3608).",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Putri et al. 2017",
+  "source_url": "https://doi.org/10.1021/acsnano.7b07669",
+  "method": "cryo-EM; structural analysis",
+  "structure_id": null,
+  "condition": "nonloaded WT encapsulin (nl-E)",
+  "used_in_databank": true,
+  "notes": "pores.pore_record_id=Q45296_ref_p3; assembly_id=Q45296_ref",
+  "source_doi": "10.1021/acsnano.7b07669"
+}

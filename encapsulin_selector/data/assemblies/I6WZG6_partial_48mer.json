@@ -16,5 +16,6 @@
   "method": "cryo-EM",
   "structure_id": "9GOT",
   "source": "Berger et al. 2025",
-  "notes": "Stable incomplete WT shell assembly intermediate containing 48 Enc monomers. The particle retains an overall icosahedral-like geometry but has a single large opening caused by missing subunits on one side. Obtained after low-pH disassembly followed by neutral-pH reassembly."
+  "notes": "Stable incomplete WT shell assembly intermediate containing 48 Enc monomers. The particle retains an overall icosahedral-like geometry but has a single large opening caused by missing subunits on one side. Obtained after low-pH disassembly followed by neutral-pH reassembly.",
+  "source_doi": "10.1038/s42003-025-07660-5"
 }

@@ -29,5 +29,6 @@
   "evidence_record_count": 0,
   "curation_source": "UniProt A0A1M7LGP9; Anuchina et al. 2025, bioRxiv 10.1101/2025.09.13.676036",
   "curator_notes": "Unreviewed predicted Type 1 shell. A double ferritin-like protein from C. acetigignens was experimentally studied and is a plausible cargo candidate, but direct assignment to this shell requires confirmation. Host thermophily was not assigned as shell thermostability.",
-  "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info"
+  "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
+  "curation_source_doi": "10.1101/2025.09.13.676036"
 }

@@ -29,5 +29,6 @@
   "evidence_record_count": 0,
   "curation_source": "UniProt A0ABQ6QMW9",
   "curator_notes": "Unreviewed predicted Family 1 shell from Corallococcus caeni. No direct characterization identified; available literature primarily concerns taxonomy and draft genome sequencing.",
-  "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info"
+  "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
+  "curation_source_doi": null
 }

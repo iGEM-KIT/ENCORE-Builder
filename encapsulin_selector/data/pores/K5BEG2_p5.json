@@ -1,0 +1,21 @@
+{
+  "pore_record_id": "K5BEG2_p5",
+  "candidate_id": "K5BEG2",
+  "assembly_id": "K5BEG2_ref",
+  "construct": "EncMh",
+  "variant_status": "wild_type",
+  "pore_type": "5fold",
+  "pore_state": "open",
+  "pore_diameter_nm": 0.8,
+  "diameter_basis": "reported_diameter",
+  "dynamic_status": "single_state_observed",
+  "charge_exterior": "not_reported",
+  "charge_interior": "not_reported",
+  "pH": null,
+  "condition": "recombinant cargo-free WT EncMh expressed in E. coli",
+  "method": "X-ray crystallography",
+  "structure_id": "6I9G",
+  "source": "Lončar et al. 2020",
+  "source_doi": "10.1016/j.bbrc.2020.06.059",
+  "notes": "His187–Gly188–Tyr189 and Arg197 line the pore; sulfate bound at its entrance."
+}

@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_P_0096",
+  "candidate_id": "A0A1G9WS71",
+  "field_name": "pore_record",
+  "value_text": "construct=N198W pore variant; variant_status=engineered; pore_type=5fold; pore_state=open; pore_diameter_nm=0.5; diameter_basis=reported_diameter; dynamic_status=single_state_observed; charge_exterior=not_reported; charge_interior=not_reported; condition=recombinant N198W DendroEnc coexpressed with CyanoPOX-TP in E. coli;\n CyanoPOX-loaded; curated_notes=Five W198 residues constrict the pore; CyanoPOX-loaded mutant showed ~5-fold lower ABTS activity than loaded WT.",
+  "value_numeric": 0.5,
+  "unit": "nm",
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Pecanac et al. 2025",
+  "source_url": "https://doi.org/10.1039/D5MA00268K",
+  "method": "cryo-EM; structural analysis",
+  "structure_id": "9I8F",
+  "condition": "recombinant N198W DendroEnc coexpressed with CyanoPOX-TP in E. coli;\n CyanoPOX-loaded",
+  "used_in_databank": true,
+  "notes": "pores.pore_record_id=A0A1G9WS71_N198W_p5; assembly_id=A0A1G9WS71_N198W_T4",
+  "source_doi": "10.1039/D5MA00268K"
+}

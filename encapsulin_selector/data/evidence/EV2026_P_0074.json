@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_P_0074",
+  "candidate_id": "Q9WZP2",
+  "field_name": "pore_record",
+  "value_text": "construct=Enc; variant_status=wild_type; pore_type=2fold_adjacent; pore_state=open; pore_diameter_nm=0.24; diameter_basis=other; dynamic_status=single_state_observed; charge_exterior=not_reported; charge_interior=not_reported; condition=recombinant cargo-free WT shell expressed in E. coli; curated_notes=One dimer-interface channel with radius 1.2 Å; diameter calculated as 2.4 Å (0.24 nm). Lined by hydrophilic residues.",
+  "value_numeric": 0.24,
+  "unit": "nm",
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Wiryaman & Toor 2021",
+  "source_url": "https://doi.org/10.1107/S2052252521001949",
+  "method": "cryo-EM; structural channel analysis",
+  "structure_id": "7KQ5",
+  "condition": "recombinant cargo-free WT shell expressed in E. coli",
+  "used_in_databank": true,
+  "notes": "pores.pore_record_id=Q9WZP2_T1_empty_p2a_small; assembly_id=Q9WZP2_T1_empty",
+  "source_doi": "10.1107/S2052252521001949"
+}

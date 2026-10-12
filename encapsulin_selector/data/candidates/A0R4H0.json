@@ -25,9 +25,10 @@
   "source_pdb": "7BOJ;9FN9",
   "source_emdb": "EMD-30130; EMD-50585;\nEMD-50586",
   "pdb_count": 2,
-  "pore_record_count": 3,
-  "evidence_record_count": 8,
+  "pore_record_count": 4,
+  "evidence_record_count": 6,
   "curation_source": "Cryo-EM M. smegmatis DyP encapsulin: PNAS 2021 (10.1073/pnas.2025658118, PMC8072242); PDB 7BOJ",
   "curator_notes": "Family 1, T=1, ~24 nm, ~2.5 nm shell thickness. Pentameric pore ~0.68 nm; additional holes are reported at threefold and twofold-related interfaces.",
-  "missing_fields_for_curation": null
+  "missing_fields_for_curation": null,
+  "curation_source_doi": "10.1073/pnas.2025658118"
 }

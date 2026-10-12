@@ -25,9 +25,10 @@
   "source_pdb": "2E0Z;5N5E",
   "source_emdb": null,
   "pdb_count": 2,
-  "pore_record_count": 3,
-  "evidence_record_count": 8,
+  "pore_record_count": 1,
+  "evidence_record_count": 3,
   "curation_source": "Akita et al. 2007 J Mol Biol 368:1469-1483 (10.1016/j.jmb.2007.02.075); PDB 2E0Z; fusion-Flp review PMC9944552",
   "curator_notes": "Shell-cargo fusion, not a plain shell. T=3, 180 subunits, ~30-32 nm reported; the legacy row reports ~0.5 nm pores and pore locations at 2-/3-/5-fold-related sites.",
-  "missing_fields_for_curation": null
+  "missing_fields_for_curation": null,
+  "curation_source_doi": "10.1016/j.jmb.2007.02.075"
 }

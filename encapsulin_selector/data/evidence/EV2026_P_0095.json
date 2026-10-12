@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_P_0095",
+  "candidate_id": "A0A1G9WS71",
+  "field_name": "pore_record",
+  "value_text": "construct=DendroEnc shell; variant_status=wild_type; pore_type=5fold; pore_state=open; pore_diameter_nm=1; diameter_basis=reported_diameter; dynamic_status=single_state_observed; charge_exterior=not_reported; charge_interior=not_reported; condition=recombinant cargo-free WT DendroEnc expressed in E. coli; curated_notes=Pore lined by hydrophilic Thr/Asn residues; no hydrophobic inner barrier.",
+  "value_numeric": 1.0,
+  "unit": "nm",
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Pecanac et al. 2025",
+  "source_url": "https://doi.org/10.1039/D5MA00268K",
+  "method": "cryo-EM; structural analysis",
+  "structure_id": "9I8E",
+  "condition": "recombinant cargo-free WT DendroEnc expressed in E. coli",
+  "used_in_databank": true,
+  "notes": "pores.pore_record_id=A0A1G9WS71_p5; assembly_id=A0A1G9WS71_ref",
+  "source_doi": "10.1039/D5MA00268K"
+}

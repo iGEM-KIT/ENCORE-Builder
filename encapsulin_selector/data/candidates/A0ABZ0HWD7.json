@@ -29,5 +29,6 @@
   "evidence_record_count": 0,
   "curation_source": "UniProt A0ABZ0HWD7",
   "curator_notes": "Unreviewed predicted Family 1 shell (locus RZS28_08075) from Methylocapsa polymorpha RX1. A different encapsulin from related M. acidiphila has been characterized, but those measurements were not transferred.",
-  "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info"
+  "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
+  "curation_source_doi": null
 }

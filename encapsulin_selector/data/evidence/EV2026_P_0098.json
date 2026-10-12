@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_P_0098",
+  "candidate_id": "A0R4H0",
+  "field_name": "pore_record",
+  "value_text": "construct=CFP-29 shell; variant_status=wild_type; pore_type=5fold; pore_state=open; pore_diameter_nm=0.68; diameter_basis=reported_diameter; dynamic_status=single_state_observed; charge_exterior=positive; condition=native WT DyP-loaded encapsulin purified from M. smegmatis mc2 155; curated_notes=Tang: 6.8 Å after van der Waals correction; Cuthbert: 6.9 Å by CAVER. Interior charge varies with pH.",
+  "value_numeric": 0.68,
+  "unit": "nm",
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Tang et al. 2021; Cuthbert et al. 2024",
+  "source_url": null,
+  "method": "cryo-EM; pore analysis; APBS/CAVER",
+  "structure_id": "7BOJ",
+  "condition": "native WT DyP-loaded encapsulin purified from M. smegmatis mc2 155",
+  "used_in_databank": true,
+  "notes": "pores.pore_record_id=A0R4H0_p5; assembly_id=A0R4H0_ref",
+  "source_doi": "10.1073/pnas.2025658118; 10.3390/microorganisms12122465"
+}

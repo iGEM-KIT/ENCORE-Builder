@@ -1,0 +1,21 @@
+{
+  "pore_record_id": "Q9WZP2_S6E_p5",
+  "candidate_id": "Q9WZP2",
+  "assembly_id": "Q9WZP2_S6E_T1",
+  "construct": "S6E pore variant",
+  "variant_status": "engineered",
+  "pore_type": "5fold",
+  "pore_state": "open",
+  "pore_diameter_nm": 0.67,
+  "diameter_basis": "narrowest_point",
+  "dynamic_status": "single_state_observed",
+  "charge_exterior": "positive",
+  "charge_interior": "mixed",
+  "pH": null,
+  "condition": "recombinant cargo-free pore-engineered shell expressed in E. coli",
+  "method": "cryo-EM; HOLE pore analysis; \nAPBS electrostatic analysis",
+  "structure_id": "7LIM",
+  "source": "Adamson et al. 2022",
+  "source_doi": "10.1126/sciadv.abl7346",
+  "notes": "HOLE minimum: 6.7 Å. Positive exterior/channel; electrostatic profile similar to S7G, with mixed contributions at the interior opening."
+}

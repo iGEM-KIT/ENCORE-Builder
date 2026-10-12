@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_P_0104",
+  "candidate_id": "K5BEG2",
+  "field_name": "pore_record",
+  "value_text": "construct=EncMh; variant_status=wild_type; pore_type=2fold_adjacent; pore_state=open; pore_diameter_nm=0.5; diameter_basis=reported_diameter; dynamic_status=single_state_observed; charge_exterior=not_reported; charge_interior=not_reported; condition=recombinant cargo-free WT EncMh expressed in E. coli; curated_notes=Smaller intersubunit pore (Fig. S6).",
+  "value_numeric": 0.5,
+  "unit": "nm",
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Lončar et al. 2020",
+  "source_url": "https://doi.org/10.1016/j.bbrc.2020.06.059",
+  "method": "X-ray crystallography",
+  "structure_id": "6I9G",
+  "condition": "recombinant cargo-free WT EncMh expressed in E. coli",
+  "used_in_databank": true,
+  "notes": "pores.pore_record_id=K5BEG2_p2a_small; assembly_id=K5BEG2_ref",
+  "source_doi": "10.1016/j.bbrc.2020.06.059"
+}

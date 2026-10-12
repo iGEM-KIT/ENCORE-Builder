@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_P_0058",
+  "candidate_id": "Q1D6H4",
+  "field_name": "pore_record",
+  "value_text": "construct=3×His-MxEnc (K199H/T200H/G201H); variant_status=engineered; pore_type=2fold; pore_state=open; diameter_basis=other; dynamic_status=single_state_observed; charge_exterior=not_reported; charge_interior=not_reported; condition=recombinant empty tetrahedral 3×His-MxEnc shell expressed in E. coli; curated_notes=Novel twofold-symmetric interaction at each tetrahedral edge creates a large elongated pore with approximate dimensions of 15 × 30 Å (1.5 × 3.0 nm)",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Szyszka et al. 2024",
+  "source_url": "https://doi.org/10.1073/pnas.2321260121",
+  "method": "cryo-EM / structural study",
+  "structure_id": "8V4Q",
+  "condition": "recombinant empty tetrahedral 3×His-MxEnc shell expressed in E. coli",
+  "used_in_databank": true,
+  "notes": "pores.pore_record_id=Q1D6H4_3xHis_Tet_p2; assembly_id=Q1D6H4_3xHis_Tet",
+  "source_doi": "10.1073/pnas.2321260121"
+}

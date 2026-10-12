@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_D_0131",
+  "candidate_id": "Q1Q6L7",
+  "field_name": "loading_info",
+  "value_text": "NIR domain co-purified with cEnc (~30 copies per 180-mer capsid); loading decreased to ~15 copies when the N-terminal diheme cytochrome domain was removed.",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": null,
+  "source_url": null,
+  "method": null,
+  "structure_id": null,
+  "condition": null,
+  "used_in_databank": true,
+  "notes": "databank.candidate_id=Q1Q6L7",
+  "source_doi": null
+}

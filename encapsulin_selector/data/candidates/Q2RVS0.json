@@ -26,8 +26,9 @@
   "source_emdb": "EMD-54372;EMD-55116; EMD-54404; EMD-54408; EMD-54415; EMD-54373",
   "pdb_count": 6,
   "pore_record_count": 1,
-  "evidence_record_count": 5,
-  "curation_source": "R. rubrum encapsulin literature; PDB 9RY4",
+  "evidence_record_count": 4,
+  "curation_source": "He et al. 2016; McIver et al. 2026; PDB 9RY4",
   "curator_notes": "Rhodospirillum rubrum Type 1 encapsulin. T=1 and ~24 nm particle size are reported. Legacy row flags pore behavior as dynamic but does not isolate a numerical pore diameter.",
-  "missing_fields_for_curation": null
+  "missing_fields_for_curation": null,
+  "curation_source_doi": "10.7554/eLife.18972; 10.1016/j.jsb.2026.108357"
 }

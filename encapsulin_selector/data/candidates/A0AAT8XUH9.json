@@ -26,8 +26,9 @@
   "source_emdb": "EMD-41905; EMD-41906",
   "pdb_count": 2,
   "pore_record_count": 2,
-  "evidence_record_count": 5,
+  "evidence_record_count": 4,
   "curation_source": "Jones, Andreas & Giessen 2024 Nat Commun 15:2558 (10.1038/s41467-024-46880-x, PMID 38519509); PDB 8U50/8U51/8U4Z",
   "curator_notes": "T=1, 24 nm. Two open pores are reported: 5-fold ~0.9 nm and 3-fold ~0.3 nm. The 5-fold pore has a negative-exterior to positive-interior charge gradient.",
-  "missing_fields_for_curation": null
+  "missing_fields_for_curation": null,
+  "curation_source_doi": "10.1038/s41467-024-46880-x"
 }

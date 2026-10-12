@@ -1,0 +1,21 @@
+{
+  "pore_record_id": "K7RV67_p5_narrow_75",
+  "candidate_id": "K7RV67",
+  "assembly_id": "K7RV67_ref",
+  "construct": "AaEnc shell",
+  "variant_status": "wild_type",
+  "pore_type": "5fold",
+  "pore_state": "open",
+  "pore_diameter_nm": 0.5,
+  "diameter_basis": "reported_diameter",
+  "dynamic_status": "demonstrated",
+  "charge_exterior": "not_reported",
+  "charge_interior": "not_reported",
+  "pH": 7.5,
+  "condition": "recombinant cargo-free WT shell expressed in E. coli",
+  "method": "cryo-EM; structural analysis",
+  "structure_id": "8DN9",
+  "source": "Jones et al. 2023",
+  "source_doi": "10.1021/acs.biomac.2c01424",
+  "notes": "Paper-defined closed conformation despite measurable aperture; ~68% of particles at pH 7.5."
+}

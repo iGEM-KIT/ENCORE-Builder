@@ -1,0 +1,21 @@
+{
+  "pore_record_id": "A0R4H0_tdNfsB_p5_wide",
+  "candidate_id": "A0R4H0",
+  "assembly_id": "A0R4H0_ref",
+  "construct": "CFP-29 shell",
+  "variant_status": "wild_type",
+  "pore_type": "5fold",
+  "pore_state": "open",
+  "pore_diameter_nm": null,
+  "diameter_basis": null,
+  "dynamic_status": "demonstrated",
+  "charge_exterior": "not_reported",
+  "charge_interior": "not_reported",
+  "pH": null,
+  "condition": "recombinant WT shell loaded with engineered tdNfsB in E. coli",
+  "method": "cryo-EM; local refinement",
+  "structure_id": "9FNA",
+  "source": "Zmyslia et al. 2025",
+  "source_doi": "10.1039/D4CB00127C",
+  "notes": "Paper-defined open conformation; 8.2 Å was measured for the icosahedrally averaged model, not independently for the isolated open state."
+}

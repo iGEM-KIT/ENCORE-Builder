@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_D_0129",
+  "candidate_id": "Q743F5",
+  "field_name": "loading_info",
+  "value_text": "Cargo: DyP-type peroxidase. Loading: C-terminal extension-mediated. Cargo stoichiometry: probably only 1 DyP hexamer per shell.",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": null,
+  "source_url": null,
+  "method": null,
+  "structure_id": null,
+  "condition": null,
+  "used_in_databank": true,
+  "notes": "databank.candidate_id=Q743F5",
+  "source_doi": null
+}

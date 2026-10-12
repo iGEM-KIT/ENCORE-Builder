@@ -1,0 +1,1542 @@
+[
+  {
+    "table": "databank",
+    "record_id": "Q1D6H4",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "McHugh et al. 2014",
+    "doi": "10.15252/embj.201488566",
+    "doi_url": "https://doi.org/10.15252/embj.201488566",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "databank",
+    "record_id": "Q1D6H4",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Eren et al. 2022",
+    "doi": "10.1016/j.str.2022.01.008",
+    "doi_url": "https://doi.org/10.1016/j.str.2022.01.008",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "databank",
+    "record_id": "Q1D6H4",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Eren et al. 2024",
+    "doi": "10.1073/pnas.2400426121",
+    "doi_url": "https://doi.org/10.1073/pnas.2400426121",
+    "relationship": "cargo-protein context",
+    "notes": "EncD ferric reductase study; not a direct shell pore measurement."
+  },
+  {
+    "table": "databank",
+    "record_id": "Q9WZP2",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Sutter et al. 2008",
+    "doi": "10.1038/nsmb.1473",
+    "doi_url": "https://doi.org/10.1038/nsmb.1473",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "databank",
+    "record_id": "Q9WZP2",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Van de Steen et al. 2024",
+    "doi": "10.1021/acsabm.3c01153",
+    "doi_url": "https://doi.org/10.1021/acsabm.3c01153",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "databank",
+    "record_id": "Q9WZP2",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "FLP/FMN: Sci Rep 2021",
+    "doi": "10.1038/s41598-021-01932-w",
+    "doi_url": "https://doi.org/10.1038/s41598-021-01932-w",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "databank",
+    "record_id": "I6WZG6",
+    "candidate_id": "I6WZG6",
+    "citation_label": "Cuthbert et al. 2024",
+    "doi": "10.3390/microorganisms12122465",
+    "doi_url": "https://doi.org/10.3390/microorganisms12122465",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "databank",
+    "record_id": "I6WZG6",
+    "candidate_id": "I6WZG6",
+    "citation_label": "TEM ~25 nm: eLife 2021",
+    "doi": "10.7554/eLife.74358",
+    "doi_url": "https://doi.org/10.7554/eLife.74358",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "databank",
+    "record_id": "A0A0F5HPP7",
+    "candidate_id": "A0A0F5HPP7",
+    "citation_label": "Giessen et al. 2019",
+    "doi": "10.7554/eLife.46070",
+    "doi_url": "https://doi.org/10.7554/eLife.46070",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "databank",
+    "record_id": "D0LZ74",
+    "candidate_id": "D0LZ74",
+    "citation_label": "Ross et al. 2022",
+    "doi": "10.1126/sciadv.abj4461",
+    "doi_url": "https://doi.org/10.1126/sciadv.abj4461",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "databank",
+    "record_id": "Q55032",
+    "candidate_id": "Q55032",
+    "citation_label": "Nichols/LaFrance et al. 2021",
+    "doi": "10.7554/eLife.59288",
+    "doi_url": "https://doi.org/10.7554/eLife.59288",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "databank",
+    "record_id": "Q8U1L4",
+    "candidate_id": "Q8U1L4",
+    "citation_label": "Akita et al. 2007",
+    "doi": "10.1016/j.jmb.2007.02.075",
+    "doi_url": "https://doi.org/10.1016/j.jmb.2007.02.075",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "databank",
+    "record_id": "Q45296",
+    "candidate_id": "Q45296",
+    "citation_label": "Valdés-Stauber & Scherer 1994",
+    "doi": "10.1128/AEM.60.10.3809-3814.1994",
+    "doi_url": "https://doi.org/10.1128/AEM.60.10.3809-3814.1994",
+    "relationship": "historical biological context",
+    "notes": "Linocin M18 historical paper, not a structural pore measurement."
+  },
+  {
+    "table": "databank",
+    "record_id": "K7RV67",
+    "candidate_id": "K7RV67",
+    "citation_label": "Giessen 2024",
+    "doi": "10.1002/cbic.202400535",
+    "doi_url": "https://doi.org/10.1002/cbic.202400535",
+    "relationship": "review",
+    "notes": "The primary structural study is Jones et al. 2023 (linked in assemblies/pores)."
+  },
+  {
+    "table": "databank",
+    "record_id": "A0A1G9WS71",
+    "candidate_id": "A0A1G9WS71",
+    "citation_label": "Pecanac et al. 2025",
+    "doi": "10.1039/D5MA00268K",
+    "doi_url": "https://doi.org/10.1039/D5MA00268K",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "databank",
+    "record_id": "A0R4H0",
+    "candidate_id": "A0R4H0",
+    "citation_label": "Tang et al. 2021",
+    "doi": "10.1073/pnas.2025658118",
+    "doi_url": "https://doi.org/10.1073/pnas.2025658118",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "databank",
+    "record_id": "K5BEG2",
+    "candidate_id": "K5BEG2",
+    "citation_label": "Lončar et al. 2020",
+    "doi": "10.1016/j.bbrc.2020.06.059",
+    "doi_url": "https://doi.org/10.1016/j.bbrc.2020.06.059",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "databank",
+    "record_id": "A0AAT8XUH9",
+    "candidate_id": "A0AAT8XUH9",
+    "citation_label": "Jones, Andreas & Giessen 2024",
+    "doi": "10.1038/s41467-024-46880-x",
+    "doi_url": "https://doi.org/10.1038/s41467-024-46880-x",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "databank",
+    "record_id": "C0ZVK4",
+    "candidate_id": "C0ZVK4",
+    "citation_label": "Tamura et al. 2015",
+    "doi": "10.1002/bit.25322",
+    "doi_url": "https://doi.org/10.1002/bit.25322",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "databank",
+    "record_id": "I3NID5",
+    "candidate_id": "I3NID5",
+    "citation_label": "Nichols et al. 2021",
+    "doi": "10.7554/eLife.59288",
+    "doi_url": "https://doi.org/10.7554/eLife.59288",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "databank",
+    "record_id": "Q2RVS0",
+    "candidate_id": "Q2RVS0",
+    "citation_label": "He et al. 2016",
+    "doi": "10.7554/eLife.18972",
+    "doi_url": "https://doi.org/10.7554/eLife.18972",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "databank",
+    "record_id": "Q2RVS0",
+    "candidate_id": "Q2RVS0",
+    "citation_label": "McIver et al. 2026",
+    "doi": "10.1016/j.jsb.2026.108357",
+    "doi_url": "https://doi.org/10.1016/j.jsb.2026.108357",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "databank",
+    "record_id": "A0A1M7LGP9",
+    "candidate_id": "A0A1M7LGP9",
+    "citation_label": "Anuchina et al. 2025 bioRxiv",
+    "doi": "10.1101/2025.09.13.676036",
+    "doi_url": "https://doi.org/10.1101/2025.09.13.676036",
+    "relationship": "genomic/putative targeting context",
+    "notes": "DFLP/encapsulin targeting study; does not alone establish a resolved shell structure for this accession."
+  },
+  {
+    "table": "databank",
+    "record_id": "A0A502IA18",
+    "candidate_id": "A0A502IA18",
+    "citation_label": "Babar et al. 2023",
+    "doi": "10.1007/s00253-023-12563-8",
+    "doi_url": "https://doi.org/10.1007/s00253-023-12563-8",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "databank",
+    "record_id": "A0A076EZF5",
+    "candidate_id": "A0A076EZF5",
+    "citation_label": "Rahmanpour & Bugg 2013",
+    "doi": "10.1111/febs.12234",
+    "doi_url": "https://doi.org/10.1111/febs.12234",
+    "relationship": "homolog-only context",
+    "notes": "The study concerns R. jostii RHA1, not a direct experimental characterization of A0A076EZF5."
+  },
+  {
+    "table": "databank",
+    "record_id": "Q0SE23",
+    "candidate_id": "Q0SE23",
+    "citation_label": "Rahmanpour & Bugg 2013",
+    "doi": "10.1111/febs.12234",
+    "doi_url": "https://doi.org/10.1111/febs.12234",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "databank",
+    "record_id": "Q1Q6L7",
+    "candidate_id": "Q1Q6L7",
+    "citation_label": "Giessen & Silver 2017",
+    "doi": "10.1038/nmicrobiol.2017.29",
+    "doi_url": "https://doi.org/10.1038/nmicrobiol.2017.29",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q1D6H4_T3",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "McHugh et al. 2014",
+    "doi": "10.15252/embj.201488566",
+    "doi_url": "https://doi.org/10.15252/embj.201488566",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q1D6H4_T3",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Eren et al. 2022",
+    "doi": "10.1016/j.str.2022.01.008",
+    "doi_url": "https://doi.org/10.1016/j.str.2022.01.008",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q1D6H4_T3",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Yadav & Beck 2026",
+    "doi": "10.1002/pro.70756",
+    "doi_url": "https://doi.org/10.1002/pro.70756",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q1D6H4_T1",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "McHugh et al. 2014",
+    "doi": "10.15252/embj.201488566",
+    "doi_url": "https://doi.org/10.15252/embj.201488566",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q1D6H4_T1",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Eren et al. 2022",
+    "doi": "10.1016/j.str.2022.01.008",
+    "doi_url": "https://doi.org/10.1016/j.str.2022.01.008",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q1D6H4_T3_loaded",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Kwon et al. 2023",
+    "doi": "10.1016/j.jsb.2023.108022",
+    "doi_url": "https://doi.org/10.1016/j.jsb.2023.108022",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q1D6H4_3xHis_T1",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Szyszka et al. 2024",
+    "doi": "10.1073/pnas.2321260121",
+    "doi_url": "https://doi.org/10.1073/pnas.2321260121",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q1D6H4_3xHis_Tet",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Szyszka et al. 2024",
+    "doi": "10.1073/pnas.2321260121",
+    "doi_url": "https://doi.org/10.1073/pnas.2321260121",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q1D6H4_pmut_T1",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Kwon et al. 2024",
+    "doi": "10.1021/acsnano.4c08186",
+    "doi_url": "https://doi.org/10.1021/acsnano.4c08186",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q1D6H4_pmut_T3",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Kwon et al. 2024",
+    "doi": "10.1021/acsnano.4c08186",
+    "doi_url": "https://doi.org/10.1021/acsnano.4c08186",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q1D6H4_pmut_T4",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Kwon et al. 2024",
+    "doi": "10.1021/acsnano.4c08186",
+    "doi_url": "https://doi.org/10.1021/acsnano.4c08186",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q9WZP2_ref",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Sutter et al. 2008",
+    "doi": "10.1038/nsmb.1473",
+    "doi_url": "https://doi.org/10.1038/nsmb.1473",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q9WZP2_ref",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "LaFrance et al. 2021",
+    "doi": "10.1038/s41598-021-01932-w",
+    "doi_url": "https://doi.org/10.1038/s41598-021-01932-w",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q9WZP2_T1_empty",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Wiryaman & Toor 2021",
+    "doi": "10.1107/S2052252521001949",
+    "doi_url": "https://doi.org/10.1107/S2052252521001949",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q9WZP2_S1K_T1",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Adamson et al. 2022",
+    "doi": "10.1126/sciadv.abl7346",
+    "doi_url": "https://doi.org/10.1126/sciadv.abl7346",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q9WZP2_S1R_T1",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Adamson et al. 2022",
+    "doi": "10.1126/sciadv.abl7346",
+    "doi_url": "https://doi.org/10.1126/sciadv.abl7346",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q9WZP2_S3E_T1",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Adamson et al. 2022",
+    "doi": "10.1126/sciadv.abl7346",
+    "doi_url": "https://doi.org/10.1126/sciadv.abl7346",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q9WZP2_S5D_T1",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Adamson et al. 2022",
+    "doi": "10.1126/sciadv.abl7346",
+    "doi_url": "https://doi.org/10.1126/sciadv.abl7346",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q9WZP2_S6E_T1",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Adamson et al. 2022",
+    "doi": "10.1126/sciadv.abl7346",
+    "doi_url": "https://doi.org/10.1126/sciadv.abl7346",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q9WZP2_S7D_T1",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Adamson et al. 2022",
+    "doi": "10.1126/sciadv.abl7346",
+    "doi_url": "https://doi.org/10.1126/sciadv.abl7346",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q9WZP2_S7G_T1",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Williams et al. 2018",
+    "doi": "10.1021/acssynbio.8b00295",
+    "doi_url": "https://doi.org/10.1021/acssynbio.8b00295",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q9WZP2_S7G_T1",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Adamson et al. 2022",
+    "doi": "10.1126/sciadv.abl7346",
+    "doi_url": "https://doi.org/10.1126/sciadv.abl7346",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "I6WZG6_ref",
+    "candidate_id": "I6WZG6",
+    "citation_label": "Berger et al. 2025",
+    "doi": "10.1038/s42003-025-07660-5",
+    "doi_url": "https://doi.org/10.1038/s42003-025-07660-5",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "I6WZG6_His_T1_empty",
+    "candidate_id": "I6WZG6",
+    "citation_label": "Contreras et al. 2014",
+    "doi": "10.1074/jbc.M114.570119",
+    "doi_url": "https://doi.org/10.1074/jbc.M114.570119",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "I6WZG6_T1_DyP_loaded",
+    "candidate_id": "I6WZG6",
+    "citation_label": "Lien et al. 2021",
+    "doi": "10.7554/eLife.74358",
+    "doi_url": "https://doi.org/10.7554/eLife.74358",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "I6WZG6_T1_DyP_loaded",
+    "candidate_id": "I6WZG6",
+    "citation_label": "Cuthbert et al. 2024",
+    "doi": "10.3390/microorganisms12122465",
+    "doi_url": "https://doi.org/10.3390/microorganisms12122465",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "I6WZG6_partial_48mer",
+    "candidate_id": "I6WZG6",
+    "citation_label": "Berger et al. 2025",
+    "doi": "10.1038/s42003-025-07660-5",
+    "doi_url": "https://doi.org/10.1038/s42003-025-07660-5",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "I6WZG6_partial_52mer",
+    "candidate_id": "I6WZG6",
+    "citation_label": "Berger et al. 2025",
+    "doi": "10.1038/s42003-025-07660-5",
+    "doi_url": "https://doi.org/10.1038/s42003-025-07660-5",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "I6WZG6_partial_54mer",
+    "candidate_id": "I6WZG6",
+    "citation_label": "Berger et al. 2025",
+    "doi": "10.1038/s42003-025-07660-5",
+    "doi_url": "https://doi.org/10.1038/s42003-025-07660-5",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "A0A0F5HPP7_ref",
+    "candidate_id": "A0A0F5HPP7",
+    "citation_label": "Giessen et al. 2019",
+    "doi": "10.7554/eLife.46070",
+    "doi_url": "https://doi.org/10.7554/eLife.46070",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "A0A0F5HPP7_T4_empty",
+    "candidate_id": "A0A0F5HPP7",
+    "citation_label": "Sigmund et al. 2019",
+    "doi": "10.1021/acsnano.9b03140",
+    "doi_url": "https://doi.org/10.1021/acsnano.9b03140",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "A0A0F5HPP7_T4_empty",
+    "candidate_id": "A0A0F5HPP7",
+    "citation_label": "Giessen et al. 2019",
+    "doi": "10.7554/eLife.46070",
+    "doi_url": "https://doi.org/10.7554/eLife.46070",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "A0A0F5HPP7_T4_Fdx_loaded",
+    "candidate_id": "A0A0F5HPP7",
+    "citation_label": "Kwon et al. 2026",
+    "doi": "10.1038/s41467-026-76849-x",
+    "doi_url": "https://doi.org/10.1038/s41467-026-76849-x",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "A0A0F5HPP7_T4GALA_T4",
+    "candidate_id": "A0A0F5HPP7",
+    "citation_label": "Jones et al. 2021",
+    "doi": "10.1002/anie.202110318",
+    "doi_url": "https://doi.org/10.1002/anie.202110318",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "A0A0F5HPP7_Glass9_T4",
+    "candidate_id": "A0A0F5HPP7",
+    "citation_label": "Siddiquee et al. 2026",
+    "doi": "10.64898/2026.01.12.698938",
+    "doi_url": "https://doi.org/10.64898/2026.01.12.698938",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "A0A0F5HPP7_Letter11_T4",
+    "candidate_id": "A0A0F5HPP7",
+    "citation_label": "Siddiquee et al. 2026",
+    "doi": "10.64898/2026.01.12.698938",
+    "doi_url": "https://doi.org/10.64898/2026.01.12.698938",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "A0A0F5HPP7_Letter11_T3",
+    "candidate_id": "A0A0F5HPP7",
+    "citation_label": "Siddiquee et al. 2026",
+    "doi": "10.64898/2026.01.12.698938",
+    "doi_url": "https://doi.org/10.64898/2026.01.12.698938",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "D0LZ74_ref",
+    "candidate_id": "D0LZ74",
+    "citation_label": "Ross et al. 2022",
+    "doi": "10.1126/sciadv.abj4461",
+    "doi_url": "https://doi.org/10.1126/sciadv.abj4461",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "D0LZ74_T1_empty",
+    "candidate_id": "D0LZ74",
+    "citation_label": "Ross et al. 2022",
+    "doi": "10.1126/sciadv.abj4461",
+    "doi_url": "https://doi.org/10.1126/sciadv.abj4461",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q55032_ref",
+    "candidate_id": "Q55032",
+    "citation_label": "Nichols/LaFrance et al. 2021",
+    "doi": "10.7554/eLife.59288",
+    "doi_url": "https://doi.org/10.7554/eLife.59288",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q55032_T1_empty",
+    "candidate_id": "Q55032",
+    "citation_label": "Nichols/LaFrance et al. 2021",
+    "doi": "10.7554/eLife.59288",
+    "doi_url": "https://doi.org/10.7554/eLife.59288",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q8U1L4_ref",
+    "candidate_id": "Q8U1L4",
+    "citation_label": "Namba et al. 2005",
+    "doi": "10.1093/jb/mvi111",
+    "doi_url": "https://doi.org/10.1093/jb/mvi111",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q8U1L4_ref",
+    "candidate_id": "Q8U1L4",
+    "citation_label": "Akita et al. 2007",
+    "doi": "10.1016/j.jmb.2007.02.075",
+    "doi_url": "https://doi.org/10.1016/j.jmb.2007.02.075",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q8U1L4_ref",
+    "candidate_id": "Q8U1L4",
+    "citation_label": "Kumamoto et al. 2024",
+    "doi": "10.1002/chir.23700",
+    "doi_url": "https://doi.org/10.1002/chir.23700",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q45296_ref",
+    "candidate_id": "Q45296",
+    "citation_label": "Snijder et al. 2016",
+    "doi": "10.1021/acs.biomac.6b00469",
+    "doi_url": "https://doi.org/10.1021/acs.biomac.6b00469",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q45296_ref",
+    "candidate_id": "Q45296",
+    "citation_label": "Putri et al. 2017",
+    "doi": "10.1021/acsnano.7b07669",
+    "doi_url": "https://doi.org/10.1021/acsnano.7b07669",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q45296_T1_DyP_loaded",
+    "candidate_id": "Q45296",
+    "citation_label": "Snijder et al. 2016",
+    "doi": "10.1021/acs.biomac.6b00469",
+    "doi_url": "https://doi.org/10.1021/acs.biomac.6b00469",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q45296_T1_DyP_loaded",
+    "candidate_id": "Q45296",
+    "citation_label": "Putri et al. 2017",
+    "doi": "10.1021/acsnano.7b07669",
+    "doi_url": "https://doi.org/10.1021/acsnano.7b07669",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "K7RV67_ref",
+    "candidate_id": "K7RV67",
+    "citation_label": "Jones et al. 2023",
+    "doi": "10.1021/acs.biomac.2c01424",
+    "doi_url": "https://doi.org/10.1021/acs.biomac.2c01424",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "A0A1G9WS71_ref",
+    "candidate_id": "A0A1G9WS71",
+    "citation_label": "Pecanac et al. 2025",
+    "doi": "10.1039/D5MA00268K",
+    "doi_url": "https://doi.org/10.1039/D5MA00268K",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "A0A1G9WS71_N198W_T4",
+    "candidate_id": "A0A1G9WS71",
+    "citation_label": "Pecanac et al. 2025",
+    "doi": "10.1039/D5MA00268K",
+    "doi_url": "https://doi.org/10.1039/D5MA00268K",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "A0R4H0_ref",
+    "candidate_id": "A0R4H0",
+    "citation_label": "Tang et al. 2021",
+    "doi": "10.1073/pnas.2025658118",
+    "doi_url": "https://doi.org/10.1073/pnas.2025658118",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "K5BEG2_ref",
+    "candidate_id": "K5BEG2",
+    "citation_label": "Loncar et al. 2020",
+    "doi": "10.1016/j.bbrc.2020.06.059",
+    "doi_url": "https://doi.org/10.1016/j.bbrc.2020.06.059",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "A0AAT8XUH9_ref",
+    "candidate_id": "A0AAT8XUH9",
+    "citation_label": "Jones, Andreas & Giessen 2024",
+    "doi": "10.1038/s41467-024-46880-x",
+    "doi_url": "https://doi.org/10.1038/s41467-024-46880-x",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q2RVS0_ref",
+    "candidate_id": "Q2RVS0",
+    "citation_label": "He et al. 2016",
+    "doi": "10.7554/eLife.18972",
+    "doi_url": "https://doi.org/10.7554/eLife.18972",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q2RVS0_ref",
+    "candidate_id": "Q2RVS0",
+    "citation_label": "McIver et al. 2026",
+    "doi": "10.1016/j.jsb.2026.108357",
+    "doi_url": "https://doi.org/10.1016/j.jsb.2026.108357",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q2RVS0_T1_EncFtn_loaded",
+    "candidate_id": "Q2RVS0",
+    "citation_label": "He et al. 2016",
+    "doi": "10.7554/eLife.18972",
+    "doi_url": "https://doi.org/10.7554/eLife.18972",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q2RVS0_T1_EncFtn_loaded",
+    "candidate_id": "Q2RVS0",
+    "citation_label": "McIver et al. 2026",
+    "doi": "10.1016/j.jsb.2026.108357",
+    "doi_url": "https://doi.org/10.1016/j.jsb.2026.108357",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q0SE23_ref",
+    "candidate_id": "Q0SE23",
+    "citation_label": "Rahmanpour & Bugg 2013",
+    "doi": "10.1111/febs.12234",
+    "doi_url": "https://doi.org/10.1111/febs.12234",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q0SE23_ref",
+    "candidate_id": "Q0SE23",
+    "citation_label": "Jones & Giessen 2021",
+    "doi": "10.1002/bit.27564",
+    "doi_url": "https://doi.org/10.1002/bit.27564",
+    "relationship": "review",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q0SE23_DypB_loaded",
+    "candidate_id": "Q0SE23",
+    "citation_label": "Rahmanpour & Bugg 2013",
+    "doi": "10.1111/febs.12234",
+    "doi_url": "https://doi.org/10.1111/febs.12234",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q0SE23_DypB_loaded",
+    "candidate_id": "Q0SE23",
+    "citation_label": "Jones & Giessen 2021",
+    "doi": "10.1002/bit.27564",
+    "doi_url": "https://doi.org/10.1002/bit.27564",
+    "relationship": "review",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q1Q6L7_full",
+    "candidate_id": "Q1Q6L7",
+    "citation_label": "Giessen & Silver 2017",
+    "doi": "10.1038/nmicrobiol.2017.29",
+    "doi_url": "https://doi.org/10.1038/nmicrobiol.2017.29",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "Q1Q6L7_delta_cyt",
+    "candidate_id": "Q1Q6L7",
+    "citation_label": "Giessen & Silver 2017",
+    "doi": "10.1038/nmicrobiol.2017.29",
+    "doi_url": "https://doi.org/10.1038/nmicrobiol.2017.29",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "A0A502IA18_exp",
+    "candidate_id": "A0A502IA18",
+    "citation_label": "Babar et al. 2022",
+    "doi": "10.3390/pr10101932",
+    "doi_url": "https://doi.org/10.3390/pr10101932",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "assemblies",
+    "record_id": "A0A502IA18_exp",
+    "candidate_id": "A0A502IA18",
+    "citation_label": "Babar et al. 2023",
+    "doi": "10.1007/s00253-023-12563-8",
+    "doi_url": "https://doi.org/10.1007/s00253-023-12563-8",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q1D6H4_p2",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Eren et al. 2022",
+    "doi": "10.1016/j.str.2022.01.008",
+    "doi_url": "https://doi.org/10.1016/j.str.2022.01.008",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q1D6H4_p3",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Eren et al. 2022",
+    "doi": "10.1016/j.str.2022.01.008",
+    "doi_url": "https://doi.org/10.1016/j.str.2022.01.008",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q1D6H4_p3",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Kwon et al. 2024",
+    "doi": "10.1021/acsnano.4c08186",
+    "doi_url": "https://doi.org/10.1021/acsnano.4c08186",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q1D6H4_p5",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Eren et al. 2022",
+    "doi": "10.1016/j.str.2022.01.008",
+    "doi_url": "https://doi.org/10.1016/j.str.2022.01.008",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q1D6H4_p5",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Kwon et al. 2024",
+    "doi": "10.1021/acsnano.4c08186",
+    "doi_url": "https://doi.org/10.1021/acsnano.4c08186",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q1D6H4_T3_loaded_p2",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Kwon et al. 2023",
+    "doi": "10.1016/j.jsb.2023.108022",
+    "doi_url": "https://doi.org/10.1016/j.jsb.2023.108022",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q1D6H4_T3_loaded_p3",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Kwon et al. 2023",
+    "doi": "10.1016/j.jsb.2023.108022",
+    "doi_url": "https://doi.org/10.1016/j.jsb.2023.108022",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q1D6H4_T3_loaded_p5",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Kwon et al. 2023",
+    "doi": "10.1016/j.jsb.2023.108022",
+    "doi_url": "https://doi.org/10.1016/j.jsb.2023.108022",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q1D6H4_3xHis_Tet_p2",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Szyszka et al. 2024",
+    "doi": "10.1073/pnas.2321260121",
+    "doi_url": "https://doi.org/10.1073/pnas.2321260121",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q1D6H4_pmut_T3_p3",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Kwon et al. 2024",
+    "doi": "10.1021/acsnano.4c08186",
+    "doi_url": "https://doi.org/10.1021/acsnano.4c08186",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q1D6H4_pmut_T3_p5",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Kwon et al. 2024",
+    "doi": "10.1021/acsnano.4c08186",
+    "doi_url": "https://doi.org/10.1021/acsnano.4c08186",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q1D6H4_pmut_T4_p3",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Kwon et al. 2024",
+    "doi": "10.1021/acsnano.4c08186",
+    "doi_url": "https://doi.org/10.1021/acsnano.4c08186",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q1D6H4_pmut_T4_p5",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Kwon et al. 2024",
+    "doi": "10.1021/acsnano.4c08186",
+    "doi_url": "https://doi.org/10.1021/acsnano.4c08186",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q9WZP2_p5",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Sutter et al. 2008",
+    "doi": "10.1038/nsmb.1473",
+    "doi_url": "https://doi.org/10.1038/nsmb.1473",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q9WZP2_p5",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Adamson et al. 2022",
+    "doi": "10.1126/sciadv.abl7346",
+    "doi_url": "https://doi.org/10.1126/sciadv.abl7346",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q9WZP2_S1R_p5",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Adamson et al. 2022",
+    "doi": "10.1126/sciadv.abl7346",
+    "doi_url": "https://doi.org/10.1126/sciadv.abl7346",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q9WZP2_S1K_p5",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Adamson et al. 2022",
+    "doi": "10.1126/sciadv.abl7346",
+    "doi_url": "https://doi.org/10.1126/sciadv.abl7346",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q9WZP2_S3E_p5",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Adamson et al. 2022",
+    "doi": "10.1126/sciadv.abl7346",
+    "doi_url": "https://doi.org/10.1126/sciadv.abl7346",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q9WZP2_S5D_p5",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Adamson et al. 2022",
+    "doi": "10.1126/sciadv.abl7346",
+    "doi_url": "https://doi.org/10.1126/sciadv.abl7346",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q9WZP2_S7D_p5",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Adamson et al. 2022",
+    "doi": "10.1126/sciadv.abl7346",
+    "doi_url": "https://doi.org/10.1126/sciadv.abl7346",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q9WZP2_S6E_p5",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Adamson et al. 2022",
+    "doi": "10.1126/sciadv.abl7346",
+    "doi_url": "https://doi.org/10.1126/sciadv.abl7346",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q9WZP2_S7G_p5",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Adamson et al. 2022",
+    "doi": "10.1126/sciadv.abl7346",
+    "doi_url": "https://doi.org/10.1126/sciadv.abl7346",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q9WZP2_T1_empty_p5",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Wiryaman & Toor 2021",
+    "doi": "10.1107/S2052252521001949",
+    "doi_url": "https://doi.org/10.1107/S2052252521001949",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q9WZP2_T1_empty_p3",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Wiryaman & Toor 2021",
+    "doi": "10.1107/S2052252521001949",
+    "doi_url": "https://doi.org/10.1107/S2052252521001949",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q9WZP2_T1_empty_p2a_large",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Wiryaman & Toor 2021",
+    "doi": "10.1107/S2052252521001949",
+    "doi_url": "https://doi.org/10.1107/S2052252521001949",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q9WZP2_T1_empty_p2a_small",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Wiryaman & Toor 2021",
+    "doi": "10.1107/S2052252521001949",
+    "doi_url": "https://doi.org/10.1107/S2052252521001949",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "I6WZG6_p5",
+    "candidate_id": "I6WZG6",
+    "citation_label": "Berger et al. 2025",
+    "doi": "10.1038/s42003-025-07660-5",
+    "doi_url": "https://doi.org/10.1038/s42003-025-07660-5",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "I6WZG6_p3",
+    "candidate_id": "I6WZG6",
+    "citation_label": "Berger et al. 2025",
+    "doi": "10.1038/s42003-025-07660-5",
+    "doi_url": "https://doi.org/10.1038/s42003-025-07660-5",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "I6WZG6_p2a_large",
+    "candidate_id": "I6WZG6",
+    "citation_label": "Berger et al. 2025",
+    "doi": "10.1038/s42003-025-07660-5",
+    "doi_url": "https://doi.org/10.1038/s42003-025-07660-5",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "I6WZG6_p2a_small",
+    "candidate_id": "I6WZG6",
+    "citation_label": "Berger et al. 2025",
+    "doi": "10.1038/s42003-025-07660-5",
+    "doi_url": "https://doi.org/10.1038/s42003-025-07660-5",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "I6WZG6_DyP_9BKX_p5",
+    "candidate_id": "I6WZG6",
+    "citation_label": "Cuthbert et al. 2024",
+    "doi": "10.3390/microorganisms12122465",
+    "doi_url": "https://doi.org/10.3390/microorganisms12122465",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "I6WZG6_DyP_8PYS_p5",
+    "candidate_id": "I6WZG6",
+    "citation_label": "Cuthbert et al. 2024",
+    "doi": "10.3390/microorganisms12122465",
+    "doi_url": "https://doi.org/10.3390/microorganisms12122465",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "I6WZG6_DyP_9BKX_p5a",
+    "candidate_id": "I6WZG6",
+    "citation_label": "Cuthbert et al. 2024",
+    "doi": "10.3390/microorganisms12122465",
+    "doi_url": "https://doi.org/10.3390/microorganisms12122465",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "I6WZG6_DyP_8PYS_p5a",
+    "candidate_id": "I6WZG6",
+    "citation_label": "Cuthbert et al. 2024",
+    "doi": "10.3390/microorganisms12122465",
+    "doi_url": "https://doi.org/10.3390/microorganisms12122465",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "A0A0F5HPP7_p3",
+    "candidate_id": "A0A0F5HPP7",
+    "citation_label": "Giessen et al. 2019",
+    "doi": "10.7554/eLife.46070",
+    "doi_url": "https://doi.org/10.7554/eLife.46070",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "A0A0F5HPP7_p5",
+    "candidate_id": "A0A0F5HPP7",
+    "citation_label": "Giessen et al. 2019",
+    "doi": "10.7554/eLife.46070",
+    "doi_url": "https://doi.org/10.7554/eLife.46070",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "A0A0F5HPP7_pseudo3",
+    "candidate_id": "A0A0F5HPP7",
+    "citation_label": "Giessen et al. 2019",
+    "doi": "10.7554/eLife.46070",
+    "doi_url": "https://doi.org/10.7554/eLife.46070",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "D0LZ74_p5_wide",
+    "candidate_id": "D0LZ74",
+    "citation_label": "Ross et al. 2022",
+    "doi": "10.1126/sciadv.abj4461",
+    "doi_url": "https://doi.org/10.1126/sciadv.abj4461",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "D0LZ74_p5_narrow",
+    "candidate_id": "D0LZ74",
+    "citation_label": "Ross et al. 2022",
+    "doi": "10.1126/sciadv.abj4461",
+    "doi_url": "https://doi.org/10.1126/sciadv.abj4461",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q55032_p5",
+    "candidate_id": "Q55032",
+    "citation_label": "Nichols/LaFrance et al. 2021",
+    "doi": "10.7554/eLife.59288",
+    "doi_url": "https://doi.org/10.7554/eLife.59288",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q8U1L4_p5",
+    "candidate_id": "Q8U1L4",
+    "citation_label": "Akita et al. 2007",
+    "doi": "10.1016/j.jmb.2007.02.075",
+    "doi_url": "https://doi.org/10.1016/j.jmb.2007.02.075",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q8U1L4_p5",
+    "candidate_id": "Q8U1L4",
+    "citation_label": "Giessen 2024",
+    "doi": "10.1002/cbic.202400535",
+    "doi_url": "https://doi.org/10.1002/cbic.202400535",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q45296_ref_p3",
+    "candidate_id": "Q45296",
+    "citation_label": "Putri et al. 2017",
+    "doi": "10.1021/acsnano.7b07669",
+    "doi_url": "https://doi.org/10.1021/acsnano.7b07669",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q45296_DyP_p3",
+    "candidate_id": "Q45296",
+    "citation_label": "Putri et al. 2017",
+    "doi": "10.1021/acsnano.7b07669",
+    "doi_url": "https://doi.org/10.1021/acsnano.7b07669",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "K7RV67_p5_wide_75",
+    "candidate_id": "K7RV67",
+    "citation_label": "Jones et al. 2023",
+    "doi": "10.1021/acs.biomac.2c01424",
+    "doi_url": "https://doi.org/10.1021/acs.biomac.2c01424",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "K7RV67_p5_narrow_75",
+    "candidate_id": "K7RV67",
+    "citation_label": "Jones et al. 2023",
+    "doi": "10.1021/acs.biomac.2c01424",
+    "doi_url": "https://doi.org/10.1021/acs.biomac.2c01424",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "K7RV67_p5_narrow_30",
+    "candidate_id": "K7RV67",
+    "citation_label": "Jones et al. 2023",
+    "doi": "10.1021/acs.biomac.2c01424",
+    "doi_url": "https://doi.org/10.1021/acs.biomac.2c01424",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "A0A1G9WS71_p5",
+    "candidate_id": "A0A1G9WS71",
+    "citation_label": "Pecanac et al. 2025",
+    "doi": "10.1039/D5MA00268K",
+    "doi_url": "https://doi.org/10.1039/D5MA00268K",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "A0A1G9WS71_N198W_p5",
+    "candidate_id": "A0A1G9WS71",
+    "citation_label": "Pecanac et al. 2025",
+    "doi": "10.1039/D5MA00268K",
+    "doi_url": "https://doi.org/10.1039/D5MA00268K",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "A0A1G9WS71_N198W_p6",
+    "candidate_id": "A0A1G9WS71",
+    "citation_label": "Pecanac et al. 2025",
+    "doi": "10.1039/D5MA00268K",
+    "doi_url": "https://doi.org/10.1039/D5MA00268K",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "A0R4H0_p5",
+    "candidate_id": "A0R4H0",
+    "citation_label": "Tang et al. 2021",
+    "doi": "10.1073/pnas.2025658118",
+    "doi_url": "https://doi.org/10.1073/pnas.2025658118",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "A0R4H0_p5",
+    "candidate_id": "A0R4H0",
+    "citation_label": "Cuthbert et al. 2024",
+    "doi": "10.3390/microorganisms12122465",
+    "doi_url": "https://doi.org/10.3390/microorganisms12122465",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "A0R4H0_p5_adjacent",
+    "candidate_id": "A0R4H0",
+    "citation_label": "Cuthbert et al. 2024",
+    "doi": "10.3390/microorganisms12122465",
+    "doi_url": "https://doi.org/10.3390/microorganisms12122465",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "A0R4H0_tdNfsB_p5_wide",
+    "candidate_id": "A0R4H0",
+    "citation_label": "Zmyslia et al. 2025",
+    "doi": "10.1039/D4CB00127C",
+    "doi_url": "https://doi.org/10.1039/D4CB00127C",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "A0R4H0_tdNfsB_p5_narrow",
+    "candidate_id": "A0R4H0",
+    "citation_label": "Zmyslia et al. 2025",
+    "doi": "10.1039/D4CB00127C",
+    "doi_url": "https://doi.org/10.1039/D4CB00127C",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "K5BEG2_p5",
+    "candidate_id": "K5BEG2",
+    "citation_label": "Lončar et al. 2020",
+    "doi": "10.1016/j.bbrc.2020.06.059",
+    "doi_url": "https://doi.org/10.1016/j.bbrc.2020.06.059",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "K5BEG2_p2a_large",
+    "candidate_id": "K5BEG2",
+    "citation_label": "Lončar et al. 2020",
+    "doi": "10.1016/j.bbrc.2020.06.059",
+    "doi_url": "https://doi.org/10.1016/j.bbrc.2020.06.059",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "K5BEG2_p2a_small",
+    "candidate_id": "K5BEG2",
+    "citation_label": "Lončar et al. 2020",
+    "doi": "10.1016/j.bbrc.2020.06.059",
+    "doi_url": "https://doi.org/10.1016/j.bbrc.2020.06.059",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "A0AAT8XUH9_p5",
+    "candidate_id": "A0AAT8XUH9",
+    "citation_label": "Jones, Andreas & Giessen 2024",
+    "doi": "10.1038/s41467-024-46880-x",
+    "doi_url": "https://doi.org/10.1038/s41467-024-46880-x",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "A0AAT8XUH9_p3",
+    "candidate_id": "A0AAT8XUH9",
+    "citation_label": "Jones, Andreas & Giessen 2024",
+    "doi": "10.1038/s41467-024-46880-x",
+    "doi_url": "https://doi.org/10.1038/s41467-024-46880-x",
+    "relationship": "record-specific source",
+    "notes": null
+  },
+  {
+    "table": "pores",
+    "record_id": "Q2RVS0_EncFtn_p5_open",
+    "candidate_id": "Q2RVS0",
+    "citation_label": "McIver et al. 2026",
+    "doi": "10.1016/j.jsb.2026.108357",
+    "doi_url": "https://doi.org/10.1016/j.jsb.2026.108357",
+    "relationship": "record-specific source",
+    "notes": null
+  }
+]

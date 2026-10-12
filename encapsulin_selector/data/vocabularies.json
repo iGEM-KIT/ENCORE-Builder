@@ -1,0 +1,105 @@
+{
+  "uniprot_reviewed_status": [
+    "reviewed",
+    "unreviewed"
+  ],
+  "encapsulin_family": [
+    "type_1",
+    "type_2A",
+    "type_2B",
+    "type_3",
+    "type_4A",
+    "type_4B",
+    "unknown"
+  ],
+  "uniprot_record_status": [
+    "active",
+    "obsolete",
+    "replaced",
+    "removed"
+  ],
+  "characterization_level": [
+    "predicted_only",
+    "reviewed_annotation",
+    "experimental_shell",
+    "structurally_characterized",
+    "questionable"
+  ],
+  "curation_confidence": [
+    "low",
+    "medium",
+    "high"
+  ],
+  "variant_status": [
+    "wild_type",
+    "engineered",
+    "mutant",
+    "truncation",
+    "fusion",
+    "unknown"
+  ],
+  "T_number_basis": [
+    "directly_reported",
+    "inferred_from_subunit_count",
+    "other_supported_inference",
+    "not_applicable"
+  ],
+  "pore_type": [
+    "2fold",
+    "2fold_adjacent",
+    "3fold",
+    "5fold",
+    "5fold_adjacent",
+    "pseudo_3fold_PHH",
+    "hexamer_center",
+    "other"
+  ],
+  "pore_state": [
+    "open",
+    "closed",
+    "unresolved",
+    "not_reported"
+  ],
+  "dynamic_status": [
+    "demonstrated",
+    "single_state_observed",
+    "not_assessed"
+  ],
+  "charge": [
+    "negative",
+    "neutral",
+    "positive",
+    "mixed",
+    "not_reported"
+  ],
+  "diameter_basis": [
+    "narrowest_point",
+    "reported_diameter",
+    "range",
+    "other",
+    "not_reported"
+  ],
+  "support_type": [
+    "direct_experimental",
+    "direct_database_annotation",
+    "by_similarity",
+    "inferred_from_subunit_count",
+    "author_inference",
+    "curator_inference",
+    "not_used_context",
+    "curated_from_sheet"
+  ],
+  "source_type": [
+    "UniProt",
+    "PDB",
+    "EMDB",
+    "paper",
+    "preprint",
+    "other",
+    "curated_sheet"
+  ],
+  "removed_action": [
+    "removed",
+    "replaced"
+  ]
+}

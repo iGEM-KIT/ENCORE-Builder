@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_A_0038",
+  "candidate_id": "K7RV67",
+  "field_name": "assembly_observation",
+  "value_text": "construct=AaEnc shell; variant_status=wild_type; assembly_symmetry=icosahedral; T_number=1; T_number_basis=directly_reported; shell_subunit_count=60; shell_diameter_nm=24; curated_notes=Canonical WT cargo-free T=1 AaEnc assembly. Jones et al. 2023 directly reported a ~24 nm icosahedral cage composed of \n60 AaEnc protomers. At pH 7.5, cryo-EM resolved closed (8DN9 / EMD-27558; ~68%) and open (8DNL / EMD-27573; ~32%) five-fold pore states, while at pH 3.0 only the closed state was observed (8DNA / EMD-27560). These structures retain the same global T=1 architecture and are therefore treated as pore conformations of a single assembly rather than separate assemblies. Individual shells remained ~24 nm by TEM across the tested pH range; larger DLS diameters at acidic pH were attributed to limited aggregation, not shell expansion. Reported thermal values are aggregation temperatures (T_agg), not melting temperatures, so thermostability_tm_c is left blank. Heterologous eGFP-TP loading did not produce a distinct shell architecture.",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Jones et al. 2023",
+  "source_url": "https://doi.org/10.1021/acs.biomac.2c01424",
+  "method": "cryo-EM; negative-stain TEM; \nDLS; SEC; static light scattering",
+  "structure_id": "8DN9;8DNA;8DNL",
+  "condition": "recombinant cargo-free WT AaEnc expressed in \nE. coli BL21(DE3); purified assembled shell; cryo-EM at pH 7.5 (closed and open five-fold pore classes) and pH 3.0 (closed five-fold pore state); biophysical pH-stability characterization across acidic to neutral conditions",
+  "used_in_databank": true,
+  "notes": "assemblies.assembly_id=K7RV67_ref",
+  "source_doi": "10.1021/acs.biomac.2c01424"
+}

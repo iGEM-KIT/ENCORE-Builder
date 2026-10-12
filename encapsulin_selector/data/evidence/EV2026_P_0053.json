@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_P_0053",
+  "candidate_id": "Q1D6H4",
+  "field_name": "pore_record",
+  "value_text": "construct=EncA; variant_status=wild_type; pore_type=3fold; pore_state=open; pore_diameter_nm=0.36; diameter_basis=reported_diameter; dynamic_status=single_state_observed; charge_exterior=positive; charge_interior=negative; condition=recombinant empty T=3 shell expressed in E. coli",
+  "value_numeric": 0.36,
+  "unit": "nm",
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Eren et al. 2022; Kwon et al. 2024",
+  "source_url": null,
+  "method": "cryo-EM; structural/electrostatic analysis;\n atomic-model pore measurement",
+  "structure_id": "7S20",
+  "condition": "recombinant empty T=3 shell expressed in E. coli",
+  "used_in_databank": true,
+  "notes": "pores.pore_record_id=Q1D6H4_p3; assembly_id=Q1D6H4_T3",
+  "source_doi": "10.1016/j.str.2022.01.008; 10.1021/acsnano.4c08186"
+}

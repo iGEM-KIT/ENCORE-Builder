@@ -29,5 +29,6 @@
   "evidence_record_count": 0,
   "curation_source": "UniProt A0ABT5CZW5",
   "curator_notes": "Unreviewed predicted Family 1 shell. UniProt protein existence is inferred from homology. No direct characterization identified; the species has been transferred to Allostigmatella ashevillensis while UniProt retains Stigmatella ashevillensis.",
-  "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info"
+  "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
+  "curation_source_doi": null
 }

@@ -1,0 +1,21 @@
+{
+  "pore_record_id": "Q1D6H4_p5",
+  "candidate_id": "Q1D6H4",
+  "assembly_id": "Q1D6H4_T3",
+  "construct": "EncA",
+  "variant_status": "wild_type",
+  "pore_type": "5fold",
+  "pore_state": "open",
+  "pore_diameter_nm": 0.64,
+  "diameter_basis": "reported_diameter",
+  "dynamic_status": "demonstrated",
+  "charge_exterior": "negative",
+  "charge_interior": "neutral",
+  "pH": null,
+  "condition": "recombinant empty T=3 shell expressed in E. coli",
+  "method": "cryo-EM / structural study; electrostatic analysis;\n atomic-model pore measurement",
+  "structure_id": "7S20",
+  "source": "Eren et al. 2022; Kwon et al. 2024",
+  "source_doi": "10.1016/j.str.2022.01.008; 10.1021/acsnano.4c08186",
+  "notes": null
+}

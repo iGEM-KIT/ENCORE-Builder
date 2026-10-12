@@ -1,0 +1,21 @@
+{
+  "pore_record_id": "A0A0F5HPP7_p3",
+  "candidate_id": "A0A0F5HPP7",
+  "assembly_id": "A0A0F5HPP7_ref",
+  "construct": "Enc",
+  "variant_status": "wild_type",
+  "pore_type": "3fold",
+  "pore_state": "open",
+  "pore_diameter_nm": 0.72,
+  "diameter_basis": "narrowest_point",
+  "dynamic_status": "single_state_observed",
+  "charge_exterior": "negative",
+  "charge_interior": "negative",
+  "pH": null,
+  "condition": "recombinant WT IMEF cargo-loaded compartment expressed in E. coli",
+  "method": "cryo-EM; structural/electrostatic analysis",
+  "structure_id": "6NJ8",
+  "source": "Giessen et al. 2019",
+  "source_doi": "10.7554/eLife.46070",
+  "notes": "Largest shell channel; additional central density may represent ions/water or symmetry averaging."
+}

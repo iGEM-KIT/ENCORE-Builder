@@ -26,8 +26,9 @@
   "source_emdb": null,
   "pdb_count": null,
   "pore_record_count": 0,
-  "evidence_record_count": 4,
-  "curation_source": "PMC8049743 (MAP2121c/SrpI homolog study)",
+  "evidence_record_count": 1,
+  "curation_source": "Nichols et al. 2021 eLife (PMC8049743; MAP2121c/SrpI homolog study)",
   "curator_notes": "MAP2121c is a pathogenic-mycobacterial SrpI homolog previously studied as a highly antigenic protein and directly associates with MAP2120c cysteine desulfurase. Legacy structural values derive from the SrpI homolog system.",
-  "missing_fields_for_curation": "T_number;shell_diameter;pore_data"
+  "missing_fields_for_curation": "T_number;shell_diameter;pore_data",
+  "curation_source_doi": "10.7554/eLife.59288"
 }

@@ -29,5 +29,6 @@
   "evidence_record_count": 1,
   "curation_source": "UniProt A0A502IA18; GenBank WP_113757162.1; Babar et al. 2023",
   "curator_notes": "Curator-selected replacement for A0A075R6D8. This accession corresponds to the experimentally investigated ~30 kDa putative encapsulating protein from Brevibacillus laterosporus Bl 1821L. Purified preparations showed globular/capsid-like structures by TEM; no quantitative shell metrics were curated.",
-  "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info"
+  "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
+  "curation_source_doi": "10.1007/s00253-023-12563-8"
 }

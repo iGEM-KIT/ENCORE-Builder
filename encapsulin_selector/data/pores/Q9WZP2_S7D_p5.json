@@ -1,0 +1,21 @@
+{
+  "pore_record_id": "Q9WZP2_S7D_p5",
+  "candidate_id": "Q9WZP2",
+  "assembly_id": "Q9WZP2_S7D_T1",
+  "construct": "S7D pore variant",
+  "variant_status": "engineered",
+  "pore_type": "5fold",
+  "pore_state": "open",
+  "pore_diameter_nm": 1.01,
+  "diameter_basis": "narrowest_point",
+  "dynamic_status": "single_state_observed",
+  "charge_exterior": "negative",
+  "charge_interior": "not_reported",
+  "pH": null,
+  "condition": "recombinant cargo-free pore-engineered shell expressed in E. coli",
+  "method": "cryo-EM; HOLE pore analysis; \nAPBS electrostatic analysis",
+  "structure_id": "7LII",
+  "source": "Adamson et al. 2022",
+  "source_doi": "10.1126/sciadv.abl7346",
+  "notes": "HOLE minimum: 10.1 Å. Negative exterior entrance; pore channel partially neutralized."
+}

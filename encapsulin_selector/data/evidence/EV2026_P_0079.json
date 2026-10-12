@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_P_0079",
+  "candidate_id": "I6WZG6",
+  "field_name": "pore_record",
+  "value_text": "construct=Enc; variant_status=wild_type; pore_type=5fold; pore_state=open; pore_diameter_nm=0.36; diameter_basis=narrowest_point; dynamic_status=demonstrated; condition=recombinant DyP-loaded WT T=1 shell expressed in E. coli; curated_notes=Five-fold major pore; CAVER bottleneck diameter 3.6 Å. Only slightly open and substantially less open than the corresponding pore in \ncryo-EM Mtb-Enc structures. Electrostatics are pH-dependent: exterior positive at pH 4.5 and strongly negative at neutral pH; interior neutral-to-slightly negative at pH 4.5 and negative-to-neutral at neutral pH.",
+  "value_numeric": 0.36,
+  "unit": "nm",
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Cuthbert et al. 2024",
+  "source_url": "https://doi.org/10.3390/microorganisms12122465",
+  "method": "X-ray crystallography; CAVER pore analysis; \nAPBS electrostatic analysis",
+  "structure_id": "9BKX",
+  "condition": "recombinant DyP-loaded WT T=1 shell expressed in E. coli",
+  "used_in_databank": true,
+  "notes": "pores.pore_record_id=I6WZG6_DyP_9BKX_p5; assembly_id=I6WZG6_T1_DyP_loaded",
+  "source_doi": "10.3390/microorganisms12122465"
+}

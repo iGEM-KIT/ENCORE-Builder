@@ -1,6 +1,6 @@
 {
-  "sequence_link_id": "A0A938BNS5_seq1",
   "candidate_id": "A0A938BNS5",
+  "sequence_link_id": "A0A938BNS5_seq1",
   "protein_accession": null,
   "nucleotide_accession": null,
   "cds_start": null,
@@ -9,6 +9,6 @@
   "cds_length_nt": 0,
   "source_nucleotide": null,
   "source_database": null,
-  "notes": "UniProtKB entry removed; sequence retained in UniParc as  UPI001D8A3635. No nucleotide record has yet been unambiguously recovered.",
+  "notes": "UniProtKB entry removed; sequence retained in UniParc as\n UPI001D8A3635. No nucleotide record has yet been unambiguously recovered.",
   "genomic_sequence": null
 }

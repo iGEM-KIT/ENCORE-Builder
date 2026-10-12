@@ -1,0 +1,21 @@
+{
+  "pore_record_id": "D0LZ74_p5_narrow",
+  "candidate_id": "D0LZ74",
+  "assembly_id": "D0LZ74_ref",
+  "construct": "Enc:EncFtn",
+  "variant_status": "wild_type",
+  "pore_type": "5fold",
+  "pore_state": "open",
+  "pore_diameter_nm": 0.5,
+  "diameter_basis": "reported_diameter",
+  "dynamic_status": "demonstrated",
+  "charge_exterior": "negative",
+  "charge_interior": "positive",
+  "pH": null,
+  "condition": "recombinant EncFtn-loaded WT shell expressed in E. coli",
+  "method": "cryo-EM; focused 3D classification/refinement",
+  "structure_id": "7OE2",
+  "source": "Ross et al. 2022",
+  "source_doi": "10.1126/sciadv.abj4461",
+  "notes": "Narrow conformation, termed \"closed\" by Ross et al.; a ~5 Å aperture remains."
+}

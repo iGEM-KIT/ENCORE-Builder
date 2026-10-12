@@ -16,5 +16,6 @@
   "method": "negative-stain TEM",
   "structure_id": null,
   "source": "Ross et al. 2022",
-  "notes": "Recombinant cargo-free WT Empty-Enc formed homogeneous regular nanocompartments with an average diameter of approximately 21 nm, indistinguishable in overall size from the EncFtn-loaded particles. No separate high-resolution cryo-EM/PDB structure was reported for the empty sample. The T=1, 60-subunit icosahedral assignment is inherited from the structurally resolved WT Loaded-Enc shell and the matching shell morphology; it was not independently established by subunit counting in the Empty-Enc TEM sample."
+  "notes": "Recombinant cargo-free WT Empty-Enc formed homogeneous regular nanocompartments with an average diameter of approximately 21 nm, indistinguishable in overall size from the EncFtn-loaded particles. No separate high-resolution cryo-EM/PDB structure was reported for the empty sample. The T=1, 60-subunit icosahedral assignment is inherited from the structurally resolved WT Loaded-Enc shell and the matching shell morphology; it was not independently established by subunit counting in the Empty-Enc TEM sample.",
+  "source_doi": "10.1126/sciadv.abj4461"
 }

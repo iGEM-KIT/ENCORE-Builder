@@ -26,8 +26,9 @@
   "source_emdb": null,
   "pdb_count": null,
   "pore_record_count": 0,
-  "evidence_record_count": 5,
+  "evidence_record_count": 3,
   "curation_source": "UniProt Q1Q6L7; Giessen & Silver 2017; Tracey et al. 2026",
-  "curator_notes": "Reviewed experimentally characterized Type 1 encapsulin from Kuenenia stuttgartiensis. Unusual N-terminal diheme-cytochrome-encapsulin fusion; full-length cEnc forms ~33 nm capsids and NIR-domain loading was demonstrated. A construct lacking the cytochrome domain forms ~29 nm capsids.",
-  "missing_fields_for_curation": "pore_data"
+  "curator_notes": "Reviewed experimentally characterized Type 1 encapsulin from Kuenenia stuttgartiensis. Unusual N-terminal diheme-cytochrome–encapsulin fusion; full-length cEnc forms ~33 nm capsids and NIR-domain loading was demonstrated. A construct lacking the cytochrome domain forms ~29 nm capsids.",
+  "missing_fields_for_curation": "pore_data",
+  "curation_source_doi": "10.1038/nmicrobiol.2017.29"
 }

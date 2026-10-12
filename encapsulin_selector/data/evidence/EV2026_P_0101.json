@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_P_0101",
+  "candidate_id": "A0R4H0",
+  "field_name": "pore_record",
+  "value_text": "construct=CFP-29 shell; variant_status=wild_type; pore_type=5fold; pore_state=open; pore_diameter_nm=0.462; diameter_basis=reported_diameter; dynamic_status=demonstrated; charge_exterior=not_reported; charge_interior=not_reported; condition=recombinant WT shell loaded with engineered tdNfsB in E. coli; curated_notes=Paper-defined closed conformation retains a 4.62 Å aperture; His188 loop displacement.",
+  "value_numeric": 0.462,
+  "unit": "nm",
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Zmyslia et al. 2025",
+  "source_url": "https://doi.org/10.1039/D4CB00127C",
+  "method": "cryo-EM; local refinement; MoleOnline",
+  "structure_id": "9FN9",
+  "condition": "recombinant WT shell loaded with engineered tdNfsB in E. coli",
+  "used_in_databank": true,
+  "notes": "pores.pore_record_id=A0R4H0_tdNfsB_p5_narrow; assembly_id=A0R4H0_ref",
+  "source_doi": "10.1039/D4CB00127C"
+}

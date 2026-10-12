@@ -29,5 +29,6 @@
   "evidence_record_count": 0,
   "curation_source": "UniProt A0A077LYF1; InterPro PIRSF019254",
   "curator_notes": "Unreviewed predicted Type 1 shell from Nostocoides japonicum T1-X7. InterPro/PIRSF019254 also classifies it as a Type 1 shell. Formerly classified as Tetrasphaera japonica.",
-  "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info"
+  "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
+  "curation_source_doi": null
 }

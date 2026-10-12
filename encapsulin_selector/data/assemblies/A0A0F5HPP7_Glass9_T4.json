@@ -16,5 +16,6 @@
   "method": "cryo-EM; SEC",
   "structure_id": "9ZVV",
   "source": "Siddiquee et al. 2026 (bioRxiv preprint)",
-  "notes": "Directed-evolution-derived homomeric pore-deletion variant with a 9-residue deletion. Glass9 retains the canonical T=4 240-mer architecture but exhibits substantially enlarged pores: approximately 21 Å at pentameric vertices and elongated approximately 12 × 35 Å openings at hexameric vertices. Cryo-EM structure PDB 9ZVV / EMD-74892 was determined at 2.40 Å."
+  "notes": "Directed-evolution-derived homomeric pore-deletion variant with a 9-residue deletion. Glass9 retains the canonical T=4 240-mer architecture but exhibits substantially enlarged pores: approximately 21 Å at pentameric vertices and elongated approximately 12 × 35 Å openings at hexameric vertices. Cryo-EM structure PDB 9ZVV / EMD-74892 was determined at 2.40 Å.",
+  "source_doi": "10.64898/2026.01.12.698938"
 }

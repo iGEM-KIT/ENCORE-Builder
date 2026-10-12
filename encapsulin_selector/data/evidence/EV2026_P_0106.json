@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_P_0106",
+  "candidate_id": "A0AAT8XUH9",
+  "field_name": "pore_record",
+  "value_text": "construct=KpEnc shell; variant_status=wild_type; pore_type=3fold; pore_state=open; pore_diameter_nm=0.3; diameter_basis=reported_diameter; dynamic_status=single_state_observed; charge_exterior=not_reported; charge_interior=not_reported; pH=7.5; condition=recombinant WT KpEnc coexpressed with cognate KpDyP in E. coli BL21(DE3);\n DyP-loaded",
+  "value_numeric": 0.3,
+  "unit": "nm",
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Jones et al. 2024",
+  "source_url": "https://doi.org/10.1038/s41467-024-46880-x",
+  "method": "cryo-EM; structural analysis",
+  "structure_id": "8U50",
+  "condition": "recombinant WT KpEnc coexpressed with cognate KpDyP in E. coli BL21(DE3);\n DyP-loaded",
+  "used_in_databank": true,
+  "notes": "pores.pore_record_id=A0AAT8XUH9_p3; assembly_id=A0AAT8XUH9_ref",
+  "source_doi": "10.1038/s41467-024-46880-x"
+}

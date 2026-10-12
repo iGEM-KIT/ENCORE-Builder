@@ -29,5 +29,6 @@
   "evidence_record_count": 0,
   "curation_source": "UniProt A0ABY8J3I8",
   "curator_notes": "Unreviewed predicted Type 1 shell (locus P9989_19335) from Halobacillus naozhouensis. No direct characterization identified; host salt tolerance was not assigned as shell stability.",
-  "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info"
+  "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
+  "curation_source_doi": null
 }

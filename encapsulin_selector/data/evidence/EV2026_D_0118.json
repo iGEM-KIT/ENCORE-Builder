@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_D_0118",
+  "candidate_id": "A0R4H0",
+  "field_name": "loading_info",
+  "value_text": "Cargo: DyP (dye-decolorizing peroxidase); CFP-29 shell; oxidative stress. Mechanism: cargo C-terminal TP.",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": null,
+  "source_url": null,
+  "method": null,
+  "structure_id": null,
+  "condition": null,
+  "used_in_databank": true,
+  "notes": "databank.candidate_id=A0R4H0",
+  "source_doi": null
+}

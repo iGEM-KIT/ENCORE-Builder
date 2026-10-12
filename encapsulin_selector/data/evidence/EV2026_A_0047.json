@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_A_0047",
+  "candidate_id": "Q0SE23",
+  "field_name": "assembly_observation",
+  "value_text": "construct=R. jostii RHA1 shell; variant_status=wild_type; assembly_symmetry=icosahedral; T_number=1; T_number_basis=other_supported_inference; shell_subunit_count=60; shell_diameter_nm=22; curated_notes=Canonical experimentally assembled WT R. jostii RHA1 encapsulin. Rahmanpour & Bugg 2013 reported a high-Mr particle\n (~1.8 MDa by calibrated gel filtration) and a ~22 nm DLS particle size. The paper inconsistently refers to the DLS value as radius and diameter; because it directly compares 22 nm with the 24 nm diameter of T. maritima, 22 nm is retained here as the reported particle diameter with this ambiguity noted. Jones & Giessen 2021 classify the R. jostii shell as a 60-subunit T=1 encapsulin; icosahedral symmetry, T=1 and 60 subunits are therefore recorded as supported inferences rather than direct structural measurements. Acid-induced disassembly and neutral-pH reassembly produced a ~31 nm DLS particle, but this was not structurally characterized as a distinct expanded assembly.",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Rahmanpour & Bugg 2013; Jones & Giessen 2021",
+  "source_url": null,
+  "method": "DLS; native PAGE; size-exclusion chromatography",
+  "structure_id": null,
+  "condition": "recombinant WT encapsulin overexpressed in \nR. jostii RHA1 Δencapsulin/pTipQC2; purified assembled encapsulin-only preparation",
+  "used_in_databank": true,
+  "notes": "assemblies.assembly_id=Q0SE23_ref",
+  "source_doi": "10.1111/febs.12234; 10.1002/bit.27564"
+}

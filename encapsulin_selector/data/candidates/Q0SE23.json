@@ -29,5 +29,6 @@
   "evidence_record_count": 3,
   "curation_source": "UniProt/UniParc Q0SE23; Rahmanpour & Bugg 2013",
   "curator_notes": "Experimentally characterized Type 1 shell from Rhodococcus jostii RHA1 (RHA1_ro02408). Q0SE23 is obsolete in UniProtKB and retained in UniParc UPI0000DBA11E. Native shells were ~22 nm by DLS; DypB loading and pH-dependent disassembly/reassembly were reported.",
-  "missing_fields_for_curation": "T_number;pore_data"
+  "missing_fields_for_curation": "T_number;pore_data",
+  "curation_source_doi": "10.1111/febs.12234"
 }

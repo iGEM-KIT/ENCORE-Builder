@@ -29,5 +29,6 @@
   "evidence_record_count": 2,
   "curation_source": "PDB 9FY6 (deposited); thesis / subsequent BmEnc characterization",
   "curator_notes": "BmEnc is reported as T=4. No quantitative shell diameter or pore dimension was curated in the source row. CLP-mediated cargo loading has been investigated.",
-  "missing_fields_for_curation": "shell_diameter;pore_data"
+  "missing_fields_for_curation": "shell_diameter;pore_data",
+  "curation_source_doi": null
 }

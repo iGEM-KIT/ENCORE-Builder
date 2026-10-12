@@ -9,12 +9,13 @@
   "shell_subunit_count": 60,
   "shell_diameter_nm": 22,
   "inner_diameter_nm": null,
-  "wall_thickness_nm": "2.5",
+  "wall_thickness_nm": 2.5,
   "inner_volume_A3": null,
   "thermostability_tm_c": null,
   "condition": "recombinant cargo-free C-terminal His-tagged \nMt-Enc expressed in E. coli",
   "method": "EM",
   "structure_id": null,
   "source": "Contreras et al. 2014",
-  "notes": "Recombinant C-terminally His-tagged Mt-Enc formed shell-like nanoparticles approximately 22 nm in diameter with an \napproximately 2.5 nm shell thickness, both measured from EM images using ImageJ by Contreras et al. 2014. Based on the similarity to the known T. maritima 60-subunit icosahedral encapsulin, the authors proposed that Mt-Enc also forms a 60-subunit icosahedral shell. T=1 is therefore inferred from the proposed icosahedral 60-mer architecture rather than directly reported for this construct."
+  "notes": "Recombinant C-terminally His-tagged Mt-Enc formed shell-like nanoparticles approximately 22 nm in diameter with an \napproximately 2.5 nm shell thickness, both measured from EM images using ImageJ by Contreras et al. 2014. Based on the similarity to the known T. maritima 60-subunit icosahedral encapsulin, the authors proposed that Mt-Enc also forms a 60-subunit icosahedral shell. T=1 is therefore inferred from the proposed icosahedral 60-mer architecture rather than directly reported for this construct.",
+  "source_doi": "10.1074/jbc.M114.570119"
 }

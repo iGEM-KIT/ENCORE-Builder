@@ -16,5 +16,6 @@
   "method": "cryo-EM; negative-stain TEM; biophysical characterization",
   "structure_id": "7LIJ",
   "source": "Adamson et al. 2022",
-  "notes": "Engineered pore point mutant. Intact T=1 shell retained. Fivefold pore diameter ~4.0 Å was calculated from the cryo-EM structure, not directly measured. Shell diameter of 24 nm observed by negative-stain TEM."
+  "notes": "Engineered pore point mutant. Intact T=1 shell retained. Fivefold pore diameter ~4.0 Å was calculated from the cryo-EM structure, not directly measured. Shell diameter of 24 nm observed by negative-stain TEM.",
+  "source_doi": "10.1126/sciadv.abl7346"
 }

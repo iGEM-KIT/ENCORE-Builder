@@ -16,5 +16,6 @@
   "method": "cryo-EM; negative-stain TEM; biophysical characterization",
   "structure_id": "6WKV;7LIT",
   "source": "Williams et al. 2018; Adamson et al. 2022",
-  "notes": "Complete pore-loop deletion/enlarged-pore variant. 6WKV and 7LIT represent the same S7G design and are therefore grouped. Williams et al. estimated an ~11 Å pore; Adamson et al. later calculated ~11.3 Å from the higher-resolution structure. Shell diameter of 24 nm observed by negative-stain TEM."
+  "notes": "Complete pore-loop deletion/enlarged-pore variant. 6WKV and 7LIT represent the same S7G design and are therefore grouped. Williams et al. estimated an ~11 Å pore; Adamson et al. later calculated ~11.3 Å from the higher-resolution structure. Shell diameter of 24 nm observed by negative-stain TEM.",
+  "source_doi": "10.1021/acssynbio.8b00295; 10.1126/sciadv.abl7346"
 }

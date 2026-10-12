@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_P_0065",
+  "candidate_id": "Q9WZP2",
+  "field_name": "pore_record",
+  "value_text": "construct=S1K pore variant; variant_status=engineered; pore_type=5fold; pore_state=open; pore_diameter_nm=0.4; diameter_basis=narrowest_point; dynamic_status=single_state_observed; charge_exterior=positive; charge_interior=positive; condition=recombinant cargo-free pore-engineered shell expressed in E. coli; curated_notes=HOLE minimum: 4.0 Å. Positive exterior and interior; Y191 forms the narrowest region.",
+  "value_numeric": 0.4,
+  "unit": "nm",
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Adamson et al. 2022",
+  "source_url": "https://doi.org/10.1126/sciadv.abl7346",
+  "method": "cryo-EM; HOLE pore analysis; \nAPBS electrostatic analysis",
+  "structure_id": "7LIJ",
+  "condition": "recombinant cargo-free pore-engineered shell expressed in E. coli",
+  "used_in_databank": true,
+  "notes": "pores.pore_record_id=Q9WZP2_S1K_p5; assembly_id=Q9WZP2_S1K_T1",
+  "source_doi": "10.1126/sciadv.abl7346"
+}

@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_A_0051",
+  "candidate_id": "A0A502IA18",
+  "field_name": "assembly_observation",
+  "value_text": "construct=purified putative encapsulating protein; variant_status=wild_type; curated_notes=Experimentally observed putative WT encapsulin assembly from B. laterosporus Bl 1821L. Babar et al. 2023 identified the \n~30 kDa purified preparation as consistent with A0A502IA18/WP_113757162 and observed predominantly globular or hexagonal capsid-like particles by TEM; related preparations had already shown encapsulin-like particles in Babar et al. 2022. Sequence analysis supports classification as a family 1 encapsulin shell protein. No quantitative particle diameter, T-number, shell subunit count or high-resolution shell structure was determined, so these fields are left blank. N-terminal analysis indicated possible co-migration with an adjacent ~25 kDa hypothetical protein.",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Babar et al. 2022; Babar et al. 2023",
+  "source_url": null,
+  "method": "TEM; SDS-PAGE; N-terminal sequencing",
+  "structure_id": null,
+  "condition": "native putative encapsulin purified from mitomycin \nC-induced Brevibacillus laterosporus Bl 1821L culture; sucrose-gradient/MWCO-enriched ~30 kDa preparation; capsid-like particles observed by TEM",
+  "used_in_databank": true,
+  "notes": "assemblies.assembly_id=A0A502IA18_exp",
+  "source_doi": "10.3390/pr10101932; 10.1007/s00253-023-12563-8"
+}

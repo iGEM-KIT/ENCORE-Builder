@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_P_0066",
+  "candidate_id": "Q9WZP2",
+  "field_name": "pore_record",
+  "value_text": "construct=S3E pore variant; variant_status=engineered; pore_type=5fold; pore_state=open; pore_diameter_nm=0.55; diameter_basis=narrowest_point; dynamic_status=single_state_observed; charge_exterior=negative; charge_interior=negative; condition=recombinant cargo-free pore-engineered shell expressed in E. coli; curated_notes=HOLE minimum: 5.5 Å. Strongly negative pore channel and both entrances.",
+  "value_numeric": 0.55,
+  "unit": "nm",
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Adamson et al. 2022",
+  "source_url": "https://doi.org/10.1126/sciadv.abl7346",
+  "method": "cryo-EM; HOLE pore analysis; \nAPBS electrostatic analysis",
+  "structure_id": "7LIL",
+  "condition": "recombinant cargo-free pore-engineered shell expressed in E. coli",
+  "used_in_databank": true,
+  "notes": "pores.pore_record_id=Q9WZP2_S3E_p5; assembly_id=Q9WZP2_S3E_T1",
+  "source_doi": "10.1126/sciadv.abl7346"
+}

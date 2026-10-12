@@ -1,0 +1,370 @@
+[
+  {
+    "citation_label": "Jones et al. 2021",
+    "article_title": "Triggered Reversible Disassembly of an Engineered Protein Nanocage",
+    "doi": "10.1002/anie.202110318",
+    "doi_url": "https://doi.org/10.1002/anie.202110318",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 1
+  },
+  {
+    "citation_label": "Tamura et al. 2015",
+    "article_title": "Packaging guest proteins into the encapsulin nanocompartment from Rhodococcus erythropolis N771",
+    "doi": "10.1002/bit.25322",
+    "doi_url": "https://doi.org/10.1002/bit.25322",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 1
+  },
+  {
+    "citation_label": "Jones & Giessen 2021",
+    "article_title": "Advances in encapsulin nanocompartment biology and engineering",
+    "doi": "10.1002/bit.27564",
+    "doi_url": "https://doi.org/10.1002/bit.27564",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 2
+  },
+  {
+    "citation_label": "Giessen 2024",
+    "article_title": "The Structural Diversity of Encapsulin Protein Shells",
+    "doi": "10.1002/cbic.202400535",
+    "doi_url": "https://doi.org/10.1002/cbic.202400535",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 2
+  },
+  {
+    "citation_label": "Kumamoto et al. 2024",
+    "article_title": "Structural Investigations of Cargo Molecules Inside Icosahedrally Symmetric Encapsulin by VUVCD Spectroscopic Measurements",
+    "doi": "10.1002/chir.23700",
+    "doi_url": "https://doi.org/10.1002/chir.23700",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 1
+  },
+  {
+    "citation_label": "Yadav & Beck 2026",
+    "article_title": "Buffer and salt dependent reassembly pathways of Myxococcus xanthus encapsulin",
+    "doi": "10.1002/pro.70756",
+    "doi_url": "https://doi.org/10.1002/pro.70756",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 1
+  },
+  {
+    "citation_label": "Babar et al. 2023",
+    "article_title": "Linocin M18 protein from the insect pathogenic bacterium Brevibacillus laterosporus isolates",
+    "doi": "10.1007/s00253-023-12563-8",
+    "doi_url": "https://doi.org/10.1007/s00253-023-12563-8",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 2
+  },
+  {
+    "citation_label": "Lončar et al. 2020",
+    "article_title": "Structure of a robust bacterial protein cage and its application as a versatile biocatalytic platform through enzyme encapsulation",
+    "doi": "10.1016/j.bbrc.2020.06.059",
+    "doi_url": "https://doi.org/10.1016/j.bbrc.2020.06.059",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 5
+  },
+  {
+    "citation_label": "Akita et al. 2007",
+    "article_title": "The crystal structure of a virus-like particle from the hyperthermophilic archaeon Pyrococcus furiosus provides insight into the evolution of viruses",
+    "doi": "10.1016/j.jmb.2007.02.075",
+    "doi_url": "https://doi.org/10.1016/j.jmb.2007.02.075",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 3
+  },
+  {
+    "citation_label": "Kwon et al. 2023",
+    "article_title": "Structure and heterogeneity of a highly cargo-loaded encapsulin shell",
+    "doi": "10.1016/j.jsb.2023.108022",
+    "doi_url": "https://doi.org/10.1016/j.jsb.2023.108022",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 4
+  },
+  {
+    "citation_label": "McIver et al. 2026",
+    "article_title": "Single particle cryo-EM analysis of the Rhodospirillum rubrum encapsulin nanocompartment shows variable loading of encapsulated ferritin cargo proteins and differences in the fivefold pore",
+    "doi": "10.1016/j.jsb.2026.108357",
+    "doi_url": "https://doi.org/10.1016/j.jsb.2026.108357",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 4
+  },
+  {
+    "citation_label": "Eren et al. 2022",
+    "article_title": "Structural Characterization of the Myxococcus xanthus Encapsulin and Ferritin-Like Cargo System Gives Insight into its Iron Storage Mechanism",
+    "doi": "10.1016/j.str.2022.01.008",
+    "doi_url": "https://doi.org/10.1016/j.str.2022.01.008",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 6
+  },
+  {
+    "citation_label": "Jones et al. 2023",
+    "article_title": "Exploring the Extreme Acid Tolerance of a Dynamic Protein Nanocage",
+    "doi": "10.1021/acs.biomac.2c01424",
+    "doi_url": "https://doi.org/10.1021/acs.biomac.2c01424",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 4
+  },
+  {
+    "citation_label": "Snijder et al. 2016",
+    "article_title": "Assembly and Mechanical Properties of the Cargo-Free and Cargo-Loaded Bacterial Nanocompartment Encapsulin",
+    "doi": "10.1021/acs.biomac.6b00469",
+    "doi_url": "https://doi.org/10.1021/acs.biomac.6b00469",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 2
+  },
+  {
+    "citation_label": "Van de Steen et al. 2024",
+    "article_title": "Encapsulation of Transketolase into In Vitro-Assembled Protein Nanocompartments Improves Thermal Stability",
+    "doi": "10.1021/acsabm.3c01153",
+    "doi_url": "https://doi.org/10.1021/acsabm.3c01153",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 1
+  },
+  {
+    "citation_label": "Kwon et al. 2024",
+    "article_title": "Pore Engineering as a General Strategy to Improve Protein-Based Enzyme Nanoreactor Performance",
+    "doi": "10.1021/acsnano.4c08186",
+    "doi_url": "https://doi.org/10.1021/acsnano.4c08186",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 9
+  },
+  {
+    "citation_label": "Putri et al. 2017",
+    "article_title": "Structural Characterization of Native and Modified Encapsulins as Nanoplatforms for in Vitro Catalysis and Cellular Uptake",
+    "doi": "10.1021/acsnano.7b07669",
+    "doi_url": "https://doi.org/10.1021/acsnano.7b07669",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 4
+  },
+  {
+    "citation_label": "Sigmund et al. 2019",
+    "article_title": "Iron-Sequestering Nanocompartments as Multiplexed Electron Microscopy Gene Reporters",
+    "doi": "10.1021/acsnano.9b03140",
+    "doi_url": "https://doi.org/10.1021/acsnano.9b03140",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 1
+  },
+  {
+    "citation_label": "Williams et al. 2018",
+    "article_title": "Pore Engineering for Enhanced Mass Transport in Encapsulin Nanocompartments",
+    "doi": "10.1021/acssynbio.8b00295",
+    "doi_url": "https://doi.org/10.1021/acssynbio.8b00295",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 1
+  },
+  {
+    "citation_label": "Giessen & Silver 2017",
+    "article_title": "Widespread distribution of encapsulin nanocompartments reveals functional diversity",
+    "doi": "10.1038/nmicrobiol.2017.29",
+    "doi_url": "https://doi.org/10.1038/nmicrobiol.2017.29",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 3
+  },
+  {
+    "citation_label": "Sutter et al. 2008",
+    "article_title": "Structural basis of enzyme encapsulation into a bacterial nanocompartment",
+    "doi": "10.1038/nsmb.1473",
+    "doi_url": "https://doi.org/10.1038/nsmb.1473",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 3
+  },
+  {
+    "citation_label": "Jones, Andreas & Giessen 2024",
+    "article_title": "Structural basis for peroxidase encapsulation inside the encapsulin from the Gram-negative pathogen Klebsiella pneumoniae",
+    "doi": "10.1038/s41467-024-46880-x",
+    "doi_url": "https://doi.org/10.1038/s41467-024-46880-x",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 4
+  },
+  {
+    "citation_label": "Kwon et al. 2026",
+    "article_title": "A permeable protein nanocage enables facile cargo loading and cytosolic protein delivery",
+    "doi": "10.1038/s41467-026-76849-x",
+    "doi_url": "https://doi.org/10.1038/s41467-026-76849-x",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 1
+  },
+  {
+    "citation_label": "FLP/FMN: Sci Rep 2021",
+    "article_title": "The encapsulin from Thermotoga maritima is a flavoprotein with a symmetry matched ferritin-like cargo protein",
+    "doi": "10.1038/s41598-021-01932-w",
+    "doi_url": "https://doi.org/10.1038/s41598-021-01932-w",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 2
+  },
+  {
+    "citation_label": "Berger et al. 2025",
+    "article_title": "In situ and in vitro cryo-EM reveal structures of mycobacterial encapsulin assembly intermediates",
+    "doi": "10.1038/s42003-025-07660-5",
+    "doi_url": "https://doi.org/10.1038/s42003-025-07660-5",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 8
+  },
+  {
+    "citation_label": "Zmyslia et al. 2025",
+    "article_title": "A nanoengineered tandem nitroreductase: designing a robust prodrug-activating nanoreactor",
+    "doi": "10.1039/D4CB00127C",
+    "doi_url": "https://doi.org/10.1039/D4CB00127C",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 2
+  },
+  {
+    "citation_label": "Pecanac et al. 2025",
+    "article_title": "Biocatalytic application and structural elucidation of robust bacterial protein nanocages",
+    "doi": "10.1039/D5MA00268K",
+    "doi_url": "https://doi.org/10.1039/D5MA00268K",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 6
+  },
+  {
+    "citation_label": "Tang et al. 2021",
+    "article_title": "Cryo-EM structure of Mycobacterium smegmatis DyP-loaded encapsulin",
+    "doi": "10.1073/pnas.2025658118",
+    "doi_url": "https://doi.org/10.1073/pnas.2025658118",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 3
+  },
+  {
+    "citation_label": "Szyszka et al. 2024",
+    "article_title": "Point mutation in a virus-like capsid drives symmetry reduction to form tetrahedral cages",
+    "doi": "10.1073/pnas.2321260121",
+    "doi_url": "https://doi.org/10.1073/pnas.2321260121",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 3
+  },
+  {
+    "citation_label": "Eren et al. 2024",
+    "article_title": "Myxococcus xanthus encapsulin cargo protein EncD is a flavin-binding protein with ferric reductase activity",
+    "doi": "10.1073/pnas.2400426121",
+    "doi_url": "https://doi.org/10.1073/pnas.2400426121",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 1
+  },
+  {
+    "citation_label": "Contreras et al. 2014",
+    "article_title": "Characterization of a Mycobacterium tuberculosis nanocompartment and its potential cargo proteins",
+    "doi": "10.1074/jbc.M114.570119",
+    "doi_url": "https://doi.org/10.1074/jbc.M114.570119",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 1
+  },
+  {
+    "citation_label": "Namba et al. 2005",
+    "article_title": "Expression and molecular characterization of spherical particles derived from the genome of the hyperthermophilic euryarchaeote Pyrococcus furiosus",
+    "doi": "10.1093/jb/mvi111",
+    "doi_url": "https://doi.org/10.1093/jb/mvi111",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 1
+  },
+  {
+    "citation_label": "Anuchina et al. 2025 bioRxiv",
+    "article_title": "Structural and Functional Characterization of Encapsulin-Targeted Double Ferritin Fold Ferroxidases",
+    "doi": "10.1101/2025.09.13.676036",
+    "doi_url": "https://doi.org/10.1101/2025.09.13.676036",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 1
+  },
+  {
+    "citation_label": "Wiryaman & Toor 2021",
+    "article_title": "Cryo-EM structure of a thermostable bacterial nanocompartment",
+    "doi": "10.1107/S2052252521001949",
+    "doi_url": "https://doi.org/10.1107/S2052252521001949",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 5
+  },
+  {
+    "citation_label": "Rahmanpour & Bugg 2013",
+    "article_title": "Assembly in vitro of Rhodococcus jostii RHA1 encapsulin and peroxidase DypB to form a nanocompartment",
+    "doi": "10.1111/febs.12234",
+    "doi_url": "https://doi.org/10.1111/febs.12234",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 4
+  },
+  {
+    "citation_label": "Ross et al. 2022",
+    "article_title": "Pore dynamics and asymmetric cargo loading in an encapsulin nanocompartment",
+    "doi": "10.1126/sciadv.abj4461",
+    "doi_url": "https://doi.org/10.1126/sciadv.abj4461",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 5
+  },
+  {
+    "citation_label": "Adamson et al. 2022",
+    "article_title": "Pore structure controls stability and molecular flux in engineered protein cages",
+    "doi": "10.1126/sciadv.abl7346",
+    "doi_url": "https://doi.org/10.1126/sciadv.abl7346",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 15
+  },
+  {
+    "citation_label": "Valdés-Stauber & Scherer 1994",
+    "article_title": "Isolation and characterization of Linocin M18, a bacteriocin produced by Brevibacterium linens",
+    "doi": "10.1128/AEM.60.10.3809-3814.1994",
+    "doi_url": "https://doi.org/10.1128/AEM.60.10.3809-3814.1994",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 1
+  },
+  {
+    "citation_label": "McHugh et al. 2014",
+    "article_title": "A virus capsid-like nanocompartment that stores iron and protects bacteria from oxidative stress",
+    "doi": "10.15252/embj.201488566",
+    "doi_url": "https://doi.org/10.15252/embj.201488566",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 3
+  },
+  {
+    "citation_label": "Cuthbert et al. 2024",
+    "article_title": "Structural Characterization of Mycobacterium tuberculosis Encapsulin in Complex with Dye-Decolorizing Peroxide",
+    "doi": "10.3390/microorganisms12122465",
+    "doi_url": "https://doi.org/10.3390/microorganisms12122465",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 8
+  },
+  {
+    "citation_label": "Babar et al. 2022",
+    "article_title": "Purification of High-Molecular-Weight Antibacterial Proteins of Insect Pathogenic Brevibacillus laterosporus Isolates",
+    "doi": "10.3390/pr10101932",
+    "doi_url": "https://doi.org/10.3390/pr10101932",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 1
+  },
+  {
+    "citation_label": "Siddiquee et al. 2026",
+    "article_title": "Directed evolution of multimeric proteins is enabled by dual-compensatory gene duplication",
+    "doi": "10.64898/2026.01.12.698938",
+    "doi_url": "https://doi.org/10.64898/2026.01.12.698938",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 3
+  },
+  {
+    "citation_label": "He et al. 2016",
+    "article_title": "Structural characterization of encapsulated ferritin provides insight into iron storage in bacterial nanocompartments",
+    "doi": "10.7554/eLife.18972",
+    "doi_url": "https://doi.org/10.7554/eLife.18972",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 3
+  },
+  {
+    "citation_label": "Giessen et al. 2019",
+    "article_title": "Large protein organelles form a new iron sequestration system with high storage capacity",
+    "doi": "10.7554/eLife.46070",
+    "doi_url": "https://doi.org/10.7554/eLife.46070",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 6
+  },
+  {
+    "citation_label": "Nichols/LaFrance et al. 2021",
+    "article_title": "Discovery and characterization of a novel family of prokaryotic nanocompartments involved in sulfur metabolism",
+    "doi": "10.7554/eLife.59288",
+    "doi_url": "https://doi.org/10.7554/eLife.59288",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 5
+  },
+  {
+    "citation_label": "TEM ~25 nm: eLife 2021",
+    "article_title": "A nanocompartment system contributes to defense against oxidative stress in Mycobacterium tuberculosis",
+    "doi": "10.7554/eLife.74358",
+    "doi_url": "https://doi.org/10.7554/eLife.74358",
+    "verification_scope": "publisher/primary metadata checked",
+    "linked_record_count": 2
+  }
+]

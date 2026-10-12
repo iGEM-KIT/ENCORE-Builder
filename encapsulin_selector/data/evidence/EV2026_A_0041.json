@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_A_0041",
+  "candidate_id": "A0R4H0",
+  "field_name": "assembly_observation",
+  "value_text": "construct=M. smegmatis CFP-29 shell; variant_status=wild_type; assembly_symmetry=icosahedral; T_number=1; T_number_basis=directly_reported; shell_subunit_count=60; shell_diameter_nm=24; wall_thickness_nm=2.5; curated_notes=Canonical native DyP-loaded WT T=1 assembly. Tang et al. 2021 isolated the endogenous CFP-29/DyP nanocompartment \nfrom M. smegmatis and directly reported a ~24 nm, ~2.5 nm-thick icosahedral shell composed of 60 CFP-29 subunits. The cargo is one dodecameric DyP complex (two hexamers) spanning the lumen. PDB 7BOJ / EMD-30130 represents the shell; PDB 7BOK / EMD-30131 represents the cargo and EMD-30132 the complete loaded particle, so 7BOK is not listed as a shell structure_id. Later tdNfsB-loaded shell structures 9FN9 / 9FNA retain the same global T=1 architecture and differ mainly in five-fold pore conformation, so they are not treated as separate assemblies. No distinct cargo-free WT assembly has been structurally characterized for this accession.",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Tang et al. 2021",
+  "source_url": "https://doi.org/10.1073/pnas.2025658118",
+  "method": "cryo-EM; mass spectrometry",
+  "structure_id": "7BOJ",
+  "condition": "native WT DyP-loaded encapsulin purified from \nM. smegmatis mc2 155; endogenous CFP-29 shell containing cognate DyP cargo",
+  "used_in_databank": true,
+  "notes": "assemblies.assembly_id=A0R4H0_ref",
+  "source_doi": "10.1073/pnas.2025658118"
+}

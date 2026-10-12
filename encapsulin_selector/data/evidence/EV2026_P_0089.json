@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_P_0089",
+  "candidate_id": "Q8U1L4",
+  "field_name": "pore_record",
+  "value_text": "construct=full-length ferritin-like–encapsulin \nfusion protein; variant_status=wild_type; pore_type=5fold; pore_state=open; pore_diameter_nm=0.5; diameter_basis=other; dynamic_status=single_state_observed; charge_exterior=not_reported; charge_interior=not_reported; condition=native WT full-length fusion particles purified from P. furiosus DSM 3638; curated_notes=Approximate pore diameter from later structural analysis of 2E0Z.",
+  "value_numeric": 0.5,
+  "unit": "nm",
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Akita et al. 2007; Giessen 2024",
+  "source_url": null,
+  "method": "X-ray crystallography; comparative structural \nanalysis",
+  "structure_id": "2E0Z",
+  "condition": "native WT full-length fusion particles purified from P. furiosus DSM 3638",
+  "used_in_databank": true,
+  "notes": "pores.pore_record_id=Q8U1L4_p5; assembly_id=Q8U1L4_ref",
+  "source_doi": "10.1016/j.jmb.2007.02.075; 10.1002/cbic.202400535"
+}

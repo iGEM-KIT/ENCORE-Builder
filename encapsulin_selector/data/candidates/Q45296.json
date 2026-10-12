@@ -25,9 +25,10 @@
   "source_pdb": "7BCV",
   "source_emdb": "EMD-12144",
   "pdb_count": 1,
-  "pore_record_count": 1,
+  "pore_record_count": 2,
   "evidence_record_count": 5,
   "curation_source": "Valdes-Stauber & Scherer 1994 AEM 60:3809-3814 (10.1128/AEM.60.10.3809-3814.1994); PDB 7BCV",
   "curator_notes": "First encapsulin historically described. T=1; shell diameter ~22.8 nm in the cited reconstruction. Legacy pore range 0.5-0.8 nm. Cargo identity for the exact strain should remain cautiously interpreted.",
-  "missing_fields_for_curation": null
+  "missing_fields_for_curation": null,
+  "curation_source_doi": "10.1128/AEM.60.10.3809-3814.1994"
 }

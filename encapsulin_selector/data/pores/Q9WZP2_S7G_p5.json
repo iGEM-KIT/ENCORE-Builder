@@ -1,0 +1,21 @@
+{
+  "pore_record_id": "Q9WZP2_S7G_p5",
+  "candidate_id": "Q9WZP2",
+  "assembly_id": "Q9WZP2_S7G_T1",
+  "construct": "S7G pore-loop deletion variant",
+  "variant_status": "engineered",
+  "pore_type": "5fold",
+  "pore_state": "open",
+  "pore_diameter_nm": 1.13,
+  "diameter_basis": "narrowest_point",
+  "dynamic_status": "single_state_observed",
+  "charge_exterior": "positive",
+  "charge_interior": "mixed",
+  "pH": null,
+  "condition": "recombinant cargo-free pore-engineered shell expressed in E. coli",
+  "method": "cryo-EM; HOLE pore analysis; \nAPBS electrostatic analysis",
+  "structure_id": "7LIT",
+  "source": "Adamson et al. 2022",
+  "source_doi": "10.1126/sciadv.abl7346",
+  "notes": "HOLE minimum: 11.3 Å. Highly positive exterior/channel; negative E199 and positive K195 contributions balance at the interior opening"
+}

@@ -16,5 +16,6 @@
   "method": "cryo-EM/structural study",
   "structure_id": "8TK7",
   "source": "Kwon et al. 2023",
-  "notes": "Highly cargo-loaded WT T=3 shell. SNAP-tag-TP occupancy was ~95%, corresponding to >170 occupied TP-binding sites\n out of 180. High cargo loading was also associated with distorted, expanded and fused shell particles."
+  "notes": "Highly cargo-loaded WT T=3 shell. SNAP-tag-TP occupancy was ~95%, corresponding to >170 occupied TP-binding sites\n out of 180. High cargo loading was also associated with distorted, expanded and fused shell particles.",
+  "source_doi": "10.1016/j.jsb.2023.108022"
 }

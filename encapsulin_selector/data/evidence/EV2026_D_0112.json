@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_D_0112",
+  "candidate_id": "D0LZ74",
+  "field_name": "loading_info",
+  "value_text": "Cargo: ferritin-like protein (EncFtn) - 4 decamers in tetrahedral arrangement (symmetry mismatch with shell). Mechanism: cargo C-terminal TP (GSLGIGSLR).",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": null,
+  "source_url": null,
+  "method": null,
+  "structure_id": null,
+  "condition": null,
+  "used_in_databank": true,
+  "notes": "databank.candidate_id=D0LZ74",
+  "source_doi": null
+}

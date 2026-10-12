@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_A_0044",
+  "candidate_id": "A0AAT8XUH9",
+  "field_name": "assembly_observation",
+  "value_text": "construct=K. pneumoniae encapsulin; variant_status=wild_type; assembly_symmetry=icosahedral; T_number=1; T_number_basis=directly_reported; shell_subunit_count=60; shell_diameter_nm=24; curated_notes=Canonical cognate DyP-loaded WT T=1 KpEnc assembly. Jones, Andreas & Giessen 2024 directly reported a 24 nm \nicosahedral shell composed of 60 KpEnc subunits. PDB 8U50 / EMD-41905 represents the WT shell coexpressed with cognate full-length KpDyP cargo, with an average loading of ~12 DyP monomers per shell; most cargo remained flexible and was not resolved in the icosahedrally averaged shell model. PDB 8U51 / EMD-41906 represents the same WT T=1 shell loaded with heterologous SUMO fused to the native DyP targeting peptide to increase targeting-peptide occupancy and resolve the TP-shell interaction; this engineered cargo-loading condition is not treated as a distinct assembly because the global shell architecture is unchanged. PDB 8U4Z / EMD-41904 represents isolated KpDyP cargo and is not a shell assembly.",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Jones, Andreas & Giessen 2024",
+  "source_url": "https://doi.org/10.1038/s41467-024-46880-x",
+  "method": "cryo-EM; negative-stain TEM; \nDLS; SEC",
+  "structure_id": "8U50;8U51",
+  "condition": "recombinant WT KpEnc coexpressed with cognate \nfull-length KpDyP cargo in E. coli BL21(DE3); DyP-loaded",
+  "used_in_databank": true,
+  "notes": "assemblies.assembly_id=A0AAT8XUH9_ref",
+  "source_doi": "10.1038/s41467-024-46880-x"
+}

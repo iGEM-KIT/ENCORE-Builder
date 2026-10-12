@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_A_0040",
+  "candidate_id": "A0A1G9WS71",
+  "field_name": "assembly_observation",
+  "value_text": "construct=N198W pore variant; variant_status=engineered; assembly_symmetry=icosahedral; T_number=4; T_number_basis=inferred_from_subunit_count; shell_subunit_count=240; curated_notes=Structurally characterized pore-engineered T=4 variant. PDB 9I8F / EMD-52716 is an icosahedral homo-240-mer resolved at \n3.6 Å; T=4 is inferred from the 240-subunit icosahedral architecture. N198W narrows the 5-fold pore from ~10 Å to ~5 Å, while the 6-fold pore remains fully closed with a hydrophobic barrier, without altering the overall cage architecture. No separate mutant shell diameter was explicitly reported, so shell_diameter_nm is left blank.",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Pecanac et al. 2025",
+  "source_url": "https://doi.org/10.1039/D5MA00268K",
+  "method": "cryo-EM",
+  "structure_id": "9I8F",
+  "condition": "recombinant N198W pore-engineered DendroEnc coexpressed with heterologous CyanoPOX-TP in E. coli; CyanoPOX-loaded",
+  "used_in_databank": true,
+  "notes": "assemblies.assembly_id=A0A1G9WS71_N198W_T4",
+  "source_doi": "10.1039/D5MA00268K"
+}

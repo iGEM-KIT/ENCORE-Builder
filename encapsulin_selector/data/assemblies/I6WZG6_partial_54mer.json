@@ -16,5 +16,6 @@
   "method": "cryo-EM",
   "structure_id": "9HQC",
   "source": "Berger et al. 2025",
-  "notes": "Stable incomplete WT shell assembly intermediate containing 54 Enc monomers. The particle has a single opening and retains an overall icosahedral-like organization, but is measurably distorted, appearing flattened in one direction and elongated in the perpendicular direction."
+  "notes": "Stable incomplete WT shell assembly intermediate containing 54 Enc monomers. The particle has a single opening and retains an overall icosahedral-like organization, but is measurably distorted, appearing flattened in one direction and elongated in the perpendicular direction.",
+  "source_doi": "10.1038/s42003-025-07660-5"
 }

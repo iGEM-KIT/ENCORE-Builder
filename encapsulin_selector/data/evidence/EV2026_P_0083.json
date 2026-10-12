@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_P_0083",
+  "candidate_id": "A0A0F5HPP7",
+  "field_name": "pore_record",
+  "value_text": "construct=Enc; variant_status=wild_type; pore_type=3fold; pore_state=open; pore_diameter_nm=0.72; diameter_basis=narrowest_point; dynamic_status=single_state_observed; charge_exterior=negative; charge_interior=negative; condition=recombinant WT IMEF cargo-loaded compartment expressed in E. coli; curated_notes=Largest shell channel; additional central density may represent ions/water or symmetry averaging.",
+  "value_numeric": 0.72,
+  "unit": "nm",
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Giessen et al. 2019",
+  "source_url": "https://doi.org/10.7554/eLife.46070",
+  "method": "cryo-EM; structural/electrostatic analysis",
+  "structure_id": "6NJ8",
+  "condition": "recombinant WT IMEF cargo-loaded compartment expressed in E. coli",
+  "used_in_databank": true,
+  "notes": "pores.pore_record_id=A0A0F5HPP7_p3; assembly_id=A0A0F5HPP7_ref",
+  "source_doi": "10.7554/eLife.46070"
+}

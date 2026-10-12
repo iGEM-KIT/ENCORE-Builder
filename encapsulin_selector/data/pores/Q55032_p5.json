@@ -1,0 +1,21 @@
+{
+  "pore_record_id": "Q55032_p5",
+  "candidate_id": "Q55032",
+  "assembly_id": "Q55032_ref",
+  "construct": "SrpI shell",
+  "variant_status": "wild_type",
+  "pore_type": "5fold",
+  "pore_state": "open",
+  "pore_diameter_nm": 0.37,
+  "diameter_basis": "narrowest_point",
+  "dynamic_status": "single_state_observed",
+  "charge_exterior": "positive",
+  "charge_interior": "neutral",
+  "pH": null,
+  "condition": "recombinant WT SrpI shell refolded in vitro in the presence of CyD; \nCyD-loaded (holo)",
+  "method": "cryo-EM; HOLE pore analysis; \nelectrostatic analysis",
+  "structure_id": "6X8M",
+  "source": "Nichols/LaFrance et al. 2021",
+  "source_doi": "10.7554/eLife.59288",
+  "notes": "Gly194 and Pro196 form the constriction; Arg192 and Arg304 contribute to the positively charged exterior."
+}

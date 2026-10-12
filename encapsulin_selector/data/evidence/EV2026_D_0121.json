@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_D_0121",
+  "candidate_id": "A0AAT8XUH9",
+  "field_name": "loading_info",
+  "value_text": "Cargo: DyP (dye-decolorizing peroxidase). Mechanism: cargo C-terminal TP (TP-shell interaction structurally resolved).",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": null,
+  "source_url": null,
+  "method": null,
+  "structure_id": null,
+  "condition": null,
+  "used_in_databank": true,
+  "notes": "databank.candidate_id=A0AAT8XUH9",
+  "source_doi": null
+}

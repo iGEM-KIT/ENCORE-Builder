@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_A_0025",
+  "candidate_id": "A0A0F5HPP7",
+  "field_name": "assembly_observation",
+  "value_text": "construct=Enc; variant_status=wild_type; assembly_symmetry=icosahedral; T_number=4; T_number_basis=directly_reported; shell_subunit_count=240; shell_diameter_nm=43; thermostability_tm_c=86.6; curated_notes=Recombinant cargo-free WT QtEnc shell. Sigmund et al. 2019 directly reported T=4 icosahedral symmetry and an approximately 43 nm shell diameter; the corresponding E. coli-derived cryo-EM map EMD-4879 was reconstructed at 3.4 Å. The empty shell has a reported melting temperature of 86.6 °C. No separate PDB atomic model is assigned to this empty-state map.",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Sigmund et al. 2019; Giessen et al. 2019",
+  "source_url": null,
+  "method": "cryo-EM; thermal unfolding",
+  "structure_id": null,
+  "condition": "recombinant cargo-free WT shell expressed in E. coli",
+  "used_in_databank": true,
+  "notes": "assemblies.assembly_id=A0A0F5HPP7_T4_empty",
+  "source_doi": "10.1021/acsnano.9b03140; 10.7554/eLife.46070"
+}

@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_A_0042",
+  "candidate_id": "I3E3I1",
+  "field_name": "assembly_observation",
+  "value_text": "construct=BmEnc shell; variant_status=wild_type; assembly_symmetry=icosahedral; T_number=4; T_number_basis=directly_reported; shell_subunit_count=240; curated_notes=Canonical recombinant cargo-free WT T=4 BmEnc assembly. McIver 2024 identified BmEnc as a T=4 encapsulin; \nPDB 9FY6 / EMD-50859 provides a 2.82 Å cryo-EM structure of an icosahedral homo-240-mer expressed in E. coli BL21(DE3). No quantitative shell diameter, inner diameter, wall thickness, or inner volume was directly reported in the public structural record, so these fields are left blank. BmEnc is an IMEF-type system, but no native IMEF-loaded BmEnc assembly has been structurally characterized. Kwon et al. 2026 showed post-assembly in vitro loading of CLP-tagged heterologous cargo into BmEnc without demonstrating a distinct global shell architecture, so this loaded preparation is not treated as a separate assembly.",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "McIver 2024; PDB 9FY6 / EMD-50859 (Marles-Wright \net al., to be published)",
+  "source_url": null,
+  "method": "cryo-EM",
+  "structure_id": "9FY6",
+  "condition": "recombinant cargo-free WT BmEnc expressed in E. coli BL21(DE3); purified assembled shell; cryo-EM sample at pH 8",
+  "used_in_databank": true,
+  "notes": "assemblies.assembly_id=I3E3I1_ref",
+  "source_doi": null
+}

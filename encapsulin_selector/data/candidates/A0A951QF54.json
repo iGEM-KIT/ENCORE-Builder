@@ -2,7 +2,7 @@
   "candidate_id": "A0A951QF54",
   "entry_name": "A0A951QF54_9CYAN",
   "protein_name": "Type 1 encapsulin shell protein",
-  "organism": "Drouetiella hepatica ",
+  "organism": "Drouetiella hepatica",
   "strain": "Uher 2000/2452",
   "genus": "Drouetiella",
   "taxonomy_id": 904376,
@@ -29,5 +29,6 @@
   "evidence_record_count": 0,
   "curation_source": "UniProt A0A951QF54",
   "curator_notes": "Unreviewed predicted Type 1 shell from Drouetiella hepatica Uher 2000/2452. No direct characterization identified; the source genome was recovered in a metagenomic sequencing project.",
-  "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info"
+  "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
+  "curation_source_doi": null
 }

@@ -1,0 +1,21 @@
+{
+  "pore_record_id": "Q9WZP2_T1_empty_p3",
+  "candidate_id": "Q9WZP2",
+  "assembly_id": "Q9WZP2_T1_empty",
+  "construct": "Enc",
+  "variant_status": "wild_type",
+  "pore_type": "3fold",
+  "pore_state": "open",
+  "pore_diameter_nm": 0.58,
+  "diameter_basis": "narrowest_point",
+  "dynamic_status": "single_state_observed",
+  "charge_exterior": "not_reported",
+  "charge_interior": "not_reported",
+  "pH": null,
+  "condition": "recombinant cargo-free WT shell expressed in E. coli",
+  "method": "cryo-EM; CHAP channel analysis",
+  "structure_id": "7KQ5",
+  "source": "Wiryaman & Toor 2021",
+  "source_doi": "10.1107/S2052252521001949",
+  "notes": "Minimum radius 2.9 Å; diameter calculated as 5.8 Å (0.58 nm). Interior Phe8 residues may restrict transport."
+}

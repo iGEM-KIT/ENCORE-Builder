@@ -1,0 +1,21 @@
+{
+  "pore_record_id": "I6WZG6_DyP_9BKX_p5a",
+  "candidate_id": "I6WZG6",
+  "assembly_id": "I6WZG6_T1_DyP_loaded",
+  "construct": "Enc",
+  "variant_status": "wild_type",
+  "pore_type": "5fold_adjacent",
+  "pore_state": "open",
+  "pore_diameter_nm": 0.34,
+  "diameter_basis": "narrowest_point",
+  "dynamic_status": "single_state_observed",
+  "charge_exterior": null,
+  "charge_interior": null,
+  "pH": null,
+  "condition": "recombinant DyP-loaded WT T=1 shell expressed in E. coli",
+  "method": "X-ray crystallography; MOLE pore analysis; \nAPBS electrostatic analysis",
+  "structure_id": "9BKX",
+  "source": "Cuthbert et al. 2024",
+  "source_doi": "10.3390/microorganisms12122465",
+  "notes": "Five-fold minor pore adjacent to the major five-fold pore; MOLE bottleneck diameter 3.4 ± 0.8 Å. Electrostatics are pH-dependent: exterior and \ninterior are strongly negative at pH 7, while the pore is overall slightly negative at pH 4.5."
+}

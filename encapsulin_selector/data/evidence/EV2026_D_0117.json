@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_D_0117",
+  "candidate_id": "A0A1G9WS71",
+  "field_name": "loading_info",
+  "value_text": "Heterologous cargo loading demonstrated via a 30-aa C-terminal targeting peptide. CyanoPOX (~60 kDa) and PTDH-mFMO (~100 kDa) were successfully encapsulated; cargo appears flexibly distributed inside the shell.",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": null,
+  "source_url": null,
+  "method": null,
+  "structure_id": null,
+  "condition": null,
+  "used_in_databank": true,
+  "notes": "databank.candidate_id=A0A1G9WS71",
+  "source_doi": null
+}

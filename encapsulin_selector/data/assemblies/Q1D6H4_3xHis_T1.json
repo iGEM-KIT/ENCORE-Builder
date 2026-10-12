@@ -16,5 +16,6 @@
   "method": "cryo-EM / negative-stain TEM",
   "structure_id": "8V4N",
   "source": "Szyszka et al. 2024",
-  "notes": "Triple pore-lining point mutant. Forms a dimorphic population containing T=1 60-mer and tetrahedral 36-mer assemblies. Shell diameter (~24 nm) was determined by negative-stain TEM."
+  "notes": "Triple pore-lining point mutant. Forms a dimorphic population containing T=1 60-mer and tetrahedral 36-mer assemblies. Shell diameter (~24 nm) was determined by negative-stain TEM.",
+  "source_doi": "10.1073/pnas.2321260121"
 }

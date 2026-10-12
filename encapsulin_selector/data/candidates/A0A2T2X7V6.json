@@ -29,5 +29,6 @@
   "evidence_record_count": 0,
   "curation_source": "UniProt A0A2T2X7V6",
   "curator_notes": "Unreviewed predicted Type 1 shell. No direct characterization identified. Host acidophily/thermotolerance was not assigned as a shell stability property.",
-  "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info"
+  "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
+  "curation_source_doi": null
 }

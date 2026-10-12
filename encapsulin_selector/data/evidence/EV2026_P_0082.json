@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_P_0082",
+  "candidate_id": "I6WZG6",
+  "field_name": "pore_record",
+  "value_text": "construct=Enc; variant_status=wild_type; pore_type=5fold_adjacent; pore_state=open; pore_diameter_nm=0.28; diameter_basis=narrowest_point; dynamic_status=single_state_observed; condition=recombinant DyP-loaded WT T=1 shell expressed in E. coli; curated_notes=Five-fold minor pore adjacent to the major five-fold pore; MOLE bottleneck diameter 2.8 ± 0.3 Å. Electrostatics are pH-dependent: exterior and \ninterior are strongly negative at pH 7 and become more neutral at low pH.",
+  "value_numeric": 0.28,
+  "unit": "nm",
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Cuthbert et al. 2024",
+  "source_url": "https://doi.org/10.3390/microorganisms12122465",
+  "method": "cryo-EM; MOLE pore analysis; \nAPBS electrostatic analysis",
+  "structure_id": "8PYS",
+  "condition": "recombinant DyP-loaded WT T=1 shell expressed in E. coli",
+  "used_in_databank": true,
+  "notes": "pores.pore_record_id=I6WZG6_DyP_8PYS_p5a; assembly_id=I6WZG6_T1_DyP_loaded",
+  "source_doi": "10.3390/microorganisms12122465"
+}

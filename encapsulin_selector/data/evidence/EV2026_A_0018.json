@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_A_0018",
+  "candidate_id": "I6WZG6",
+  "field_name": "assembly_observation",
+  "value_text": "construct=Enc; variant_status=wild_type; assembly_symmetry=icosahedral; T_number=1; T_number_basis=directly_reported; shell_subunit_count=60; shell_diameter_nm=23; inner_diameter_nm=19; curated_notes=Canonical full WT T=1 shell. Berger et al. 2025 directly reported a 60-subunit T=1 icosahedron with an outer diameter of 23 nm and inner diameter of 19 nm along the fivefold axis. 7P1T was obtained from a sample subjected to pH 3 disassembly followed by neutral-pH reassembly and recovered the canonical full-shell architecture. 8IKA is an independent WT, unmutated icosahedral homo-60-mer and is grouped here because it represents the same assembly state. Wall thickness is left blank rather than calculated from outer and inner diameters. A spherical/radial wall thickness of ~2.0 nm can be calculated from the directly reported 23 nm outer and 19 nm inner diameters; this value is not directly reported.",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Berger et al. 2025; PDB 8IKA (Du et al., to be published)",
+  "source_url": "https://doi.org/10.1038/s42003-025-07660-5",
+  "method": "cryo-EM",
+  "structure_id": "7P1T;8IKA",
+  "condition": "recombinant WT shell expressed in E. coli; 7P1T obtained from low-pH disassembly followed by neutral-pH reassembly; 8IKA is an independently determined WT shell",
+  "used_in_databank": true,
+  "notes": "assemblies.assembly_id=I6WZG6_ref",
+  "source_doi": "10.1038/s42003-025-07660-5"
+}

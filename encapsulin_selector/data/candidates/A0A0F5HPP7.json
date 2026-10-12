@@ -22,12 +22,13 @@
   "reference_assembly_id": "A0A0F5HPP7_ref",
   "loading_info": "Cargo: IMEF (iron-mineralizing encapsulin-associated firmicute; ferroxidase) + minor 2Fe-2S ferredoxin (Fdx); high-capacity iron storage (>23,000 Fe). Mechanism: cargo C-terminal TP.",
   "source_uniprot": "https://www.uniprot.org/uniprotkb/A0A0F5HPP7/entry",
-  "source_pdb": "6NJ8;7MH2;8RVJ;9ZW3;9ZW4;9ZVV;",
+  "source_pdb": "6NJ8;7MH2;8RVJ;9ZW3;9ZW4;9ZVV",
   "source_emdb": "EMD-23834; EMD-9383; EMD-74892; EMD-74904; EMD-74905;",
-  "pdb_count": 7,
+  "pdb_count": 6,
   "pore_record_count": 3,
-  "evidence_record_count": 12,
+  "evidence_record_count": 11,
   "curation_source": "Giessen et al. 2019 eLife 8:e46070 (PMC6668986); PDB 6NJ8",
   "curator_notes": "Largest confirmed encapsulin in this set: T=4, 240 subunits, 42 nm, 9.6 MDa. Both 3- and 5-fold pores are negatively charged. Melting temperature reported as 86.6 °C.",
-  "missing_fields_for_curation": null
+  "missing_fields_for_curation": null,
+  "curation_source_doi": "10.7554/eLife.46070"
 }

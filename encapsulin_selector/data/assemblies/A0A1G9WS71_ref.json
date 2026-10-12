@@ -16,5 +16,6 @@
   "method": "cryo-EM",
   "structure_id": "9I8E",
   "source": "Pecanac et al. 2025",
-  "notes": "Canonical WT cargo-free T=4 DendroEnc assembly. Pecanac et al. 2025 directly reported a ~40 nm icosahedral shell composed of 240 subunits, resolved at 3.4 Å (PDB 9I8E / EMD-52715). The WT shell has an open 5-fold pore of ~10 Å, a nearly closed 6-fold pore, and an additional triangular pore. Heterologous CyanoPOX- and PTDH-mFMO-loaded WT preparations are not treated as separate assemblies because no distinct global shell architecture was demonstrated."
+  "notes": "Canonical WT cargo-free T=4 DendroEnc assembly. Pecanac et al. 2025 directly reported a ~40 nm icosahedral shell composed of 240 subunits, resolved at 3.4 Å (PDB 9I8E / EMD-52715). The WT shell has an open 5-fold pore of ~10 Å, a nearly closed 6-fold pore, and an additional triangular pore. Heterologous CyanoPOX- and PTDH-mFMO-loaded WT preparations are not treated as separate assemblies because no distinct global shell architecture was demonstrated.",
+  "source_doi": "10.1039/D5MA00268K"
 }

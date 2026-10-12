@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_A_0046",
+  "candidate_id": "Q2RVS0",
+  "field_name": "assembly_observation",
+  "value_text": "construct=R. rubrum encapsulin; variant_status=wild_type; assembly_symmetry=icosahedral; T_number=1; T_number_basis=inferred_from_subunit_count; shell_subunit_count=60; shell_diameter_nm=23.9; curated_notes=Biologically relevant cognate EncFtn-loaded WT T=1 assembly. He et al. 2016 measured coexpressed EncFtn-Enc \nparticles at 23.9 ± 2.2 nm by negative-stain TEM. McIver et al. 2026 resolved the loaded shell by cryo-EM and showed an icosahedral 60-subunit architecture with greater five-fold pore flexibility than the empty shell; cargo loading was heterogeneous, with up to five EncFtn decamers per cage. PDB 9RZM / EMD-54404 represents the loaded shell reconstruction, while PDB 9SQR / EMD-55116 is a symmetry-relaxed loaded nanocompartment containing the 60-subunit shell and resolved EncFtn cargo. Focused open/closed pentamer structures 9S05 and 9RZU are treated as pore conformations, not separate assemblies.",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "He et al. 2016; McIver et al. 2026",
+  "source_url": null,
+  "method": "negative-stain TEM; cryo-EM",
+  "structure_id": "9RZM;9SQR",
+  "condition": "recombinant WT R. rubrum encapsulin \ncoexpressed with cognate EncFtn cargo in E. coli; EncFtn-loaded",
+  "used_in_databank": true,
+  "notes": "assemblies.assembly_id=Q2RVS0_T1_EncFtn_loaded",
+  "source_doi": "10.7554/eLife.18972; 10.1016/j.jsb.2026.108357"
+}

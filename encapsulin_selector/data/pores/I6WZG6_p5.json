@@ -1,0 +1,21 @@
+{
+  "pore_record_id": "I6WZG6_p5",
+  "candidate_id": "I6WZG6",
+  "assembly_id": "I6WZG6_ref",
+  "construct": "Enc",
+  "variant_status": "wild_type",
+  "pore_type": "5fold",
+  "pore_state": "open",
+  "pore_diameter_nm": 0.9,
+  "diameter_basis": "reported_diameter",
+  "dynamic_status": "single_state_observed",
+  "charge_exterior": "positive",
+  "charge_interior": "neutral",
+  "pH": null,
+  "condition": "recombinant WT shell expressed in E. coli; low-pH disassembly followed by \nneutral-pH reassembly",
+  "method": "cryo-EM; structural/electrostatic analysis",
+  "structure_id": "7P1T",
+  "source": "Berger et al. 2025",
+  "source_doi": "10.1038/s42003-025-07660-5",
+  "notes": "Central 5-fold pore; reported diameter 9 Å. Slightly positive exterior and neutral interior."
+}

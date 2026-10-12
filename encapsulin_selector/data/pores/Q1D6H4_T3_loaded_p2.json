@@ -1,0 +1,21 @@
+{
+  "pore_record_id": "Q1D6H4_T3_loaded_p2",
+  "candidate_id": "Q1D6H4",
+  "assembly_id": "Q1D6H4_T3_loaded",
+  "construct": "EncA",
+  "variant_status": "wild_type",
+  "pore_type": "2fold",
+  "pore_state": "closed",
+  "pore_diameter_nm": null,
+  "diameter_basis": null,
+  "dynamic_status": "single_state_observed",
+  "charge_exterior": null,
+  "charge_interior": null,
+  "pH": null,
+  "condition": "recombinant SNAP-tag-TP-loaded shell expressed in E. coli",
+  "method": "cryo-EM / structural study",
+  "structure_id": "8TK7",
+  "source": "Kwon et al. 2023",
+  "source_doi": "10.1016/j.jsb.2023.108022",
+  "notes": "Purified protein was stored in 20 mM Tris, 150 mM NaCl, pH 7.5 prior to structural analysis"
+}

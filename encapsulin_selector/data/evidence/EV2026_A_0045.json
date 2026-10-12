@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_A_0045",
+  "candidate_id": "Q2RVS0",
+  "field_name": "assembly_observation",
+  "value_text": "construct=R. rubrum encapsulin; variant_status=wild_type; assembly_symmetry=icosahedral; T_number=1; T_number_basis=inferred_from_subunit_count; shell_subunit_count=60; shell_diameter_nm=24.6; curated_notes=Canonical recombinant cargo-free WT T=1 R. rubrum encapsulin assembly. He et al. 2016 measured empty recombinant \nparticles at 24.6 ± 2.0 nm by negative-stain TEM. McIver et al. 2026 resolved the empty shell by cryo-EM as an icosahedral homo-60-mer at 2.0 Å (PDB 9RY4 / EMD-54372); T=1 is assigned from the experimentally established 60-subunit icosahedral architecture. PDB 9RY7 / EMD-54373 is a focused closed five-fold pentamer derived from the same empty cage and is treated as a local pore structure rather than a separate assembly.",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "He et al. 2016; McIver et al. 2026",
+  "source_url": null,
+  "method": "negative-stain TEM; cryo-EM",
+  "structure_id": "9RY4",
+  "condition": "recombinant cargo-free WT R. rubrum \nencapsulin expressed in E. coli; empty/apo shell",
+  "used_in_databank": true,
+  "notes": "assemblies.assembly_id=Q2RVS0_ref",
+  "source_doi": "10.7554/eLife.18972; 10.1016/j.jsb.2026.108357"
+}

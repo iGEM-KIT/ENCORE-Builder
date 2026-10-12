@@ -16,5 +16,6 @@
   "method": "cryo-EM / structural study",
   "structure_id": "8V4Q",
   "source": "Szyszka et al. 2024",
-  "notes": "36-mer assembly with tetrahedral symmetry rather than icosahedral symmetry; therefore T-number is not applicable. \nCoexists with the T=1 60-mer 3×His assembly."
+  "notes": "36-mer assembly with tetrahedral symmetry rather than icosahedral symmetry; therefore T-number is not applicable. \nCoexists with the T=1 60-mer 3×His assembly.",
+  "source_doi": "10.1073/pnas.2321260121"
 }

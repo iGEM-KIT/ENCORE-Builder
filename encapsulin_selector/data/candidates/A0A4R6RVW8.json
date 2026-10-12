@@ -29,5 +29,6 @@
   "evidence_record_count": 0,
   "curation_source": "UniProt A0A4R6RVW8",
   "curator_notes": "Predicted Type 1 encapsulin shell protein from Labedaea rhizosphaerae. No direct experimental shell characterization identified. Pending systematic genomic-context cargo audit.",
-  "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info"
+  "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
+  "curation_source_doi": null
 }

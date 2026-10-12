@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_A_0020",
+  "candidate_id": "I6WZG6",
+  "field_name": "assembly_observation",
+  "value_text": "construct=Enc; variant_status=wild_type; assembly_symmetry=icosahedral; T_number=1; T_number_basis=inferred_from_subunit_count; shell_subunit_count=60; shell_diameter_nm=25; curated_notes=Biologically relevant native DyP-loaded state. DyP-containing nanocompartments were experimentally demonstrated after recombinant expression of the native Enc-DyP system and in M. tuberculosis H37Rv by Lien et al. 2021; native purified particles contained Enc and DyP by mass spectrometry and were approximately 25 nm by TEM. 8PYS provides a 2.7 Å cryo-EM structure of the 60-subunit icosahedral shell prepared in a DyP-loaded context, although DyP was not resolved in the deposited shell model. 9BKX provides a 3.15 Å X-ray structure of the recombinant Mtb Enc-DyP complex with a 60-subunit shell; the compact DyP domain was not resolved, while DyP targeting-peptide density was observed on the shell interior. T=1 is assigned from the experimentally established 60-subunit icosahedral architecture. The 25 nm shell diameter is retained from the Lien et al. 2021 TEM state; 9BKX reports an approximately 24 nm shell. Tagged/recombinant structural constructs are treated as supporting structures of the same biological assembly rather than separate assemblies.",
+  "value_numeric": null,
+  "unit": null,
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Lien et al. 2021; PDB 8PYS (Willmore & Woodward, \nto be published); Cuthbert et al. 2024",
+  "source_url": null,
+  "method": "TEM; mass spectrometry; cryo-EM; X-ray crystallography",
+  "structure_id": "8PYS; 9BKX",
+  "condition": "native M. tuberculosis H37Rv nanocompartments and recombinant WT Enc-DyP system expressed in E. coli; DyP-containing",
+  "used_in_databank": true,
+  "notes": "assemblies.assembly_id=I6WZG6_T1_DyP_loaded",
+  "source_doi": "10.7554/eLife.74358; 10.3390/microorganisms12122465"
+}

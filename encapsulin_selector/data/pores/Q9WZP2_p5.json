@@ -1,0 +1,21 @@
+{
+  "pore_record_id": "Q9WZP2_p5",
+  "candidate_id": "Q9WZP2",
+  "assembly_id": "Q9WZP2_ref",
+  "construct": "Enc",
+  "variant_status": "wild_type",
+  "pore_type": "5fold",
+  "pore_state": "open",
+  "pore_diameter_nm": 0.29,
+  "diameter_basis": "narrowest_point",
+  "dynamic_status": "single_state_observed",
+  "charge_exterior": "negative",
+  "charge_interior": "positive",
+  "pH": null,
+  "condition": "native WT shell purified from T. maritima",
+  "method": "X-ray crystallography; HOLE pore analysis; \nelectrostatic analysis",
+  "structure_id": "3DKT",
+  "source": "Sutter et al. 2008; Adamson et al. 2022",
+  "source_doi": "10.1038/nsmb.1473; 10.1126/sciadv.abl7346",
+  "notes": "HOLE minimum: 2.9 Å. Negative exterior entrance; positively charged interior surface."
+}

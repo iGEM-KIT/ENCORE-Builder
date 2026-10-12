@@ -1,0 +1,21 @@
+{
+  "pore_record_id": "Q9WZP2_S1R_p5",
+  "candidate_id": "Q9WZP2",
+  "assembly_id": "Q9WZP2_S1R_T1",
+  "construct": "S1R pore variant",
+  "variant_status": "engineered",
+  "pore_type": "5fold",
+  "pore_state": "open",
+  "pore_diameter_nm": 0.35,
+  "diameter_basis": "narrowest_point",
+  "dynamic_status": "single_state_observed",
+  "charge_exterior": "positive",
+  "charge_interior": "positive",
+  "pH": null,
+  "condition": "recombinant cargo-free pore-engineered shell expressed in E. coli",
+  "method": "cryo-EM; HOLE pore analysis; \nAPBS electrostatic analysis",
+  "structure_id": "7LIK",
+  "source": "Adamson et al. 2022",
+  "source_doi": "10.1126/sciadv.abl7346",
+  "notes": "HOLE minimum: 3.5 Å. Positive exterior and interior; Y191 forms the narrowest region."
+}

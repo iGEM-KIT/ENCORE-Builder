@@ -1,0 +1,21 @@
+{
+  "pore_record_id": "Q1D6H4_T3_loaded_p3",
+  "candidate_id": "Q1D6H4",
+  "assembly_id": "Q1D6H4_T3_loaded",
+  "construct": "EncA",
+  "variant_status": "wild_type",
+  "pore_type": "3fold",
+  "pore_state": "open",
+  "pore_diameter_nm": 0.5,
+  "diameter_basis": "reported_diameter",
+  "dynamic_status": "single_state_observed",
+  "charge_exterior": "positive",
+  "charge_interior": "negative",
+  "pH": null,
+  "condition": "recombinant SNAP-tag-TP-loaded shell expressed in E. coli",
+  "method": "cryo-EM / structural study; electrostatic analysis",
+  "structure_id": "8TK7",
+  "source": "Kwon et al. 2023",
+  "source_doi": "10.1016/j.jsb.2023.108022",
+  "notes": "3-fold pore located at the center of the hexameric facet."
+}

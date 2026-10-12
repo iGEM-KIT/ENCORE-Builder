@@ -25,9 +25,10 @@
   "source_pdb": "7P1T;7PHM;8IKA;8PYS;9BKX;9GOT;9HQ7;9HQC;9I8D;9FNA",
   "source_emdb": "EMD-13164; EMD-13420; EMD-18031; EMD-35507; EMD-51500; EMD-52340; EMD-52341",
   "pdb_count": 10,
-  "pore_record_count": 3,
-  "evidence_record_count": 8,
+  "pore_record_count": 8,
+  "evidence_record_count": 15,
   "curation_source": "Mtb-Enc.DyP crystal: Microorganisms 2024 (10.3390/microorganisms12122465, PMC11676171); TEM ~25 nm: eLife 2021 (10.7554/eLife.74358)",
   "curator_notes": "T=1, 60 subunits, ~24-25 nm. 5- and 3-fold pore dimensions are reported; no clear pore was identified at the twofold symmetry point in the cited structural description. A0A045HTX8 was excluded as a redundant former accession.",
-  "missing_fields_for_curation": null
+  "missing_fields_for_curation": null,
+  "curation_source_doi": "10.3390/microorganisms12122465; 10.7554/eLife.74358"
 }
