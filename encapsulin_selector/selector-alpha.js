@@ -2,7 +2,21 @@
   const DATA = window.ENCAPSULIN_SELECTOR_DATA;
   const candidates = DATA.candidates;
   const assemblies = DATA.assemblies;
-const sequences = DATA.sequences ?? [];
+  const sequences = DATA.sequences ?? [];
+  const pores = DATA.pores ?? [];
+  const doiById = new Map((DATA.doi_index ?? []).map(ref => [ref.doi.toLowerCase(), ref]));
+  const citationsByRecord = new Map();
+  (DATA.citation_links ?? []).forEach(link => {
+    const key = `${link.table}:${link.record_id}`;
+    if (!citationsByRecord.has(key)) citationsByRecord.set(key, []);
+    citationsByRecord.get(key).push(link);
+  });
+  const poresByAssembly = new Map();
+  pores.forEach(pore => {
+    if (!pore.assembly_id) return; // Do not attribute a pore to an unrelated variant.
+    if (!poresByAssembly.has(pore.assembly_id)) poresByAssembly.set(pore.assembly_id, []);
+    poresByAssembly.get(pore.assembly_id).push(pore);
+  });
   const byCandidate = new Map();
   assemblies.forEach(a => {
     if (!byCandidate.has(a.candidate_id)) byCandidate.set(a.candidate_id, []);
@@ -27,6 +41,31 @@ sequences.forEach(s => {
     .toLowerCase().replace(/\s+/g, " ").trim();
   const display = value => (value === null || value === undefined || String(value).trim() === "")
     ? "not reported" : String(value);
+  // Humanize controlled vocabulary values for display only. Never transform IDs,
+  // accession numbers, sequences, links or the values used by the filter logic.
+  const vocabularyLabels = {
+    not_reported: "Not reported",
+    wild_type: "Wild-type",
+    single_state_observed: "Single state observed",
+    reported_diameter: "Reported diameter",
+    narrowest_point: "Narrowest point",
+    measured_from_structure: "Measured from structure",
+    partial_icosahedral: "Partial icosahedral",
+    type_1: "Type 1",
+    type_2: "Type 2"
+  };
+  function humanValue(value) {
+    if (value === null || value === undefined || String(value).trim() === "") return "Not reported";
+    const raw = String(value).trim();
+    if (vocabularyLabels[raw]) return vocabularyLabels[raw];
+    return raw.replace(/_/g, " ").replace(/^./, letter => letter.toUpperCase());
+  }
+  function enumProperty(label, value) {
+    return property(label, humanValue(value));
+  }
+  function strandLabel(value) {
+    return value === "+" ? "Positive (+)" : value === "-" ? "Negative (−)" : humanValue(value);
+  }
 
   function readLocaleNumber(raw) {
     const s = String(raw ?? "").trim();
@@ -43,7 +82,9 @@ sequences.forEach(s => {
     const fields = [
       ["diameterMin", "Minimum diameter"],
       ["diameterMax", "Maximum diameter"],
-      ["targetDiameter", "Preferred diameter"]
+      ["targetDiameter", "Preferred diameter"],
+      ["poreDiameterMin", "Minimum pore diameter"],
+      ["poreDiameterMax", "Maximum pore diameter"]
     ];
     const errors = [];
     for (const [id,label] of fields) {
@@ -55,6 +96,11 @@ sequences.forEach(s => {
     if (min.valid && max.valid && !min.empty && !max.empty && min.value > max.value) {
       errors.push("Minimum diameter cannot be greater than maximum diameter.");
     }
+    const pmin = readLocaleNumber($("poreDiameterMin").value);
+    const pmax = readLocaleNumber($("poreDiameterMax").value);
+    if (pmin.valid && pmax.valid && !pmin.empty && !pmax.empty && pmin.value > pmax.value) {
+      errors.push("Minimum pore diameter cannot be greater than maximum pore diameter.");
+    }
     const box = $("filterError");
     if (box) {
       box.textContent = errors.join(" ");
@@ -64,8 +110,11 @@ sequences.forEach(s => {
   }
 
   $("datasetBadge").textContent =
-    `${DATA.meta.candidate_count} candidates • ${DATA.meta.assembly_count} curated assemblies • ${DATA.meta.sequence_count} sequence records`;
-  $("alphaNote").textContent = DATA.meta.status_note;
+    `${candidates.length} candidates • ${assemblies.length} assemblies • ${pores.length} pore observations`;
+  $("alphaNote").textContent =
+    "Pore filters use recorded observations for a specific assembly, not an assumed property of every variant. " +
+    "Missing pore measurements are kept as potential matches. " +
+    "References link to the original scientific publications.";
 
   // Mode switching
   // Each tab gets its own history entry (#search / #finder) so the browser
@@ -92,11 +141,24 @@ sequences.forEach(s => {
     .sort((a,b) => String(a).localeCompare(String(b), undefined, {numeric:true}));
 
   unique("assembly_symmetry").forEach(v => {
-    const o = document.createElement("option"); o.value=v; o.textContent=v; $("symmetry").appendChild(o);
+    const o = document.createElement("option"); o.value=v; o.textContent=humanValue(v); $("symmetry").appendChild(o);
   });
   unique("shell_subunit_count").forEach(v => {
     const o = document.createElement("option"); o.value=v; o.textContent=v; $("subunitCount").appendChild(o);
   });
+  [...new Set(pores.map(p => p.pore_type).filter(Boolean))]
+    .sort().forEach(v => {
+      const o = document.createElement("option");
+      o.value = v;
+      o.textContent = poreLabelsForSelect(v);
+      $("poreType").appendChild(o);
+    });
+  function poreLabelsForSelect(value) {
+    return ({"2fold":"2-fold", "3fold":"3-fold", "5fold":"5-fold",
+      "2fold_adjacent":"2-fold adjacent", "5fold_adjacent":"5-fold adjacent",
+      "pseudo_3fold_PHH":"Pseudo-3-fold (PHH)",
+      "hexamer_center":"Hexamer center"})[value] || value;
+  }
 
   function assemblyWhy(a) {
     const bits = [];
@@ -122,19 +184,123 @@ sequences.forEach(s => {
       .join(", ");
     return `<div class="prop"><span class="k">${esc(label)}</span><span class="v">${links}</span></div>`;
   }
+
+  function doiLink(doi, label = doi) {
+    if (!doi || !/^10\.\d{4,9}\/[^\s<>"']+$/i.test(String(doi).trim())) return esc(display(label));
+    const clean = String(doi).trim();
+    return `<a class="ext-link" href="https://doi.org/${encodeURI(clean).replace(/%25/g, '%2525')}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`;
+  }
+
+  // These links are indexed by (table, record_id): a citation for one engineered
+  // pore must never appear as evidence for a different assembly or pore.
+  function citationBlock(table, recordId) {
+    const linked = citationsByRecord.get(`${table}:${recordId}`) || [];
+    if (!linked.length) return "";
+    const rows = linked.map(link => {
+      const ref = doiById.get(String(link.doi || "").toLowerCase());
+      const title = ref?.article_title ? ` — ${esc(ref.article_title)}` : "";
+      const context = link.relationship ? ` <span class="citation-role">(${esc(link.relationship)})</span>` : "";
+      return `<li>${doiLink(link.doi, ref?.citation_label || link.citation_label || link.doi)}${title}${context}</li>`;
+    }).join("");
+    return `<details class="details citations"><summary>References (${linked.length})</summary><ul>${rows}</ul></details>`;
+  }
+
+  const poreLabels = {
+    "2fold": "2-fold", "3fold": "3-fold", "5fold": "5-fold",
+    "2fold_adjacent": "2-fold adjacent", "5fold_adjacent": "5-fold adjacent",
+    "pseudo_3fold_PHH": "Pseudo-3-fold (PHH)", "hexamer_center": "Hexamer-center"
+  };
+  const poreLabel = value => poreLabels[value] || humanValue(value);
+  const poreDiameter = p => typeof p.pore_diameter_nm === "number" && Number.isFinite(p.pore_diameter_nm)
+    ? `${p.pore_diameter_nm} nm` : "Not reported";
+
+  // Pore names keep the UniProt candidate key but replace database tokens with
+  // human-readable descriptors. Size/state/variant modifiers come only from the
+  // actual record ID and observed fields; never infer variants from pore geometry.
+  function poreDisplayName(p) {
+    const tokens = String(p.pore_record_id || "").split("_").slice(1);
+    const mod = [];
+    if (tokens.includes("small")) mod.push("Small");
+    else if (tokens.includes("large")) mod.push("Large");
+    else if (tokens.includes("narrow")) mod.push("Narrow");
+    else if (tokens.includes("wide")) mod.push("Wide");
+
+    const mutation = tokens.find(t => /^[A-Z]\d+[A-Z]$/.test(t));
+    if (mutation) mod.push(mutation);
+    else if (tokens.includes("pmut")) mod.push("Pore-loop mutant");
+    else if (tokens.includes("3xHis")) mod.push("3×His-tagged");
+    else if (tokens.includes("tdNfsB")) mod.push("tdNfsB-loaded");
+    else if (tokens.includes("DyP")) mod.push("DyP-loaded");
+    else if (tokens.includes("EncFtn")) mod.push("EncFtn-loaded");
+    else if (tokens.includes("loaded")) mod.push("Cargo-loaded");
+
+    const site = p.pore_type === "2fold_adjacent" ? "adjacent 2-fold"
+      : p.pore_type === "5fold_adjacent" ? "adjacent 5-fold"
+      : poreLabel(p.pore_type);
+    const siteText = `${mod.length ? `${mod.join(" ")} ` : ""}${site} pore`.replace(/^./, ch => ch.toUpperCase());
+    const structure = tokens.find(t => /^\d[A-Za-z0-9]{3}$/.test(t));
+    const phSuffix = tokens.some(t => t === "30" || t === "75") && p.pH != null
+      ? ` (pH ${p.pH})` : "";
+    return `${p.candidate_id} — ${siteText}${structure ? ` (${structure})` : phSuffix}`;
+  }
+
+  function poreCard(p) {
+    const linked = citationsByRecord.get(`pores:${p.pore_record_id}`) || [];
+    // Show Source DOI separately only if it is not already linked in References.
+    const extraDois = String(p.source_doi || "").split(";").map(x => x.trim()).filter(Boolean)
+      .filter(doi => !linked.some(c => String(c.doi || "").toLowerCase() === doi.toLowerCase()));
+    return `
+      <article class="pore-card">
+        <div class="assembly-top">
+          <div>
+            <div class="assembly-display-name">${esc(poreDisplayName(p))}</div>
+            <div class="chips">
+              <span class="chip">${esc(poreLabel(p.pore_type))}</span>
+              <span class="chip">${esc(humanValue(p.pore_state))}</span>
+              <span class="chip">${esc(poreDiameter(p))}</span>
+            </div>
+          </div>
+        </div>
+        <div class="property-grid compact-grid">
+          ${enumProperty("Exterior charge", p.charge_exterior)}
+          ${enumProperty("Interior charge", p.charge_interior)}
+          ${enumProperty("Diameter basis", p.diameter_basis)}
+          ${enumProperty("Observed dynamics", p.dynamic_status)}
+        </div>
+        <details class="details pore-details">
+          <summary>Pore observation details</summary>
+          <div class="property-grid">
+            ${property("Record ID", p.pore_record_id)}
+            ${property("Construct", p.construct)}
+            ${enumProperty("Variant status", p.variant_status)}
+            ${property("pH", p.pH)}
+            ${propertyPdb("Structure ID", p.structure_id)}
+            ${property("Method", p.method)}
+            ${property("Source", p.source)}
+          </div>
+          ${p.condition ? `<section class="readable-panel condition-panel" aria-label="Experimental conditions">
+            <h4>Experimental conditions</h4>${readableText(p.condition, "condition")}
+          </section>` : ""}
+          ${p.notes ? `<section class="readable-panel notes-panel" aria-label="Pore notes">
+            <h4>Additional notes</h4>${readableText(p.notes, "pore")}
+          </section>` : ""}
+          ${extraDois.length ? `<p class="extra-source"><b>Additional source DOI:</b> ${extraDois.map(d => doiLink(d)).join(", ")}</p>` : ""}
+        </details>
+        ${citationBlock("pores", p.pore_record_id)}
+      </article>`;
+  }
+
+
 function sequenceCard(s) {
   const sourceLink = s.source_nucleotide
     ? `<a class="ext-link" href="${esc(s.source_nucleotide)}" target="_blank" rel="noopener">${esc(display(s.nucleotide_accession))}</a>`
     : esc(display(s.nucleotide_accession));
 
   return `
-    <article class="assembly-card">
+    <article class="assembly-card sequence-card">
       <div class="assembly-top">
         <div>
-          <div class="assembly-id">${esc(s.sequence_link_id)}</div>
-          <div class="chips">
-            <span class="chip">Sequence record</span>
-          </div>
+          <div class="assembly-display-name">${esc(s.candidate_id)} — ${s.genomic_sequence ? "Genomic sequence" : "Sequence reference"}</div>
         </div>
       </div>
 
@@ -147,7 +313,7 @@ function sequenceCard(s) {
         ${property("Database", s.source_database)}
         ${property("CDS start", s.cds_start)}
         ${property("CDS end", s.cds_end)}
-        ${property("Strand", s.strand)}
+        ${property("Strand", strandLabel(s.strand))}
         ${property("CDS length", s.cds_length_nt ? `${s.cds_length_nt} nt` : null)}
       </div>
 
@@ -161,12 +327,101 @@ function sequenceCard(s) {
       ${s.notes ? `
         <details class="details">
           <summary>Sequence notes</summary>
-          <p>${esc(s.notes)}</p>
+          <div class="readable-panel">${readableText(s.notes, "sequence")}</div>
         </details>
       ` : ""}
+      <details class="details record-meta">
+        <summary>Technical record ID</summary>
+        <code>${esc(s.sequence_link_id)}</code>
+      </details>
     </article>`;
 }
+  // Display labels change presentation only. assembly_id remains the stable reference
+  // for pore observations, citations, filtering, and scientific traceability.
+  const assemblyDisplayLabels = {
+    'A0A0F5HPP7_Glass9_T4': 'Glass9 pore-deletion variant (T=4)',
+    'A0A0F5HPP7_Letter11_T3': 'Letter11 pore-deletion variant (T=3)',
+    'A0A0F5HPP7_Letter11_T4': 'Letter11 pore-deletion variant (T=4)',
+    'A0A0F5HPP7_T4GALA_T4': 'T4GALA E-loop variant (T=4)',
+    'A0A0F5HPP7_T4_Fdx_loaded': 'Ferredoxin-loaded T=4',
+    'A0A0F5HPP7_T4_empty': 'Wild-type cargo-free T=4',
+    'A0A0F5HPP7_ref': 'IMEF-loaded wild-type T=4',
+    'A0A1G9WS71_N198W_T4': 'N198W pore variant (T=4)',
+    'A0A1G9WS71_ref': 'Wild-type cargo-free T=4',
+    'A0A502IA18_exp': 'Experimentally observed putative encapsulin particles',
+    'A0AAT8XUH9_ref': 'DyP-loaded wild-type T=1',
+    'A0R4H0_ref': 'Native DyP-loaded wild-type T=1',
+    'D0LZ74_T1_empty': 'Wild-type cargo-free T=1',
+    'D0LZ74_ref': 'EncFtn-loaded wild-type T=1',
+    'I3E3I1_ref': 'Wild-type cargo-free T=4',
+    'I6WZG6_His_T1_empty': 'His-tagged cargo-free T=1',
+    'I6WZG6_T1_DyP_loaded': 'DyP-loaded wild-type T=1',
+    'I6WZG6_partial_48mer': 'Wild-type partial 48-mer',
+    'I6WZG6_partial_52mer': 'Wild-type partial 52-mer',
+    'I6WZG6_partial_54mer': 'Wild-type partial 54-mer',
+    'I6WZG6_ref': 'Wild-type T=1 shell',
+    'K5BEG2_ref': 'Wild-type cargo-free T=1',
+    'K7RV67_ref': 'Wild-type cargo-free T=1',
+    'Q0SE23_DypB_loaded': 'DypB-loaded wild-type T=1',
+    'Q0SE23_ref': 'Wild-type T=1 shell',
+    'Q1D6H4_3xHis_T1': '3×His-tagged T=1',
+    'Q1D6H4_3xHis_Tet': '3×His-tagged tetrahedral 36-mer',
+    'Q1D6H4_T1': 'Wild-type T=1',
+    'Q1D6H4_T3': 'Wild-type T=3',
+    'Q1D6H4_T3_loaded': 'Cargo-loaded T=3',
+    'Q1D6H4_pmut_T1': 'Pore-loop mutant, cargo-free T=1',
+    'Q1D6H4_pmut_T3': 'Pore-loop mutant, cargo-loaded T=3',
+    'Q1D6H4_pmut_T4': 'Pore-loop mutant, cargo-loaded T=4',
+    'Q1Q6L7_delta_cyt': 'cEnc ΔCyt variant (T=3)',
+    'Q1Q6L7_full': 'cEnc with cytochrome domain (T=3)',
+    'Q2RVS0_T1_EncFtn_loaded': 'EncFtn-loaded wild-type T=1',
+    'Q2RVS0_ref': 'Wild-type cargo-free T=1',
+    'Q45296_T1_DyP_loaded': 'DyP-loaded wild-type T=1',
+    'Q45296_ref': 'Wild-type cargo-free T=1',
+    'Q55032_T1_empty': 'Wild-type apo-SrpI T=1',
+    'Q55032_ref': 'CyD-loaded wild-type T=1',
+    'Q8U1L4_ref': 'Native ferritin–encapsulin fusion (T=3)',
+    'Q9WZP2_S1K_T1': 'S1K pore mutant (T=1)',
+    'Q9WZP2_S1R_T1': 'S1R pore mutant (T=1)',
+    'Q9WZP2_S3E_T1': 'S3E pore mutant (T=1)',
+    'Q9WZP2_S5D_T1': 'S5D pore-loop variant (T=1)',
+    'Q9WZP2_S6E_T1': 'S6E pore-loop variant (T=1)',
+    'Q9WZP2_S7D_T1': 'S7D pore-loop variant (T=1)',
+    'Q9WZP2_S7G_T1': 'S7G pore-loop deletion (T=1)',
+    'Q9WZP2_T1_empty': 'Wild-type cargo-free T=1',
+    'Q9WZP2_ref': 'FLP-associated wild-type T=1',
+  };
+
+  function assemblyDisplayName(a) {
+    const fallbackConstruct = String(a.construct || "").trim();
+    const suffix = a.T_number == null ? "" : ` (T=${a.T_number})`;
+    const fallback = fallbackConstruct && fallbackConstruct.toLowerCase() !== "enc"
+      ? `${fallbackConstruct}${suffix}`
+      : `${a.variant_status === "engineered" ? "Engineered" : "Wild-type"} assembly${suffix}`;
+    return `${a.candidate_id} — ${assemblyDisplayLabels[a.assembly_id] || fallback}`;
+  }
+
+  // Break only at unambiguous sentence boundaries (punctuation + uppercase).
+  // This avoids splitting abbreviations like "E. coli" and "et al. 2022".
+  // Wording is never rewritten; strings are escaped before rendering.
+  function readableSegments(value, separateSemicolons=false) {
+    const text = String(value || "").replace(/\s+/g, " ").trim();
+    if (!text) return [];
+    const sentences = text.split(/(?<=[.!?])\s+(?=[A-Z])/u).filter(Boolean);
+    if (!separateSemicolons) return sentences;
+    return sentences.flatMap(sentence => sentence.split(/;\s+(?=\S)/u).map(x => x.trim()).filter(Boolean));
+  }
+
+  function readableText(value, kind="notes") {
+    const lines = readableSegments(value, ["condition", "sequence", "pore"].includes(kind));
+    if (!lines.length) return '<p class="readable-empty">Not reported</p>';
+    // Even one short sequence/pore note is a bullet for consistent scanability.
+    if (lines.length === 1 && !["sequence", "pore"].includes(kind)) return `<p class="readable-prose">${esc(lines[0])}</p>`;
+    return `<ul class="readable-points">${lines.map(t => `<li>${esc(t)}</li>`).join("")}</ul>`;
+  }
+
   function assemblyCard(a, refId, matchState="") {
+    const linkedPores = poresByAssembly.get(a.assembly_id) || [];
     const variantChip = a.variant_status === "wild_type"
       ? `<span class="chip wt">WT</span>`
       : `<span class="chip eng">Engineered</span>`;
@@ -176,15 +431,16 @@ function sequenceCard(s) {
       <article class="assembly-card">
         <div class="assembly-top">
           <div>
-            <div class="assembly-id">${esc(a.assembly_id)}</div>
+            <div class="assembly-display-name">${esc(assemblyDisplayName(a))}</div>
             <div class="chips">${variantChip}${refChip}${unknownChip}</div>
           </div>
-          <div class="chip">${esc(a.assembly_symmetry || "symmetry unknown")}</div>
+          <div class="chip">${esc(a.assembly_symmetry ? humanValue(a.assembly_symmetry) : "Symmetry unknown")}</div>
         </div>
         <div class="why">${esc(assemblyWhy(a))}</div>
         <details class="details">
           <summary>Assembly details</summary>
         <div class="property-grid">
+          ${property("Record ID", a.assembly_id)}
           ${property("Construct", a.construct)}
           ${property("T-number", a.T_number === null ? null : `T=${a.T_number}`)}
           ${property("Subunits", a.shell_subunit_count)}
@@ -195,11 +451,24 @@ function sequenceCard(s) {
           ${property("Tm", a.thermostability_tm_c === null ? null : `${a.thermostability_tm_c} °C`)}
           ${propertyPdb("Structure ID", a.structure_id)}
           ${property("Method", a.method)}
-          ${property("Condition", a.condition)}
           ${property("Source", a.source)}
         </div>
-        <p><b>Notes:</b> ${esc(display(a.notes))}</p>
+        <section class="readable-panel condition-panel" aria-label="Experimental conditions">
+          <h4>Experimental conditions</h4>
+          ${readableText(a.condition, "condition")}
+        </section>
+        <section class="readable-panel notes-panel" aria-label="Additional notes">
+          <h4>Additional notes</h4>
+          ${readableText(a.notes)}
+        </section>
         </details>
+        ${linkedPores.length ? `
+          <details class="details pore-group">
+            <summary>Pore observations (${linkedPores.length})</summary>
+            <p class="hint">Only pores linked to this exact assembly or engineered variant are listed.</p>
+            <div class="pore-list">${linkedPores.map(poreCard).join("")}</div>
+          </details>` : ""}
+        ${citationBlock("assemblies", a.assembly_id)}
       </article>`;
   }
 
@@ -233,6 +502,8 @@ function sequenceCard(s) {
   function candidateCard(c, assemblySubset=null, stateMap=null) {
     const linked = assemblySubset ?? (byCandidate.get(c.candidate_id) || []);
     const linkedSequences = sequencesByCandidate.get(c.candidate_id) || [];
+    const poreCount = (byCandidate.get(c.candidate_id) || [])
+      .reduce((sum, a) => sum + (poresByAssembly.get(a.assembly_id) || []).length, 0);
     const assemblyHtml = linked.length
       ? linked.map(a => assemblyCard(a, c.reference_assembly_id, stateMap?.get(a.assembly_id) || "")).join("")
       : `<div class="empty-state">No curated assembly record is available for this candidate in the current dataset.</div>`;
@@ -251,21 +522,22 @@ function sequenceCard(s) {
             <p class="candidate-sub">${esc(c.protein_name)}</p>
             <div class="chips">
               ${c.strain ? `<span class="chip">${esc(c.strain)}</span>` : ""}
-              ${c.encapsulin_family ? `<span class="chip">${esc(c.encapsulin_family)}</span>` : ""}
+              ${c.encapsulin_family ? `<span class="chip">${esc(humanValue(c.encapsulin_family))}</span>` : ""}
               ${ids ? `<span class="chip">${esc(ids)}</span>` : ""}
-              <span class="chip">${linked.length} curated ${linked.length === 1 ? "assembly" : "assemblies"}</span>
+              <span class="chip">${linked.length} shown ${linked.length === 1 ? "assembly" : "assemblies"}</span>
+              ${poreCount ? `<span class="chip">${poreCount} pore ${poreCount === 1 ? "observation" : "observations"}</span>` : ""}
             </div>
           </div>
           ${builderSequence(c)
             ? `<button type="button" class="use-nc" data-use-nc="${esc(c.candidate_id)}">Use this nanocompartment</button>`
             : `<span class="use-nc-none" title="No genomic sequence record for this candidate yet">No sequence to use</span>`}
         </div>
+        ${citationBlock("databank", c.candidate_id)}
         <details class="details">
-  <summary>Sequence data (${linkedSequences.length})</summary>
-  <div class="assembly-list">${sequenceHtml}</div>
-</details>
-
-<div class="assembly-list">${assemblyHtml}</div>
+          <summary>Sequence data (${linkedSequences.length})</summary>
+          <div class="assembly-list sequence-list">${sequenceHtml}</div>
+        </details>
+        <div class="assembly-list">${assemblyHtml}</div>
       </article>`;
   }
 
@@ -273,10 +545,18 @@ function sequenceCard(s) {
   function candidateSearchText(c) {
     const linked = byCandidate.get(c.candidate_id) || [];
     const linkedSequences = sequencesByCandidate.get(c.candidate_id) || [];
+    const linkedPores = linked.flatMap(a => poresByAssembly.get(a.assembly_id) || []);
+    const sourceLinks = [
+      ...(citationsByRecord.get(`databank:${c.candidate_id}`) || []),
+      ...linked.flatMap(a => citationsByRecord.get(`assemblies:${a.assembly_id}`) || []),
+      ...linkedPores.flatMap(p => citationsByRecord.get(`pores:${p.pore_record_id}`) || [])
+    ];
     return norm([
       c.candidate_id, c.entry_name, c.protein_name, c.organism, c.strain,
       c.genus, c.gene, c.locus_tag, c.orf_name, c.encapsulin_family,
       ...linked.map(a => a.construct),
+      ...linkedPores.flatMap(p => [p.pore_record_id, p.pore_type, p.construct, p.structure_id]),
+      ...sourceLinks.flatMap(link => [link.doi, link.citation_label]),
 ...linkedSequences.flatMap(s => [
   s.protein_accession,
   s.nucleotide_accession,
@@ -315,6 +595,40 @@ function sequenceCard(s) {
     return (helper.max < reqMin || helper.min > reqMax) ? "fail" : "pass";
   }
 
+  // A match needs one *observed pore row* on this specific assembly satisfying
+  // every pore criterion. Never combine diameter from one pore with the charge
+  // of a different pore, nor values from other assemblies of the same protein.
+  function classifyPores(a) {
+    const poreType = $("poreType").value;
+    const poreState = $("poreState").value;
+    const poreCharge = $("poreCharge").value;
+    const min = readLocaleNumber($("poreDiameterMin").value);
+    const max = readLocaleNumber($("poreDiameterMax").value);
+    const needsDiameter = !min.empty || !max.empty;
+    if (!poreType && !poreState && !poreCharge && !needsDiameter) return "match";
+    const rows = poresByAssembly.get(a.assembly_id) || [];
+    if (!rows.length) return "potential";
+    const relevant = rows.filter(p => (!poreType || p.pore_type === poreType) &&
+      (!poreState || p.pore_state === poreState));
+    if (!relevant.length) return "potential"; // No measurement of requested pore type/state.
+    let hasUnknown = false;
+    for (const p of relevant) {
+      let missing = false;
+      if (needsDiameter) {
+        const d = p.pore_diameter_nm;
+        if (typeof d !== "number" || !Number.isFinite(d)) missing = true;
+        else if ((!min.empty && d < min.value) || (!max.empty && d > max.value)) continue;
+      }
+      if (poreCharge) {
+        if (!p.charge_exterior || p.charge_exterior === "not_reported") missing = true;
+        else if (p.charge_exterior !== poreCharge) continue;
+      }
+      if (!missing) return "match";
+      hasUnknown = true;
+    }
+    return hasUnknown ? "potential" : "no";
+  }
+
   function classify(a) {
     let unknown = false;
     const dmin = $("diameterMin").value;
@@ -350,6 +664,9 @@ function sequenceCard(s) {
 
     if ($("structureRequired").checked && !a.structure_id) return "no";
 
+    const poreState = classifyPores(a);
+    if (poreState === "no") return "no";
+    if (poreState === "potential") unknown = true;
     return unknown ? "potential" : "match";
   }
 
@@ -421,13 +738,15 @@ function sequenceCard(s) {
 
   [
     "diameterMin","diameterMax","tNumber","variantStatus","symmetry",
-    "subunitCount","structureRequired","includeUnknown","targetDiameter","preferStructure"
+    "subunitCount","structureRequired","includeUnknown","targetDiameter","preferStructure",
+    "poreType","poreState","poreCharge","poreDiameterMin","poreDiameterMax"
   ].forEach(id => $(id).addEventListener("input", runFinder));
 
   $("searchCapsules").addEventListener("click", runFinder);
 
   $("clearFilters").addEventListener("click", () => {
-    ["diameterMin","diameterMax","tNumber","variantStatus","symmetry","subunitCount","targetDiameter"]
+    ["diameterMin","diameterMax","tNumber","variantStatus","symmetry","subunitCount","targetDiameter",
+      "poreType","poreState","poreCharge","poreDiameterMin","poreDiameterMax"]
       .forEach(id => $(id).value = "");
     $("structureRequired").checked = false;
     $("preferStructure").checked = false;
@@ -439,7 +758,8 @@ function sequenceCard(s) {
 
   // Keep tab, filters, search text and scroll position across a page refresh.
   const SESSION_KEY = "encapsulin.selector.v1";
-  const TEXT_IDS = ["globalSearch","diameterMin","diameterMax","tNumber","variantStatus","symmetry","subunitCount","targetDiameter"];
+  const TEXT_IDS = ["globalSearch","diameterMin","diameterMax","tNumber","variantStatus","symmetry","subunitCount","targetDiameter",
+    "poreType","poreState","poreCharge","poreDiameterMin","poreDiameterMax"];
   const CHECK_IDS = ["structureRequired","includeUnknown","preferStructure"];
   const activeMode = () => document.querySelector(".mode-tab.active").dataset.mode;
 

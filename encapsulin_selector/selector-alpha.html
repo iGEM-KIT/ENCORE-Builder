@@ -50,7 +50,7 @@
       <div class="search-box">
         <label for="globalSearch">Organism, accession, protein, gene, strain or construct</label>
         <input id="globalSearch" type="search" placeholder="e.g. Thermotoga maritima, Q9WZP2, encA">
-        <p class="hint">Direct search returns the candidate and all curated assemblies linked to it.</p>
+        <p class="hint">Direct search includes accessions, organisms, constructs, pore IDs and literature DOIs; results show the candidate and its curated observations.</p>
       </div>
       <div id="searchSummary" class="summary-line"></div>
       <div id="searchResults" class="results-stack"></div>
@@ -102,6 +102,40 @@
             </select>
           </div>
 
+          <hr>
+          <h2>Observed pore properties</h2>
+          <p class="hint pore-filter-note">Pore criteria must be met by the same recorded pore on the same assembly. Missing observations remain potential matches.</p>
+          <div class="field-group">
+            <label for="poreType">Pore location</label>
+            <select id="poreType"><option value="">Any</option></select>
+          </div>
+          <div class="field-group">
+            <label for="poreState">Observed pore state</label>
+            <select id="poreState">
+              <option value="">Any</option>
+              <option value="open">Open</option>
+              <option value="closed">Closed</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label>Pore diameter (nm)</label>
+            <div class="two-col">
+              <input id="poreDiameterMin" type="text" inputmode="decimal" placeholder="Min" aria-label="Minimum pore diameter in nm">
+              <input id="poreDiameterMax" type="text" inputmode="decimal" placeholder="Max" aria-label="Maximum pore diameter in nm">
+            </div>
+          </div>
+          <div class="field-group">
+            <label for="poreCharge">Exterior pore charge</label>
+            <select id="poreCharge">
+              <option value="">Any</option>
+              <option value="positive">Positive</option>
+              <option value="negative">Negative</option>
+              <option value="neutral">Neutral</option>
+              <option value="mixed">Mixed</option>
+            </select>
+          </div>
+          <hr>
+
           <label class="check-row">
             <input id="structureRequired" type="checkbox">
             <span>Structure ID recorded</span>
@@ -140,7 +174,7 @@
           <div id="matchResults" class="results-stack"></div>
           <div id="potentialBlock">
             <h2 class="section-title">Potential matches</h2>
-            <p class="hint">Data is missing for one or more properties you filtered on, so these could not be fully checked. Nothing reported contradicts your filters.</p>
+            <p class="hint">One or more required properties or pore observations have not been recorded for these assemblies. The available measurements do not establish a complete match.</p>
             <div id="potentialResults" class="results-stack"></div>
           </div>
         </div>

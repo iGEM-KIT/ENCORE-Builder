@@ -211,3 +211,94 @@ input:focus, select:focus { outline:3px solid var(--focus); border-color:var(--a
 .use-nc-none { flex:none; color:var(--muted); font-size:.8rem; font-weight:650; padding-top:8px; }
 @media (max-width:760px) { .use-nc, .use-nc-none { margin-top:12px; } }
 :root[data-theme="dark"] .use-nc { color:#08201a; }
+
+/* Curated pore observations, evidence rows and per-record literature */
+.pore-group > .pore-list { display:grid; gap:10px; margin-top:12px; }
+.pore-card { padding:12px; border:1px solid var(--line); border-radius:12px; background:var(--card); }
+.pore-card .chips { margin:7px 0 12px; }
+.pore-card .details { margin-top:8px; }
+.pore-card .prop .v { line-height:1.4; }
+.pore-group > .hint { margin:0 0 8px; }
+.citations ul { margin:4px 0 10px; padding-left:22px; line-height:1.55; }
+.citations li { margin-bottom:7px; overflow-wrap:anywhere; font-size:.87rem; }
+.citation-role { color:var(--muted); font-size:.8rem; }
+.candidate-card > .citations { margin:0; padding:6px 20px; border-top:1px solid var(--line); }
+.compact-grid { grid-template-columns:repeat(4,minmax(0,1fr)); }
+.pore-filter-note { margin:-6px 0 12px; line-height:1.45; }
+@media (max-width:900px) { .compact-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media (max-width:560px) { .compact-grid { grid-template-columns:1fr; } }
+
+/* Step 4: readable scientific record titles and visually grouped notes. */
+.assembly-display-name {
+  font-size: 1rem;
+  line-height: 1.35;
+  font-weight: 780;
+  letter-spacing: -.01em;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+}
+.readable-panel {
+  margin: 13px 0 6px;
+  padding: 13px 16px;
+  background: var(--list-bg);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--body-ink);
+}
+.readable-panel h4 {
+  margin: 0 0 8px;
+  font-size: .81rem;
+  font-weight: 800;
+  color: var(--sub-ink);
+  letter-spacing: .015em;
+}
+.readable-panel .readable-prose,
+.readable-panel .readable-empty {
+  margin: 0;
+  font-size: .88rem;
+  line-height: 1.7;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.readable-panel .readable-empty { color: var(--muted); font-style: italic; }
+.readable-points {
+  padding-left: 19px;
+  margin: 2px 0 0;
+  font-size: .87rem;
+  line-height: 1.62;
+  overflow-wrap: anywhere;
+}
+.readable-points li { padding-left: 3px; margin: 0 0 8px; }
+.readable-points li:last-child { margin-bottom: 0; }
+.readable-points li::marker { color: var(--accent); }
+.assembly-card .condition-panel { border-left: 3px solid var(--accent); }
+.assembly-card .notes-panel { border-left: 3px solid var(--line); }
+.assembly-card .details > .readable-panel { margin-top: 12px; }
+
+/* Step 5: present technical record metadata without spreadsheet-style labels. */
+.candidate-card > .details .sequence-list {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  margin-top: 2px;
+}
+.sequence-card {
+  padding: 10px 0 2px;
+  border: 0;
+  background: transparent;
+  border-radius: 0;
+}
+.sequence-card .record-meta {
+  font-size: .8rem;
+  color: var(--muted);
+}
+.sequence-card .record-meta code {
+  display: inline-block;
+  font-size: .82rem;
+  padding: 2px 0 6px;
+  overflow-wrap: anywhere;
+}
+.pore-details .condition-panel { border-left: 3px solid var(--accent); }
+.pore-details .notes-panel { border-left: 3px solid var(--line); }
+.pore-details .readable-panel { margin-top: 12px; }
+.pore-card .extra-source { margin: 12px 0 2px; }
