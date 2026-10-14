@@ -14,11 +14,12 @@ primer3-py. Details and setup: see the section
 ## Database scope (important!)
 
 On its first start the container downloads **only** the mandatory commec databases
-(biorisk, control_lists, low_concern, best_match; ~6 GB download, ~40 GB on disk, via `commec setup -d /databases`, see
+(biorisk and low-concern; ~1.2 GB, via `commec setup`, see
 `entrypoint.sh`) into the volume `/databases`, **not** the full taxonomy databases (protein NR
 ~530 GB, nucleotide NT ~580 GB, together over 1 TB). Until the download is done `/health`
-reports `ok: false` and the app shows the screening as off. The image uses commec 2.1.0 (the
-version on the server; only available for x86_64, so the image is built for linux/amd64). That was a deliberate decision: the full databases do not fit
+reports `ok: false` and the app shows the screening as off. The image uses commec 1.0.4, the newest version
+that installs on every platform: commec is noarch, but 1.0.5 and 2.x need blast >=2.17, which bioconda does not
+have for linux-aarch64 (Docker on Apple Silicon), so their conda install fails there. That was a deliberate decision: the full databases do not fit
 on the disk of most development machines and take very long to download.
 
 Practical consequence: `commec screen` always runs here with `--skip-tx --skip-nt`
@@ -57,9 +58,8 @@ the others in the same batch).
 
 - `COMMEC_DB_DIR` (default `/databases`): where `commec setup` downloaded to.
 - `COMMEC_THREADS` (default `4`): passed through to `commec screen -t`.
-- `COMMEC_SKIP_TAXONOMY` (default `true` in `app.py`, `false` in `docker-compose.yml`): `true` appends `--skip-tx --skip-nt`
-  (only the biorisk list is checked). With `commec setup` of commec 2.x the `best_match` databases come along, so the compose file
-  switches the taxonomy steps on (measured here: 200 bp ~12 s, 2.7 kb ~17 s; with skip about half).
+- `COMMEC_SKIP_TAXONOMY` (default `true`): `true` appends `--skip-tx --skip-nt`
+  (only the biorisk list is checked).
   Only set to `false` if this image has been extended with the protein/nucleotide taxonomy
   databases (see above).
 - `COMMEC_RUN_TIMEOUT_SECONDS` (default `900`): hard timeout per
@@ -71,15 +71,13 @@ the others in the same batch).
 ## Verified
 
 This wrapper was tested end to end against a real, locally built container
-(commec 2.1.0, x86_64), not just built from the docs (the screening of a harmless GFP gene was run end to end after the
-version change; a positive control with a real toxin sequence was not repeated with 2.1.0, only with 1.0.4):
+(commec 1.0.4; the switch back from 2.1.0 to 1.0.4 for cross-platform installs has not been re-run yet), not just built from the docs:
 
-- `commec setup -d /databases` (run by `entrypoint.sh`) downloads `biorisk/`, `control_lists/`, `low_concern/` and
-  `best_match/` (~40 GB on disk), no taxonomy databases, and needs no input.
+- `commec setup` (run by `entrypoint.sh` with a fixed answer sequence on stdin) downloads the curated biorisk and
+  low-concern databases (~1.2 GB), no taxonomy databases.
 - `GET /health` reports `ok: true` as soon as the database is there.
 - `POST /screen` with a harmless sequence (GFP) returns
-  `biorisk: "Pass"` and `screen_status: "Pass (Skipped Taxonomy)"` (1.0.4 said `"Warning"`; the frontend only looks at the
-  word in front of the bracket and, with skipped taxonomy, at `biorisk`).
+  `biorisk: "Pass"` and `screen_status: "Warning"` (the frontend looks at `biorisk` when the taxonomy is skipped).
 - `POST /screen` with a real conotoxin sequence obtained from UniProt
   (Q9BPJ4, listed in the biorisk database as "Must flag") correctly returns
   `screen_status: "Flag"`, `biorisk: "Flag"`,
