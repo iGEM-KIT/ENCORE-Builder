@@ -20,7 +20,7 @@ installed. No programming skills, no Node.js, no Python needed.
    docker compose up --build
    ```
    The first start takes a bit longer (it builds the builder and additionally
-   the biosecurity screening container (commec) downloads its databases (~6 GB download, ~40 GB on disk) once on its first start, see below; the screening is "off" until
+   the biosecurity screening container (commec) downloads its databases (~1.2 GB) once on its first start, see below; the screening is "off" until
    that is done).
 3. Open it in the browser: **[http://localhost:3000](http://localhost:3000)**
 4. To stop, press `Ctrl+C` in the terminal, or in a new terminal:
