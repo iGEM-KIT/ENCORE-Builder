@@ -8,8 +8,11 @@ mkdir -p "$DB_DIR"
 if [ ! -f "$DB_DIR/.setup-complete" ]; then
     (
         touch "$DB_DIR/.setup-running"
-        echo "[commec-service] first start: downloading the databases into $DB_DIR (about 6 GB download, about 40 GB on disk) ..."
-        if commec setup -d "$DB_DIR" </dev/null; then
+        echo "[commec-service] first start: downloading the databases into $DB_DIR (about 1.2 GB) ..."
+        # commec 1.0.4 `commec setup` has no -d flag and asks interactively; the answers (verified against the real
+        # flow): 1. target directory, 2. download biorisk+benign: y, 3. keep the default URL, 4. protein NR: n (~530 GB),
+        # 5. nucleotide NT: n (~580 GB), 6. taxonomy DB: n, 7. confirm.
+        if printf '%s\ny\n\nn\nn\nn\n\n' "$DB_DIR" | commec setup; then
             touch "$DB_DIR/.setup-complete"
             echo "[commec-service] databases ready."
         else

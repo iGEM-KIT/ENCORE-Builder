@@ -20,7 +20,7 @@ installed. No programming skills, no Node.js, no Python needed.
    docker compose up --build
    ```
    The first start takes a bit longer (it builds the builder and additionally
-   the biosecurity screening container (commec) downloads its databases (~6 GB download, ~40 GB on disk) once on its first start, see below; the screening is "off" until
+   the biosecurity screening container (commec) downloads its databases (~1.2 GB) once on its first start, see below; the screening is "off" until
    that is done).
 3. Open it in the browser: **[http://localhost:3000](http://localhost:3000)**
 4. To stop, press `Ctrl+C` in the terminal, or in a new terminal:
@@ -115,9 +115,9 @@ this screening (with a visible note in step 4). Real
 unavoidability cannot be guaranteed by self-hosted, open source software anyway,
 so this is the honest default here, not a tamper protection.
 
-**Database scope:** The shipped `commec-service` container (commec 2.1.0, built for
-x86_64, emulated on Apple Silicon) downloads the mandatory commec databases (biorisk, control
-lists, low-concern, best_match; ~6 GB download, ~40 GB on disk) on its first start into the volume `commec-db`, so a
+**Database scope:** The shipped `commec-service` container (commec 1.0.4, the newest version
+that installs on Windows, Linux and Mac incl. Apple Silicon) downloads the curated commec databases
+(biorisk and low-concern; ~1.2 GB) on its first start into the volume `commec-db`, so a
 recreated container does not download them again. It does not download the full
 protein/nucleotide taxonomy databases (over 1 TB together according to
 COMMEC's own size statement), which on most machines neither fit on the
