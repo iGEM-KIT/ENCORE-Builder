@@ -157,9 +157,11 @@ helper check and does not replace the biosafety review of your institution.
 
 ## Using the software
 
-The start page has a **"Before you start"** card that opens a guide with all rules and
-notes for using the builder (what the builder accepts, which combinations are
-allowed, what happens to your sequences). Read it once.
+Everything you need to know to use the software is explained in the **guide inside the
+software itself**. On the start page, click the **"Before you start"** card: it opens a guide
+with all rules and notes (what the builder accepts, which combinations are allowed, how your
+own sequences are handled, how to read the results and what to order). Read it once before you
+start. This page only gives a short overview of the steps:
 
 1. Start page, then **"Start builder"**
 2. **Step 1, Nanocompartment Site:** choose a nanocompartment from the library
