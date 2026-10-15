@@ -94,10 +94,30 @@ You download a single small file. Docker then fetches the ready-made program and
 screening for you.
 
 1. Create a new empty folder, for example `ENCORE` on your Desktop.
-2. Download this file into that folder:
-   [docker-compose.pull.yml](https://raw.githubusercontent.com/iGEM-KIT/ENCORE-Builder/main/docker-compose.pull.yml)
-   (right-click the link, "Save link as"; make sure the file name stays exactly
-   `docker-compose.pull.yml`).
+2. Get the file `docker-compose.pull.yml` into that folder. It has to end in exactly `.yml`.
+   Some browsers save a plain link as `.txt`, so use one of these two ways:
+   * **With the browser:** open
+     [the file on GitHub](https://github.com/iGEM-KIT/ENCORE-Builder/blob/main/docker-compose.pull.yml)
+     and click the **Download raw file** button (the download arrow at the top right of the file
+     view). Move the file into your folder.
+   * **With the terminal:** open a terminal in your folder first (see above: right-click the
+     folder), then run the command for your system. The file lands directly in that folder with
+     the right name.
+
+     Mac and Linux:
+     ```bash
+     curl -L -o docker-compose.pull.yml https://raw.githubusercontent.com/iGEM-KIT/ENCORE-Builder/main/docker-compose.pull.yml
+     ```
+
+     Windows (PowerShell):
+     ```bash
+     curl.exe -L -o docker-compose.pull.yml https://raw.githubusercontent.com/iGEM-KIT/ENCORE-Builder/main/docker-compose.pull.yml
+     ```
+
+   Check the name: if the file is called `docker-compose.pull.yml.txt` (or `docker-compose.pull.txt`),
+   rename it to `docker-compose.pull.yml`. On Windows you see the ending only if you switch it on:
+   in File Explorer click **View**, then **Show**, then **File name extensions**. On a Mac,
+   click the file, press Enter to rename it and confirm with **Use .yml** if asked.
 3. Open a terminal in that folder (see above: right-click the folder).
 4. Type this and press Enter:
    ```bash
