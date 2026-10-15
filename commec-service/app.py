@@ -41,8 +41,8 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 DB_DIR = os.environ.get("COMMEC_DB_DIR", "/databases")
 THREADS = os.environ.get("COMMEC_THREADS", "4")
 PORT = int(os.environ.get("PORT", "8787"))
-# The first start only downloads the mandatory set (curated biorisk + low_concern + best_match,
-# ~40 GB on disk) via `commec setup`, not the ~530GB protein-NR / ~580GB
+# The first start only downloads the mandatory set (curated biorisk + low_concern,
+# ~1.2 GB) via `commec setup`, not the ~530GB protein-NR / ~580GB
 # nucleotide-NT taxonomy databases (see Dockerfile for why); so the
 # protein/nucleotide taxonomy search steps must be skipped, or commec errors
 # looking for databases that were never downloaded. Kept as an env var, not
@@ -145,7 +145,7 @@ class Handler(BaseHTTPRequestHandler):
             running = os.path.exists(os.path.join(DB_DIR, ".setup-running"))
             db_ok = has_content and not running
             if running:
-                detail = f"{DB_DIR}: the databases are being downloaded (first start, about 6 GB download, about 40 GB on disk); screening is available afterwards."
+                detail = f"{DB_DIR}: the databases are being downloaded (first start, about 1.2 GB); screening is available afterwards."
             else:
                 detail = DB_DIR if db_ok else f"{DB_DIR} missing or empty: run `commec setup -d {DB_DIR}` (see Dockerfile)."
             self._send_json(200, {"ok": db_ok, "detail": detail})
