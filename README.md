@@ -60,15 +60,33 @@ Good to know before you start:
 
 ### How to open a terminal (needed for the commands below)
 
-A terminal is a window where you type a command and press Enter.
+A terminal is a window where you type a command and press Enter. For this project the terminal
+has to be **opened inside the folder** where your files are (the folder with
+`docker-compose.pull.yml`, or the unzipped project folder). The easiest way is to open it
+straight from the folder with a right-click, so you never have to type a path:
 
-* **Windows:** press the Windows key, type `PowerShell`, press Enter.
-* **Mac:** press Cmd and Space, type `Terminal`, press Enter.
-* **Linux:** press Ctrl, Alt and T.
+* **Windows 11:** open the folder in File Explorer, right-click an empty spot inside it (not on
+  a file) and choose **Open in Terminal**.
+* **Windows 10:** open the folder in File Explorer, hold the **Shift** key, right-click an empty
+  spot inside it and choose **Open PowerShell window here**.
+* **Windows (works on every version):** open the folder in File Explorer, click into the address
+  bar at the top (where the path is shown), type `powershell` and press Enter.
+* **Mac:** in Finder, right-click the **folder itself** (for example `ENCORE`), then choose
+  **Services**, then **New Terminal at Folder**. If you do not see this entry, switch it on once:
+  Apple menu, System Settings, Keyboard, Keyboard Shortcuts, Services, Files and Folders, tick
+  **New Terminal at Folder**. A second way: open the Terminal app (Cmd and Space, type
+  `Terminal`) and drag the folder onto the Terminal window or the Terminal icon in the Dock.
+* **Linux:** in your file manager, right-click an empty spot inside the folder and choose **Open
+  in Terminal** (in KDE Dolphin: **Open Terminal Here**, or press F4).
+
+The terminal window then already sits in the right folder and you can run the commands directly.
 
 To run a command, copy it from this page, paste it into the terminal and press **Enter**.
-Where a step says "go into the folder", type `cd ` (with a space after it), drag the folder
-from your file explorer into the terminal window (this fills in its path) and press Enter.
+
+Opening the terminal by hand also works: Windows key, type `PowerShell`, Enter (Windows);
+Cmd and Space, type `Terminal`, Enter (Mac); Ctrl, Alt and T (Linux). You then have to go into
+the folder yourself: type `cd ` (with a space after it), drag the folder from your file explorer
+into the terminal window (this fills in its path) and press Enter.
 
 ## Way A: easiest, download one file
 
@@ -80,7 +98,7 @@ screening for you.
    [docker-compose.pull.yml](https://raw.githubusercontent.com/iGEM-KIT/ENCORE-Builder/main/docker-compose.pull.yml)
    (right-click the link, "Save link as"; make sure the file name stays exactly
    `docker-compose.pull.yml`).
-3. Open a terminal and go into the folder (see above).
+3. Open a terminal in that folder (see above: right-click the folder).
 4. Type this and press Enter:
    ```bash
    docker compose -f docker-compose.pull.yml up
@@ -109,7 +127,7 @@ yourself instead of trusting a ready-made image. Docker builds everything from t
    ```bash
    git clone https://github.com/iGEM-KIT/ENCORE-Builder.git
    ```
-2. Open a terminal and go into the unzipped folder `ENCORE-Builder` (see above).
+2. Open a terminal in the unzipped folder `ENCORE-Builder` (see above: right-click the folder).
 3. Build and start:
    ```bash
    docker compose up --build
@@ -166,7 +184,7 @@ physical properties (diameter, triangulation number).
 
 ## Stopping, updating and cleaning up
 
-Open the terminal in the same folder you started from (Way A: the folder with
+Open a terminal in the same folder you started from (right-click, see above) (Way A: the folder with
 `docker-compose.pull.yml`, Way B: the project folder).
 
 | I want to | Way A | Way B |
