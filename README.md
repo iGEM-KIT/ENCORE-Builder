@@ -161,28 +161,7 @@ Everything you need to know to use the software is explained in the **guide insi
 software itself**. On the start page, click the **"Before you start"** card: it opens a guide
 with all rules and notes (what the builder accepts, which combinations are allowed, how your
 own sequences are handled, how to read the results and what to order). Read it once before you
-start. This page only gives a short overview of the steps:
-
-1. Start page, then **"Start builder"**
-2. **Step 1, Nanocompartment Site:** choose a nanocompartment from the library
-   (or paste your own sequence) and fill the four modules around it
-   (spacer, linker, surface marker or own sequence)
-3. **Step 2, Cargo Site:** paste your own coding sequence or amino acid sequence (or load an
-   example such as GFP) and fill the modules around it
-4. **Step 3, Promoter:** choose the promoter
-5. Click **"Calculate construct"**. With screening active it runs automatically;
-   only for a real hit a warning appears that has to be confirmed before
-   continuing
-6. **Step 4, Modules:** the finished Golden Gate design (Level 0, 1 and 2), primers,
-   plasmid map, exportable as an annotated GenBank file (.gb)
-7. **Step 5, Overview:** what to order as oligos, primers or DNA
-
-Every sequence you enter yourself (DNA or amino acids) is codon-optimized for
-*S. cerevisiae* and kept free of BsaI and BbsI sites.
-
-Not sure yet which encapsulin fits? Switch to **"Encapsulin Filter"** in the
-header at the top: there you can search by organism or accession, or filter by
-physical properties (diameter, triangulation number).
+start.
 
 ## Stopping, updating and cleaning up
 
