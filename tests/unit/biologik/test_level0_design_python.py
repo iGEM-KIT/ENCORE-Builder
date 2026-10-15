@@ -16,6 +16,13 @@ from Biologik.level0_design.parts_db import load_parts
 from Biologik.level0_design.sequence import is_protein, reverse_complement, validate_cargo
 
 
+
+def assembly_sites(dna):
+    """The BsaI and BbsI sites of a sequence. A whole Level 1 module also holds toolbox parts, which are fixed plasmids and still
+    carry some RFC 10 / SapI sites, so a module is only required to be free of the two assembly enzymes."""
+    return [h for h in find_forbidden(dna) if h['enzyme'] in ('BsaI', 'BbsI')]
+
+
 def test_validate_cargo_takes_a_trailing_stop_codon_off_instead_of_rejecting_it():
     # The builder adds the stop codon itself, so an entered one is removed with a warning.
     cargo = validate_cargo('ATGAAATTTGAAATGAAATTTGAAATGAAATTTTAG', min_bp=30)
@@ -996,7 +1003,7 @@ def test_every_user_sequence_in_a_full_design_is_site_free_from_level0_to_the_le
     assert all(c['codon'] is None for c in design['level0Constructs'] if not c['isUser'])
     # the assembled Level 1 modules (BsaI) carry no BsaI/BbsI site anywhere
     cargo, _, nc = design['level1Constructs']
-    assert find_forbidden(cargo['sequence']) == [] and find_forbidden(nc['sequence']) == []
+    assert assembly_sites(cargo['sequence']) == [] and assembly_sites(nc['sequence']) == []        # toolbox parts keep their RFC 10 / SapI sites
     # the cargo shown in the design is the optimized one, with the same protein as entered
     assert find_forbidden(design['cargo']['sequence']) == []
 
@@ -1069,7 +1076,7 @@ def test_design_builds_from_protein_input_everywhere():
     assert all(r['fromProtein'] and r['status'] == 'optimized' for r in report.values()) and len(report) == 3
     assert 'Back-translated' in users['PartB']['genbank']
     cargo, _, nc = design['level1Constructs']
-    assert find_forbidden(cargo['sequence']) == [] and find_forbidden(nc['sequence']) == []
+    assert assembly_sites(cargo['sequence']) == [] and assembly_sites(nc['sequence']) == []        # toolbox parts keep their RFC 10 / SapI sites
 
 
 def test_custom_shell_can_be_a_protein_too():
@@ -1297,3 +1304,85 @@ def test_the_terminators_marker_and_origins_come_from_the_level2_vector_not_from
     level2 = _real_design()['level2Construct']['sequence']
     assert adh1 not in level2 and cyc1 not in level2 and insert_sequences
     assert 'HIS3' in features and 'AmpR' in features and any('2μ' in k or '2μ' in k for k in features)   # marker and origins stay in the vector
+
+
+# The sites the iGEM standards forbid inside a part: RFC 10 (EcoRI, XbaI, SpeI, PstI, NotI to avoid) and RFC 1000 (BsaI, SapI)
+
+RFC_SITES = {'EcoRI': ['GAATTC'], 'XbaI': ['TCTAGA'], 'SpeI': ['ACTAGT'], 'PstI': ['CTGCAG'], 'NotI': ['GCGGCCGC'],
+             'SapI': ['GCTCTTC', 'GAAGAGC'], 'BsaI': ['GGTCTC', 'GAGACC'], 'BbsI': ['GAAGAC', 'GTCTTC']}
+
+
+def test_the_forbidden_sites_are_the_ones_of_the_two_igem_standards_plus_bbsi():
+    from Biologik.level0_design.codon import FORBIDDEN_SITES
+    assert {enzyme: sorted(sites) for enzyme, sites in FORBIDDEN_SITES.items()} == {e: sorted(s) for e, s in RFC_SITES.items()}
+    for enzyme, sites in FORBIDDEN_SITES.items():
+        assert len(sites) == len(set(sites))
+        if len(sites) == 2:
+            assert sites[1] == reverse_complement(sites[0]), enzyme                  # both strands
+        else:
+            assert sites[0] == reverse_complement(sites[0]), enzyme                  # a palindromic site is listed once
+
+
+def test_find_forbidden_finds_every_site_in_both_orientations():
+    for enzyme, sites in RFC_SITES.items():
+        for site in sites:
+            hits = find_forbidden('AAA' + site + 'TTT')
+            assert [(h['enzyme'], h['pos']) for h in hits] == [(enzyme, 3)], site
+
+
+# 12 codons that read as protein but contain one site each (in frame), plus filler
+SITE_RICH_CDS = ('ATG' + 'GAATTC' + 'TCTAGA' + 'ACTAGT' + 'CTGCAG' + 'GCGGCCGCC' + 'GCTCTTCAA' + 'GAAGAGCAA'
+                 + 'GGTCTC' + 'GAAGAC' + 'AAATTTAAATTT')
+
+
+def test_codon_optimization_removes_the_rfc_10_and_rfc_1000_sites_too_and_keeps_the_protein():
+    assert len(SITE_RICH_CDS) % 3 == 0
+    before = {h['enzyme'] for h in find_forbidden(SITE_RICH_CDS)}
+    assert before == set(RFC_SITES)                                                 # every enzyme is in the test sequence
+    result = optimize_cds(SITE_RICH_CDS)
+    assert result['status'] == 'optimized' and find_forbidden(result['sequence']) == [] and result['forbiddenAfter'] == []
+    assert translate(result['sequence']) == translate(SITE_RICH_CDS) and len(result['sequence']) == len(SITE_RICH_CDS)
+    assert {h['enzyme'] for h in result['forbiddenBefore']} == set(RFC_SITES)
+
+
+def _can_change(bases):
+    """Whole codons that each have a synonymous codon, so the optimizer is free to avoid the site."""
+    from Biologik.level0_design.codon import CODON_TABLE, SYNONYMS
+    return len(bases) % 3 == 0 and all(len(SYNONYMS[CODON_TABLE[bases[k:k + 3]]]) > 1 and CODON_TABLE[bases[k:k + 3]] != '*'
+                                       for k in range(0, len(bases), 3))
+
+
+@pytest.mark.parametrize('enzyme, site', [(e, s) for e, sites in RFC_SITES.items() for s in sites])
+def test_no_rfc_site_can_appear_across_the_seam_to_the_adapter(enzyme, site):
+    """The adapter flanks (overhang plus GC spacer) can complete a site that starts or ends in the part. The part is built so that,
+    as entered, it WOULD complete the site with the flank; the optimizer has to pick other codons. Its context is the longest
+    site minus one base (NotI has 8), so a site that reaches 6 or 7 bases into the part is still seen."""
+    cases = 0
+    for cut in range(1, len(site)):
+        tail, head = site[cut:], site[:cut]
+        if _can_change(tail):                                                       # left seam: flank = first bases, part starts with the rest
+            dna = tail + 'GCT' * 3
+            assert find_forbidden(head + dna)                                       # as entered it completes the site
+            result = optimize_cds(dna, left=head, right='')
+            assert find_forbidden(head + result['sequence']) == [], (enzyme, 'left', cut)
+            assert translate(result['sequence']) == translate(dna)
+            cases += 1
+        if _can_change(head):                                                       # right seam: the part ends with the first bases
+            dna = 'GCT' * 3 + head
+            assert find_forbidden(dna + tail)
+            result = optimize_cds(dna, left='', right=tail)
+            assert find_forbidden(result['sequence'] + tail) == [], (enzyme, 'right', cut)
+            assert translate(result['sequence']) == translate(dna)
+            cases += 1
+    assert cases >= 1                                                              # the construction really exercised a seam
+
+
+def test_a_full_design_removes_rfc_sites_from_own_sequences_but_leaves_toolbox_parts_alone():
+    from Biologik.level0_design.design import design_construct
+    cargo = ('ATG' + 'GAATTCTCTAGAACTAGTCTGCAG' + 'GCGGCCGCC' + 'GCTCTTCAA' + 'GGTCTCGAAGAC' + 'AAATTTAAATTTAAATTTAAATTT')
+    design = design_construct({'nanocompartment': 'tmari', 'cargoSeq': cargo, 'cargoLabel': 'X'})
+    mine = next(c for c in design['level0Constructs'] if c['isUser'])
+    assert find_forbidden(mine['insert']['sequence']) == []
+    assert {s.split(' ')[0] for s in design['codonOptimization'][0]['sitesRemoved']} == set(RFC_SITES)
+    shell = next(c for c in design['level0Constructs'] if c['module'] == 'nc_site' and c['slot'] == 3)
+    assert not shell['isUser'] and any(h['enzyme'] == 'XbaI' for h in find_forbidden(shell['insert']['sequence']))   # E-Tm is a built plasmid

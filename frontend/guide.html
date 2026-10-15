@@ -138,8 +138,8 @@
           <td>The cargo needs at least 30 bp (10 aa). Your own shell and your own module sequences can be any length.</td></tr>
       <tr><td><span class="tag req">Required</span> <b>No overhangs, no adapter bases</b></td>
           <td>Give the bare coding part. The builder wraps it in the adapter of its Type: BbsI sites, the Level 0/1/2 overhangs and the 2-nt GC frame spacer. Bases you add yourself would be doubled.</td></tr>
-      <tr><td><span class="tag auto">Automatic</span> <b>BsaI / BbsI sites</b></td>
-          <td>You do not have to remove them yourself: the codon optimization removes every BsaI (GGTCTC / GAGACC) and BbsI (GAAGAC / GTCTTC) site without changing the protein; see below.</td></tr>
+      <tr><td><span class="tag auto">Automatic</span> <b>Restriction sites</b></td>
+          <td>You do not have to remove them yourself: the codon optimization removes, without changing the protein, every site of the two enzymes of this toolkit, <b>BsaI</b> (GGTCTC / GAGACC) and <b>BbsI</b> (GAAGAC / GTCTTC), and the sites that the iGEM standards forbid inside a part: <b>SapI</b> (GCTCTTC / GAAGAGC) for the iGEM Type IIS standard RFC 1000, and <b>EcoRI</b> (GAATTC), <b>XbaI</b> (TCTAGA), <b>SpeI</b> (ACTAGT) and <b>PstI</b> (CTGCAG) for the BioBrick standard RFC 10, plus <b>NotI</b> (GCGGCCGC), which RFC 10 asks to avoid. See below.</td></tr>
       <tr><td><span class="tag auto">Automatic</span> <b>Biosecurity screening</b></td>
           <td>Every sequence you enter yourself is screened with COMMEC before the design is calculated. A hit never blocks you silently: you review it and confirm before continuing. Toolbox parts are not screened. If the screening service is not reachable, the builder tells you and goes on.</td></tr>
       <tr><td><span class="tag info">Info</span> <b>Primer structure</b></td>
@@ -153,8 +153,9 @@
       <li><b>Your own sequences</b> are codon-optimized for <i>Saccharomyces cerevisiae</i> automatically; DNA or amino acids alike. The protein stays exactly the same; only synonymous codons change.</li>
       <li><b>Toolbox sequences</b> (library parts and library cargos) are already optimized for <i>S. cerevisiae</i> and are never changed.</li>
       <li>The result keeps the codon adaptation index (CAI) at about 0.85 to 0.9 and the GC content at about 35 to 40&nbsp;%. The same input always gives the same output.</li>
-      <li>No BsaI or BbsI site is left (also not across the seam to the adapter or to the neighbouring part) and no run of seven identical bases.</li>
-      <li>A DNA sequence that is already well adapted (CAI ≥ 0.85) and has no such sites is kept as you entered it.</li>
+      <li>None of these restriction sites is left: BsaI, BbsI, SapI (RFC 1000), EcoRI, XbaI, SpeI, PstI and NotI (RFC 10), on either strand, also not across the seam to the adapter or to the neighbouring part. No run of seven identical bases is left either.</li>
+      <li>Toolbox parts are plasmids that already exist and are not changed. Some of them contain RFC 10 or SapI sites (for example the shell E-Tm has an XbaI site and the cargo CiVCPO an EcoRI and a SapI site), so a design that uses them is not automatically RFC 10 or RFC 1000 compatible; the compatibility box of the Registry entry shows it.</li>
+      <li>A DNA sequence that is already well adapted (CAI ≥ 0.85) and has none of these sites is kept as you entered it.</li>
       <li>You see what happened under the input field, in the Level 0 popup of the part, and in the GenBank note. Level 0 primers, oligos and the DNA list all use the <b>optimized</b> sequence.</li>
       <li><b>Another host organism?</b> The builder always optimizes for <i>S. cerevisiae</i>; a sequence you optimized for another organism is re-optimized.</li>
     </ul>

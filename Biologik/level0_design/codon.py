@@ -11,7 +11,8 @@ identical codons. The randomness is tied to the input (seed = hash of the sequen
 Afterwards an exact search (dynamic programming over all codons, not greedy) corrects the choice as little as possible, so that
 
 * no BsaI site (GGTCTC / GAGACC) and no BbsI site (GAAGAC / GTCTTC) arises or remains, also not across the seam to the
-  adapter (4-nt overhang + GC spacer + insert + overhang), so that the Golden Gate cloning does not cut the part;
+  adapter (4-nt overhang + GC spacer + insert + overhang), so that the Golden Gate cloning does not cut the part; the same
+  holds for the sites that the iGEM standards forbid inside a part: SapI (RFC 1000) and EcoRI, XbaI, SpeI, PstI plus NotI (RFC 10);
 * no homopolymers of 7 or more identical bases arise (synthesis problems, for A/T in yeast also premature termination).
 
 Codon usage: Kazusa table for S. cerevisiae (frequency per 1000 codons). CAI after Sharp & Li (1987) with
@@ -53,9 +54,24 @@ SYNONYMS: dict = {}
 for _codon, _aa in CODON_TABLE.items():
     SYNONYMS.setdefault(_aa, []).append(_codon)
 
-# Restriction sites that must never arise (both strands).
-FORBIDDEN_SITES = {"BsaI": ("GGTCTC", "GAGACC"), "BbsI": ("GAAGAC", "GTCTTC")}
-_FORBIDDEN = tuple(s for pair in FORBIDDEN_SITES.values() for s in pair)
+# Restriction sites that must never arise (both strands; a palindromic site is listed once).
+#   BsaI, BbsI: the enzymes of this toolkit's Golden Gate assembly
+#   SapI:       iGEM Type IIS standard RFC 1000 (together with BsaI)
+#   EcoRI, XbaI, SpeI, PstI: BioBrick standard RFC 10 (illegal in a part); NotI is listed there as "avoid"
+# Source: the iGEM Registry help pages "Help:Standards/Assembly/Type_IIS" and "Help:Standards/Assembly/RFC10".
+FORBIDDEN_SITES = {
+    "BsaI": ("GGTCTC", "GAGACC"),
+    "BbsI": ("GAAGAC", "GTCTTC"),
+    "SapI": ("GCTCTTC", "GAAGAGC"),
+    "EcoRI": ("GAATTC",),
+    "XbaI": ("TCTAGA",),
+    "SpeI": ("ACTAGT",),
+    "PstI": ("CTGCAG",),
+    "NotI": ("GCGGCCGC",),
+}
+_FORBIDDEN = tuple(s for sites in FORBIDDEN_SITES.values() for s in sites)
+# Bases of context kept on each side: the longest site minus one, so a site that spans a seam is always seen
+CONTEXT = max(len(s) for s in _FORBIDDEN) - 1
 MAX_RUN = 6  # longest allowed homopolymer
 # Exponent on the frequency in the random draw (1 = proportional); 3 matches CAI/GC of VectorBuilder (~0.87 / ~36 %)
 SHARPEN = 3.0
@@ -150,11 +166,11 @@ def _sites_in_context(seq: str, lefts: list, rights: list) -> list:
     seen, hits = set(), []
     for left in lefts:
         for right in rights:
-            for h in find_forbidden(left[-5:] + seq + right[:5]):
-                key = (h["enzyme"], h["pos"] - len(left[-5:]), h["site"])
+            for h in find_forbidden(left[-CONTEXT:] + seq + right[:CONTEXT]):
+                key = (h["enzyme"], h["pos"] - len(left[-CONTEXT:]), h["site"])
                 if key not in seen:
                     seen.add(key)
-                    hits.append({**h, "pos": h["pos"] - len(left[-5:])})
+                    hits.append({**h, "pos": h["pos"] - len(left[-CONTEXT:])})
     return sorted(hits, key=lambda h: h["pos"])
 
 
@@ -175,9 +191,9 @@ def _draw_targets(dna: str) -> list:
 
 def _search(dna: str, targets: list, lefts: list, rights: list) -> tuple:
     """Exact search (dynamic programming) for the codons that deviate as little as possible from the target codons and
-        form no forbidden site. State = the last 6 bases per context variant. Returns (sequence, None) or (None, reason)."""
+        form no forbidden site. State = the last CONTEXT bases per context variant. Returns (sequence, None) or (None, reason)."""
     layers = []  # per position: state -> (score, predecessor state, codon) for the traceback
-    states = {tuple(left[-6:] for left in lefts): 0.0}
+    states = {tuple(left[-CONTEXT:] for left in lefts): 0.0}
     for i, target in enumerate(targets):
         original = dna[3 * i:3 * i + 3]
         options = SYNONYMS[CODON_TABLE[original]] if CODON_TABLE[original] != "*" else [original]
@@ -187,7 +203,7 @@ def _search(dna: str, targets: list, lefts: list, rights: list) -> tuple:
                 windows = tuple(w + codon for w in state)
                 if any(_bad(w, 3) for w in windows):
                     continue
-                key = tuple(w[-6:] for w in windows)
+                key = tuple(w[-CONTEXT:] for w in windows)
                 s = score - _cost(codon, target)
                 if key not in nxt or s > nxt[key][0]:
                     nxt[key] = (s, state, codon)
@@ -198,7 +214,7 @@ def _search(dna: str, targets: list, lefts: list, rights: list) -> tuple:
 
     # Right context: no site may arise across the seam to the adapter either.
     finals = [(score, key) for key, score in states.items()
-              if not any(_crosses(w[-5:] + r[:5], len(w[-5:])) for w in key for r in rights)]
+              if not any(_crosses(w[-CONTEXT:] + r[:CONTEXT], len(w[-CONTEXT:])) for w in key for r in rights)]
     if not finals:
         return None, "No codon combination avoids all restriction sites at the right junction."
     key = max(finals)[1]
@@ -239,7 +255,7 @@ def optimize_cds(dna: str, left="", right="", protein: bool = False) -> dict:
         return {**result, "reason": "Length is not a multiple of 3; the sequence was kept as entered."}
     if not protein and cai_before >= ALREADY_ADAPTED_CAI and not sites_before and not _has_run(dna):
         return {**result, "status": "kept", "optimized": True,
-                "reason": f"Already well adapted to S. cerevisiae (CAI {result['caiBefore']}) and free of BsaI/BbsI sites; kept as entered."}
+                "reason": f"Already well adapted to S. cerevisiae (CAI {result['caiBefore']}) and free of the restriction sites to avoid (BsaI, BbsI, SapI, EcoRI, XbaI, SpeI, PstI, NotI); kept as entered."}
 
     out, reason = _search(dna, _draw_targets(dna), lefts, rights)
     if out is None:
