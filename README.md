@@ -15,23 +15,26 @@ skills.
 2. [Step 0: install Docker (all ways)](#step-0-install-docker-all-ways)
 3. [Way A: easiest, download one file](#way-a-easiest-download-one-file)
 4. [Way B: download the whole project and build it yourself](#way-b-download-the-whole-project-and-build-it-yourself)
-5. [Way C: only the Builder, with one command](#way-c-only-the-builder-with-one-command)
-6. [Using the software](#using-the-software)
-7. [Stopping, updating and cleaning up](#stopping-updating-and-cleaning-up)
-8. [Something does not work](#something-does-not-work)
-9. [For developers](#for-developers)
+5. [Docker Desktop window](#using-the-docker-desktop-window)
+6. [Biosecurity screening is always included](#biosecurity-screening-is-always-included)
+7. [Using the software](#using-the-software)
+8. [Stopping, updating and cleaning up](#stopping-updating-and-cleaning-up)
+9. [Something does not work](#something-does-not-work)
+10. [For developers](#for-developers)
 
 ## Which way is right for me?
 
-| | Way A | Way B | Way C |
-|---|---|---|---|
-| For whom | Everybody. Start here. | People who want to read or change the code | People who only want a quick look |
-| You download | one small file | the whole project | nothing |
-| Builder and Encapsulin Filter | yes | yes | yes |
-| Biosecurity screening | yes | yes | **no** |
-| Where the program comes from | ready-made images from the GitHub Container Registry | built on your computer | ready-made image from the GitHub Container Registry |
+Both ways always start **two containers together**: the Builder (with the Encapsulin Filter) and
+the biosecurity screening. There is no way to run the Builder without the screening.
 
-All three ways need Docker (Step 0). If you are unsure, take **Way A**.
+| | Way A | Way B |
+|---|---|---|
+| For whom | Everybody. Start here. | People who want to read or change the code |
+| You download | one small file | the whole project |
+| Where the program comes from | ready-made images from the GitHub Container Registry | built on your computer |
+| First start | a few minutes | 10 to 30 minutes |
+
+Both ways need Docker (Step 0). If you are unsure, take **Way A**.
 
 ## Step 0: install Docker (all ways)
 
@@ -119,36 +122,14 @@ yourself instead of trusting a ready-made image. Docker builds everything from t
 The same folder also works without building: `docker compose up` (without `--build`) uses the
 ready-made images like Way A.
 
-## Way C: only the Builder, with one command
+## Using the Docker Desktop window
 
-This starts the Builder and the Encapsulin Filter from the ready-made image, **without
-biosecurity screening**. Use it for a quick look. For real designs use Way A or B, because the
-screening is part of the safety concept of the project.
+Docker Desktop shows the program as a project in the **Containers** tab after the first start
+of Way A or B. There you can start and stop both containers together with one button, read the
+logs and open the page with the port link next to `app`. Typing a command is only needed for
+the very first start.
 
-```bash
-docker run -p 3000:3000 ghcr.io/igem-kit/encore-builder:latest
-```
-
-Then open [http://localhost:3000](http://localhost:3000). Stop it with `Ctrl+C`.
-
-You can also build the image yourself instead of downloading it (inside the project folder of
-Way B):
-
-```bash
-docker build -t encore-builder .
-docker run -p 3000:3000 encore-builder
-```
-
-### Starting from the Docker Desktop window (no typing)
-
-Docker Desktop can also start the program with the mouse, once the image has been downloaded:
-open the **Images** tab, find `ghcr.io/igem-kit/encore-builder`, click **Run**, open
-**Optional settings**, enter `3000` as host port and click **Run**. Without the second
-container, this is Way C (no screening). The easiest way to see everything in the Docker
-Desktop window is to start Way A once; the **Containers** tab then shows both containers with
-start and stop buttons, logs and a link to the page.
-
-## Biosecurity screening is always included (Way A and B)
+## Biosecurity screening is always included
 
 Every gene sequence you enter yourself is automatically checked for known toxins, virulence
 factors and regulated pathogens
@@ -213,7 +194,7 @@ docker compose -f docker-compose.pull.yml down --volumes --rmi all
 | "Cannot connect to the Docker daemon" or "docker: command not found" | Docker Desktop is not running or not installed. Start Docker Desktop and wait for "Engine running". |
 | The page shows "Upgrade Required" | Use [http://127.0.0.1:3000](http://127.0.0.1:3000) instead of `localhost`. |
 | "port is already allocated" or "address already in use" | Something else uses port 3000. Stop the other program, or change `"3000:3000"` in the compose file to `"3001:3000"` and open port 3001. |
-| The header says "Biosecurity screening: off" | The screening container is still downloading its databases (first start only, a few minutes) or not running. Check the **Containers** tab: both `app` and `commec` should be green. With Way C the screening is off by design. |
+| The header says "Biosecurity screening: off" | The screening container is still downloading its databases (first start only, a few minutes) or not running. Check the **Containers** tab: both `app` and `commec` should be green. |
 | The first start seems stuck | Watch the terminal: as long as lines keep appearing, it is downloading. A slow internet connection makes it take longer. |
 | "no space left on device" | Free up disk space, or in Docker Desktop use Settings, Resources to give it more disk. |
 | It is very slow or crashes on the first start | Give Docker Desktop more memory (Settings, Resources, at least 4 GB). |
@@ -243,12 +224,8 @@ fails (e.g. missing C compiler), Biologik keeps running anyway, only with
 a less accurate Wallace Tm estimate instead of primer3. A specific
 interpreter can be forced with `BIOLOGIK_PYTHON=/path/to/python`.
 
-Alternatively Docker without Compose:
-
-```bash
-docker build -t encore-builder .
-docker run -p 3000:3000 encore-builder
-```
+The builder image alone (`docker build -t encore-builder .`) runs without the screening container;
+users should always start the Compose files so that the screening is included.
 
 ### Publishing the Docker images
 
