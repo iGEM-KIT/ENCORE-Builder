@@ -184,8 +184,8 @@ physical properties (diameter, triangulation number).
 
 ## Stopping, updating and cleaning up
 
-Open a terminal in the same folder you started from (right-click, see above) (Way A: the folder with
-`docker-compose.pull.yml`, Way B: the project folder).
+Open a terminal in the same folder you started from (right-click the folder, see above). That is
+the folder with `docker-compose.pull.yml` for Way A and the project folder for Way B.
 
 | I want to | Way A | Way B |
 |---|---|---|
