@@ -114,7 +114,7 @@ sequences.forEach(s => {
   $("alphaNote").textContent =
     "Pore filters use recorded observations for a specific assembly, not an assumed property of every variant. " +
     "Missing pore measurements are kept as potential matches. " +
-    "References link to the original scientific publications.";
+    "Sources link to the original scientific publications.";
 
   // Mode switching
   // Each tab gets its own history entry (#search / #finder) so the browser
@@ -202,7 +202,7 @@ sequences.forEach(s => {
       const context = link.relationship ? ` <span class="citation-role">(${esc(link.relationship)})</span>` : "";
       return `<li>${doiLink(link.doi, ref?.citation_label || link.citation_label || link.doi)}${title}${context}</li>`;
     }).join("");
-    return `<details class="details citations"><summary>References (${linked.length})</summary><ul>${rows}</ul></details>`;
+    return `<details class="details citations"><summary>Source (${linked.length})</summary><ul>${rows}</ul></details>`;
   }
 
   const poreLabels = {
@@ -246,7 +246,7 @@ sequences.forEach(s => {
 
   function poreCard(p) {
     const linked = citationsByRecord.get(`pores:${p.pore_record_id}`) || [];
-    // Show Source DOI separately only if it is not already linked in References.
+    // Show Source DOI separately only if it is not already linked in Source.
     const extraDois = String(p.source_doi || "").split(";").map(x => x.trim()).filter(Boolean)
       .filter(doi => !linked.some(c => String(c.doi || "").toLowerCase() === doi.toLowerCase()));
     return `
@@ -451,7 +451,6 @@ function sequenceCard(s) {
           ${property("Tm", a.thermostability_tm_c === null ? null : `${a.thermostability_tm_c} °C`)}
           ${propertyPdb("Structure ID", a.structure_id)}
           ${property("Method", a.method)}
-          ${property("Source", a.source)}
         </div>
         <section class="readable-panel condition-panel" aria-label="Experimental conditions">
           <h4>Experimental conditions</h4>
