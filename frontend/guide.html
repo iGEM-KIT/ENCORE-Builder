@@ -104,7 +104,7 @@
   <section id="checklist" class="card">
     <h2>Checklist</h2>
     <ul class="checks">
-      <li><b>Pick the nanocompartment.</b> Not sure which one fits your use case? Use the separate <a href="/selector/selector-alpha.html">nanocompartment filter</a> first.</li>
+      <li><b>Pick the nanocompartment.</b> Not sure which one fits your use case? Use the separate <a href="/selector/selector-alpha.html">nanocompartment filter</a> first; its <b>Use this nanocompartment</b> button hands a library shell over to the builder.</li>
       <li><b>Have your sequences ready</b>: DNA (CDS) or amino acids, <b>with or without start and stop codon</b> (the builder adds them where needed), and <b>without overhangs or restriction sites</b> added by you. The builder adds the overhangs itself.</li>
       <li><b>Know your fusion.</b> Decide what sits in the four modules (Type 0.1, 0.2, 0.4, 0.5) around the shell and around the cargo; see <a href="#modules">The modules</a>.</li>
       <li><b>Plan a biosafety review.</b> The built-in screening is a helper check, not a replacement for your institution's review.</li>
@@ -131,7 +131,7 @@
       <tr><td><span class="tag req">Required</span> <b>DNA or amino acids</b></td>
           <td>Paste a coding sequence (A/T/G/C, <b>T not U</b>) or an amino acid sequence in one-letter code. It is told apart automatically: if at least 90&nbsp;% of the letters are A/C/G/T, it is read as DNA, otherwise as protein. FASTA header lines (<code>&gt;name</code>), spaces, line breaks and digits are ignored; other letters are dropped with a warning. A protein is back-translated to DNA for <i>S. cerevisiae</i>, 3 bp per amino acid.</td></tr>
       <tr><td><span class="tag auto">Automatic</span> <b>Start and stop codon</b></td>
-          <td>You do not need to add them. The builder puts an <b>ATG</b> in front of the <b>first coding part</b> of each ORF and a <b>stop codon (TAA)</b> behind the <b>last</b> one, in whichever slot it sits. The stop always follows the last coding part of the ORF: if Type 0.5 is an NCS spacer and Type 0.4 holds a linker, the stop comes behind the linker; if only NCS spacers follow the shell or the cargo, the stop comes directly behind it. The part that carries the stop is marked with an asterisk <b>*</b>. The ORF of the nanocompartment module is read from Type 0.1 to 0.5, the ORF of the cargo module from Type 0.5 to 0.1. If the outer modules are plain NCS spacers, the shell or the cargo itself gets the ATG. An ATG you enter yourself is kept and never doubled; a stop codon you enter at the end is removed with a warning. A stop codon in the middle only gives a warning. A <b>linker</b> needs no start codon of its own.</td></tr>
+          <td>You do not need to add them. The builder puts an <b>ATG</b> in front of the <b>first coding part</b> of each ORF and a <b>stop codon (TAA)</b> behind the <b>last</b> one, in whichever slot it sits. The stop always follows the last coding part of the ORF: if Type 0.5 is an NCS spacer and Type 0.4 holds a linker, the stop comes behind the linker; if only NCS spacers follow the shell or the cargo, the stop comes directly behind it. The part that carries the stop is marked with an asterisk <b>*</b>. The ORF of the nanocompartment module is read from Type 0.1 to 0.5, the ORF of the cargo module from Type 0.5 to 0.1. If the outer modules are plain NCS spacers, the shell or the cargo itself gets the ATG. An ATG you enter yourself is kept and never doubled; a stop codon you enter at the end is removed with a warning. Under the input field a hint with a button (for example <b>Remove start and stop codon</b>) takes those codons out of the field for you. A stop codon in the middle only gives a warning. A <b>linker</b> needs no start codon of its own.</td></tr>
       <tr><td><span class="tag warn">Check</span> <b>Multiple of 3 (DNA)</b></td>
           <td>The length must be divisible by 3. Otherwise you get a warning: the fusion would shift the reading frame, and the sequence cannot be codon-optimized. The builder joins parts with a 4-nt overhang plus a 2-nt spacer, which makes 6 nt, so a part with a multiple-of-3 length keeps everything in frame. Amino acid sequences are always in frame.</td></tr>
       <tr><td><span class="tag req">Required</span> <b>Cargo length</b></td>
@@ -196,8 +196,8 @@
           <td>If the outer module holds a coding part (marker, intein, targeting peptide or your own sequence), the inner module must be a linker or your own linker sequence. Not a marker, intein or targeting peptide.</td></tr>
       <tr><td><span class="tag req">Required</span> <b>Targeting peptide: only once, only at the ends</b></td>
           <td>Only in the cargo module, only in Type 0.1 or Type 0.5, at most once. In Type 0.1 it is fused behind the cargo, in Type 0.5 in front of it.</td></tr>
-      <tr><td><span class="tag req">Required</span> <b>Own shell → no targeting peptide choice</b></td>
-          <td>If you use your own shell, the builder does not know a matching peptide. Put your own sequence into the cargo module instead.</td></tr>
+      <tr><td><span class="tag req">Required</span> <b>Own shell or vault → no targeting peptide choice</b></td>
+          <td>If you use your own shell, the builder does not know a matching peptide. The human vault (major vault protein) is no encapsulin and has no targeting peptide of the toolkit either. Put your own sequence into the cargo module instead.</td></tr>
       <tr><td><span class="tag req">Required</span> <b>Combined NCS: both slots at once</b></td>
           <td>If you choose <b>NCS 0.12</b> in Type 0.1 or 0.2 (or <b>NCS 0.45</b> in Type 0.4 or 0.5), the neighbouring slot becomes the same combined NCS automatically and is locked. To release it, change the slot where you made the choice to something else. A combined NCS cannot be chosen next to a slot that holds a linker, marker or your own sequence. In the results the pair appears as one part (Type 0.12 or Type 0.45) with one plasmid, one Level 0 construct and one entry in the order list.</td></tr>
       <tr><td><span class="tag warn">Check</span> <b>The stop codon is added automatically</b></td>
@@ -211,7 +211,7 @@
     <ul class="plain">
       <li>The central promoter drives both modules: the nanocompartment module to the right (sense), the cargo module to the left (antisense). Both transcripts start at the promoter and run outward.</li>
       <li>GAL1-10 is a bidirectional, galactose-inducible yeast promoter.</li>
-      <li>The promoter is part of the Level 2 construct only. As long as no real sequence of a promoter is in the parts database, a stand-in sequence is shown.</li>
+      <li>The promoter is part of the Level 2 construct only. It has its own Level 1 plasmid and is not ordered in step 5. The GAL1-10 sequence (665 bp) is the one from the toolkit, with a link to its entry in the iGEM Registry.</li>
     </ul>
   </section>
 
@@ -239,7 +239,8 @@
       <tr><td><b>DNA</b></td>
           <td>Every part with a real sequence that is not ordered as oligos, as one double-stranded fragment with adapter. Use it instead of PCR.</td></tr>
     </table>
-    <p class="note">Every toolbox part in these lists also shows a badge "iGEM Registry ↗" on the right with a link to the part in the iGEM Registry. Until the links are added, it is a dashed placeholder; your own sequences have none.</p>
+    <p class="note">Every toolbox part in these lists also shows a badge "iGEM Registry ↗" on the right with a link to the part in the iGEM Registry. A part that is not in the Registry yet shows a dashed placeholder instead; your own sequences have none.</p>
+    <p class="note"><b>The Registry sequences can differ from the sequences the builder shows.</b> The entries in the iGEM Registry were optimized and entered separately from this software, so the DNA can differ even when the protein is the same. The usual reasons: (1) <b>Different optimization.</b> The builder codon-optimizes your own sequences with its own algorithm (<i>S. cerevisiae</i> codon table, no BsaI or BbsI sites, no long runs of one base). A Registry entry that was optimized with another tool, for example by a DNA supplier, uses different codons. Toolbox parts are never changed by the builder; they are shown as stored in the toolkit. (2) <b>Start and stop codons.</b> The builder stores a part without ATG and without stop codon and adds them where the reading frame begins and ends, which depends on what you place in the neighbouring slots. A Registry entry may already contain an ATG or a stop codon (or none), so its length can differ by 3 or 6 bp and the start and stop can sit at a different position than in your design. (3) <b>Overhangs and frame spacer.</b> The builder adds the overhangs and the 2 nt GC spacer itself; the Registry entry holds only the part, and for a few parts it carries extra bases (the NCS entry has two bases more at the front). (4) <b>Entries are still being completed.</b> A Registry entry can be corrected later. Use the Registry link to find the part, but order and clone from the sequences shown in the builder (the Level 0 window, the order lists and the GenBank files), and compare the translated protein rather than the raw DNA if you want to check a part against the Registry.</p>
     <p class="note">Why 150 bp? Many suppliers make oligos only up to about 100 to 150 nt and charge much more beyond that, while double-stranded DNA is not offered below roughly 125 bp. Lists can be copied, and downloaded as CSV or GenBank.</p>
   </section>
 
