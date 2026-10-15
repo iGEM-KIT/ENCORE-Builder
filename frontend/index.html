@@ -3074,7 +3074,12 @@ else boot();
 window.ENCORE_API = (function(){
   const base = '/api';
   const json = async (url, opts) => {
-    const r = await fetch(url, opts);
+    let r;
+    try{ r = await fetch(url, opts); }
+    catch(e){
+      // The browser could not reach the Builder server at all (stopped or restarting containers, wrong address): say so in plain words
+      throw Object.assign(new Error('The Builder server cannot be reached. Check that it is running (in Docker Desktop, the app container must be green), then reload this page and try again.'), {network:true});
+    }
     if(!r.ok){ const e = await r.json().catch(()=>({})); throw Object.assign(new Error(e.statusMessage||('HTTP '+r.status)), {status:r.status, data:e.data}); }
     return r.json();
   };
