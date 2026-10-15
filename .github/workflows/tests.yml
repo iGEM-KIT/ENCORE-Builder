@@ -1,0 +1,40 @@
+# Runs all tests on every push to main and on every pull request:
+#   python: the Biologik engine, the primer design, the commec-service wrapper, the data checks and the page checks
+#   node:   the server utilities (bridge to the Python engine, bridge to the screening container)
+# The images are built by publish-images.yml; this workflow only runs the tests.
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # node is needed by the check that selector-data.js is up to date
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: pip install pytest -r Biologik/requirements.txt
+      - run: python -m pytest -q
+
+  node:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: node --test tests/unit/server

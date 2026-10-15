@@ -198,7 +198,7 @@ sequences.forEach(s => {
     if (!linked.length) return "";
     const rows = linked.map(link => {
       const ref = doiById.get(String(link.doi || "").toLowerCase());
-      const title = ref?.article_title ? ` — ${esc(ref.article_title)}` : "";
+      const title = ref?.article_title ? `: ${esc(ref.article_title)}` : "";
       const context = link.relationship ? ` <span class="citation-role">(${esc(link.relationship)})</span>` : "";
       return `<li>${doiLink(link.doi, ref?.citation_label || link.citation_label || link.doi)}${title}${context}</li>`;
     }).join("");
@@ -241,7 +241,7 @@ sequences.forEach(s => {
     const structure = tokens.find(t => /^\d[A-Za-z0-9]{3}$/.test(t));
     const phSuffix = tokens.some(t => t === "30" || t === "75") && p.pH != null
       ? ` (pH ${p.pH})` : "";
-    return `${p.candidate_id} — ${siteText}${structure ? ` (${structure})` : phSuffix}`;
+    return `${p.candidate_id}: ${siteText}${structure ? ` (${structure})` : phSuffix}`;
   }
 
   function poreCard(p) {
@@ -300,7 +300,7 @@ function sequenceCard(s) {
     <article class="assembly-card sequence-card">
       <div class="assembly-top">
         <div>
-          <div class="assembly-display-name">${esc(s.candidate_id)} — ${s.genomic_sequence ? "Genomic sequence" : "Sequence reference"}</div>
+          <div class="assembly-display-name">${esc(s.candidate_id)}: ${s.genomic_sequence ? "Genomic sequence" : "Sequence reference"}</div>
         </div>
       </div>
 
@@ -380,7 +380,7 @@ function sequenceCard(s) {
     'Q45296_ref': 'Wild-type cargo-free T=1',
     'Q55032_T1_empty': 'Wild-type apo-SrpI T=1',
     'Q55032_ref': 'CyD-loaded wild-type T=1',
-    'Q8U1L4_ref': 'Native ferritin–encapsulin fusion (T=3)',
+    'Q8U1L4_ref': 'Native ferritin-encapsulin fusion (T=3)',
     'Q9WZP2_S1K_T1': 'S1K pore mutant (T=1)',
     'Q9WZP2_S1R_T1': 'S1R pore mutant (T=1)',
     'Q9WZP2_S3E_T1': 'S3E pore mutant (T=1)',
@@ -398,7 +398,7 @@ function sequenceCard(s) {
     const fallback = fallbackConstruct && fallbackConstruct.toLowerCase() !== "enc"
       ? `${fallbackConstruct}${suffix}`
       : `${a.variant_status === "engineered" ? "Engineered" : "Wild-type"} assembly${suffix}`;
-    return `${a.candidate_id} — ${assemblyDisplayLabels[a.assembly_id] || fallback}`;
+    return `${a.candidate_id}: ${assemblyDisplayLabels[a.assembly_id] || fallback}`;
   }
 
   // Break only at unambiguous sentence boundaries (punctuation + uppercase).

@@ -65,19 +65,27 @@ has to be **opened inside the folder** where your files are (the folder with
 `docker-compose.pull.yml`, or the unzipped project folder). The easiest way is to open it
 straight from the folder with a right-click, so you never have to type a path:
 
-* **Windows 11:** open the folder in File Explorer, right-click an empty spot inside it (not on
-  a file) and choose **Open in Terminal**.
-* **Windows 10:** open the folder in File Explorer, hold the **Shift** key, right-click an empty
-  spot inside it and choose **Open PowerShell window here**.
 * **Windows (works on every version):** open the folder in File Explorer, click into the address
-  bar at the top (where the path is shown), type `powershell` and press Enter.
+  bar at the top (where the path is shown), type `powershell.exe` and press Enter. A blue
+  PowerShell window opens in that folder. (If your Windows only jumps to a folder called
+  "Powershell" when you type `powershell`, the `.exe` ending avoids that.)
+* **Windows 11, with the right-click menu:** right-click an empty spot inside the folder (not on
+  a file) and choose **Open in Terminal**. On some versions this entry is in the old menu
+  behind **Show more options**, or needs the **Shift** key.
+* **Windows 10, with the right-click menu:** hold the **Shift** key, right-click an empty spot
+  inside the folder and choose **Open PowerShell window here** (on newer builds the entry reads
+  **Open in Windows Terminal**).
 * **Mac:** in Finder, right-click the **folder itself** (for example `ENCORE`), then choose
-  **Services**, then **New Terminal at Folder**. If you do not see this entry, switch it on once:
-  Apple menu, System Settings, Keyboard, Keyboard Shortcuts, Services, Files and Folders, tick
-  **New Terminal at Folder**. A second way: open the Terminal app (Cmd and Space, type
-  `Terminal`) and drag the folder onto the Terminal window or the Terminal icon in the Dock.
+  **Services**, then **New Terminal at Folder**. This entry is switched off on a fresh Mac, so
+  switch it on once: Apple menu, System Settings, Keyboard, Keyboard Shortcuts, Services, Files
+  and Folders, tick **New Terminal at Folder**. A second way that needs no setting: open the
+  Terminal app (Cmd and Space, type `Terminal`) and drag the folder onto the Terminal icon in the
+  Dock; a new window opens in that folder.
 * **Linux:** in your file manager, right-click an empty spot inside the folder and choose **Open
-  in Terminal** (in KDE Dolphin: **Open Terminal Here**, or press F4).
+  in Terminal**. In GNOME Files (Ubuntu) it is built in; on some distributions (for example
+  Fedora) the package `gnome-terminal-nautilus` has to be installed first. In KDE Dolphin press
+  **F4** to show a terminal in the folder, or **Alt+Shift+F4** to open a separate terminal window
+  there. If your file manager has no such entry, use the manual way below.
 
 The terminal window then already sits in the right folder and you can run the commands directly.
 
@@ -127,8 +135,6 @@ screening for you.
    screening container downloads its databases (about 1.2 GB) once. Lines of text keep scrolling
    by; that is normal. Later starts take seconds.
 6. Open your web browser and go to **[http://localhost:3000](http://localhost:3000)**.
-   If you see "Upgrade Required" instead of the page, use
-   [http://127.0.0.1:3000](http://127.0.0.1:3000).
 7. In the top right the page shows **"Biosecurity screening: on"** with a green dot as soon as
    the screening is ready. Until then it says "off"; the Builder already works, just without
    the check. If you want the screening, wait for the dot before you calculate a construct.
@@ -154,8 +160,7 @@ yourself instead of trusting a ready-made image. Docker builds everything from t
    ```
 4. The first start takes longer than Way A (10 to 30 minutes, depending on your computer and
    internet), because Docker builds both images and the screening downloads its databases once.
-5. Open **[http://localhost:3000](http://localhost:3000)** (or
-   [http://127.0.0.1:3000](http://127.0.0.1:3000) if you see "Upgrade Required").
+5. Open **[http://localhost:3000](http://localhost:3000)**.
 
 The same folder also works without building: `docker compose up` (without `--build`) uses the
 ready-made images like Way A.
@@ -223,7 +228,6 @@ above): the folder with `docker-compose.pull.yml` for Way A and the project fold
 |---|---|
 | "Cannot connect to the Docker daemon" or "docker: command not found" | Docker Desktop is not running or not installed. Start Docker Desktop and wait for "Engine running". |
 | "failed to connect to the docker API at unix:///var/run/docker.sock" | Docker Desktop is not running yet, or the terminal uses the wrong Docker connection. Start Docker Desktop and wait for "Engine running". If the message stays, run `docker context use desktop-linux` once and try again. |
-| The page shows "Upgrade Required" | Use [http://127.0.0.1:3000](http://127.0.0.1:3000) instead of `localhost`. |
 | "port is already allocated" or "address already in use" | Something else uses port 3000. Stop the other program, or change `"3000:3000"` in the compose file to `"3001:3000"` and open port 3001. |
 | The page shows "The Builder server cannot be reached" (or "Failed to fetch") | The browser cannot reach the Builder. In Docker Desktop open the **Containers** tab and check that `app` is running (green); start it if not, wait a few seconds and reload the page. This also happens when the containers were restarted or updated while the page was still open. The screening container (`commec`) is not the cause: without it the Builder still calculates, only without the check. |
 | The header says "Biosecurity screening: off" | The screening container is still downloading its databases (first start only, a few minutes) or not running. Check the **Containers** tab: both `app` and `commec` should be green. |
@@ -273,6 +277,31 @@ package settings, "Change package visibility"), otherwise users cannot pull them
 logging in. `docker-compose.yml` has both `image:` and `build:` for every service, so
 `docker compose up --build` builds locally and plain `docker compose up` pulls;
 `docker-compose.pull.yml` is the image-only variant that users download as a single file.
+
+### Running the tests
+
+```bash
+pip install pytest -r Biologik/requirements.txt   # once (primer3-py is needed for the primer tests)
+pnpm test                                          # Node tests, then Python tests
+# or separately:
+pnpm test:node                                     # server utilities (tests/unit/server)
+pnpm test:py                                       # python3 -m pytest (tests/unit)
+```
+
+What is covered:
+
+* `tests/unit/biologik/`: the design engine (cargo validation, codon optimization, slots, combined NCS, Level 0 to 2
+  assembly, primers, oligos, GenBank) and the primer design (Tm balancing, dimers, extensions).
+* `tests/unit/commec_service/`: the HTTP wrapper of the screening container, with COMMEC itself replaced.
+* `tests/unit/data/`: integrity of the encapsulin database (references between candidates, assemblies, pores and
+  citations), that `selector-data.js` is up to date, and the file rules of the parts database.
+* `tests/unit/frontend/`: the pages are well formed, internal links and looked-up ids exist, and the house rules for visible
+  text hold (no dashes as punctuation).
+* `tests/unit/server/`: the bridge to the Python engine and the bridge to the screening container (it must never turn
+  a missing screening into an error).
+
+The workflow [.github/workflows/tests.yml](.github/workflows/tests.yml) runs everything on every push to `main` and on every
+pull request. The interactive parts of the pages (clicking through the steps) are not covered by an automated test yet.
 
 ### Biosecurity screening (COMMEC): details
 

@@ -3060,11 +3060,9 @@ else boot();
 </script>
 
 <!-- ============================================================= -->
-<!-- OPTIONAL backend connection layer. Additive & non-breaking:   -->
-<!-- When this page is served by the Nuxt server, window.ENCORE_API -->
-<!-- talks to the real Golden Gate engine (server/services/         -->
-<!-- goldenGate). See PROJECT_TODO.txt for how to fully switch the  -->
-<!-- prototype over to backend-driven data.                         -->
+<!-- Backend connection layer: window.ENCORE_API talks to the     -->
+<!-- Nuxt server (server/api/), which runs the Biologik engine.   -->
+<!-- Without the server the page shows a notice.                  -->
 <!-- ============================================================= -->
 <script>
 window.ENCORE_API = (function(){

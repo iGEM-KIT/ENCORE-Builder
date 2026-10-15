@@ -175,7 +175,7 @@ def _ncs_combined() -> list:
 
 # Everything the frontend needs for its dropdowns, in ONE place.
 # On purpose a function and not a constant, so that it can read from the database
-# later without the callers changing (see PROJECT_TODO.txt, 5).
+# later without the callers changing.
 
 def get_libraries() -> dict:
     parts = load_parts()

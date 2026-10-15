@@ -96,7 +96,7 @@ def _assemble_primers(anneal_f: str, anneal_r: str, oh_f: str, oh_r: str, tm_f, 
         CARGO_L1_FLANK). They are NOT identical to the extensions in
         ``primer_design/add_extensions.py`` (type0.3 appends TTCT, i.e. the
         Type 3 overhang). Which variant describes the real toolbox
-        is open; see PROJECT_TODO.txt section 1. Nothing is decided here
+        still has to be checked against the lab. Nothing is decided here
         on purpose: the thermodynamics were swapped, the
         biology was not.
 
