@@ -8,6 +8,7 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -37,4 +38,5 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: node --test tests/unit/server
+      # the files are named one by one: `node --test <directory>` does not work on every Node version
+      - run: node --test tests/unit/server/biologik.test.mjs tests/unit/server/commec.test.mjs

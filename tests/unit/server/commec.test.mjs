@@ -1,5 +1,5 @@
 // Tests of server/utils/commec.js (the bridge to the biosecurity screening container).
-// Run with: node --test tests/unit/server
+// Run with: pnpm test:node (or: node --test tests/unit/server/biologik.test.mjs tests/unit/server/commec.test.mjs)
 // fetch is replaced, so no container is needed. The point of the module is that a missing or broken screening
 // never turns into an error for the design: it always answers {available: false, reason}.
 import { test, beforeEach, afterEach, mock } from 'node:test'

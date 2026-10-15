@@ -14,8 +14,8 @@
     "preview": "nuxt preview",
     "start": "node .output/server/index.mjs",
     "postinstall": "nuxt prepare",
-    "test": "node --test tests/unit/server && python3 -m pytest -q",
-    "test:node": "node --test tests/unit/server",
+    "test": "node --test tests/unit/server/biologik.test.mjs tests/unit/server/commec.test.mjs && python3 -m pytest -q",
+    "test:node": "node --test tests/unit/server/biologik.test.mjs tests/unit/server/commec.test.mjs",
     "test:py": "python3 -m pytest -q"
   },
   "dependencies": {
