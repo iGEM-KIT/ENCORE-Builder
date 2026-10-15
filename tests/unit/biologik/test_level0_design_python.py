@@ -572,8 +572,8 @@ def test_level2_is_the_bbsi_assembly_of_the_three_level1_modules():
     pl = level2['plasmid']
     assert pl['length'] == backbone['length_bp'] - 824 + level2['length']
     assert pl['sequence'][pl['insertStart'] - 1:pl['insertEnd']] == level2['sequence']
-    assert pl['sequence'].startswith(backbone['sequence'][:2127] + 'CCAA')
-    assert pl['sequence'][pl['insertEnd'] - 4:pl['insertEnd']] == 'AATG' and pl['sequence'][pl['insertEnd']:pl['insertEnd'] + 20] == backbone['sequence'][2951:2971]
+    assert pl['sequence'].startswith(backbone['sequence'][:2126] + 'CCAA')
+    assert pl['sequence'][pl['insertEnd'] - 4:pl['insertEnd']] == 'AATG' and pl['sequence'][pl['insertEnd']:pl['insertEnd'] + 20] == backbone['sequence'][2950:2970]
     for label in ('HIS3', 'AmpR', 'ADH1 terminator', 'CYC1 terminator', 'GFP', 'BbLvl2N', 'BbLvl2C'):
         assert f'/label="{label}"' in pl['genbank']
     assert 'BbsI Rec Site' not in pl['genbank']                       # the cassette's own BbsI sites are gone
@@ -593,7 +593,7 @@ def test_libraries_ship_level1_and_level2_backbones_with_a_ready_genbank_text():
     from Biologik.level0_design.data import get_libraries
     libs = get_libraries()
     for key, name, bp, labels in (('level1Backbones', 'pAGM1311', 2621, ('KanR', 'ori', 'lacZ-alpha', 'BbsI rec site', 'BsaI rec site')),
-                                  ('level2Backbones', 'pESC', 6544, ('HIS3', 'AmpR', 'ADH1 terminator', 'CYC1 terminator'))):
+                                  ('level2Backbones', 'pESC', 6543, ('HIS3', 'AmpR', 'ADH1 terminator', 'CYC1 terminator'))):
         gb = libs[key][0]['genbank']
         assert gb.startswith(f'LOCUS       {name}') and f'{bp} bp' in gb and 'circular' in gb and gb.count('LOCUS') == 1 and gb.strip().endswith('//')
         for label in labels:

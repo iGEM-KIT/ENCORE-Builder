@@ -2,12 +2,12 @@
   "id": "adh1-terminator",
   "kind": "terminator",
   "label": "ADH1 terminator (S. cerevisiae)",
-  "sequence": "GAGCGACCTCATGCTATACCTGAGAAAGCAACCTGACCTACAGGAAAGAGTTACTCAAGAATAAGAATTTTCGTTTTAAAACCTAAGAGTCACTTTAAAATTTGTATACACTTATTTTTTTTYATAACTTATTTAATAATAAAAATCATAAATCATAAGAAATTCGC",
+  "sequence": "GAGCGACCTCATGCTATACCTGAGAAAGCAACCTGACCTACAGGAAAGAGTTACTCAAGAATAAGAATTTTCGTTTTAAAACCTAAGAGTCACTTTAAAATTTGTATACACTTATTTTTTTTATAACTTATTTAATAATAAAAATCATAAATCATAAGAAATTCGC",
   "sequence_status": "real",
   "on_stock": null,
-  "length_bp": 167,
+  "length_bp": 166,
   "organism": "S. cerevisiae",
   "source": "Extrahiert aus Level 2 Destination HIS3.gb (pESC-HIS-Backbone), GenBank-Location 1961..2127.",
-  "notes": "No slot of its own in the Level 0/1/2 design engine yet; purely informational for now.",
+  "notes": "No slot of its own in the Level 0/1/2 design engine yet; purely informational for now. One ambiguity base (Y) of the source file was removed, as in the Level 2 backbone it was cut from.",
   "used_by": []
 }

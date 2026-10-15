@@ -140,32 +140,35 @@ def test_every_parts_file_is_valid_json_with_an_id_that_matches_the_file_name():
         assert entry["id"] == path.stem or path.parent.name == "level0_inserts", f"{path.name}: id {entry['id']!r}"
 
 
-IUPAC = r"[ACGTRYKMSWBDHVNacgtrykmswbdhvn]+"
-
-
 def test_part_sequences_are_plain_dna_and_their_length_field_is_right():
-    """Inserts, promoters and adapters must be plain A/C/G/T; only the imported backbones and terminators may carry IUPAC codes."""
+    """No sequence in the database may carry an ambiguity code (Y, N, ...): it could not be ordered or cloned as it is."""
     for path in part_files():
         entry = json.loads(path.read_text(encoding="utf8"))
         seq = entry.get("sequence")
         if not seq:
             continue
-        imported = path.parent.name in ("level0_backbones", "level1_backbones", "level2_backbones", "terminators")
-        assert re.fullmatch(IUPAC if imported else r"[ACGTacgt]+", seq), f"{path.name}: not plain DNA"
+        assert re.fullmatch(r"[ACGTacgt]+", seq), f"{path.name}: not plain DNA"
         if entry.get("length_bp") is not None:
             assert entry["length_bp"] == len(seq), f"{path.name}: length_bp {entry['length_bp']} but {len(seq)} bases"
 
 
-def test_the_only_ambiguous_base_in_the_imported_sequences_is_the_known_one():
-    """The Level 2 backbone pESC-HIS (and the ADH1 terminator cut from it) has one Y (C or T) at position 2083 in the source
-    GenBank file. It is pinned here so that a second one cannot slip in unnoticed; if the source file is corrected, remove it."""
-    found = {}
-    for path in part_files():
-        seq = json.loads(path.read_text(encoding="utf8")).get("sequence") or ""
-        positions = [i + 1 for i, base in enumerate(seq.upper()) if base not in "ACGT"]
-        if positions:
-            found[path.name] = positions
-    assert found == {"pESC-HIS-lvl2-dest.json": [2083], "adh1-terminator.json": [123]}
+def test_the_level2_backbone_has_the_length_of_its_registry_entry_and_its_annotations_sit_on_the_right_bases():
+    backbone = json.loads((PARTS / "level2_backbones" / "pESC-HIS-lvl2-dest.json").read_text(encoding="utf8"))
+    seq = backbone["sequence"]
+    assert len(seq) == backbone["length_bp"] == 6543                                 # BBa_260UMT7M in the iGEM Registry
+
+    def bases(location):
+        return "".join(seq[int(a) - 1:int(b or a)] for a, b in re.findall(r"(\d+)(?:\.\.[<>]?(\d+))?", location))
+
+    insert = backbone["current_insert"]
+    for key in ("promoter", "rbs", "cds", "terminator"):
+        assert bases(insert[key]["location"]) == insert[key]["sequence"], key
+    reverse = lambda s: s[::-1].translate(str.maketrans("ACGT", "TGCA"))
+    for key, overhang in backbone["receiver_overhangs"].items():
+        found = bases(overhang["location"])
+        assert overhang["sequence"] in (found, reverse(found)), f"{key}: {found} is not {overhang['sequence']}"
+    adh1 = json.loads((PARTS / "terminators" / "adh1-terminator.json").read_text(encoding="utf8"))["sequence"]
+    assert adh1 in seq                                                               # the terminator was cut from this backbone
 
 
 def test_registry_links_are_complete_urls_to_the_igem_registry():
