@@ -204,6 +204,19 @@ above): the folder with `docker-compose.pull.yml` for Way A and the project fold
 | Remove the program but keep the screening databases | **Containers** tab, **Delete** (trash can) on the entry of the project | `docker compose -f docker-compose.pull.yml down` | `docker compose down` |
 | Remove everything, including the downloaded screening databases (frees about 5 GB) | delete the project in the **Containers** tab, then delete the two `ghcr.io/igem-kit/...` images in the **Images** tab and the volume ending in `commec-db` in the **Volumes** tab | `docker compose -f docker-compose.pull.yml down --volumes --rmi all` | `docker compose down --volumes --rmi all` |
 
+### After an update: old images and closing the terminal
+
+* **Old images turn into `<none>`.** After `docker compose -f docker-compose.pull.yml pull` (and
+  starting again with `up`), Docker Desktop shows the previous version of each image in the
+  **Images** tab with the name `<none>` (the tag moved to the new image). These old images are no
+  longer used and **can safely be deleted** (select them in the **Images** tab and click the trash
+  can) to free disk space. The new images with the proper name stay.
+* **You can close the terminal or press `Ctrl+C`.** Once `pull` has finished and the start with
+  `up` is running, closing the terminal window and/or pressing `Ctrl+C` is fine and does not
+  damage anything. Note that this stops the containers that were started in that terminal. Start
+  them again with the **Start** button in the **Containers** tab of Docker Desktop (or
+  `up` again). To keep them running after the terminal is closed, start with `up -d`.
+
 ## Something does not work
 
 | Problem | What to do |
