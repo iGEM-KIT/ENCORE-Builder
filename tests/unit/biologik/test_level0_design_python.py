@@ -135,7 +135,7 @@ def test_json_cli_serves_libraries():
     libraries = response['libraries']
     assert sorted(libraries) == [
         'cargoPresets', 'inteins', 'level0Backbones', 'level1Backbones', 'level2Backbones', 'linkers',
-        'nanocompartments', 'ncs', 'ncsStatus', 'promoters', 'surfaceMarkers', 'targetingPeptides',
+        'nanocompartments', 'ncs', 'ncsCombined', 'ncsStatus', 'promoters', 'surfaceMarkers', 'targetingPeptides',
     ]
     assert [m['id'] for m in libraries['surfaceMarkers']] == ['spycatcher', 'spytag']
     assert [nc['id'] for nc in libraries['nanocompartments']] == ['tmari', 'mxan', 'qther', 'mvp']
@@ -206,10 +206,10 @@ def test_unknown_surface_marker_is_rejected():
         raise AssertionError('unknown marker should raise')
 
 
-ADAPTER_IDS = ['0.1', '0.1rc', '0.2', '0.3', '0.4', '0.5', '0.5rc']
+ADAPTER_IDS = ['0.1', '0.1rc', '0.2', '0.3', '0.4', '0.5', '0.5rc', '0.12', '0.12rc', '0.45', '0.45rc']   # the last four are the combined NCS adapters
 
 
-def test_all_seven_type_overhang_adapters_are_in_the_database():
+def test_all_type_overhang_adapters_are_in_the_database():
     adapters = {a['id']: a for a in load_parts()['type_overhangs']}
     assert sorted(adapters) == sorted(ADAPTER_IDS)
     assert adapters['0.1']['used_for_modules'] == ['nc_site']
@@ -1182,3 +1182,67 @@ def test_level0_primers_carry_the_structure_check_of_the_finished_primers():
     for key in ('hairpin', 'selfDimer'):
         assert set(st[key]) == {'forward', 'reverse'} and all(isinstance(v['ok'], bool) for v in st[key].values())
     assert isinstance(st['heteroDimer']['deltaG'], float)
+
+
+# Combined NCS spacers: one Level 0 part that replaces two neighbouring NCS parts (Types 0.1 + 0.2 and 0.4 + 0.5)
+
+NCS_BASE = {'nanocompartment': 'tmari', 'cargoSeq': 'ATGGCTAAAGGTGAAGAACTGTTCACCGGTGTTGTTCCAATCTTGGTTGAATTGGATGGTGATGTTAACGGTCACAAATTCTCT', 'cargoLabel': 'X'}
+
+
+def _levels_with_ncs(nc_slots=None, cargo_slots=None):
+    from Biologik.level0_design.design import design_construct
+    return design_construct({**NCS_BASE, 'ncSlots': nc_slots or {}, 'cargoSlots': cargo_slots or {}})
+
+
+def test_the_combined_ncs_adapters_join_the_left_of_one_type_and_the_right_of_the_next():
+    adapters = {a['id']: a for a in load_parts()['type_overhangs']}
+    for combined, left, right in (('0.12', '0.1', '0.2'), ('0.12rc', '0.1rc', '0.2'), ('0.45', '0.4', '0.5'), ('0.45rc', '0.4', '0.5rc')):
+        a = adapters[combined]
+        roles = {o['role']: o['sequence_top_strand'] for o in a['overhangs']}
+        left_roles = {o['role']: o['sequence_top_strand'] for o in adapters[left]['overhangs']}
+        right_roles = {o['role']: o['sequence_top_strand'] for o in adapters[right]['overhangs']}
+        assert roles['level1_N'] == left_roles['level1_N'] and roles['level1_C'] == right_roles['level1_C']
+        assert roles['level0_N'] == left_roles['level0_N'] and roles['level0_C'] == right_roles['level0_C']
+        assert a['type_slot'] is None and a['covers_slots'] in ([1, 2], [4, 5])
+        assert a['length_bp'] == len(a['sequence']) == 42
+        # the overhang between the two parts (the level 1 C of the left, the level 1 N of the right) is gone
+        assert left_roles['level1_C'] not in [o['sequence_top_strand'] for o in a['overhangs']]
+
+
+def test_a_combined_ncs_is_one_part_and_sets_both_of_its_slots():
+    from Biologik.level0_design.slots import module_units, resolve_slots
+    slots = resolve_slots({'1': {'kind': 'ncs12'}, '4': {'kind': 'ncs'}, '5': {'kind': 'ncs45'}}, 'nc')
+    assert [slots[n]['kind'] for n in (1, 2, 4, 5)] == ['ncs12', 'ncs12', 'ncs45', 'ncs45']          # the other slot follows automatically
+    assert module_units(slots) == [(12, [1, 2]), (3, [3]), (45, [4, 5])]
+    with pytest.raises(ValueError, match='only fits'):
+        resolve_slots({'4': {'kind': 'ncs12'}}, 'nc')
+    with pytest.raises(ValueError, match='remove the other part'):
+        resolve_slots({'1': {'kind': 'ncs12'}, '2': {'kind': 'linker', 'id': 'GSSS2'}}, 'nc')
+
+
+def test_a_combined_ncs_builds_one_level0_part_and_a_shorter_module():
+    separate = _levels_with_ncs()
+    combined = _levels_with_ncs({'1': {'kind': 'ncs12'}, '4': {'kind': 'ncs45'}}, {'2': {'kind': 'ncs12'}, '5': {'kind': 'ncs45'}})
+    for module in ('ncModule', 'cargoModule'):
+        assert [p['type'] for p in combined['level0'][module]] == ['Type 0.12', 'Type 0.3', 'Type 0.45']
+        assert [p['slots'] for p in combined['level0'][module]] == [[1, 2], [3], [4, 5]]
+    keys = {(c['module'], c['slot']): c for c in combined['level0Constructs']}
+    assert sorted(slot for (module, slot) in keys if module == 'nc_site') == [3, 12, 45]
+    assert {c['adapter'] for c in combined['level0Constructs'] if c['slot'] in (12, 45)} == {'0.12', '0.12rc', '0.45', '0.45rc'}
+    for slot in (12, 45):
+        ncs = keys[('nc_site', slot)]
+        assert ncs['insert']['sequence'] == 'CCGTCAGGGCGCGTCAGCGGGTGTTGGCGGGTGTCGGGG' and ncs['label'] == 'NCS'
+        assert ncs['genbank'].startswith('LOCUS       ' + f'Level0.{slot}_NCS_NC') and ncs['type'] == f'Type 0.{slot}'
+    # one NCS (39 bp) + its 4 nt overhang + 2 nt frame spacer less per pair
+    sep_len = {m['site']: m['length'] for m in separate['level1Constructs']}
+    com_len = {m['site']: m['length'] for m in combined['level1Constructs']}
+    for site in ('nc_site', 'cargo_site'):
+        assert sep_len[site] - com_len[site] == 2 * (39 + 4 + 2)
+    assert combined['level2Construct'] is not None
+
+
+def test_the_combined_ncs_keeps_the_stop_codon_logic():
+    design = _levels_with_ncs({'1': {'kind': 'ncs12'}, '4': {'kind': 'linker', 'id': 'GSSS2'}, '5': {'kind': 'ncs'}})
+    assert [p['stop'] for p in design['level0']['ncModule']] == [False, False, True, False]        # 0.12, shell, linker (ends the ORF), NCS
+    flags = {(c['module'], c['slot']): c['stopCodon'] for c in design['level0Constructs']}
+    assert flags[('nc_site', 4)] is True and flags[('nc_site', 12)] is False

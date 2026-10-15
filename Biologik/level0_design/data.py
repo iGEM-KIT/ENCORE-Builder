@@ -159,6 +159,20 @@ def _ncs_status() -> dict:
     return out
 
 
+def _ncs_combined() -> list:
+    """The combined NCS spacers, each one Level 0 part that replaces two neighbouring NCS parts:
+    [{"id": "ncs12", "label": "NCS 0.12", "slots": [1, 2], "status": {"nc": "not_built", "cargo": "not_built"}}, ...]."""
+    out = {}
+    for entry in find_inserts("ncs"):
+        covers = entry.get("covers_slots")
+        if not covers:
+            continue
+        key = "".join(str(n) for n in covers)
+        item = out.setdefault(key, {"id": f"ncs{key}", "label": f"NCS 0.{key}", "slots": list(covers), "status": {}})
+        item["status"][SITE_KEY[entry["site"]]] = plasmid_status(entry)
+    return [out[key] for key in sorted(out)]
+
+
 # Everything the frontend needs for its dropdowns, in ONE place.
 # On purpose a function and not a constant, so that it can read from the database
 # later without the callers changing (see PROJECT_TODO.txt, 5).
@@ -175,6 +189,7 @@ def get_libraries() -> dict:
         "targetingPeptides": TARGETING_PEPTIDES,
         "ncs": _ncs_slots(),
         "ncsStatus": _ncs_status(),
+        "ncsCombined": _ncs_combined(),
         # The backbones come from the parts database (Biologik/level0_design/parts/README.md); the Level 0 backbone
         # with its finished GenBank text (copy/download in the frontend, step 4 / Level 0).
         "level0Backbones": [{**b, "genbank": format_backbone_record(b)} for b in parts["level0_backbones"] if b.get("sequence")],

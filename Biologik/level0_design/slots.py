@@ -30,6 +30,10 @@ def build_custom_nanocompartment(custom) -> dict:
 
 
 NC_SLOTS = (1, 2, 4, 5)
+# Combined NCS spacers: one Level 0 part that replaces two neighbouring NCS parts ("ncs12" = Types 0.1 + 0.2, "ncs45" = 0.4 + 0.5).
+# Choosing it in one of the two slots sets the other one as well.
+COMBINED_NCS = {"ncs12": (1, 2), "ncs45": (4, 5)}
+NCS_KINDS = ("ncs",) + tuple(COMBINED_NCS)
 # Parts from the library that a slot can take: kind -> (search function, name for the error message)
 LIBRARY_PARTS = {"linker": (find_linker, "linker"), "marker": (find_surface_marker, "surface marker"),
                  "intein": (find_intein, "intein")}
@@ -51,7 +55,11 @@ def resolve_slots(raw, module: str = "nc") -> dict:
     for n in NC_SLOTS:
         cfg = raw.get(str(n)) or raw.get(n) or {}
         kind = cfg.get("kind") or "ncs"
-        if kind == "ncs":
+        if kind in COMBINED_NCS:
+            if n not in COMBINED_NCS[kind]:
+                raise ValueError(f"Type 0.{n}: the combined NCS 0.{COMBINED_NCS[kind][0]}{COMBINED_NCS[kind][1]} only fits Type 0.{COMBINED_NCS[kind][0]} and 0.{COMBINED_NCS[kind][1]}.")
+            slots[n] = {"kind": kind}
+        elif kind == "ncs":
             slots[n] = {"kind": kind}
         elif kind == "tp":
             if module != "cargo":
@@ -78,11 +86,20 @@ def resolve_slots(raw, module: str = "nc") -> dict:
     if sum(1 for n in NC_SLOTS if slots[n]["kind"] == "tp") > 1:
         raise ValueError("Only one targeting peptide can be used.")
 
+    # A combined NCS covers two slots: if one of the two is set to it, the other one is the same part.
+    for kind, pair in COMBINED_NCS.items():
+        if any(slots[n]["kind"] == kind for n in pair):
+            for n in pair:
+                if slots[n]["kind"] not in ("ncs", kind):
+                    raise ValueError(f"Type 0.{n}: the combined NCS 0.{pair[0]}{pair[1]} replaces both Type 0.{pair[0]} and 0.{pair[1]}; "
+                                     f"remove the other part from Type 0.{n} first.")
+                slots[n] = {"kind": kind}
+
     # If the outer slot (Type 0.1 or 0.5) is used, the inner one (0.2 or 0.4) must not be an
     # NCS spacer. If a CDS (marker, TP or own sequence) sits outside, a
     # linker must sit inside; a second marker is not enough there.
     for outer, inner in ((1, 2), (5, 4)):
-        if slots[outer]["kind"] != "ncs" and slots[inner]["kind"] == "ncs":
+        if slots[outer]["kind"] not in NCS_KINDS and slots[inner]["kind"] in NCS_KINDS:
             raise ValueError(f"Type 0.{inner}: cannot be an NCS spacer while Type 0.{outer} is in use.")
         if slots[outer]["kind"] in ("marker", "tp", "custom", "intein") and slots[inner]["kind"] in ("marker", "intein"):
             raise ValueError(
@@ -106,6 +123,10 @@ def _slot_part(n: int, cfg: dict, tp_label: str = "TP") -> dict:
     if kind == "custom":
         return {"role": "custom-part", "label": cfg["label"], "kind": f"t{n}", "note": "Your sequence",
                 "bp": cfg["bp"], "isNew": True}
+    if kind in COMBINED_NCS:
+        a, b = COMBINED_NCS[kind]
+        return {"role": "ncs", "label": "NCS", "kind": "ncs", "note": f"Spacer · replaces Type 0.{a} and 0.{b}", "bp": NOMINAL_BP["NCS"],
+                "slots": [a, b], "slot": int(f"{a}{b}")}
     return {"role": "ncs", "label": "NCS", "kind": "ncs", "note": "Spacer", "bp": NOMINAL_BP["NCS"]}
 
 
@@ -113,7 +134,23 @@ def orf_slots(slots: dict, module: str) -> list:
     """The coding slots of a module in reading direction: NC module Type 0.1 -> 0.5, cargo module (antisense) Type 0.5 -> 0.1.
     The central part (Type 0.3) is always coding; NCS spacers never are. The first one gets the start codon, the last one the stop codon."""
     order = (1, 2, 3, 4, 5) if module == "nc" else (5, 4, 3, 2, 1)
-    return [n for n in order if n == 3 or slots[n]["kind"] != "ncs"]
+    return [n for n in order if n == 3 or slots[n]["kind"] not in NCS_KINDS]
+
+
+def module_units(slots: dict) -> list:
+    """The Level 0 parts of a module in Type order as (key, covered slots): normally (1,[1]), (2,[2]), (3,[3]), (4,[4]), (5,[5]);
+    a combined NCS replaces two neighbours by one unit, e.g. (12,[1,2]) or (45,[4,5])."""
+    units, n = [], 1
+    while n <= 5:
+        kind = slots[n]["kind"] if n != 3 else None
+        if kind in COMBINED_NCS and COMBINED_NCS[kind][0] == n:
+            a, b = COMBINED_NCS[kind]
+            units.append((int(f"{a}{b}"), [a, b]))
+            n = b + 1
+        else:
+            units.append((n, [n]))
+            n += 1
+    return units
 
 
 def _module_layout(slots: dict, middle: dict, module: str, tp_label: str = "TP") -> list:
@@ -123,13 +160,15 @@ def _module_layout(slots: dict, middle: dict, module: str, tp_label: str = "TP")
     parts[3] = middle
     last = orf_slots(slots, module)[-1]
     parts[last] = {**parts[last], "stop": True}
-    return [parts[1], parts[2], parts[3], parts[4], parts[5]]
+    return [parts[key] if key in parts else _slot_part(covers[0], slots[covers[0]], tp_label) for key, covers in module_units(slots)]
 
 
 def level0_part(slot: int, spec: dict) -> dict:
     # Function to create a Level 0 module, a kind of profile.
+    slot = spec.get("slot", slot)
     return {
         "slot": slot,
+        "slots": spec.get("slots", [slot]),
         "type": f"Type 0.{slot}",
         "role": spec["role"],
         "label": spec["label"],
@@ -147,17 +186,17 @@ def level0_part(slot: int, spec: dict) -> dict:
 
 
 def build_modules(nc: dict, cargo_label: str, cargo_bp: int, cargo_slots: dict, nc_slots: dict):
-    # A module consists of five Level 0 parts. The cargo and NC modules are built here.
+    # A module consists of five Level 0 parts (four if a combined NCS replaces two of them). The cargo and NC modules are built here.
     cg = {"role": "cargo", "label": cargo_label, "kind": "t3", "note": "Cargo", "bp": cargo_bp, "isCargo": True}
     # Cargo module (antisense): the ORF runs from Type 0.5 to 0.1.
     cargo_layout = _module_layout(cargo_slots, cg, "cargo", tp_label=nc["tp"])
-    cargo_module = [level0_part(index + 1, spec) for index, spec in enumerate(cargo_layout)]
+    cargo_module = [level0_part(key, spec) for (key, _), spec in zip(module_units(cargo_slots), cargo_layout)]
 
     shell = {"role": "shell", "label": nc["shell"], "kind": "shell", "note": "Shell", "bp": nc["shellBp"],
              "isNew": bool(nc.get("custom"))}
     # NC module (sense): the ORF runs from Type 0.1 to 0.5.
     nc_layout = _module_layout(nc_slots, shell, "nc")
-    nc_module = [level0_part(index + 1, spec) for index, spec in enumerate(nc_layout)]
+    nc_module = [level0_part(key, spec) for (key, _), spec in zip(module_units(nc_slots), nc_layout)]
     return cargo_module, nc_module
 
 

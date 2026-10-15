@@ -13,7 +13,7 @@ from .oligos import design_level0_oligos
 from .parts_db import plasmid_status, bare_cds, find_inserts, find_library_cargo, find_real_sequence, load_parts
 from .primers import MIN_PCR_INSERT_BP, design_level0_primers, pcr_product_genbank
 from .sequence import reverse_complement
-from .slots import orf_slots
+from .slots import COMBINED_NCS, module_units, orf_slots
 from .user_codons import codon_note
 
 
@@ -84,6 +84,10 @@ def _toolkit_part(cfg: dict, nc: dict, site: str, n: int) -> Part:
     if kind == "intein":
         found = resolve_insert("intein", cfg["id"], site, n, "INT" + cfg["id"], cfg["bp"])
         return Part(cfg["label"], found[0], found[1], False, "intein (toolkit part)", found[2])
+    if kind in COMBINED_NCS:
+        a, b = COMBINED_NCS[kind]
+        found = resolve_insert("ncs", "ncs", site, None, "NCS", 30, covers_slots=[a, b])
+        return Part("NCS", found[0], found[1], False, f"combined NCS spacer, replaces Type 0.{a} and 0.{b} (toolkit part)", found[2])
     found = resolve_insert("ncs", "ncs", site, n, "NCS", 30)
     return Part("NCS", found[0], found[1], False, "NCS spacer (toolkit part)", found[2])
 
@@ -248,9 +252,9 @@ def build_level0_constructs(nc: dict, cargo_label: str, cargo_antisense: str, ca
     for module, slots, middle in (("cargo", cargo_slots, cargo), ("nc", nc_slots, shell)):
         site = "cargo_site" if module == "cargo" else "nc_site"
         flags = _orf_flags(slots, module)
-        for n in (1, 2, 3, 4, 5):
-            part = middle if n == 3 else _toolkit_part(slots[n], nc, site, n)
-            codon = (cargo_codon if module == "cargo" else nc.get("codon")) if n == 3 else slots[n].get("codon")
+        for n, covers in module_units(slots):
+            part = middle if n == 3 else _toolkit_part(slots[covers[0]], nc, site, covers[0])
+            codon = (cargo_codon if module == "cargo" else nc.get("codon")) if n == 3 else slots[covers[0]].get("codon")
             construct, fragment = _build_construct(part, module, n, codon, backbone, cargo_antisense, *flags.get(n, (False, False)))
             constructs.append(construct)
             if fragments is not None:

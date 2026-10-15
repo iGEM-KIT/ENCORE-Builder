@@ -17,7 +17,7 @@ def spacer_mode(module: str, slot: int) -> str:
     has no spacer)."""
     if module != "cargo":
         return "before"
-    return "drop" if slot == 5 else "after"
+    return "drop" if slot in (5, 45) else "after"
 
 
 def _relocate_spacer(entry: dict, mode: str) -> dict:
@@ -119,8 +119,9 @@ def attach_adapter(adapter, insert_seq: str, spacer: str = "before") -> dict:
 
 def adapter_id_for(module: str, slot: int) -> str:
     """Which adapter (parts/type_overhangs/) applies to a part in module `module` ("cargo"/"nc") at Type 0.<slot>:
-    at the outer slots 0.1/0.5 the cargo site has its own rc adapters, 0.2 to 0.4 apply to both sides."""
-    return f"0.{slot}rc" if module == "cargo" and slot in (1, 5) else f"0.{slot}"
+    at the outer slots 0.1/0.5 the cargo site has its own rc adapters, 0.2 to 0.4 apply to both sides. The combined NCS
+    (slot 12 = Types 0.1 + 0.2, slot 45 = Types 0.4 + 0.5) has its own adapters 0.12/0.45 with an rc variant for the cargo site."""
+    return f"0.{slot}rc" if module == "cargo" and slot in (1, 5, 12, 45) else f"0.{slot}"
 
 
 def adapter_contexts(adapter_id: str, antisense: bool, slot: int | None = None) -> tuple:

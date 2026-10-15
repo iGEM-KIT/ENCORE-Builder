@@ -46,7 +46,9 @@ Plasmid fields (`plasmids` list):
 - `registry_url`: link to the part in the iGEM Registry, `null` until it is known. The builder shows it for every toolbox part in the order lists of step 5 (a placeholder while it is `null`).
 - `notes`: oddities noticed during the import (to be checked).
 - `covers_slots` (combined NCS only, e.g. `0.12 NCS` = `[1, 2]`, `0.45 NCS` = `[4, 5]`): the spacer covers two slots at once; `type_slot` is then
-  `null`. They are stored but not offered in the dropdowns yet.
+  `null`. The builder offers them as "NCS 0.12" / "NCS 0.45" in both slots they cover: choosing one sets and locks the other slot, and the
+  result is ONE Level 0 part (Type 0.12 / 0.45) with its own adapter (`type_overhangs/0.12`, `0.12rc`, `0.45`, `0.45rc`: the left of the first
+  and the right of the second adapter, without the overhang in between) and one Level 1 fragment fewer.
 
 Plasmids with `id: null` are listed in `Level 0 constructs.xlsx` (id "-") but are not built and not in the lab system; they are in the database
 only for completeness and so that the part can be chosen at that slot. They have no internal id, `on_stock` is `false` and `registry_url` is `null`.

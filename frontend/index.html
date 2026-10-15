@@ -294,6 +294,7 @@
   .slothead .sterm{margin-left:auto;font-size:11px;color:var(--muted)}
   @media(max-width:700px){.slotrow{grid-template-columns:1fr}}
   .slotcard{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--card-2,var(--card))}
+  .slotcard.locked{opacity:.7}
   .slothead{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:13px}
   .slothead .stype{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:2px 8px}
   .slothint{margin-top:8px;font-size:12px;color:var(--muted)}
@@ -1112,7 +1113,7 @@ const endsWithStop = seq => seq.length>=3 && STOP_CODONS.includes(seq.slice(-3))
    database: the same source the design itself is computed from. Adding a nanocompartment is a backend-only change. */
 const LIB = {
   nanocompartments: [], cargoPresets: [], linkers: [], promoters: [], surfaceMarkers: [],
-  inteins: [], targetingPeptides: [], ncs: null,
+  inteins: [], targetingPeptides: [], ncs: null, ncsStatus: null, ncsCombined: [],
   level0Backbones: [], level1Backbones: [], level2Backbones: [],
 };
 
@@ -1126,6 +1127,8 @@ function applyLibs(l){
   LIB.inteins          = l.inteins          || LIB.inteins;
   LIB.targetingPeptides = l.targetingPeptides || LIB.targetingPeptides;
   LIB.ncs              = l.ncs              || LIB.ncs;
+  LIB.ncsStatus        = l.ncsStatus        || LIB.ncsStatus;
+  LIB.ncsCombined      = l.ncsCombined      || LIB.ncsCombined;
   LIB.level0Backbones  = l.level0Backbones  || LIB.level0Backbones;
   LIB.level1Backbones  = l.level1Backbones  || LIB.level1Backbones;
   LIB.level2Backbones  = l.level2Backbones  || LIB.level2Backbones;
@@ -1617,19 +1620,26 @@ function slotsValid(mod){ const sl=slotsOf(mod); return SLOT_NUMBERS.every(n=>sl
      a linker (or own linker sequence).
    - The targeting peptide only exists in the cargo module, in Type 0.1 or 0.5, at most once. */
 const LINKER_FOR={ 2:1, 4:5 };
+/* Combined NCS: one Level 0 part that replaces two neighbouring NCS parts (0.12 = Types 0.1 + 0.2, 0.45 = Types 0.4 + 0.5).
+   Choosing it in one of the two slots sets the other slot too and locks it; it is released again when the chosen slot is
+   changed to something else. */
+const COMBINED={ ncs12:[1,2], ncs45:[4,5] };
+const isNcs=kind=>kind==='ncs' || kind in COMBINED;
 const isCds=c=>['marker','intein','custom','tp'].includes(c.kind);
-const blocksNcs=(mod,n)=>!['none','ncs'].includes(slotsOf(mod)[LINKER_FOR[n]].kind);
+const blocksNcs=(mod,n)=>{ const k=slotsOf(mod)[LINKER_FOR[n]].kind; return k!=='none' && !isNcs(k); };
 const needsLinker=(mod,n)=>isCds(slotsOf(mod)[LINKER_FOR[n]]);
 function slotRulesOk(mod){
   const sl=slotsOf(mod), k=n=>sl[n].kind;
   if(SLOT_NUMBERS.some(n=>k(n)==='none')) return false;             // every slot needs a choice
   if(SLOT_NUMBERS.filter(n=>k(n)==='tp').length>1) return false;
-  return [2,4].every(n=>(!blocksNcs(mod,n) || k(n)!=='ncs') && (!needsLinker(mod,n) || ['linker','custom'].includes(k(n))));
+  return [2,4].every(n=>(!blocksNcs(mod,n) || !isNcs(k(n))) && (!needsLinker(mod,n) || ['linker','custom'].includes(k(n))));
 }
 function enforceSlotRules(mod){
   const sl=slotsOf(mod);
   SLOT_NUMBERS.forEach(n=>{
     const el=slotEl(mod,n), sel=el.querySelector('.slotsel'), kind=sl[n].kind;
+    sel.disabled = !!sl[n].locked;                                          // the partner slot of a combined NCS cannot be changed
+    el.classList.toggle('locked', !!sl[n].locked);
     const inner = n===2 || n===4;
     const noNcs = inner && blocksNcs(mod,n), needLnk = inner && needsLinker(mod,n), outer=LINKER_FOR[n];
     const otherTp = SLOT_NUMBERS.some(m=>m!==n && sl[m].kind==='tp');
@@ -1638,18 +1648,20 @@ function enforceSlotRules(mod){
       const v=o.value;
       let off=false;
       if(v==='none'){ o.disabled=true; return; }                       // placeholder
-      if(noNcs && v==='ncs') off=true;
+      if(noNcs && (v==='ncs' || v in COMBINED)) off=true;
       if(needLnk && (v.startsWith('marker:') || v.startsWith('intein:') || v==='tp')) off=true;
       if(v==='tp' && (inner || otherTp || noTpHere)) off=true;        // only Type 0.1 / 0.5, only once, and only with a toolkit nanocompartment
       o.disabled=off;
     });
     const hint=el.querySelector('.slothint');
     let text='';
-    if(noNcs) text = needLnk ? `Type 0.${outer} holds a sequence: a linker is required here.`
+    if(sl[n].locked){ const p=COMBINED[kind]; text=`Part of the combined NCS 0.${p[0]}${p[1]}: it replaces Type 0.${p[0]} and 0.${p[1]}. Change the other slot to release it.`; }
+    else if(noNcs) text = needLnk ? `Type 0.${outer} holds a sequence: a linker is required here.`
                                   : `Type 0.${outer} is in use: this position cannot be an NCS spacer.`;
     hint.textContent=text; hint.style.display = text ? 'block' : 'none';
     let bounce=null;
-    if((noNcs && kind==='ncs') || (needLnk && (kind==='marker' || kind==='intein' || kind==='tp'))) bounce=firstLinker(mod,n);
+    if(sl[n].locked) bounce=null;
+    else if((noNcs && isNcs(kind)) || (needLnk && (kind==='marker' || kind==='intein' || kind==='tp'))) bounce=firstLinker(mod,n);
     else if(kind==='tp' && [...sel.options].find(o=>o.value===kind)?.disabled) bounce={kind:'ncs'};
     if(bounce){
       sl[n]=bounce;
@@ -1680,6 +1692,7 @@ function slotOptionsHtml(mod, n){
     return list.length ? `<optgroup label="${label}">${list.map(m=>`<option value="${kind}:${m.id}">${m.label}: ${m.aa} aa${statusHint(m.status && m.status[mod] && m.status[mod][n])}</option>`).join('')}</optgroup>` : ''; };
   return `<option value="none" disabled selected>Please select</option>`
     + (roles.includes('plain') ? `<option value="ncs">NCS (spacer)${ncsSt('plain')}</option>` : '')
+    + (LIB.ncsCombined||[]).filter(x=>x.slots.includes(n)).map(x=>`<option value="${x.id}">${x.label} (spacer for Type 0.${x.slots[0]} and 0.${x.slots[1]})${statusHint(x.status && x.status[mod])}</option>`).join('')
     + (tpHere ? `<option value="tp">Targeting peptide${tpSt}</option>` : '')
     + group('Linker', LIB.linkers, 'linker')
     + group('Surface display', LIB.surfaceMarkers, 'marker')
@@ -1713,9 +1726,22 @@ function initSlots(){
     });
   });
 }
+function setSlotSelect(mod,n,value){
+  const el=slotEl(mod,n);
+  el.querySelector('.slotsel').value=value;
+  el.querySelector('.slotcustom').style.display = value==='custom' ? 'flex' : 'none';
+}
+const otherOfPair=(kind,n)=>{ const p=COMBINED[kind]; return p[0]===n ? p[1] : p[0]; };
 function setSlotFromSelect(mod,n){
   const el=slotEl(mod,n), v=el.querySelector('.slotsel').value, sl=slotsOf(mod), prev=sl[n];
-  if(v==='ncs' || v==='tp') sl[n]={kind:v};
+  if(prev.kind in COMBINED && v!==prev.kind){                              // leaving a combined NCS releases its partner slot
+    const o=otherOfPair(prev.kind,n); sl[o]={kind:'ncs'}; setSlotSelect(mod,o,'ncs');
+  }
+  if(v in COMBINED){                                                       // the partner slot becomes the same NCS and is locked
+    const o=otherOfPair(v,n);
+    sl[n]={kind:v}; sl[o]={kind:v, locked:true}; setSlotSelect(mod,o,v);
+  }
+  else if(v==='ncs' || v==='tp') sl[n]={kind:v};
   else if(v==='custom') sl[n]={kind:'custom', label:prev.label||'', seqRaw:prev.seqRaw||'', valid:false};
   else { const [kind,id]=v.split(':'); sl[n]={kind,id}; }
   el.querySelector('.slotcustom').style.display = v==='custom' ? 'flex' : 'none';
@@ -1759,7 +1785,7 @@ function slotsPayload(mod){
   SLOT_NUMBERS.forEach(n=>{
     const c=sl[n];
     out[n] = c.kind==='custom' ? {kind:'custom', label:c.label||'', seq:clean(c.seqRaw||'')}
-           : c.kind==='tp' ? {kind:c.kind} : (c.kind==='ncs' || c.kind==='none') ? {kind:'ncs'} : {kind:c.kind, id:c.id};
+           : (c.kind==='tp' || c.kind in COMBINED) ? {kind:c.kind} : (c.kind==='ncs' || c.kind==='none') ? {kind:'ncs'} : {kind:c.kind, id:c.id};
   });
   return out;
 }
@@ -1795,7 +1821,7 @@ function updateConstructStrip(){
     // shows immediately on selection. The typed name appears live; whether the sequence itself is
     // valid yet only gates "Continue", not this preview.
     if(c.kind==='custom') return { kind:'t'+k, label:(c.label||'').trim() || 'Custom', filled:true };
-    if(c.kind==='ncs') return { kind:'ncs', label:'NCS', filled:true };
+    if(isNcs(c.kind)) return { kind:'ncs', label:'NCS', filled:true };
     return { kind:'ncs', label:'Type 0.'+k, filled:false };
   };
   const promoFilled = !!state.promoter;
@@ -2087,7 +2113,7 @@ function l0Box(p){
 }
 function l0Frag(p, module){
   const isNew = p.isCargo || p.isNew;
-  const slot = (String(p.type||'').match(/(\d)$/)||[])[1] || '';
+  const slot = (String(p.type||'').match(/0\.(\d+)$/)||[])[1] || '';
   return `<div class="l0frag ${isNew?'l0new':'l0stock'}" data-module="${module}" data-slot="${slot}" role="button" tabindex="0" aria-label="${esc(p.label)}: show sequence">${l0Box(p)}</div>`;
 }
 function l0ModuleRow(parts, antisense){
@@ -2102,8 +2128,10 @@ function l0ModuleRow(parts, antisense){
   const ordered = antisense ? parts.map((p,i)=>({p,i})).reverse() : parts.map((p,i)=>({p,i}));
   const cells = [ohChip(JUNCTIONS[antisense ? 5 : 0], 'left')];
   ordered.forEach(({p,i},n)=>{
+    // a combined NCS covers two slots: its junctions are those of its first and last slot
+    const lo=(p.slots && p.slots[0]) || i+1, hi=(p.slots && p.slots[p.slots.length-1]) || i+1;
     cells.push(l0Frag(p, antisense ? 'cargo' : 'nc'));
-    cells.push(ohChip(JUNCTIONS[antisense ? i : i+1], n===ordered.length-1 ? 'right' : null));
+    cells.push(ohChip(JUNCTIONS[antisense ? lo-1 : hi], n===ordered.length-1 ? 'right' : null));
   });
   return `<div class="strand-dir"><span>5′</span><span>3′</span></div><div class="partsrow sep l0grid">${cells.join('')}</div>`;
 }
@@ -2732,7 +2760,8 @@ function renderOrder(res){
 function partFromApi(p){
   return {
     label: p.label,
-    kind: p.kind==='shell' ? p.kind : 't'+p.slot,
+    kind: p.kind==='shell' ? p.kind : 't'+((p.slots && p.slots[0]) || p.slot),
+    slots: p.slots,
     note: p.note,
     bp: p.bp,
     type: p.type,
@@ -2850,7 +2879,7 @@ window.addEventListener('scroll',updateProgress,{passive:true}); window.addEvent
 /* ===================== Session persistence (survive a page refresh) ===================== */
 history.scrollRestoration='manual';
 const SESSION_KEY='encore.builder.v1';
-const packSlots=mod=>SLOT_NUMBERS.reduce((o,n)=>{ const c=slotsOf(mod)[n]; o[n]={ kind:c.kind, id:c.id, label:c.label, seqRaw:c.seqRaw }; return o; },{});
+const packSlots=mod=>SLOT_NUMBERS.reduce((o,n)=>{ const c=slotsOf(mod)[n]; o[n]={ kind:c.kind, id:c.id, label:c.label, seqRaw:c.seqRaw, locked:!!c.locked }; return o; },{});
 function saveSession(){
   try{
     sessionStorage.setItem(SESSION_KEY, JSON.stringify({
@@ -2900,8 +2929,9 @@ async function restoreSession(){
     SLOT_NUMBERS.forEach(n=>{
       const c=saved[n]; if(!c) return;
       if(c.kind==='ncsstop') c.kind='ncs';                 // the NCS with stop codon no longer exists (older saved sessions)
+      if(c.locked) return;                                  // the partner slot of a combined NCS is set by the slot that owns it
       const el=slotEl(mod,n), sel=el.querySelector('.slotsel');
-      sel.value = ['none','ncs','tp'].includes(c.kind) ? c.kind : c.kind==='custom' ? 'custom' : c.kind+':'+c.id;
+      sel.value = ['none','ncs','tp','ncs12','ncs45'].includes(c.kind) ? c.kind : c.kind==='custom' ? 'custom' : c.kind+':'+c.id;
       if(!sel.value) sel.value='none';
       el.querySelector('.slotlabel').value=c.label||'';
       el.querySelector('.slotseq').value=c.seqRaw||'';

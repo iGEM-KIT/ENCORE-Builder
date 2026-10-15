@@ -1,0 +1,216 @@
+{
+  "id": "0.12",
+  "kind": "type_overhang",
+  "label": "Combined NCS adapter 0.12 (Types 0.1 and 0.2); nanocompartment (NC) site",
+  "sequence": "GAAGACAACTCAACATTGATGCAAAATTCTCGAGAAGTCTTC",
+  "sequence_status": "real",
+  "on_stock": null,
+  "length_bp": 42,
+  "type_slot": null,
+  "used_for_modules": [
+    "nc_site"
+  ],
+  "reverse_complement_variant": false,
+  "description": "Type1+Type2 combined NCS, Nanocompartment",
+  "enzyme": "BbsI",
+  "bbsi_sites": [
+    {
+      "location": "1..6",
+      "strand": "+",
+      "sequence_top_strand": "GAAGAC"
+    },
+    {
+      "location": "complement(37..42)",
+      "strand": "-",
+      "sequence_top_strand": "GTCTTC"
+    }
+  ],
+  "overhangs": [
+    {
+      "label": "0N",
+      "role": "level0_N",
+      "location": "<9..>12",
+      "strand": "+",
+      "sequence_top_strand": "CTCA",
+      "sequence_own_strand_5to3": "CTCA"
+    },
+    {
+      "label": "0.1N Lvl1",
+      "role": "level1_N",
+      "location": "13..>16",
+      "strand": "+",
+      "sequence_top_strand": "ACAT",
+      "sequence_own_strand_5to3": "ACAT"
+    },
+    {
+      "label": "1.3N Lvl2",
+      "role": "level2_N",
+      "location": "<17..>20",
+      "strand": "+",
+      "sequence_top_strand": "TGAT",
+      "sequence_own_strand_5to3": "TGAT"
+    },
+    {
+      "label": "0.2C Lvl1",
+      "role": "level1_C",
+      "location": "complement(27..30)",
+      "strand": "-",
+      "sequence_top_strand": "TTCT",
+      "sequence_own_strand_5to3": "AGAA"
+    },
+    {
+      "label": "0C",
+      "role": "level0_C",
+      "location": "complement(<31..>34)",
+      "strand": "-",
+      "sequence_top_strand": "CGAG",
+      "sequence_own_strand_5to3": "CTCG"
+    }
+  ],
+  "insert": {
+    "location": "23..26",
+    "placeholder_sequence": "AAAA",
+    "note": "4 nt filler, replaced by the CDS (or part sequence) when the adapter is attached."
+  },
+  "organism": null,
+  "source": "Derived from the adapters 0.1 and 0.2: everything of 0.1 up to and including the insert placeholder, then everything of 0.2 behind its insert placeholder. The overhang between the two parts is left out, so one combined part replaces two.",
+  "notes": "Combined NCS adapter for Types 0.1 and 0.2 (one Level 0 plasmid instead of two). Frame spacer and insert placeholder are those of 0.1.",
+  "used_by": [],
+  "features": [
+    {
+      "type": "misc_feature",
+      "location": "1..6",
+      "qualifiers": {
+        "created_by": [
+          "linus"
+        ],
+        "label": [
+          "BbsI rec site"
+        ]
+      }
+    },
+    {
+      "type": "overhang",
+      "location": "<9..>12",
+      "qualifiers": {
+        "created_by": [
+          "linus"
+        ],
+        "modified_by": [
+          "Marina Schreidl"
+        ],
+        "label": [
+          "0N"
+        ]
+      }
+    },
+    {
+      "type": "overhang",
+      "location": "13..>16",
+      "qualifiers": {
+        "created_by": [
+          "linus"
+        ],
+        "modified_by": [
+          "Marina Schreidl"
+        ],
+        "label": [
+          "0.1N Lvl1"
+        ]
+      }
+    },
+    {
+      "type": "overhang",
+      "location": "<17..>20",
+      "qualifiers": {
+        "created_by": [
+          "linus"
+        ],
+        "modified_by": [
+          "Marina Schreidl"
+        ],
+        "label": [
+          "1.3N Lvl2"
+        ]
+      }
+    },
+    {
+      "type": "misc_feature",
+      "location": "21..22",
+      "qualifiers": {
+        "label": [
+          "Frame spacer"
+        ],
+        "note": [
+          "2-nt spacer GC directly 5' of the insert: with the 4-nt overhang in front of it every junction between two parts adds 6 nt (two codons), so fused parts stay in frame. Lies inside the BsaI fragment, so it is kept when cloning."
+        ]
+      }
+    },
+    {
+      "type": "misc_feature",
+      "location": "23..26",
+      "qualifiers": {
+        "created_by": [
+          "Felix Cuntz"
+        ],
+        "modified_by": [
+          "Felix Cuntz"
+        ],
+        "label": [
+          "Insert"
+        ]
+      }
+    },
+    {
+      "type": "overhang",
+      "location": "complement(27..30)",
+      "qualifiers": {
+        "created_by": [
+          "linus"
+        ],
+        "modified_by": [
+          "Marina Schreidl"
+        ],
+        "label": [
+          "0.2C Lvl1"
+        ]
+      }
+    },
+    {
+      "type": "overhang",
+      "location": "complement(<31..>34)",
+      "qualifiers": {
+        "created_by": [
+          "linus"
+        ],
+        "modified_by": [
+          "Marina Schreidl"
+        ],
+        "label": [
+          "0C"
+        ]
+      }
+    },
+    {
+      "type": "misc_feature",
+      "location": "complement(37..42)",
+      "qualifiers": {
+        "created_by": [
+          "linus"
+        ],
+        "label": [
+          "BbsI rec site"
+        ]
+      }
+    }
+  ],
+  "frame_spacer": {
+    "location": "21..22",
+    "sequence": "GC",
+    "note": "Added to keep the reading frame: directly 5' of the insert (top strand), inside the BsaI fragment. Overhang (4 nt) + spacer (2 nt) = 6 nt between two fused parts."
+  },
+  "covers_slots": [
+    1,
+    2
+  ]
+}
