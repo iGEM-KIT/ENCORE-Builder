@@ -384,8 +384,6 @@
   .orderitem .oi-main{min-width:0;flex:1}
   .orderitem .oi-name{font-weight:600;font-size:13.5px}
   .orderitem .oi-sub{font-size:11.5px;color:var(--muted)}
-  .oi-badge.notbuilt{background:rgba(213,94,0,.12);color:#9a4100}
-  [data-theme="dark"] .oi-badge.notbuilt{background:rgba(240,168,131,.16);color:#f0a883}
   .orderitem .oi-badge{font-family:'JetBrains Mono';font-size:10.5px;font-weight:700;padding:4px 9px;border-radius:6px;white-space:nowrap}
   .orderitem .oi-kind{margin:5px 0 3px}
   .oi-badge.reg{background:var(--card-2);color:var(--teal-deep);border:1px solid var(--line);text-decoration:none}
@@ -2684,11 +2682,9 @@ function orderRow(name, sub, status, seqHtml, construct){
   const badge = status==='oligo' ? '<span class="oi-badge synth">oligo pair</span>'
     : status==='primer' ? '<span class="oi-badge pcr">primer pair</span>'
     : '<span class="oi-badge assemble">DNA</span>';
-  const built = construct && !construct.isUser && STATUS_HINT[construct.plasmidStatus]
-    ? `<span class="oi-badge notbuilt" title="${construct.plasmidStatus==='not_built' ? 'This plasmid is not built and not in the lab system yet' : 'No glycerol stock of this plasmid'}">${STATUS_HINT[construct.plasmidStatus].trim().slice(1,-1)}</span>` : '';
   const sw = status==='oligo' ? 't3' : status==='primer' ? 'shell' : 'promo';
   return `<div class="orderitem"><span class="oi-sw" style="background:${cvar(sw)}"></span>
-    <div class="oi-main"><div class="oi-name">${esc(name)}</div><div class="oi-sub">${esc(sub)}</div><div class="oi-kind">${badge} ${built}</div>${seqHtml||''}</div>${construct && !construct.isUser ? registryLinkHtml(construct) : ''}</div>`;
+    <div class="oi-main"><div class="oi-name">${esc(name)}</div><div class="oi-sub">${esc(sub)}</div><div class="oi-kind">${badge}</div>${seqHtml||''}</div>${construct && !construct.isUser ? registryLinkHtml(construct) : ''}</div>`;
 }
 const orderName = c => c.stopCodon ? `${c.label}*` : c.label;     // NCS spacers that carry the ORF's stop codon are marked with * (as in the selection)
 const orderSite = c => c.module==='cargo_site' ? 'cargo site' : 'nanocompartment site';
