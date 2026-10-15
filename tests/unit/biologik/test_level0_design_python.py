@@ -1251,3 +1251,49 @@ def test_registry_links_point_to_registry_igem_org_and_the_linked_parts_exist_th
     # every plasmid of a linked part carries the link, and parts that are not in the Registry yet carry none
     assert all(e['registry_url'] for e in inserts() if (e['category'], e['part']) in linked)
     assert not any(e['registry_url'] for e in inserts() if (e['category'], e['part']) in {('linker', 'GSSS2'), ('linker', 'GSSS4'), ('tp', 'TP-Tm')})
+
+
+# What the guide tells about the Level 2 insert: the overhangs, no BbsI or BsaI site, no terminators or vector parts
+
+LEVEL2_SLOT_VARIANTS = [
+    {},
+    {'ncSlots': {'1': {'kind': 'ncs12'}, '4': {'kind': 'ncs45'}}, 'cargoSlots': {'2': {'kind': 'ncs12'}}},
+    {'ncSlots': {'1': {'kind': 'marker', 'id': 'spycatcher'}, '2': {'kind': 'linker', 'id': 'GSSS3'},
+                 '4': {'kind': 'linker', 'id': 'GGS2'}, '5': {'kind': 'marker', 'id': 'spytag'}},
+     'cargoSlots': {'1': {'kind': 'ncs'}, '2': {'kind': 'linker', 'id': 'GSSS2'}, '4': {'kind': 'linker', 'id': 'GSSS4'}, '5': {'kind': 'intein', 'id': 'int'}}},
+]
+
+
+@pytest.mark.parametrize('nanocompartment', ['tmari', 'mxan', 'qther', 'mvp'])
+@pytest.mark.parametrize('variant', range(len(LEVEL2_SLOT_VARIANTS)))
+def test_the_level2_insert_has_the_two_level2_overhangs_and_no_bbsi_or_bsai_site(nanocompartment, variant):
+    from Biologik.level0_design.design import design_construct
+    design = design_construct({'nanocompartment': nanocompartment, 'cargoSeq': _long_cargo(), 'cargoLabel': 'X', **LEVEL2_SLOT_VARIANTS[variant]})
+    insert = design['level2Construct']['sequence']
+    assert insert[:4] == 'CCAA' and insert[-4:] == 'AATG'
+    for site in ('GAAGAC', 'GTCTTC', 'GGTCTC', 'GAGACC'):
+        assert site not in insert, f'{site} in the Level 2 insert'
+    assert design['level2Construct']['junctions']['n'] == 'CCAA' and design['level2Construct']['junctions']['c'] == 'AATG'
+
+
+def test_the_terminators_marker_and_origins_come_from_the_level2_vector_not_from_the_insert():
+    """The insert is only the two modules and the promoter; the vector pESC-HIS carries the terminators right next to the overhangs."""
+    backbone = next(iter(load_parts()['level2_backbones']))
+    seq = backbone['sequence']
+
+    def span(location):
+        numbers = [int(n) for n in re.findall(r'\d+', location)]
+        return min(numbers), max(numbers)
+
+    features = {f['qualifiers'].get('label', [''])[0]: f for f in backbone['features']}
+    adh1_end = span(features['ADH1 terminator']['location'])[1]
+    cyc1_start = span(features['CYC1 terminator']['location'])[0]
+    left_a, _ = span(backbone['receiver_overhangs']['5_prime']['location'])
+    _, right_b = span(backbone['receiver_overhangs']['3_prime']['location'])
+    assert adh1_end + 1 == left_a and right_b + 1 == cyc1_start                      # terminators sit right at the overhangs
+    insert_sequences = [m['sequence'] for m in _real_design()['level1Constructs']]
+    adh1 = seq[span(features['ADH1 terminator']['location'])[0] - 1:adh1_end]
+    cyc1 = seq[cyc1_start - 1:span(features['CYC1 terminator']['location'])[1]]
+    level2 = _real_design()['level2Construct']['sequence']
+    assert adh1 not in level2 and cyc1 not in level2 and insert_sequences
+    assert 'HIS3' in features and 'AmpR' in features and any('2μ' in k or '2μ' in k for k in features)   # marker and origins stay in the vector

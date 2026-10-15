@@ -163,3 +163,12 @@ def test_the_builder_page_offers_no_option_the_backend_does_not_know():
         n = COMBINED_NCS[kind][0] if kind in COMBINED_NCS else 1
         slots = resolve_slots({str(n): {"kind": kind}}, "nc")
         assert len(slots) == len(NC_SLOTS)
+
+
+def test_the_level2_compatibility_hint_is_in_the_guide_and_in_the_builder_and_is_not_overstated():
+    guide = re.sub(r"<[^>]*>", " ", GUIDE.read_text(encoding="utf8"))
+    index = re.sub(r"<[^>]*>", " ", INDEX.read_text(encoding="utf8"))
+    for text in (guide, index):
+        assert "CCAA" in text and "AATG" in text and "BbsI" in text
+        assert "not" in text.split("Which plasmids does")[1][:700]                   # says that it is not every Golden Gate plasmid
+    assert "compatible with all Golden Gate" not in guide + index
