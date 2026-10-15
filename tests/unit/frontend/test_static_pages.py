@@ -174,10 +174,10 @@ def test_the_level2_compatibility_hint_is_in_the_guide_and_in_the_builder_and_is
     assert "compatible with all Golden Gate" not in guide + index
 
 
-def test_the_guide_explains_the_not_built_label_and_says_stock_does_not_matter():
+def test_the_guide_explains_the_not_built_label_and_does_not_talk_about_stock():
     guide = re.sub(r"<[^>]*>", " ", GUIDE.read_text(encoding="utf8"))
     assert "(not built)" in guide and "has not been built yet" in guide
-    assert "stock plays no role" in guide
+    assert "stock" not in guide.lower()                                            # stock is not a topic of the software
     index = INDEX.read_text(encoding="utf8")
     assert "' (not built)'" in index                                               # the label the guide explains is the one the builder shows
     assert "not in stock" not in index and "no_stock" not in index
