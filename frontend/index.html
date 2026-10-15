@@ -579,7 +579,7 @@
     <div class="s-step" data-target="sec-1"><button class="s-node"><span class="s-dot">2</span><span class="s-text"><span class="t">Cargo Site</span><span class="sub">Cargo &amp; modules</span></span></button><span class="s-line"></span></div>
     <div class="s-step" data-target="sec-2"><button class="s-node"><span class="s-dot">3</span><span class="s-text"><span class="t">Promoter</span><span class="sub">Drives both modules</span></span></button><span class="s-line"></span></div>
     <div class="s-step" data-target="sec-3"><button class="s-node"><span class="s-dot">4</span><span class="s-text"><span class="t">Result</span><span class="sub">Modules</span></span></button><span class="s-line"></span></div>
-    <div class="s-step" data-target="sec-4"><button class="s-node"><span class="s-dot">5</span><span class="s-text"><span class="t">Overview</span><span class="sub">Stock, oligos, primers, DNA</span></span></button></div>
+    <div class="s-step" data-target="sec-4"><button class="s-node"><span class="s-dot">5</span><span class="s-text"><span class="t">Overview</span><span class="sub">Oligos, primers, DNA</span></span></button></div>
   </nav>
 </aside>
 <!-- ============ TOP BAR: progress + live construct map ============ -->
@@ -755,7 +755,7 @@
 
           <!-- Level 0 / 1 / 2; collapsible tabs. Each shows that level's modules in
                their correct construct form, the acceptor plasmid(s) they get cloned
-               into, and an order checklist (stock / PCR / synthesize). -->
+               into, and an order checklist (PCR / synthesize). -->
           <div class="block">
             <div class="sectitle"><h3>Golden Gate assembly<button class="info" data-info="levels">i</button></h3></div>
             <p class="secsub">Level 0 (individual parts) → Level 1 (modules) → Level 2 (finished construct). Open a level, then click a module to see more details.</p>
@@ -1680,7 +1680,7 @@ const availableAt = (item, mod, n) => !item.slots || (item.slots[mod]||[]).inclu
 const linkersAt = (mod, n) => LIB.linkers.filter(l=>availableAt(l,mod,n));
 function firstLinker(mod, n){ const l=linkersAt(mod,n)[0]; return l ? {kind:'linker', id:l.id} : {kind:'custom', label:'', seqRaw:'', valid:false}; }
 function ncsRoles(mod, n){ return LIB.ncs ? ((LIB.ncs[mod]||{})[n] || []) : ['plain']; }
-const STATUS_HINT = { not_built:' (not built)' };            // only "not built" is shown; stock is not relevant for the software
+const STATUS_HINT = { not_built:' (not built)' };            // the only label a part gets in the drop-downs
 const statusHint = s => STATUS_HINT[s] || '';
 function slotOptionsHtml(mod, n){
   const roles = ncsRoles(mod, n);
@@ -2101,7 +2101,7 @@ function renderStrand(elId, parts, opts={}){
    junction rotated too: the old bottom strand becomes the top strand, read 5'->3'
    (= reverse complement of the physical top-strand junction), the old top strand
    becomes the bottom one (= the junction reversed). All ten parts are shown in full
-   colour; only a thin inset ring marks new vs. stock. */
+   colour; only a thin inset ring marks new vs. toolbox. */
 const JUNCTIONS=['ACAT','TATG','TTCT','ATCC','TGGC','TTGT'];   // Type n runs from JUNCTIONS[n-1] to JUNCTIONS[n]
 function l0Box(p){
   const k = p.kind || 'ncs';
@@ -2113,7 +2113,7 @@ function l0Box(p){
 function l0Frag(p, module){
   const isNew = p.isCargo || p.isNew;
   const slot = (String(p.type||'').match(/0\.(\d+)$/)||[])[1] || '';
-  return `<div class="l0frag ${isNew?'l0new':'l0stock'}" data-module="${module}" data-slot="${slot}" role="button" tabindex="0" aria-label="${esc(p.label)}: show sequence">${l0Box(p)}</div>`;
+  return `<div class="l0frag ${isNew?'l0new':'l0toolbox'}" data-module="${module}" data-slot="${slot}" role="button" tabindex="0" aria-label="${esc(p.label)}: show sequence">${l0Box(p)}</div>`;
 }
 function l0ModuleRow(parts, antisense){
   // antisense (cargo): rotate the whole construct by 180 degrees (see comment above)
@@ -2770,7 +2770,7 @@ function partFromApi(p){
     surface: !!p.surface,
     // isCargo has to be passed through: renderLevel0() uses it to decide which
     // of the five Level 0 parts is drawn as new (full colour, fusion sites, BbsI tag) and
-    // which as stock parts. mapnote stays for the strip view.
+    // which as toolbox parts. mapnote stays for the strip view.
     isCargo: !!p.isCargo,
     isNew: !!p.isNew,
     mapnote: p.isCargo ? (p.bp+' bp') : undefined,

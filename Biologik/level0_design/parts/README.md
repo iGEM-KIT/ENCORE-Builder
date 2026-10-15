@@ -42,7 +42,7 @@ Plasmid fields (`plasmids` list):
   (`level2_overhang`: TGAT/AATG = NC site, CCAA/CGTT = cargo site), for Type 0.2-0.4 from the strand on which the part lies in the
   plasmid (`stored_orientation`: sense = NC site, antisense = cargo site; the "rc" plasmids).
 - `frame_spacer_in_plasmid`: the 2 bases the plasmid carries before the ORF (only for traceability).
-- `on_stock`: `true` = glycerol stock available, `false` = no. Only kept as a record: the builder never looks at it, so a part without stock is offered and ordered like any other. What the builder does show is whether the plasmid has been built at all (an entry with an internal `id`) or is only planned (`id: null`, shown as "(not built)").
+- A plasmid entry whose internal `id` is set counts as built; one with `id: null` is only planned and is shown as "(not built)".
 - `registry_url`: link to the part in the iGEM Registry, `null` until it is known. The builder shows it for every toolbox part in the order lists of step 5 (a placeholder while it is `null`).
 - `notes`: oddities noticed during the import (to be checked).
 - `covers_slots` (combined NCS only, e.g. `0.12 NCS` = `[1, 2]`, `0.45 NCS` = `[4, 5]`): the spacer covers two slots at once; `type_slot` is then
@@ -51,7 +51,7 @@ Plasmid fields (`plasmids` list):
   and the right of the second adapter, without the overhang in between) and one Level 1 fragment fewer.
 
 Plasmids with `id: null` are listed in `Level 0 constructs.xlsx` (id "-") but are not built and not in the lab system; they are in the database
-only for completeness and so that the part can be chosen at that slot. They have no internal id, `on_stock` is `false` and `registry_url` is `null`.
+only for completeness and so that the part can be chosen at that slot. They have no internal id and `registry_url` is `null`.
 The site of a plasmid follows the table where it disagreed with the GenBank orientation (L1 linkers at 0.2/0.4, MVP).
 
 To add a plasmid of an existing part (e.g. the same linker at another slot): append an entry to its `plasmids` list. To add a new
@@ -61,7 +61,7 @@ in `get_libraries()`).
 
 ## Common fields (promoters/, terminators/)
 
-- `id`, `kind`, `label`, `sequence` (or `null`), `sequence_status` (`real`/`missing`), `on_stock`, `length_bp`,
+- `id`, `kind`, `label`, `sequence` (or `null`), `sequence_status` (`real`/`missing`), `length_bp`,
   `organism`, `source`, `notes`, `used_by`.
 
 ## `level0_backbones/`, `level1_backbones/`, `level2_backbones/<id>.json`
@@ -71,8 +71,7 @@ with the full sequence, the curated core fields (marker, origin,
 acceptor overhangs `receiver_overhangs.5_prime`/`3_prime`, currently occupying
 stuffer/test cassette in `current_insert`) AND the complete, raw
 parsed GenBank `FEATURES` table (`features`: list of
-`{type, location, qualifiers}`) for maximum traceability. Also has
-the `on_stock` field (see above) directly after `sequence_status`.
+`{type, location, qualifiers}`) for maximum traceability. 
 
 Currently stored as real: `pAGM9121-lvl0-dest` (Level 0, Weber et al. 2011),
 `pAGM1311-lvl1-dest` (Level 1, Weber et al. 2011), `pESC-HIS-lvl2-dest`
@@ -97,7 +96,7 @@ file per adapter, file name = `id` = name in the user's GenBank file:
 | `0.5`   | 0.5       | `nc_site`                 | Level 2 overhang `2_C` = AATG |
 | `0.5rc` | 0.5       | `cargo_site`              | Level 2 overhang `2_C` = CGTT (cargo module, rc variant) |
 
-Fields (in addition to `id`/`kind`/`label`/`sequence`/`sequence_status`/`on_stock`/
+Fields (in addition to `id`/`kind`/`label`/`sequence`/`sequence_status`/
 `length_bp`/`source`/`notes`/`used_by`, see above):
 
 - `type_slot`: 1..5 (Type 0.x).

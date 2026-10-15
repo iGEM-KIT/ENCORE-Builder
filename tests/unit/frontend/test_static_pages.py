@@ -174,10 +174,22 @@ def test_the_level2_compatibility_hint_is_in_the_guide_and_in_the_builder_and_is
     assert "compatible with all Golden Gate" not in guide + index
 
 
-def test_the_guide_explains_the_not_built_label_and_does_not_talk_about_stock():
+def test_the_guide_explains_the_not_built_label():
     guide = re.sub(r"<[^>]*>", " ", GUIDE.read_text(encoding="utf8"))
     assert "(not built)" in guide and "has not been built yet" in guide
-    assert "stock" not in guide.lower()                                            # stock is not a topic of the software
-    index = INDEX.read_text(encoding="utf8")
-    assert "' (not built)'" in index                                               # the label the guide explains is the one the builder shows
-    assert "not in stock" not in index and "no_stock" not in index
+    assert "' (not built)'" in INDEX.read_text(encoding="utf8")                    # the label the guide explains is the one the builder shows
+
+
+@pytest.mark.parametrize("path", [INDEX, GUIDE, SELECTOR_HTML], ids=lambda p: p.name)
+def test_visible_text_never_mentions_stock(path):
+    """Whether a plasmid is in stock is kept in the data files only; no page shows or even names it."""
+    parser = VisibleText()
+    parser.feed(path.read_text(encoding="utf8"))
+    assert "stock" not in " ".join(parser.parts).lower()
+    source = path.read_text(encoding="utf8").lower()
+    assert "on_stock" not in source and "no_stock" not in source and "onstock" not in source
+
+
+def test_the_documentation_does_not_mention_stock_either():
+    for path in (ROOT / "README.md", ROOT / "Biologik" / "level0_design" / "parts" / "README.md"):
+        assert "stock" not in path.read_text(encoding="utf8").lower(), path.name

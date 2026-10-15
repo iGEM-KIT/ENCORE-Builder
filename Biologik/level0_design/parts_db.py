@@ -124,8 +124,7 @@ def find_inserts(category: str, part: str | None = None, site: str | None = None
 
 def plasmid_status(entry: dict | None) -> str:
     """State of a Level 0 plasmid entry: "built" (it has an internal id) or "not_built" (no internal id: planned in the toolkit
-    table but not built and not in the lab system). No entry at all (a part used at a slot where no plasmid exists) counts as not built.
-    Whether a built plasmid is in stock (`on_stock`) is deliberately ignored: it stays in the data files but means nothing to the software."""
+    table but not built and not in the lab system). No entry at all (a part used at a slot where no plasmid exists) counts as not built."""
     return "built" if entry and entry.get("id") else "not_built"
 
 

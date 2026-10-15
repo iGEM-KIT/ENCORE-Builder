@@ -1388,14 +1388,21 @@ def test_a_full_design_removes_rfc_sites_from_own_sequences_but_leaves_toolbox_p
     assert not shell['isUser'] and any(h['enzyme'] == 'XbaI' for h in find_forbidden(shell['insert']['sequence']))   # E-Tm is a built plasmid
 
 
-def test_stock_is_ignored_by_the_software_and_only_the_built_state_counts():
+def test_only_the_built_state_counts_and_the_data_only_field_never_reaches_the_user():
     from Biologik.level0_design.parts_db import plasmid_status
     assert plasmid_status({'id': 'Lvl0.1_a_001', 'on_stock': True}) == 'built'
-    assert plasmid_status({'id': 'Lvl0.1_a_001', 'on_stock': False}) == 'built'          # no stock: still offered and ordered like any other part
+    assert plasmid_status({'id': 'Lvl0.1_a_001', 'on_stock': False}) == 'built'          # that field changes nothing
     assert plasmid_status({'id': 'Lvl0.1_a_001'}) == 'built'
     assert plasmid_status({'id': None, 'on_stock': True}) == 'not_built'                 # planned only
     assert plasmid_status(None) == 'not_built'
+    import json
     from Biologik.level0_design.data import get_libraries
+    from Biologik.level0_design.design import build_genbank, design_construct
     libs = get_libraries()
     statuses = {s for item in libs['linkers'] + libs['surfaceMarkers'] + libs['inteins'] for site in item['status'].values() for s in site.values()}
-    assert statuses <= {'built', 'not_built'}                                            # 'stock' and 'no_stock' are gone from the answers
+    assert statuses <= {'built', 'not_built'}
+    design = design_construct({'nanocompartment': 'tmari', 'cargoSeq': _long_cargo(), 'cargoLabel': 'X'})
+    # nothing the server answers or exports carries the bookkeeping field or the word
+    for name, text in (('libraries', json.dumps(libs)), ('design', json.dumps(design)), ('genbank', build_genbank(design))):
+        assert 'stock' not in text.lower(), f'{name} mentions stock'
+    assert all('on_stock' in e for e in load_parts()['level0_inserts'][0]['plasmids'])    # while the data files still keep it

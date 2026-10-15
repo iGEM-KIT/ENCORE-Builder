@@ -177,6 +177,11 @@ def _ncs_combined() -> list:
 # On purpose a function and not a constant, so that it can read from the database
 # later without the callers changing.
 
+def _public(entry: dict) -> dict:
+    """A parts database entry as the frontend gets it: without its internal bookkeeping fields."""
+    return {k: v for k, v in entry.items() if k != "on_stock"}
+
+
 def get_libraries() -> dict:
     parts = load_parts()
     return {
@@ -192,9 +197,9 @@ def get_libraries() -> dict:
         "ncsCombined": _ncs_combined(),
         # The backbones come from the parts database (Biologik/level0_design/parts/README.md); the Level 0 backbone
         # with its finished GenBank text (copy/download in the frontend, step 4 / Level 0).
-        "level0Backbones": [{**b, "genbank": format_backbone_record(b)} for b in parts["level0_backbones"] if b.get("sequence")],
-        "level1Backbones": [{**b, "genbank": format_backbone_record(b)} for b in parts["level1_backbones"] if b.get("sequence")],
-        "level2Backbones": [{**b, "genbank": format_backbone_record(b)} for b in parts["level2_backbones"] if b.get("sequence")],
+        "level0Backbones": [{**_public(b), "genbank": format_backbone_record(b)} for b in parts["level0_backbones"] if b.get("sequence")],
+        "level1Backbones": [{**_public(b), "genbank": format_backbone_record(b)} for b in parts["level1_backbones"] if b.get("sequence")],
+        "level2Backbones": [{**_public(b), "genbank": format_backbone_record(b)} for b in parts["level2_backbones"] if b.get("sequence")],
     }
 
 
