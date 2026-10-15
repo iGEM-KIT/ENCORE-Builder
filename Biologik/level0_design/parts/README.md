@@ -42,7 +42,7 @@ Plasmid fields (`plasmids` list):
   (`level2_overhang`: TGAT/AATG = NC site, CCAA/CGTT = cargo site), for Type 0.2-0.4 from the strand on which the part lies in the
   plasmid (`stored_orientation`: sense = NC site, antisense = cargo site; the "rc" plasmids).
 - `frame_spacer_in_plasmid`: the 2 bases the plasmid carries before the ORF (only for traceability).
-- `on_stock`: `true` = glycerol stock available, `false` = no. The builder does not use it at the moment.
+- `on_stock`: `true` = glycerol stock available, `false` = no. Only kept as a record: the builder never looks at it, so a part without stock is offered and ordered like any other. What the builder does show is whether the plasmid has been built at all (an entry with an internal `id`) or is only planned (`id: null`, shown as "(not built)").
 - `registry_url`: link to the part in the iGEM Registry, `null` until it is known. The builder shows it for every toolbox part in the order lists of step 5 (a placeholder while it is `null`).
 - `notes`: oddities noticed during the import (to be checked).
 - `covers_slots` (combined NCS only, e.g. `0.12 NCS` = `[1, 2]`, `0.45 NCS` = `[4, 5]`): the spacer covers two slots at once; `type_slot` is then

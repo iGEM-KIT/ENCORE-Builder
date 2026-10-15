@@ -51,7 +51,7 @@ def _slots(category: str, part: str, **extra) -> dict:
 
 
 def _status(category: str, part: str, **extra) -> dict:
-    """{"nc": {"2": "stock", ...}, "cargo": {...}}: state of the Level 0 plasmid of this part per site and slot (see plasmid_status)."""
+    """{"nc": {"2": "built", ...}, "cargo": {...}}: state of the Level 0 plasmid of this part per site and slot (see plasmid_status)."""
     out = {"nc": {}, "cargo": {}}
     for entry in find_inserts(category, part, **extra):
         if entry.get("type_slot") is not None:
@@ -151,7 +151,7 @@ def _ncs_slots() -> dict:
 
 
 def _ncs_status() -> dict:
-    """State of the NCS plasmids: {"nc": {"1": {"plain": "stock"}, ...}, "cargo": {...}}."""
+    """State of the NCS plasmids: {"nc": {"1": {"plain": "built"}, ...}, "cargo": {...}}."""
     out = {"nc": {}, "cargo": {}}
     for entry in find_inserts("ncs"):
         if entry.get("type_slot") is not None:

@@ -1167,13 +1167,13 @@ def test_parts_and_constructs_tell_whether_their_plasmid_is_built():
     from Biologik.level0_design.data import get_libraries
     libs = get_libraries()
     linker = next(l for l in libs['linkers'] if l['id'] == 'GSSS2')
-    assert linker['status']['nc']['2'] == 'stock' and linker['status']['nc']['4'] == 'not_built'   # 0.4 L2 on NC is only listed in the table
-    assert next(c for c in libs['cargoPresets'] if c['id'] == 'nlucp')['status'] == 'no_stock'
-    assert next(c for c in libs['cargoPresets'] if c['id'] == 'yegfp')['status'] == 'stock'
-    assert libs['ncsStatus']['nc']['1'] == {'plain': 'stock'}
+    assert linker['status']['nc']['2'] == 'built' and linker['status']['nc']['4'] == 'not_built'   # 0.4 L2 on NC is only listed in the table
+    assert next(c for c in libs['cargoPresets'] if c['id'] == 'nlucp')['status'] == 'built'        # no glycerol stock, still a built plasmid
+    assert next(c for c in libs['cargoPresets'] if c['id'] == 'yegfp')['status'] == 'built'
+    assert libs['ncsStatus']['nc']['1'] == {'plain': 'built'}
     design = _design(cargoSeq=_long_cargo(), nc_slots={'4': {'kind': 'linker', 'id': 'GSSS2'}})
     status = {(c['module'], c['slot']): c['plasmidStatus'] for c in design['level0Constructs']}
-    assert status[('nc_site', 4)] == 'not_built' and status[('nc_site', 3)] == 'stock'
+    assert status[('nc_site', 4)] == 'not_built' and status[('nc_site', 3)] == 'built'
     assert status[('cargo_site', 3)] is None                                              # your own cargo has no plasmid
 
 
@@ -1386,3 +1386,16 @@ def test_a_full_design_removes_rfc_sites_from_own_sequences_but_leaves_toolbox_p
     assert {s.split(' ')[0] for s in design['codonOptimization'][0]['sitesRemoved']} == set(RFC_SITES)
     shell = next(c for c in design['level0Constructs'] if c['module'] == 'nc_site' and c['slot'] == 3)
     assert not shell['isUser'] and any(h['enzyme'] == 'XbaI' for h in find_forbidden(shell['insert']['sequence']))   # E-Tm is a built plasmid
+
+
+def test_stock_is_ignored_by_the_software_and_only_the_built_state_counts():
+    from Biologik.level0_design.parts_db import plasmid_status
+    assert plasmid_status({'id': 'Lvl0.1_a_001', 'on_stock': True}) == 'built'
+    assert plasmid_status({'id': 'Lvl0.1_a_001', 'on_stock': False}) == 'built'          # no stock: still offered and ordered like any other part
+    assert plasmid_status({'id': 'Lvl0.1_a_001'}) == 'built'
+    assert plasmid_status({'id': None, 'on_stock': True}) == 'not_built'                 # planned only
+    assert plasmid_status(None) == 'not_built'
+    from Biologik.level0_design.data import get_libraries
+    libs = get_libraries()
+    statuses = {s for item in libs['linkers'] + libs['surfaceMarkers'] + libs['inteins'] for site in item['status'].values() for s in site.values()}
+    assert statuses <= {'built', 'not_built'}                                            # 'stock' and 'no_stock' are gone from the answers

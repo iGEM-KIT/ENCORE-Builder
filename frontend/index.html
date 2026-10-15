@@ -1680,7 +1680,7 @@ const availableAt = (item, mod, n) => !item.slots || (item.slots[mod]||[]).inclu
 const linkersAt = (mod, n) => LIB.linkers.filter(l=>availableAt(l,mod,n));
 function firstLinker(mod, n){ const l=linkersAt(mod,n)[0]; return l ? {kind:'linker', id:l.id} : {kind:'custom', label:'', seqRaw:'', valid:false}; }
 function ncsRoles(mod, n){ return LIB.ncs ? ((LIB.ncs[mod]||{})[n] || []) : ['plain']; }
-const STATUS_HINT = { not_built:' (not built)' };            // a part that is not in stock is shown like any other (stock is not a reason to hide or label it)
+const STATUS_HINT = { not_built:' (not built)' };            // only "not built" is shown; stock is not relevant for the software
 const statusHint = s => STATUS_HINT[s] || '';
 function slotOptionsHtml(mod, n){
   const roles = ncsRoles(mod, n);

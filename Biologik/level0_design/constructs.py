@@ -223,7 +223,7 @@ def _build_construct(part: Part, module: str, n: int, codon: dict | None, backbo
         "primers": primers, "oligos": oligos,
         # link to the part in the iGEM Registry (parts database field `registry_url`); None until it is filled in, and for own parts
         "registryUrl": None if part.is_user or not part.source else part.source.get("registry_url"),
-        # state of the Level 0 plasmid of a toolkit part: "stock", "no_stock" or "not_built" (None for your own sequences)
+        # state of the Level 0 plasmid of a toolkit part: "built" or "not_built" (None for your own sequences); stock is not considered
         "plasmidStatus": None if part.is_user else plasmid_status(part.source),
         "codon": codon if part.is_user else None,
         "stopCodon": bool(shown["stops"]), "stopLocation": shown["stops"][0]["location"] if shown["stops"] else None,
