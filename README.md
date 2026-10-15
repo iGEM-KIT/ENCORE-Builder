@@ -272,9 +272,7 @@ Registry on every push to `main`, on version tags (`v1.2.3`) and by hand from th
 * `ghcr.io/igem-kit/encore-builder` (builder)
 * `ghcr.io/igem-kit/encore-builder-commec` (biosecurity screening)
 
-After the first run, set both packages to **public** on GitHub (organization page, Packages,
-package settings, "Change package visibility"), otherwise users cannot pull them without
-logging in. `docker-compose.yml` has both `image:` and `build:` for every service, so
+`docker-compose.yml` has both `image:` and `build:` for every service, so
 `docker compose up --build` builds locally and plain `docker compose up` pulls;
 `docker-compose.pull.yml` is the image-only variant that users download as a single file.
 
