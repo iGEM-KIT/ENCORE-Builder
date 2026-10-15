@@ -23,7 +23,7 @@
         "side": "5' side of the sense strand"
       },
       "on_stock": true,
-      "registry_url": null,
+      "registry_url": "https://registry.igem.org/parts/bba-26m21ryz",
       "notes": null
     },
     {
@@ -39,7 +39,7 @@
         "side": "right end of the top strand (5' side of the sense strand)"
       },
       "on_stock": true,
-      "registry_url": null,
+      "registry_url": "https://registry.igem.org/parts/bba-26m21ryz",
       "notes": "remark in the xlsx: 'pipi'"
     },
     {
@@ -55,7 +55,7 @@
         "side": "5' side of the sense strand"
       },
       "on_stock": true,
-      "registry_url": null,
+      "registry_url": "https://registry.igem.org/parts/bba-26m21ryz",
       "notes": null
     },
     {
@@ -71,7 +71,7 @@
         "side": "right end of the top strand (5' side of the sense strand)"
       },
       "on_stock": true,
-      "registry_url": null,
+      "registry_url": "https://registry.igem.org/parts/bba-26m21ryz",
       "notes": null
     },
     {
@@ -87,7 +87,7 @@
         "side": "5' side of the sense strand"
       },
       "on_stock": true,
-      "registry_url": null,
+      "registry_url": "https://registry.igem.org/parts/bba-26m21ryz",
       "notes": null
     },
     {
@@ -103,7 +103,7 @@
         "side": "right end of the top strand (5' side of the sense strand)"
       },
       "on_stock": true,
-      "registry_url": null,
+      "registry_url": "https://registry.igem.org/parts/bba-26m21ryz",
       "notes": null
     },
     {
@@ -119,7 +119,7 @@
         "side": "5' side of the sense strand"
       },
       "on_stock": true,
-      "registry_url": null,
+      "registry_url": "https://registry.igem.org/parts/bba-26m21ryz",
       "notes": null
     },
     {
@@ -135,7 +135,7 @@
         "side": "right end of the top strand (5' side of the sense strand)"
       },
       "on_stock": true,
-      "registry_url": null,
+      "registry_url": "https://registry.igem.org/parts/bba-26m21ryz",
       "notes": null
     },
     {
@@ -148,7 +148,7 @@
       "stored_orientation": "sense",
       "frame_spacer_in_plasmid": null,
       "on_stock": false,
-      "registry_url": null,
+      "registry_url": "https://registry.igem.org/parts/bba-26m21ryz",
       "notes": "Listed in \"Level 0 constructs.xlsx\", not yet imported from GenBank",
       "covers_slots": [
         1,
@@ -165,7 +165,7 @@
       "stored_orientation": "sense",
       "frame_spacer_in_plasmid": null,
       "on_stock": false,
-      "registry_url": null,
+      "registry_url": "https://registry.igem.org/parts/bba-26m21ryz",
       "notes": "Listed in \"Level 0 constructs.xlsx\", not yet imported from GenBank",
       "covers_slots": [
         4,
@@ -182,7 +182,7 @@
       "stored_orientation": "antisense",
       "frame_spacer_in_plasmid": null,
       "on_stock": false,
-      "registry_url": null,
+      "registry_url": "https://registry.igem.org/parts/bba-26m21ryz",
       "notes": "No internal id: this plasmid is not built and not in the lab system. Listed in \"Level 0 constructs.xlsx\" for completeness only.",
       "covers_slots": [
         1,
@@ -199,7 +199,7 @@
       "stored_orientation": "antisense",
       "frame_spacer_in_plasmid": null,
       "on_stock": false,
-      "registry_url": null,
+      "registry_url": "https://registry.igem.org/parts/bba-26m21ryz",
       "notes": "No internal id: this plasmid is not built and not in the lab system. Listed in \"Level 0 constructs.xlsx\" for completeness only.",
       "covers_slots": [
         4,

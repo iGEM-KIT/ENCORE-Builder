@@ -11,5 +11,6 @@
   "notes": "Bidirectional, inducible yeast promoter. Checked: only A/C/G/T, no BsaI/BbsI site.",
   "used_by": [
     "PROMOTERS[GAL110]"
-  ]
+  ],
+  "registry_url": "https://registry.igem.org/parts/bba-26g6hp9z"
 }

@@ -29,7 +29,7 @@
         "side": "right end of the top strand (5' side of the sense strand)"
       },
       "on_stock": true,
-      "registry_url": null,
+      "registry_url": "https://registry.igem.org/parts/bba-26zek4c0",
       "notes": null
     },
     {
@@ -45,7 +45,7 @@
         "side": "right end of the top strand (5' side of the sense strand)"
       },
       "on_stock": true,
-      "registry_url": null,
+      "registry_url": "https://registry.igem.org/parts/bba-26zek4c0",
       "notes": null
     },
     {
@@ -58,7 +58,7 @@
       "stored_orientation": "antisense",
       "frame_spacer_in_plasmid": null,
       "on_stock": false,
-      "registry_url": null,
+      "registry_url": "https://registry.igem.org/parts/bba-26zek4c0",
       "notes": "No internal id: this plasmid is not built and not in the lab system. Listed in \"Level 0 constructs.xlsx\" for completeness only."
     },
     {
@@ -71,7 +71,7 @@
       "stored_orientation": "antisense",
       "frame_spacer_in_plasmid": null,
       "on_stock": false,
-      "registry_url": null,
+      "registry_url": "https://registry.igem.org/parts/bba-26zek4c0",
       "notes": "No internal id: this plasmid is not built and not in the lab system. Listed in \"Level 0 constructs.xlsx\" for completeness only."
     }
   ]

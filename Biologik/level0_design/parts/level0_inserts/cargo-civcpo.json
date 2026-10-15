@@ -14,7 +14,7 @@
   },
   "organism": null,
   "source": "Level 0 plasmid '0.3CiCVPO2.0' (Lvl0.3_b_065) from the user-supplied GenBank file 'documents from Level 0'; only the insert was taken; the type overhangs and the frame spacer of the plasmid were cut off. Stock: glycerol stock column of 'Level 0 constructs.xlsx'.",
-  "notes": null,
+  "notes": "Registry entry BBa_26IXYL27 is 1829 bp: ATG plus this sequence, but without its last base (T), so the entry is not a multiple of 3 and its frame breaks at the end. The sequence stored here (1827 bp, 609 codons) is complete; the registry entry should be checked.",
   "used_by": [],
   "plasmids": [
     {
@@ -30,7 +30,7 @@
         "side": "right end of the top strand (5' side of the sense strand)"
       },
       "on_stock": true,
-      "registry_url": null,
+      "registry_url": "https://registry.igem.org/parts/bba-26ixyl27",
       "notes": "plasmid carries NO frame spacer (insert directly between the overhangs)"
     }
   ]

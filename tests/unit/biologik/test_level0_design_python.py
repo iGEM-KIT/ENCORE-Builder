@@ -753,20 +753,16 @@ def test_short_real_parts_get_an_oligo_pair_that_anneals_to_the_bbsi_cut_fragmen
     assert all(c['oligos'] is None for c in design['level0Constructs'] if not c['isReal'])
 
 
-def test_toolkit_constructs_have_a_registry_link_slot_that_stays_empty_until_the_database_has_a_url(monkeypatch):
+def test_toolkit_constructs_carry_the_registry_link_of_their_part_and_own_sequences_never_do():
     design = _design(cargoSeq=_long_cargo(), nc_slots={'4': {'kind': 'custom', 'label': 'Mine', 'seq': 'ATG' + 'GCT' * 20}})
-    constructs = design['level0Constructs']
-    assert all('registryUrl' in c and 'onStock' not in c and 'plasmid_source' not in c for c in constructs)
-    assert all(c['registryUrl'] is None for c in constructs)                      # no URL stored yet: the UI shows a placeholder
-    # as soon as the parts database carries a URL, toolkit parts get it, own sequences never do
-    import Biologik.level0_design.parts_db as parts_db_module
-    real_inserts = parts_db_module.inserts
-    monkeypatch.setattr(parts_db_module, 'inserts',
-                        lambda: [{**e, 'registry_url': 'https://parts.igem.org/Part:TEST'} for e in real_inserts()])
-    constructs = _design(cargoSeq=_long_cargo(), nc_slots={'4': {'kind': 'custom', 'label': 'Mine', 'seq': 'ATG' + 'GCT' * 20}})['level0Constructs']
-    by_slot = {(c['module'], c['slot']): c for c in constructs}
-    assert by_slot[('nc_site', 3)]['registryUrl'] == 'https://parts.igem.org/Part:TEST'
-    assert by_slot[('nc_site', 4)]['registryUrl'] is None and by_slot[('cargo_site', 3)]['registryUrl'] is None
+    by_slot = {(c['module'], c['slot']): c for c in design['level0Constructs']}
+    assert all('registryUrl' in c and 'onStock' not in c and 'plasmid_source' not in c for c in by_slot.values())
+    assert by_slot[('nc_site', 3)]['registryUrl'] == 'https://registry.igem.org/parts/bba-261v56af'        # E-Tm shell
+    assert by_slot[('nc_site', 1)]['registryUrl'] == 'https://registry.igem.org/parts/bba-26m21ryz'        # NCS
+    assert by_slot[('nc_site', 4)]['registryUrl'] is None and by_slot[('cargo_site', 3)]['registryUrl'] is None   # own sequences: never
+    # a toolkit part that has no Registry entry yet keeps the placeholder (no URL)
+    gsss2 = _design(nc_slots={'4': {'kind': 'linker', 'id': 'GSSS2'}})['level0Constructs']
+    assert next(c for c in gsss2 if c['module'] == 'nc_site' and c['slot'] == 4)['registryUrl'] is None
 
 
 def test_every_level0_insert_in_the_database_has_a_registry_url_field():
@@ -1182,3 +1178,13 @@ def test_level0_primers_carry_the_structure_check_of_the_finished_primers():
     for key in ('hairpin', 'selfDimer'):
         assert set(st[key]) == {'forward', 'reverse'} and all(isinstance(v['ok'], bool) for v in st[key].values())
     assert isinstance(st['heteroDimer']['deltaG'], float)
+
+
+def test_registry_links_point_to_registry_igem_org_and_the_linked_parts_exist_there():
+    from Biologik.level0_design.parts_db import inserts
+    urls = {e['registry_url'] for e in inserts() if e['registry_url']}
+    assert urls and all(u.startswith('https://registry.igem.org/parts/bba-') for u in urls)
+    linked = {(e['category'], e['part']) for e in inserts() if e['registry_url']}
+    # every plasmid of a linked part carries the link, and parts that are not in the Registry yet carry none
+    assert all(e['registry_url'] for e in inserts() if (e['category'], e['part']) in linked)
+    assert not any(e['registry_url'] for e in inserts() if (e['category'], e['part']) in {('linker', 'GSSS2'), ('linker', 'GSSS4'), ('tp', 'TP-Tm')})

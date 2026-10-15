@@ -30,7 +30,7 @@
         "side": "5' side of the sense strand"
       },
       "on_stock": true,
-      "registry_url": null,
+      "registry_url": "https://registry.igem.org/parts/bba-264vlnf8",
       "notes": "plasmid carries only a 1-nt spacer (A) in front of the ATG"
     }
   ]
