@@ -1,44 +1,160 @@
-# ENCORE-Builder
+# ENCORE Builder
 
-Golden Gate design software for planning an encapsulin cargo construct with our
-Golden Gate toolbox: put together a nanocompartment and a cargo, and get
-primers and a finished Level 2 plasmid map, plus a separate filter tool
-to find the matching encapsulin.
+The ENCORE Builder is a design tool for planning an encapsulin cargo construct with our
+Golden Gate toolKIT. You put together a nanocompartment and a cargo, and the Builder gives you
+all parts, primers or oligos to order and a finished Level 2 plasmid map. A second tool, the
+Encapsulin Filter, helps you to find the matching encapsulin first.
 
-## Quick start: just use the software
+It runs on your own computer, inside a program called Docker. Nothing you type leaves your
+computer. This page explains every way to start it, step by step. You do not need programming
+skills.
 
-You only need [Docker](https://www.docker.com/products/docker-desktop/)
-installed. No programming skills, no Node.js, no Python needed.
+**Contents**
 
-1. Download the repo:
+1. [Which way is right for me?](#which-way-is-right-for-me)
+2. [Step 0: install Docker (all ways)](#step-0-install-docker-all-ways)
+3. [Way A: easiest, download one file](#way-a-easiest-download-one-file)
+4. [Way B: download the whole project and build it yourself](#way-b-download-the-whole-project-and-build-it-yourself)
+5. [Way C: only the Builder, with one command](#way-c-only-the-builder-with-one-command)
+6. [Using the software](#using-the-software)
+7. [Stopping, updating and cleaning up](#stopping-updating-and-cleaning-up)
+8. [Something does not work](#something-does-not-work)
+9. [For developers](#for-developers)
+
+## Which way is right for me?
+
+| | Way A | Way B | Way C |
+|---|---|---|---|
+| For whom | Everybody. Start here. | People who want to read or change the code | People who only want a quick look |
+| You download | one small file | the whole project | nothing |
+| Builder and Encapsulin Filter | yes | yes | yes |
+| Biosecurity screening | yes | yes | **no** |
+| Where the program comes from | ready-made images from the GitHub Container Registry | built on your computer | ready-made image from the GitHub Container Registry |
+
+All three ways need Docker (Step 0). If you are unsure, take **Way A**.
+
+## Step 0: install Docker (all ways)
+
+Docker is a free program that runs other programs in a protected box (a "container"), so that
+you do not have to install anything else. You only need to do this once.
+
+1. Go to [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/)
+   and download **Docker Desktop** for your system (Windows, Mac with Apple chip or Intel chip,
+   or Linux). Not sure about your Mac? Click the Apple menu, then "About This Mac": if it says
+   "Apple M1/M2/M3/M4" you have the Apple chip.
+2. Open the downloaded file and follow the installer. Accept the standard settings. On Windows
+   the installer may ask for a restart.
+3. **Start Docker Desktop** and wait until it says "Engine running" (a green dot at the bottom
+   left). You can skip creating an account; there is a "Skip" or "Continue without signing in"
+   option.
+4. Docker Desktop has to be running whenever you use the ENCORE Builder.
+
+Good to know before you start:
+
+* Free disk space: about **5 GB** (the program itself and the screening databases).
+* Memory: Docker Desktop should be allowed to use at least **4 GB** (Settings, Resources).
+* Internet: needed for the first start only (downloads), afterwards the Builder works offline.
+
+### How to open a terminal (needed for the commands below)
+
+A terminal is a window where you type a command and press Enter.
+
+* **Windows:** press the Windows key, type `PowerShell`, press Enter.
+* **Mac:** press Cmd and Space, type `Terminal`, press Enter.
+* **Linux:** press Ctrl, Alt and T.
+
+To run a command, copy it from this page, paste it into the terminal and press **Enter**.
+Where a step says "go into the folder", type `cd ` (with a space after it), drag the folder
+from your file explorer into the terminal window (this fills in its path) and press Enter.
+
+## Way A: easiest, download one file
+
+You download a single small file. Docker then fetches the ready-made program and the biosecurity
+screening for you.
+
+1. Create a new empty folder, for example `ENCORE` on your Desktop.
+2. Download this file into that folder:
+   [docker-compose.pull.yml](https://raw.githubusercontent.com/iGEM-KIT/ENCORE-Builder/main/docker-compose.pull.yml)
+   (right-click the link, "Save link as"; make sure the file name stays exactly
+   `docker-compose.pull.yml`).
+3. Open a terminal and go into the folder (see above).
+4. Type this and press Enter:
+   ```bash
+   docker compose -f docker-compose.pull.yml up
+   ```
+5. Wait. The **first start takes several minutes**: Docker downloads the program, and the
+   screening container downloads its databases (about 1.2 GB) once. Lines of text keep scrolling
+   by; that is normal. Later starts take seconds.
+6. Open your web browser and go to **[http://localhost:3000](http://localhost:3000)**.
+   If you see "Upgrade Required" instead of the page, use
+   [http://127.0.0.1:3000](http://127.0.0.1:3000).
+7. In the top right the page shows **"Biosecurity screening: on"** with a green dot as soon as
+   the screening is ready. Until then it says "off"; the Builder already works, just without
+   the check. If you want the screening, wait for the dot before you calculate a construct.
+
+To stop the program, see [Stopping, updating and cleaning up](#stopping-updating-and-cleaning-up).
+
+## Way B: download the whole project and build it yourself
+
+Choose this if you want to read or change the code, or if you prefer to build the program
+yourself instead of trusting a ready-made image. Docker builds everything from the project files.
+
+1. Download the project. Without any extra software: open
+   [github.com/iGEM-KIT/ENCORE-Builder](https://github.com/iGEM-KIT/ENCORE-Builder), click the
+   green **Code** button, then **Download ZIP**, and unzip the file. If you know git, you can
+   instead run:
    ```bash
    git clone https://github.com/iGEM-KIT/ENCORE-Builder.git
-   cd ENCORE-Builder
    ```
-2. Start it:
+2. Open a terminal and go into the unzipped folder `ENCORE-Builder` (see above).
+3. Build and start:
    ```bash
    docker compose up --build
    ```
-   The first start takes a bit longer (it builds the builder and additionally
-   the biosecurity screening container (commec) downloads its databases (~1.2 GB) once on its first start, see below; the screening is "off" until
-   that is done).
-3. Open it in the browser: **[http://localhost:3000](http://localhost:3000)**
-4. To stop, press `Ctrl+C` in the terminal, or in a new terminal:
-   ```bash
-   docker compose down
-   ```
+4. The first start takes longer than Way A (10 to 30 minutes, depending on your computer and
+   internet), because Docker builds both images and the screening downloads its databases once.
+5. Open **[http://localhost:3000](http://localhost:3000)** (or
+   [http://127.0.0.1:3000](http://127.0.0.1:3000) if you see "Upgrade Required").
 
-That's it: the builder and the encapsulin filter are now fully running.
+The same folder also works without building: `docker compose up` (without `--build`) uses the
+ready-made images like Way A.
 
-### Biosecurity screening is always included
+## Way C: only the Builder, with one command
 
-Every gene sequence you enter yourself is automatically checked for known toxins,
-virulence factors and regulated pathogens
-([COMMEC](https://github.com/ibbis-bio/common-mechanism) by IBBIS). For this,
-`docker compose up` starts a second container by default, without
-having to specify anything extra. As soon as both containers are running,
-the header at the top right shows **"Biosecurity screening: on"** with a
-green dot.
+This starts the Builder and the Encapsulin Filter from the ready-made image, **without
+biosecurity screening**. Use it for a quick look. For real designs use Way A or B, because the
+screening is part of the safety concept of the project.
+
+```bash
+docker run -p 3000:3000 ghcr.io/igem-kit/encore-builder:latest
+```
+
+Then open [http://localhost:3000](http://localhost:3000). Stop it with `Ctrl+C`.
+
+You can also build the image yourself instead of downloading it (inside the project folder of
+Way B):
+
+```bash
+docker build -t encore-builder .
+docker run -p 3000:3000 encore-builder
+```
+
+### Starting from the Docker Desktop window (no typing)
+
+Docker Desktop can also start the program with the mouse, once the image has been downloaded:
+open the **Images** tab, find `ghcr.io/igem-kit/encore-builder`, click **Run**, open
+**Optional settings**, enter `3000` as host port and click **Run**. Without the second
+container, this is Way C (no screening). The easiest way to see everything in the Docker
+Desktop window is to start Way A once; the **Containers** tab then shows both containers with
+start and stop buttons, logs and a link to the page.
+
+## Biosecurity screening is always included (Way A and B)
+
+Every gene sequence you enter yourself is automatically checked for known toxins, virulence
+factors and regulated pathogens
+([COMMEC](https://github.com/ibbis-bio/common-mechanism) by IBBIS). If a sequence matches, a
+warning with a reason appears and you have to confirm it before you can continue. It is a
+helper check and does not replace the biosafety review of your institution.
 
 ## Using the software
 
@@ -46,26 +162,66 @@ The start page has a **"Before you start"** card that opens a guide with all rul
 notes for using the builder (what the builder accepts, which combinations are
 allowed, what happens to your sequences). Read it once.
 
-1. Start page → **"Start builder"**
+1. Start page, then **"Start builder"**
 2. **Step 1, Nanocompartment Site:** choose a nanocompartment from the library
    (or paste your own sequence) and fill the four modules around it
    (spacer, linker, surface marker or own sequence)
-3. **Step 2, Cargo Site:** paste your own CDS or amino acid sequence (or load an
+3. **Step 2, Cargo Site:** paste your own coding sequence or amino acid sequence (or load an
    example such as GFP) and fill the modules around it
 4. **Step 3, Promoter:** choose the promoter
 5. Click **"Calculate construct"**. With screening active it runs automatically;
    only for a real hit a warning appears that has to be confirmed before
    continuing
-6. **Step 4, Modules:** the finished Golden Gate design (Level 0 → 1 → 2), primers,
+6. **Step 4, Modules:** the finished Golden Gate design (Level 0, 1 and 2), primers,
    plasmid map, exportable as an annotated GenBank file (.gb)
-7. **Step 5, Order:** what to order as oligos, primers or DNA
+7. **Step 5, Overview:** what to order as oligos, primers or DNA
 
 Every sequence you enter yourself (DNA or amino acids) is codon-optimized for
 *S. cerevisiae* and kept free of BsaI and BbsI sites.
 
 Not sure yet which encapsulin fits? Switch to **"Encapsulin Filter"** in the
-header at the top: there you can search by organism/accession or filter by
+header at the top: there you can search by organism or accession, or filter by
 physical properties (diameter, triangulation number).
+
+## Stopping, updating and cleaning up
+
+Open the terminal in the same folder you started from (Way A: the folder with
+`docker-compose.pull.yml`, Way B: the project folder).
+
+| I want to | Way A | Way B |
+|---|---|---|
+| Stop | press `Ctrl+C` in the terminal where it runs, or run `docker compose -f docker-compose.pull.yml down` | `docker compose down` |
+| Start again | `docker compose -f docker-compose.pull.yml up` | `docker compose up` |
+| Run in the background | add `-d` to the start command; stop it with the `down` command | same |
+| Update to the newest version | `docker compose -f docker-compose.pull.yml pull`, then start again | `git pull` (or download the ZIP again), then `docker compose up --build` |
+
+You can also stop and start the containers with the buttons in the **Containers** tab of Docker
+Desktop.
+
+Remove everything again, including the downloaded screening databases (frees about 5 GB):
+
+```bash
+docker compose -f docker-compose.pull.yml down --volumes --rmi all
+```
+
+(Way B: `docker compose down --volumes --rmi all`.)
+
+## Something does not work
+
+| Problem | What to do |
+|---|---|
+| "Cannot connect to the Docker daemon" or "docker: command not found" | Docker Desktop is not running or not installed. Start Docker Desktop and wait for "Engine running". |
+| The page shows "Upgrade Required" | Use [http://127.0.0.1:3000](http://127.0.0.1:3000) instead of `localhost`. |
+| "port is already allocated" or "address already in use" | Something else uses port 3000. Stop the other program, or change `"3000:3000"` in the compose file to `"3001:3000"` and open port 3001. |
+| The header says "Biosecurity screening: off" | The screening container is still downloading its databases (first start only, a few minutes) or not running. Check the **Containers** tab: both `app` and `commec` should be green. With Way C the screening is off by design. |
+| The first start seems stuck | Watch the terminal: as long as lines keep appearing, it is downloading. A slow internet connection makes it take longer. |
+| "no space left on device" | Free up disk space, or in Docker Desktop use Settings, Resources to give it more disk. |
+| It is very slow or crashes on the first start | Give Docker Desktop more memory (Settings, Resources, at least 4 GB). |
+| Windows asks about WSL 2 or virtualization | Follow the Docker Desktop installer hints. Virtualization may have to be enabled in the BIOS; the Docker documentation explains how. |
+
+Still stuck? Open an
+[issue on GitHub](https://github.com/iGEM-KIT/ENCORE-Builder/issues) and copy the last lines
+from the terminal into it.
 
 ---
 
@@ -93,6 +249,21 @@ Alternatively Docker without Compose:
 docker build -t encore-builder .
 docker run -p 3000:3000 encore-builder
 ```
+
+### Publishing the Docker images
+
+The workflow [.github/workflows/publish-images.yml](.github/workflows/publish-images.yml)
+builds both images for `linux/amd64` and `linux/arm64` and pushes them to the GitHub Container
+Registry on every push to `main`, on version tags (`v1.2.3`) and by hand from the Actions tab:
+
+* `ghcr.io/igem-kit/encore-builder` (builder)
+* `ghcr.io/igem-kit/encore-builder-commec` (biosecurity screening)
+
+After the first run, set both packages to **public** on GitHub (organization page, Packages,
+package settings, "Change package visibility"), otherwise users cannot pull them without
+logging in. `docker-compose.yml` has both `image:` and `build:` for every service, so
+`docker compose up --build` builds locally and plain `docker compose up` pulls;
+`docker-compose.pull.yml` is the image-only variant that users download as a single file.
 
 ### Biosecurity screening (COMMEC): details
 
