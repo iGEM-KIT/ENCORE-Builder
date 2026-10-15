@@ -165,26 +165,24 @@ start.
 
 ## Stopping, updating and cleaning up
 
-Open a terminal in the same folder you started from (right-click the folder, see above). That is
-the folder with `docker-compose.pull.yml` for Way A and the project folder for Way B.
+After the first start, Way A is easiest to handle in the **Docker Desktop window**: open Docker
+Desktop and use the **Containers** tab. Both containers appear there together as one entry named
+after your folder (for example `encore`), with the two containers `app` and `commec` inside.
+Docker Desktop also starts again with your computer and shows what is running.
 
-| I want to | Way A | Way B |
-|---|---|---|
-| Stop | press `Ctrl+C` in the terminal where it runs, or run `docker compose -f docker-compose.pull.yml down` | `docker compose down` |
-| Start again | `docker compose -f docker-compose.pull.yml up` | `docker compose up` |
-| Run in the background | add `-d` to the start command; stop it with the `down` command | same |
-| Update to the newest version | `docker compose -f docker-compose.pull.yml pull`, then start again | `git pull` (or download the ZIP again), then `docker compose up --build` |
+The terminal commands work in the same folder you started from (right-click the folder, see
+above): the folder with `docker-compose.pull.yml` for Way A and the project folder for Way B.
 
-You can also stop and start the containers with the buttons in the **Containers** tab of Docker
-Desktop.
-
-Remove everything again, including the downloaded screening databases (frees about 5 GB):
-
-```bash
-docker compose -f docker-compose.pull.yml down --volumes --rmi all
-```
-
-(Way B: `docker compose down --volumes --rmi all`.)
+| I want to | Way A: Docker Desktop window | Way A: terminal | Way B: terminal |
+|---|---|---|---|
+| Stop | **Containers** tab, click the **Stop** button (square) on the entry of the project | press `Ctrl+C` where it runs, or `docker compose -f docker-compose.pull.yml down` | `docker compose down` |
+| Start again | **Containers** tab, click the **Start** button (triangle) on the entry of the project, then wait for `app` and `commec` to turn green | `docker compose -f docker-compose.pull.yml up` | `docker compose up` |
+| Open the page | **Containers** tab, click the port link `3000:3000` next to `app` | open [http://localhost:3000](http://localhost:3000) | same |
+| Look at the logs | click `app` or `commec`, then the **Logs** tab | `docker compose -f docker-compose.pull.yml logs` | `docker compose logs` |
+| Run in the background | containers started from the window already run in the background | add `-d` to the start command; stop it with the `down` command | same |
+| Update to the newest version | stop the project, then use the terminal command in the next column (a pull is needed) | `docker compose -f docker-compose.pull.yml pull`, then start again | `git pull` (or download the ZIP again), then `docker compose up --build` |
+| Remove the program but keep the screening databases | **Containers** tab, **Delete** (trash can) on the entry of the project | `docker compose -f docker-compose.pull.yml down` | `docker compose down` |
+| Remove everything, including the downloaded screening databases (frees about 5 GB) | delete the project in the **Containers** tab, then delete the two `ghcr.io/igem-kit/...` images in the **Images** tab and the volume ending in `commec-db` in the **Volumes** tab | `docker compose -f docker-compose.pull.yml down --volumes --rmi all` | `docker compose down --volumes --rmi all` |
 
 ## Something does not work
 
