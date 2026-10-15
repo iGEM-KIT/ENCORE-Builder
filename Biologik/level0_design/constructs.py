@@ -13,6 +13,7 @@ from .oligos import design_level0_oligos
 from .parts_db import plasmid_status, bare_cds, find_inserts, find_library_cargo, find_real_sequence, load_parts
 from .primers import MIN_PCR_INSERT_BP, design_level0_primers, pcr_product_genbank
 from .sequence import reverse_complement
+from .slots import orf_slots
 from .user_codons import codon_note
 
 
@@ -54,14 +55,6 @@ def resolve_insert(category: str, part: str, site: str, slot: int, seed: str, le
     return placeholder_seq(seed, length), False, None
 
 
-def first_stop_offset(sense: str):
-    """Offset (0-based) of the first stop codon (TAA/TAG/TGA) in the reading frame of a sense sequence, otherwise None."""
-    for i in range(0, len(sense) - 2, 3):
-        if sense[i:i + 3] in STOP_CODONS:
-            return i
-    return None
-
-
 class Part(NamedTuple):
     """A part of a module before it goes into its adapter. `seq` is the sense sequence (for the cargo only known later);
     `is_user` = entered by the user instead of a toolkit part, `is_real` = real sequence instead of a placeholder, `source` = entry
@@ -91,9 +84,8 @@ def _toolkit_part(cfg: dict, nc: dict, site: str, n: int) -> Part:
     if kind == "intein":
         found = resolve_insert("intein", cfg["id"], site, n, "INT" + cfg["id"], cfg["bp"])
         return Part(cfg["label"], found[0], found[1], False, "intein (toolkit part)", found[2])
-    found = resolve_insert("ncs", "ncs", site, n, "NCS", 30, ncs_role="stop" if kind == "ncsstop" else "plain")
-    what = "NCS spacer with stop codon (toolkit part)" if kind == "ncsstop" else "NCS spacer (toolkit part)"
-    return Part("NCS", found[0], found[1], False, what, found[2])
+    found = resolve_insert("ncs", "ncs", site, n, "NCS", 30)
+    return Part("NCS", found[0], found[1], False, "NCS spacer (toolkit part)", found[2])
 
 
 def _middle_parts(nc: dict, cargo_label: str, cargo_antisense: str) -> tuple:
@@ -113,13 +105,11 @@ def _middle_parts(nc: dict, cargo_label: str, cargo_antisense: str) -> tuple:
 
 def _orf_flags(slots: dict, module: str) -> dict:
     """{slot: (start, stop)} for the coding parts of a module: the first coding part in reading direction gets the start codon (ATG),
-    the last one a stop codon, unless an NCS with stop codon provides the stop. NCS spacers get neither. The central part (Type 0.3)
-    never gets a stop codon: behind it the stop stays at Type 0.4 (NC module) / Type 0.2 (cargo module), the "NCS with stop codon".
-    Reading direction: NC module Type 0.1 -> 0.5, cargo module (antisense) Type 0.5 -> 0.1; the central part (Type 0.3) is always coding."""
-    order = (1, 2, 3, 4, 5) if module == "nc" else (5, 4, 3, 2, 1)
-    coding = [n for n in order if n == 3 or slots[n]["kind"] not in ("ncs", "ncsstop")]
-    has_stop = any(cfg["kind"] == "ncsstop" for cfg in slots.values())
-    return {n: (n == coding[0], n == coding[-1] and n != 3 and not has_stop) for n in coding}
+    the last one a stop codon, wherever it sits (also the central part, if every part behind it is an NCS spacer). NCS spacers get
+    neither. Reading direction: NC module Type 0.1 -> 0.5, cargo module (antisense) Type 0.5 -> 0.1; the central part (Type 0.3) is
+    always coding."""
+    coding = orf_slots(slots, module)
+    return {n: (n == coding[0], n == coding[-1]) for n in coding}
 
 
 def _add_start_stop(seq: str, start: bool, stop: bool, is_user: bool) -> str:
@@ -132,15 +122,12 @@ def _add_start_stop(seq: str, start: bool, stop: bool, is_user: bool) -> str:
     return seq
 
 
-def _mark_stop(built: dict, seq: str, module: str) -> None:
-    """NCS with stop codon: mark the stop codon in the reading frame as an entry in `built["stops"]`."""
-    sense = reverse_complement(seq) if module == "cargo" else seq
-    off = first_stop_offset(sense)
-    if off is None:
-        return
+def _mark_stop(built: dict, sense: str, module: str) -> None:
+    """Mark the stop codon at the 3' end of the ORF (the last codon of the sense sequence) as an entry in `built["stops"]`."""
+    off = len(sense) - 3
     ia, ib = location_span(built["insert"]["location"])
     a = ia + off if module == "nc" else ib - off - 2
-    built["stops"].append({"location": f"{a}..{a + 2}", "note": f"stop codon {sense[off:off + 3]} in the reading frame of the ORF"})
+    built["stops"].append({"location": f"{a}..{a + 2}", "note": f"stop codon {sense[off:]} in the reading frame of the ORF"})
 
 
 def _construct_features(shown: dict, part: Part, n: int, adapter_id: str, orientation: str, codon: dict | None) -> list:
@@ -199,14 +186,13 @@ def _build_construct(part: Part, module: str, n: int, codon: dict | None, backbo
         sense = reverse_complement(cargo_antisense)
         if not part.is_user:
             sense = bare_cds(sense)  # a library cargo entered with its ATG / stop codon: the start and stop are added below
-    seq = _add_start_stop(sense, start, stop, part.is_user)
-    if antisense:
-        seq = reverse_complement(seq)
+    sense = _add_start_stop(sense, start, stop, part.is_user)
+    seq = reverse_complement(sense) if antisense else sense
     adapter_id = adapter_id_for(module, n)
     built = attach_adapter(adapter_id, seq, spacer_mode(module, n))  # top strand of the Level 0 plasmid, 5' left -> 3' right
     built["stops"] = []
-    if "stop codon" in part.what:
-        _mark_stop(built, seq, module)
+    if stop:
+        _mark_stop(built, sense, module)
     plasmid = clone_into_level0_backbone(
         built, part.label, backbone, antisense,
         f"{backbone['id'].split('-')[0]}_{level0_record_name(part.label, n, module)}") if backbone else None
@@ -236,7 +222,7 @@ def _build_construct(part: Part, module: str, n: int, codon: dict | None, backbo
         # state of the Level 0 plasmid of a toolkit part: "stock", "no_stock" or "not_built" (None for your own sequences)
         "plasmidStatus": None if part.is_user else plasmid_status(part.source),
         "codon": codon if part.is_user else None,
-        "stopCodon": "stop codon" in part.what, "stopLocation": shown["stops"][0]["location"] if shown["stops"] else None,
+        "stopCodon": bool(shown["stops"]), "stopLocation": shown["stops"][0]["location"] if shown["stops"] else None,
         "genbank": format_genbank_record(record_name, shown["sequence"], features, False,
                                          _definition(part.label, adapter_id, antisense, part.is_real)),
         "plasmid": plasmid,

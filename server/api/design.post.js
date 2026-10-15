@@ -9,7 +9,7 @@
  *   promoter?: string,         // promoter id (default: GAL1-10)
  *   cargoSlots?: Slots,        // what sits around the cargo (Type 0.1/0.2 behind it, 0.4/0.5 in front)
  *   ncSlots?: Slots,           // what sits around the shell (default: NCS spacer everywhere)
- *   // Slots = { "1" | "2" | "4" | "5": { kind: 'ncs' } | { kind: 'ncsstop' }
+ *   // Slots = { "1" | "2" | "4" | "5": { kind: 'ncs' }
  *   //                                | { kind: 'tp' }                    // cargo module, Type 0.1 or 0.5 only
  *   //                                | { kind: 'linker', id: string }
  *   //                                | { kind: 'marker', id: string }    // spycatcher | spytag

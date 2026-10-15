@@ -25,15 +25,14 @@ still sees one entry per Level 0 plasmid (`id` = plasmid id, e.g. `Lvl0.2_b_034`
 `sequence` is the BARE part: sense strand (as it is read; a part that lies in the plasmid as a reverse complement, cargo site, has
 already been turned back here), **without start codon, without stop codon, without overhangs and without the frame spacer**.
 The software adds ATG and the stop codon per slot when it builds the construct (`constructs._orf_flags`, `_add_start_stop`):
-the first coding part of an ORF gets ATG, the last one a stop codon (TAA) unless an NCS with stop codon provides it; the NC module
-is read Type 0.1 -> 0.5, the cargo module Type 0.5 -> 0.1; the central part (0.3) counts as coding for the start codon but never gets a
-stop codon: behind it the stop stays at Type 0.4 (NC) / Type 0.2 (cargo), the "NCS with stop codon". So one sequence serves every slot
-(a targeting peptide at Type 0.5 gets ATG, at Type 0.1 a stop codon). Overhangs and the frame spacer come from `type_overhangs/`.
+the first coding part of an ORF gets ATG, the last one a stop codon (TAA), wherever it sits; the NC module
+is read Type 0.1 -> 0.5, the cargo module Type 0.5 -> 0.1; the central part (0.3) is coding too, so it gets the stop codon when every
+part behind it is an NCS spacer. So one sequence serves every slot (a targeting peptide at Type 0.5 gets ATG, at Type 0.1 a stop codon). Overhangs and the frame spacer come from `type_overhangs/`.
 Own sequences of the user are treated the same way, but an ATG or stop codon they already carry is not doubled.
-Linkers and NCS spacers are stored as they are (no start/stop logic for NCS; linkers carry none).
+Linkers and NCS spacers are stored as they are (no start/stop logic for NCS; linkers carry none). There is exactly one NCS sequence, shared by every NCS plasmid; there is no NCS with stop codon.
 
 Part fields: `id`, `category` (`shell`, `cargo`, `linker`, `marker`, `intein`, `tp`, `ncs`), `part` / `part_label` (part id and label
-in the dropdowns, e.g. linker `GSSS3`), `sequence` (missing in `ncs.json`: there every plasmid carries its own `sequence`),
+in the dropdowns, e.g. linker `GSSS3`), `sequence`,
 `sequence_status`, `length_bp`, `checks` (length divisible by 3, BsaI/BbsI sites in the part), `organism`, `source`, `notes`, `used_by`.
 
 Plasmid fields (`plasmids` list):
@@ -42,7 +41,6 @@ Plasmid fields (`plasmids` list):
 - `type_slot` (1-5) and `site` (`nc_site` / `cargo_site`). For Type 0.1/0.5 the site follows from the Level 2 overhang
   (`level2_overhang`: TGAT/AATG = NC site, CCAA/CGTT = cargo site), for Type 0.2-0.4 from the strand on which the part lies in the
   plasmid (`stored_orientation`: sense = NC site, antisense = cargo site; the "rc" plasmids).
-- `ncs_role` (NCS only: `plain` / `stop`; `stop` only at the slots behind the central part: NC site 0.4/0.5, cargo site 0.2/0.1).
 - `frame_spacer_in_plasmid`: the 2 bases the plasmid carries before the ORF (only for traceability).
 - `on_stock`: `true` = glycerol stock available, `false` = no. The builder does not use it at the moment.
 - `registry_url`: link to the part in the iGEM Registry, `null` until it is known. The builder shows it for every toolbox part in the order lists of step 5 (a placeholder while it is `null`).

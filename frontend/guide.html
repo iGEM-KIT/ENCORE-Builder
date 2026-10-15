@@ -131,7 +131,7 @@
       <tr><td><span class="tag req">Required</span> <b>DNA or amino acids</b></td>
           <td>Paste a coding sequence (A/T/G/C, <b>T not U</b>) or an amino acid sequence in one-letter code. It is told apart automatically: if at least 90&nbsp;% of the letters are A/C/G/T, it is read as DNA, otherwise as protein. FASTA header lines (<code>&gt;name</code>), spaces, line breaks and digits are ignored; other letters are dropped with a warning. A protein is back-translated to DNA for <i>S. cerevisiae</i>, 3 bp per amino acid.</td></tr>
       <tr><td><span class="tag auto">Automatic</span> <b>Start and stop codon</b></td>
-          <td>You do not need to add them. The builder puts an <b>ATG</b> in front of the <b>first coding part</b> of each ORF and a <b>stop codon (TAA)</b> behind the <b>last</b> one in the outer slots (Type 0.5 of the nanocompartment module, Type 0.1 of the cargo module). The central part never gets a stop codon by itself: behind the shell or the cargo the stop stays at Type 0.4 (nanocompartment module) or Type 0.2 (cargo module), where you choose <b>NCS with stop codon</b>. The ORF of the nanocompartment module is read from Type 0.1 to 0.5, the ORF of the cargo module from Type 0.5 to 0.1. If the outer modules are plain NCS spacers, the shell or the cargo itself gets the ATG. An ATG you enter yourself is kept and never doubled; a stop codon you enter at the end is removed with a warning. A stop codon in the middle only gives a warning. A <b>linker</b> needs no start codon of its own.</td></tr>
+          <td>You do not need to add them. The builder puts an <b>ATG</b> in front of the <b>first coding part</b> of each ORF and a <b>stop codon (TAA)</b> behind the <b>last</b> one, in whichever slot it sits. The stop always follows the last coding part of the ORF: if Type 0.5 is an NCS spacer and Type 0.4 holds a linker, the stop comes behind the linker; if only NCS spacers follow the shell or the cargo, the stop comes directly behind it. The part that carries the stop is marked with an asterisk <b>*</b>. The ORF of the nanocompartment module is read from Type 0.1 to 0.5, the ORF of the cargo module from Type 0.5 to 0.1. If the outer modules are plain NCS spacers, the shell or the cargo itself gets the ATG. An ATG you enter yourself is kept and never doubled; a stop codon you enter at the end is removed with a warning. A stop codon in the middle only gives a warning. A <b>linker</b> needs no start codon of its own.</td></tr>
       <tr><td><span class="tag warn">Check</span> <b>Multiple of 3 (DNA)</b></td>
           <td>The length must be divisible by 3. Otherwise you get a warning: the fusion would shift the reading frame, and the sequence cannot be codon-optimized. The builder joins parts with a 4-nt overhang plus a 2-nt spacer, which makes 6 nt, so a part with a multiple-of-3 length keeps everything in frame. Amino acid sequences are always in frame.</td></tr>
       <tr><td><span class="tag req">Required</span> <b>Cargo length</b></td>
@@ -176,7 +176,6 @@
     <h3>What you can put into a module</h3>
     <ul class="plain">
       <li><b>NCS (spacer)</b>: a neutral spacer; the default filler.</li>
-      <li><b>NCS with stop codon</b>: a spacer that ends the ORF.</li>
       <li><b>Targeting peptide (TP)</b>: only in the cargo module; the matching TP for your nanocompartment is chosen automatically.</li>
       <li><b>Linker</b>, e.g. GGS or GSSS repeats.</li>
       <li><b>Surface display marker</b>, e.g. SpyCatcher or SpyTag, displayed on the outside of the cage.</li>
@@ -198,10 +197,8 @@
           <td>Only in the cargo module, only in Type 0.1 or Type 0.5, at most once. In Type 0.1 it is fused behind the cargo, in Type 0.5 in front of it.</td></tr>
       <tr><td><span class="tag req">Required</span> <b>Own shell → no targeting peptide choice</b></td>
           <td>If you use your own shell, the builder does not know a matching peptide. Put your own sequence into the cargo module instead.</td></tr>
-      <tr><td><span class="tag req">Required</span> <b>NCS with stop codon: behind the central part, once, last</b></td>
-          <td>It can only sit directly behind the shell or the cargo (shell: Type 0.4 or 0.5; cargo: Type 0.2 or 0.1), only once per module, and nothing may follow it; the remaining outer module must be a plain NCS.</td></tr>
-      <tr><td><span class="tag warn">Check</span> <b>NCS with stop codon replaces the automatic stop</b></td>
-          <td>Behind a coding part in the outer slot the builder adds a stop codon by itself. If you choose <b>NCS with stop codon</b> in a module, that spacer provides the stop instead and none is added. The part that carries it is marked with an asterisk <b>*</b>, and the stop codon is highlighted in its sequence.</td></tr>
+      <tr><td><span class="tag warn">Check</span> <b>The stop codon is added automatically</b></td>
+          <td>Behind the last coding part of each ORF the builder adds a stop codon (TAA) by itself; there is nothing to choose. The part that carries it is marked with an asterisk <b>*</b>, and the stop codon is highlighted in its sequence. There is one NCS sequence for all spacers; it contains no stop codon.</td></tr>
     </table>
     <p class="note">The builder disables impossible choices in the drop-downs and explains why under the module. A choice that becomes invalid when you change a neighbour is reset automatically.</p>
   </section>

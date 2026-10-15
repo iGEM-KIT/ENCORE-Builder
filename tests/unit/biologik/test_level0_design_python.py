@@ -165,14 +165,15 @@ def test_json_cli_reports_the_real_error_on_stdout():
     assert result.stderr.strip() == ''
 
 
-def test_stop_codon_is_only_set_where_the_user_put_an_ncs_with_stop():
-    # No automatic stop codon: without an explicitly chosen "NCS with stop codon" no slot carries one.
-    for slots in (CARGO_SLOTS_C_TERM, CARGO_SLOTS_N_TERM):
-        module = _design(cargo_slots=slots)['level0']['cargoModule']
-        assert not any(p['stop'] for p in module)
-
-    # With an explicitly chosen NCS with stop codon (NC site, directly behind the shell) it sits exactly there.
-    nc_module = _design(nc_slots={'4': {'kind': 'ncsstop'}})['level0']['ncModule']
+def test_the_stop_codon_sits_behind_the_last_coding_part_of_each_orf():
+    # Cargo module (read Type 0.5 -> 0.1): the linker at 0.2 is the last coding part behind the cargo when 0.1 is an NCS spacer.
+    module = _design(cargo_slots={'1': {'kind': 'ncs'}, '2': {'kind': 'linker', 'id': 'GSSS2'}})['level0']['cargoModule']
+    assert [p['stop'] for p in module] == [False, True, False, False, False]
+    # A targeting peptide at 0.1 is the last part of the cargo ORF (C-terminal); at 0.5 it is the first (N-terminal), the cargo ends it.
+    assert [p['stop'] for p in _design(cargo_slots=CARGO_SLOTS_C_TERM)['level0']['cargoModule']] == [True, False, False, False, False]
+    assert [p['stop'] for p in _design(cargo_slots=CARGO_SLOTS_N_TERM)['level0']['cargoModule']] == [False, False, True, False, False]
+    # NC module: with a linker at 0.4 behind the shell and an NCS at 0.5, the stop sits behind the linker.
+    nc_module = _design(nc_slots={'4': {'kind': 'linker', 'id': 'GSSS2'}, '5': {'kind': 'ncs'}})['level0']['ncModule']
     assert [p['stop'] for p in nc_module] == [False, False, False, True, False]
 
 
@@ -185,14 +186,15 @@ def test_surface_marker_sits_at_the_chosen_terminus():
 
     assert n_term[0]['kind'] == 'mark' and n_term[1]['role'] == 'nc-linker'
     assert c_term[4]['kind'] == 'mark' and c_term[3]['role'] == 'nc-linker'
-    assert not any(p['stop'] for p in n_term + c_term)
+    assert sum(p['stop'] for p in n_term) == 1 and sum(p['stop'] for p in c_term) == 1
+    assert c_term[4]['stop'] and n_term[2]['stop']                                   # NC module: the marker at 0.5 ends the ORF; with the marker at 0.1 the shell does
 
 
 def test_without_a_marker_the_slots_stay_inert_spacers():
     nc_module = _design()['level0']['ncModule']
 
     assert [p['role'] for p in nc_module] == ['ncs', 'ncs', 'shell', 'ncs', 'ncs']
-    assert [p['stop'] for p in nc_module] == [False] * 5
+    assert [p['stop'] for p in nc_module] == [False, False, True, False, False]     # only the shell is coding: it gets start and stop
 
 
 def test_unknown_surface_marker_is_rejected():
@@ -799,9 +801,10 @@ def test_insert_database_is_consistent():
     coding = [e for e in entries if e['category'] in ('shell', 'cargo', 'linker', 'tp', 'marker', 'intein')]
     assert all(bare_cds(e['sequence']) == e['sequence'] for e in coding if e['category'] != 'linker')
     assert [e['id'] for e in coding if len(e['sequence']) % 3] == []
-    # one file per part: all plasmids of a part share its sequence (only the NCS file carries one sequence per plasmid)
+    # one file per part: all plasmids of a part share its sequence; there is exactly one NCS sequence for every NCS plasmid
     for part in load_parts()['level0_inserts']:
-        assert part['plasmids'] and (part['category'] == 'ncs') == ('sequence' not in part)
+        assert part['plasmids'] and 'sequence' in part
+    assert {e['sequence'] for e in entries if e['category'] == 'ncs'} == {'CCGTCAGGGCGCGTCAGCGGGTGTTGGCGGGTGTCGGGG'}
 
 
 def test_libraries_offer_each_part_only_where_a_level0_plasmid_exists():
@@ -813,9 +816,9 @@ def test_libraries_offer_each_part_only_where_a_level0_plasmid_exists():
     assert {m['id']: m['slots'] for m in libs['surfaceMarkers']} == {'spycatcher': {'nc': [1, 5], 'cargo': [1, 5]}, 'spytag': {'nc': [1, 5], 'cargo': [1, 5]}}
     assert libs['inteins'][0]['slots'] == {'nc': [1, 5], 'cargo': [1, 5]}
     assert all(t['slots'] == {'nc': [], 'cargo': [1, 5]} for t in libs['targetingPeptides'])
-    # NCS: the stop variant sits behind the central part (NC: Type 0.4, cargo: Type 0.2), plain NCS elsewhere
-    assert libs['ncs'] == {'nc': {'1': ['plain'], '2': ['plain'], '4': ['stop'], '5': ['plain']},
-                           'cargo': {'1': ['plain'], '2': ['stop'], '4': ['plain'], '5': ['plain']}}
+    # NCS: one plain spacer at every slot of both sites (no NCS with stop codon: the stop is added behind the last coding part)
+    assert libs['ncs'] == {'nc': {'1': ['plain'], '2': ['plain'], '4': ['plain'], '5': ['plain']},
+                           'cargo': {'1': ['plain'], '2': ['plain'], '4': ['plain'], '5': ['plain']}}
     assert [c['id'] for c in libs['cargoPresets']] == ['yegfp', 'lgb4', 'nlucp', 'civcpo', 'pabp', 'pabp-rrm1-4', 'pabp-rrm1-2']
     assert [n['shellBp'] for n in libs['nanocompartments']] == [798, 864, 849, 2682]
 
@@ -832,15 +835,16 @@ def test_a_cargo_taken_unchanged_from_the_library_is_a_toolkit_part():
 
 
 def test_toolkit_parts_use_the_inserts_of_their_own_site_and_slot():
-    design = _design(cargoSeq=_long_cargo(), cargo_slots={'1': {'kind': 'ncs'}, '2': {'kind': 'ncsstop'}, '4': {'kind': 'linker', 'id': 'GSSS3'}, '5': {'kind': 'tp'}},
-                     nc_slots={'1': {'kind': 'marker', 'id': 'spycatcher'}, '2': {'kind': 'linker', 'id': 'GSSS2'}, '4': {'kind': 'ncsstop'}})
+    design = _design(cargoSeq=_long_cargo(), cargo_slots={'1': {'kind': 'ncs'}, '2': {'kind': 'ncs'}, '4': {'kind': 'linker', 'id': 'GSSS3'}, '5': {'kind': 'tp'}},
+                     nc_slots={'1': {'kind': 'marker', 'id': 'spycatcher'}, '2': {'kind': 'linker', 'id': 'GSSS2'}, '4': {'kind': 'ncs'}})
     by = {(c['module'], c['slot']): c for c in design['level0Constructs']}
     # the cargo module sits antisense: its linker is the reverse complement of the sense insert in the DB
     from Biologik.level0_design.parts_db import find_inserts
     gsss3 = find_inserts('linker', 'GSSS3', 'cargo_site', 4)[0]['sequence']
     assert by[('cargo_site', 4)]['insert']['sequence'] == gsss3                       # shown rotated -> sense again
     assert by[('nc_site', 1)]['insert']['sequence'] == 'ATG' + find_inserts('marker', 'spycatcher')[0]['sequence']   # first part of the ORF: start added
-    assert by[('nc_site', 4)]['insert']['sequence'] == find_inserts('ncs', 'ncs', 'nc_site', 4, ncs_role='stop')[0]['sequence']
+    assert by[('nc_site', 4)]['insert']['sequence'] == find_inserts('ncs', 'ncs', 'nc_site', 4)[0]['sequence']
+    assert by[('nc_site', 4)]['insert']['sequence'] == 'CCGTCAGGGCGCGTCAGCGGGTGTTGGCGGGTGTCGGGG'     # the one NCS sequence, no stop codon
     assert by[('cargo_site', 5)]['insert']['sequence'] == 'ATG' + find_inserts('tp', 'TP-Tm', 'cargo_site', 5)[0]['sequence']
 
 
@@ -871,17 +875,16 @@ def test_primers_exist_only_for_own_sequences_of_at_least_150_bp_and_shorter_par
 
 
 
-def test_ncs_spacers_with_a_stop_codon_are_flagged_on_their_construct():
-    design = _design(cargoSeq=_long_cargo(), nc_slots={'4': {'kind': 'ncsstop'}})
+def test_the_part_that_ends_the_orf_is_flagged_and_ncs_spacers_never_are():
+    design = _design(cargoSeq=_long_cargo(), nc_slots={'4': {'kind': 'linker', 'id': 'GSSS2'}})
     flags = {(c['module'], c['slot']): c['stopCodon'] for c in design['level0Constructs']}
-    assert flags[('nc_site', 4)] is True and flags[('nc_site', 5)] is False and flags[('nc_site', 3)] is False
-    stop = next(c for c in design['level0Constructs'] if c['module'] == 'nc_site' and c['slot'] == 4)
-    assert stop['what'] == 'NCS spacer with stop codon (toolkit part)'
+    assert flags[('nc_site', 4)] is True and flags[('nc_site', 3)] is False and flags[('nc_site', 5)] is False
+    assert all(not c['stopCodon'] for c in design['level0Constructs'] if c['label'] == 'NCS')
 
 
-def test_the_stop_codon_of_an_ncs_with_stop_is_marked_in_construct_oligos_and_plasmid():
-    design = _design(cargoSeq=_long_cargo(), cargo_slots={'1': {'kind': 'ncs'}, '2': {'kind': 'ncsstop'}},
-                     nc_slots={'4': {'kind': 'ncsstop'}})
+def test_the_stop_codon_is_marked_in_construct_oligos_and_plasmid():
+    design = _design(cargoSeq=_long_cargo(), cargo_slots={'1': {'kind': 'ncs'}, '2': {'kind': 'linker', 'id': 'GSSS2'}},
+                     nc_slots={'4': {'kind': 'linker', 'id': 'GSSS2'}})
     stops = {'TAA', 'TAG', 'TGA'}
     for module, slot in (('nc_site', 4), ('cargo_site', 2)):
         c = next(c for c in design['level0Constructs'] if c['module'] == module and c['slot'] == slot)
@@ -899,7 +902,7 @@ def test_the_stop_codon_of_an_ncs_with_stop_is_marked_in_construct_oligos_and_pl
 
 
 def test_oligo_pairs_come_with_an_annotated_genbank_record_of_the_annealed_fragment():
-    design = _design(cargoSeq=_long_cargo(), nc_slots={'4': {'kind': 'ncsstop'}})
+    design = _design(cargoSeq=_long_cargo(), nc_slots={'4': {'kind': 'linker', 'id': 'GSSS2'}})
     for c in design['level0Constructs']:
         if not c['oligos']:
             continue
@@ -1114,16 +1117,18 @@ def test_start_codon_goes_on_the_first_coding_part_of_each_orf_and_stop_behind_t
     assert _insert_of(design, 'cargo_site', 1) == tp + 'TAA'                       # Type 0.1 of the cargo module is its C terminus
 
 
-def test_the_central_part_gets_a_start_codon_but_never_a_stop_codon():
+def test_the_central_part_gets_start_and_stop_when_only_ncs_spacers_follow():
     from Biologik.level0_design.parts_db import find_inserts
-    design = _design(cargo_slots={'1': {'kind': 'ncs'}})
     shell = find_inserts('shell', 'E-Tm')[0]['sequence']
-    assert _insert_of(design, 'nc_site', 3) == 'ATG' + shell                          # the stop stays at Type 0.4 (NC) / 0.2 (cargo)
-    # the stop codon comes from the NCS with stop codon behind the central part
-    with_stop = _design(cargo_slots={'1': {'kind': 'ncs'}}, nc_slots={'4': {'kind': 'ncsstop'}})
-    assert _insert_of(with_stop, 'nc_site', 3) == 'ATG' + shell
-    # NCS spacers never get start or stop codons
-    assert all(len(c['insert']['sequence']) in (39, 40, 41, 42) for c in design['level0Constructs'] if c['label'] == 'NCS')
+    design = _design(cargo_slots={'1': {'kind': 'ncs'}})
+    assert _insert_of(design, 'nc_site', 3) == 'ATG' + shell + 'TAA'                  # nothing coding behind it: the shell ends the ORF
+    # with a linker behind the shell, the stop moves behind the linker and the shell stays without one
+    linker = find_inserts('linker', 'GSSS2', 'nc_site', 4)[0]['sequence']
+    with_linker = _design(cargo_slots={'1': {'kind': 'ncs'}}, nc_slots={'4': {'kind': 'linker', 'id': 'GSSS2'}})
+    assert _insert_of(with_linker, 'nc_site', 3) == 'ATG' + shell
+    assert _insert_of(with_linker, 'nc_site', 4) == linker + 'TAA'
+    # NCS spacers never get start or stop codons: they are the one NCS sequence
+    assert {c['insert']['sequence'] for c in design['level0Constructs'] if c['label'] == 'NCS'} == {'CCGTCAGGGCGCGTCAGCGGGTGTTGGCGGGTGTCGGGG'}
 
 
 def test_a_library_cargo_with_its_own_atg_and_stop_is_not_doubled():
@@ -1133,7 +1138,7 @@ def test_a_library_cargo_with_its_own_atg_and_stop_is_not_doubled():
     for entered in (yegfp, 'ATG' + yegfp, 'ATG' + yegfp + 'TAA'):
         design = _design(cargoSeq=entered, cargoLabel='yeGFP', cargo_slots={'1': {'kind': 'ncs'}})
         gene = next(c for c in design['level0Constructs'] if c['module'] == 'cargo_site' and c['slot'] == 3)
-        assert gene['isUser'] is False and gene['insert']['sequence'] == 'ATG' + yegfp
+        assert gene['isUser'] is False and gene['insert']['sequence'] == 'ATG' + yegfp + 'TAA'
 
 
 def test_an_own_sequence_keeps_its_atg_and_gets_no_second_one():

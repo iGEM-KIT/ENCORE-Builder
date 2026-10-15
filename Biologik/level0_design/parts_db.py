@@ -105,7 +105,7 @@ def inserts() -> list[dict]:
 def find_inserts(category: str, part: str | None = None, site: str | None = None, slot: int | None = None,
                  **extra) -> list[dict]:
     """Inserts of one category (shell, cargo, linker, marker, intein, tp, ncs), optionally filtered by part id,
-    site ("nc_site"/"cargo_site"), Type slot and further fields (variant="c_term", ncs_role="stop", ...)."""
+    site ("nc_site"/"cargo_site"), Type slot and further fields (variant="c_term", ...)."""
     out = []
     for entry in inserts():
         if entry.get("category") != category:

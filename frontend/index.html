@@ -1177,7 +1177,7 @@ const INFO = {
           <p>You provide the coding sequence (CDS). It is directed into the compartment via the targeting peptide.</p>` },
   stop: { title:'Start and stop codon', img:'Diagram: TP-linker-cargo reading frame',
     body:`<p>The cargo is fused with the linker and targeting peptide into <b>one continuous protein</b>.</p>
-          <p>You do not have to add a start or stop codon: the builder puts an <b>ATG</b> in front of the first coding part of each ORF and a <b>stop codon</b> behind the last one in the outer slot (Type 0.5 of the NC module, Type 0.1 of the cargo module). Behind the shell or the cargo the stop stays in the <b>NCS with stop codon</b> (Type 0.4 or 0.2). A stop codon you enter at the end is removed; an ATG you enter is kept (not doubled).</p>
+          <p>You do not have to add a start or stop codon: the builder puts an <b>ATG</b> in front of the first coding part of each ORF and a <b>stop codon</b> behind the last one, in whichever slot it sits: the stop always follows the last coding part of the ORF (for example behind a linker or marker at Type 0.4 or 0.5 of the NC module, or directly behind the shell if only NCS spacers follow it). The part that carries the stop is marked with a <b>*</b>. A stop codon you enter at the end is removed; an ATG you enter is kept (not doubled).</p>
           <p><b>Basis of the checks.</b> Everything is simple sequence logic, no model: the input is read as DNA if at least 90 % of its letters are A/C/G/T, otherwise as protein; the length must be a multiple of 3; every codon in the reading frame is compared with TAA, TAG and TGA to find in-frame stops; GC content = (G+C) ÷ length; amino acids = length ÷ 3. A terminal stop codon is cut off, and an ATG at the start is not doubled.</p>` },
   commec: { title:'Biosecurity screening (COMMEC)', img:'Diagram: your sequence → COMMEC → curated biorisk database',
     body:`<p><b>COMMEC</b> (<i>Common Mechanism</i>, from IBBIS, the International Biosecurity and Biosafety Initiative for Science) is an open-source tool that checks DNA for similarity to known biosecurity concerns. It is the same kind of check DNA synthesis providers run before they ship an order.</p>
@@ -1615,29 +1615,23 @@ function slotsValid(mod){ const sl=slotsOf(mod); return SLOT_NUMBERS.every(n=>sl
    - Type 0.2 next to 0.1 / Type 0.4 next to 0.5: if the outer slot is in use (linker, marker, TP or own sequence)
      the inner slot cannot be an NCS spacer; if it holds a CDS (marker, TP or own sequence) the inner slot must be
      a linker (or own linker sequence).
-   - "NCS with stop codon" only sits behind the central part (shell: Type 0.4/0.5, cargo: Type 0.2/0.1), at most
-     once, and nothing may follow it.
    - The targeting peptide only exists in the cargo module, in Type 0.1 or 0.5, at most once. */
 const LINKER_FOR={ 2:1, 4:5 };
 const isCds=c=>['marker','intein','custom','tp'].includes(c.kind);
-const blocksNcs=(mod,n)=>!['none','ncs','ncsstop'].includes(slotsOf(mod)[LINKER_FOR[n]].kind);
+const blocksNcs=(mod,n)=>!['none','ncs'].includes(slotsOf(mod)[LINKER_FOR[n]].kind);
 const needsLinker=(mod,n)=>isCds(slotsOf(mod)[LINKER_FOR[n]]);
 function slotRulesOk(mod){
-  const sl=slotsOf(mod), k=n=>sl[n].kind, {near,far}=MODS[mod];
+  const sl=slotsOf(mod), k=n=>sl[n].kind;
   if(SLOT_NUMBERS.some(n=>k(n)==='none')) return false;             // every slot needs a choice
-  if(SLOT_NUMBERS.some(n=>k(n)==='ncsstop' && n!==near && n!==far)) return false;
-  if(k(near)==='ncsstop' && k(far)!=='ncs') return false;
-  if(k(near)==='ncsstop' && k(far)==='ncsstop') return false;
   if(SLOT_NUMBERS.filter(n=>k(n)==='tp').length>1) return false;
   return [2,4].every(n=>(!blocksNcs(mod,n) || k(n)!=='ncs') && (!needsLinker(mod,n) || ['linker','custom'].includes(k(n))));
 }
 function enforceSlotRules(mod){
-  const sl=slotsOf(mod), {near,far}=MODS[mod];
+  const sl=slotsOf(mod);
   SLOT_NUMBERS.forEach(n=>{
     const el=slotEl(mod,n), sel=el.querySelector('.slotsel'), kind=sl[n].kind;
     const inner = n===2 || n===4;
     const noNcs = inner && blocksNcs(mod,n), needLnk = inner && needsLinker(mod,n), outer=LINKER_FOR[n];
-    const afterStop = n===far && sl[near].kind==='ncsstop';
     const otherTp = SLOT_NUMBERS.some(m=>m!==n && sl[m].kind==='tp');
     const noTpHere = !!(state.nc && !state.nc.tp);                         // an own shell or the vault brings no targeting peptide; use "Use your own sequence"
     [...sel.options].forEach(o=>{
@@ -1647,25 +1641,16 @@ function enforceSlotRules(mod){
       if(noNcs && v==='ncs') off=true;
       if(needLnk && (v.startsWith('marker:') || v.startsWith('intein:') || v==='tp')) off=true;
       if(v==='tp' && (inner || otherTp || noTpHere)) off=true;        // only Type 0.1 / 0.5, only once, and only with a toolkit nanocompartment
-      if(v==='ncsstop'){
-        if(n!==near && n!==far) off=true;                              // must sit behind the central part
-        if(n===near && !['ncs','none'].includes(sl[far].kind)) off=true;   // something follows it, or a second stop
-        if(n===far && sl[near].kind==='ncsstop') off=true;             // only one stop
-        if(noNcs) off=true;
-      }
-      if(afterStop && v!=='ncs') off=true;                             // nothing after the stop codon
       o.disabled=off;
     });
     const hint=el.querySelector('.slothint');
     let text='';
-    if(afterStop) text=`Type 0.${near} holds the stop codon: nothing can follow it.`;
-    else if(noNcs) text = needLnk ? `Type 0.${outer} holds a sequence: a linker is required here.`
+    if(noNcs) text = needLnk ? `Type 0.${outer} holds a sequence: a linker is required here.`
                                   : `Type 0.${outer} is in use: this position cannot be an NCS spacer.`;
     hint.textContent=text; hint.style.display = text ? 'block' : 'none';
     let bounce=null;
     if((noNcs && kind==='ncs') || (needLnk && (kind==='marker' || kind==='intein' || kind==='tp'))) bounce=firstLinker(mod,n);
-    else if((kind==='ncsstop' || kind==='tp') && [...sel.options].find(o=>o.value===kind)?.disabled) bounce={kind:'ncs'};
-    else if(afterStop && !['ncs','none'].includes(kind)) bounce={kind:'ncs'};
+    else if(kind==='tp' && [...sel.options].find(o=>o.value===kind)?.disabled) bounce={kind:'ncs'};
     if(bounce){
       sl[n]=bounce;
       sel.value = bounce.kind==='linker' ? 'linker:'+bounce.id : bounce.kind==='custom' ? 'custom' : 'ncs';
@@ -1683,7 +1668,7 @@ const refreshNav=mod=>mod==='nc' ? refreshNext0() : refreshNext1();
 const availableAt = (item, mod, n) => !item.slots || (item.slots[mod]||[]).includes(n);
 const linkersAt = (mod, n) => LIB.linkers.filter(l=>availableAt(l,mod,n));
 function firstLinker(mod, n){ const l=linkersAt(mod,n)[0]; return l ? {kind:'linker', id:l.id} : {kind:'custom', label:'', seqRaw:'', valid:false}; }
-function ncsRoles(mod, n){ return LIB.ncs ? ((LIB.ncs[mod]||{})[n] || []) : ['plain','stop']; }
+function ncsRoles(mod, n){ return LIB.ncs ? ((LIB.ncs[mod]||{})[n] || []) : ['plain']; }
 const STATUS_HINT = { not_built:' (not built)', no_stock:' (not in stock)' };
 const statusHint = s => STATUS_HINT[s] || '';
 function slotOptionsHtml(mod, n){
@@ -1695,7 +1680,6 @@ function slotOptionsHtml(mod, n){
     return list.length ? `<optgroup label="${label}">${list.map(m=>`<option value="${kind}:${m.id}">${m.label}: ${m.aa} aa${statusHint(m.status && m.status[mod] && m.status[mod][n])}</option>`).join('')}</optgroup>` : ''; };
   return `<option value="none" disabled selected>Please select</option>`
     + (roles.includes('plain') ? `<option value="ncs">NCS (spacer)${ncsSt('plain')}</option>` : '')
-    + (roles.includes('stop') ? `<option value="ncsstop">NCS with stop codon${ncsSt('stop')}</option>` : '')
     + (tpHere ? `<option value="tp">Targeting peptide${tpSt}</option>` : '')
     + group('Linker', LIB.linkers, 'linker')
     + group('Surface display', LIB.surfaceMarkers, 'marker')
@@ -1731,7 +1715,7 @@ function initSlots(){
 }
 function setSlotFromSelect(mod,n){
   const el=slotEl(mod,n), v=el.querySelector('.slotsel').value, sl=slotsOf(mod), prev=sl[n];
-  if(v==='ncs' || v==='ncsstop' || v==='tp') sl[n]={kind:v};
+  if(v==='ncs' || v==='tp') sl[n]={kind:v};
   else if(v==='custom') sl[n]={kind:'custom', label:prev.label||'', seqRaw:prev.seqRaw||'', valid:false};
   else { const [kind,id]=v.split(':'); sl[n]={kind,id}; }
   el.querySelector('.slotcustom').style.display = v==='custom' ? 'flex' : 'none';
@@ -1775,7 +1759,7 @@ function slotsPayload(mod){
   SLOT_NUMBERS.forEach(n=>{
     const c=sl[n];
     out[n] = c.kind==='custom' ? {kind:'custom', label:c.label||'', seq:clean(c.seqRaw||'')}
-           : (c.kind==='ncsstop' || c.kind==='tp') ? {kind:c.kind} : (c.kind==='ncs' || c.kind==='none') ? {kind:'ncs'} : {kind:c.kind, id:c.id};
+           : c.kind==='tp' ? {kind:c.kind} : (c.kind==='ncs' || c.kind==='none') ? {kind:'ncs'} : {kind:c.kind, id:c.id};
   });
   return out;
 }
@@ -1811,7 +1795,6 @@ function updateConstructStrip(){
     // shows immediately on selection. The typed name appears live; whether the sequence itself is
     // valid yet only gates "Continue", not this preview.
     if(c.kind==='custom') return { kind:'t'+k, label:(c.label||'').trim() || 'Custom', filled:true };
-    if(c.kind==='ncsstop') return { kind:'ncs', label:'NCS*', filled:true };
     if(c.kind==='ncs') return { kind:'ncs', label:'NCS', filled:true };
     return { kind:'ncs', label:'Type 0.'+k, filled:false };
   };
@@ -2256,7 +2239,7 @@ function copyText(btn, text){
 /* Sequence with the insert bold and the overhang bases tinted (positions are 1-based, from the backend). */
 function l0SeqHtml(seq, insertLoc, overhangs, stopLoc){
   const [i0,i1] = insertLoc.split('..').map(Number);
-  const stop = stopLoc ? (stopLoc.match(/\d+/g)||[]).map(Number) : null;       // stop codon of an NCS* (1-based)
+  const stop = stopLoc ? (stopLoc.match(/\d+/g)||[]).map(Number) : null;       // stop codon at the 3′ end of the ORF (1-based)
   const tint = new Array(seq.length).fill(false);
   overhangs.forEach(o=>{ const n=(o.location.match(/\d+/g)||[]).map(Number); for(let k=Math.min(...n);k<=Math.max(...n);k++) tint[k-1]=true; });
   let html='', run='', cls=null;
@@ -2916,8 +2899,9 @@ async function restoreSession(){
     const saved=s[MODS[mod].key]; if(!saved) return;
     SLOT_NUMBERS.forEach(n=>{
       const c=saved[n]; if(!c) return;
+      if(c.kind==='ncsstop') c.kind='ncs';                 // the NCS with stop codon no longer exists (older saved sessions)
       const el=slotEl(mod,n), sel=el.querySelector('.slotsel');
-      sel.value = ['none','ncs','ncsstop','tp'].includes(c.kind) ? c.kind : c.kind==='custom' ? 'custom' : c.kind+':'+c.id;
+      sel.value = ['none','ncs','tp'].includes(c.kind) ? c.kind : c.kind==='custom' ? 'custom' : c.kind+':'+c.id;
       if(!sel.value) sel.value='none';
       el.querySelector('.slotlabel').value=c.label||'';
       el.querySelector('.slotseq').value=c.seqRaw||'';

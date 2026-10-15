@@ -6,8 +6,8 @@
   "part_label": "NCS",
   "sequence_status": "real",
   "organism": null,
-  "source": "Level 0 plasmid '0.1NCS' (Lvl0.1_a_006) from the user-supplied GenBank file 'documents from Level 0'; only the insert was taken; the type overhangs and the frame spacer of the plasmid were cut off. Stock: glycerol stock column of 'Level 0 constructs.xlsx'.",
-  "notes": null,
+  "source": "One NCS sequence for every NCS plasmid (user decision 2026-10-15). It is the insert of Level 0 plasmid '0.5NCS' (Lvl0.5_a_026 region) without the 2 base frame spacer 'TA'; the type overhangs and the frame spacer are added by the software. Stock: glycerol stock column of 'Level 0 constructs.xlsx'.",
+  "notes": "All NCS spacers (every Type slot, both sites) share this one non-coding sequence. The earlier NCS with stop codon no longer exists: the software puts the stop codon (TAA) behind the last coding part of each ORF. The plasmid names (for example '0.2NCSrc*') are the original toolkit names and are kept for traceability.",
   "used_by": [],
   "plasmids": [
     {
@@ -22,15 +22,9 @@
         "sequence": "TA",
         "side": "5' side of the sense strand"
       },
-      "ncs_role": "plain",
       "on_stock": true,
       "registry_url": null,
-      "notes": null,
-      "sequence": "GGGGAGAGGCGGTTTGCGTATTGGGCGCTCTTCCGCTTCC",
-      "checks": {
-        "bsai_sites": [],
-        "bbsi_sites": []
-      }
+      "notes": null
     },
     {
       "id": "Lvl0.1rc_a_029",
@@ -44,15 +38,9 @@
         "sequence": "TC",
         "side": "right end of the top strand (5' side of the sense strand)"
       },
-      "ncs_role": "plain",
       "on_stock": true,
       "registry_url": null,
-      "notes": "remark in the xlsx: 'pipi'",
-      "sequence": "CGAAGAGGCCCGCACCGATCGCCCTTCCCAACAGTTGCGC",
-      "checks": {
-        "bsai_sites": [],
-        "bbsi_sites": []
-      }
+      "notes": "remark in the xlsx: 'pipi'"
     },
     {
       "id": "Lvl0.2_a_011",
@@ -66,15 +54,9 @@
         "sequence": "TA",
         "side": "5' side of the sense strand"
       },
-      "ncs_role": "plain",
       "on_stock": true,
       "registry_url": null,
-      "notes": null,
-      "sequence": "CGCAACTGTTGGGAAGGGCGATCGGTGCGGGCCTCTTCG",
-      "checks": {
-        "bsai_sites": [],
-        "bbsi_sites": []
-      }
+      "notes": null
     },
     {
       "id": "Lvl0.2rc_a_012",
@@ -88,15 +70,9 @@
         "sequence": "TT",
         "side": "right end of the top strand (5' side of the sense strand)"
       },
-      "ncs_role": "stop",
       "on_stock": true,
       "registry_url": null,
-      "notes": "NCS carrying a stop codon (marked * in the name or starting with a stop codon)",
-      "sequence": "GGGTAAAGGCGGTTTGCGTATTGGGCGCTCTTCCGCTTCC",
-      "checks": {
-        "bsai_sites": [],
-        "bbsi_sites": []
-      }
+      "notes": null
     },
     {
       "id": "Lvl0.4_a_021",
@@ -110,15 +86,9 @@
         "sequence": "TA",
         "side": "5' side of the sense strand"
       },
-      "ncs_role": "stop",
       "on_stock": true,
       "registry_url": null,
-      "notes": "named 'rc' in the file but stored on the sense strand (spacer on the left); identical insert to Lvl0.4_a_022; NCS carrying a stop codon (marked * in the name or starting with a stop codon)",
-      "sequence": "TGAAATACCGCACAGATGCGTACGGAGAAAATACCGCAT",
-      "checks": {
-        "bsai_sites": [],
-        "bbsi_sites": []
-      }
+      "notes": null
     },
     {
       "id": "Lvl0.4_a_022",
@@ -132,15 +102,9 @@
         "sequence": "TA",
         "side": "right end of the top strand (5' side of the sense strand)"
       },
-      "ncs_role": "plain",
       "on_stock": true,
       "registry_url": null,
-      "notes": "appears twice in the GenBank file (as 0.4NCS* and as 0.4NCSrc); same insert as Lvl0.4_a_021 but with the spacer on the right; marked * in the name, but this slot lies in front of the ORF, so it is offered as a plain NCS",
-      "sequence": "ATGCGGTATTTTCTCCGTACGCATCTGTGCGGTATTTCA",
-      "checks": {
-        "bsai_sites": [],
-        "bbsi_sites": []
-      }
+      "notes": null
     },
     {
       "id": "Lvl0.5_a_030",
@@ -154,15 +118,9 @@
         "sequence": "TA",
         "side": "5' side of the sense strand"
       },
-      "ncs_role": "plain",
       "on_stock": true,
       "registry_url": null,
-      "notes": null,
-      "sequence": "CCGTCAGGGCGCGTCAGCGGGTGTTGGCGGGTGTCGGGG",
-      "checks": {
-        "bsai_sites": [],
-        "bbsi_sites": []
-      }
+      "notes": null
     },
     {
       "id": "Lvl0.5rc_a_023",
@@ -176,15 +134,9 @@
         "sequence": "TT",
         "side": "right end of the top strand (5' side of the sense strand)"
       },
-      "ncs_role": "plain",
       "on_stock": true,
       "registry_url": null,
-      "notes": null,
-      "sequence": "AACCCCGACACCCGCCAACACCCGCTGACGCGCCCTGACGG",
-      "checks": {
-        "bsai_sites": [],
-        "bbsi_sites": []
-      }
+      "notes": null
     },
     {
       "id": "Lvl0.15_a_068",
@@ -198,16 +150,10 @@
       "on_stock": false,
       "registry_url": null,
       "notes": "Listed in \"Level 0 constructs.xlsx\", not yet imported from GenBank",
-      "ncs_role": "plain",
-      "sequence": "GAGGTGCGTGGAACGAGTATCGCCAATGCAATCCACTCGT",
       "covers_slots": [
         1,
         2
-      ],
-      "checks": {
-        "bsai_sites": [],
-        "bbsi_sites": []
-      }
+      ]
     },
     {
       "id": "Lvl0.45_a_069",
@@ -221,16 +167,10 @@
       "on_stock": false,
       "registry_url": null,
       "notes": "Listed in \"Level 0 constructs.xlsx\", not yet imported from GenBank",
-      "ncs_role": "stop",
-      "sequence": "TGACCAATCAGGCAGAAGGGATAAACTACCGGATTCCGTA",
       "covers_slots": [
         4,
         5
-      ],
-      "checks": {
-        "bsai_sites": [],
-        "bbsi_sites": []
-      }
+      ]
     },
     {
       "id": null,
@@ -244,16 +184,10 @@
       "on_stock": false,
       "registry_url": null,
       "notes": "No internal id: this plasmid is not built and not in the lab system. Listed in \"Level 0 constructs.xlsx\" for completeness only.",
-      "ncs_role": "stop",
-      "sequence": "TAAACGAGTGGATTGCATTGGCGATACTCGTTCCACGCACCTC",
       "covers_slots": [
         1,
         2
-      ],
-      "checks": {
-        "bsai_sites": [],
-        "bbsi_sites": []
-      }
+      ]
     },
     {
       "id": null,
@@ -267,16 +201,17 @@
       "on_stock": false,
       "registry_url": null,
       "notes": "No internal id: this plasmid is not built and not in the lab system. Listed in \"Level 0 constructs.xlsx\" for completeness only.",
-      "ncs_role": "plain",
-      "sequence": "TACGGAATCCGGTAGTTTATCCCTTCTGCCTGATTGGTCA",
       "covers_slots": [
         4,
         5
-      ],
-      "checks": {
-        "bsai_sites": [],
-        "bbsi_sites": []
-      }
+      ]
     }
-  ]
+  ],
+  "sequence": "CCGTCAGGGCGCGTCAGCGGGTGTTGGCGGGTGTCGGGG",
+  "length_bp": 39,
+  "checks": {
+    "length_divisible_by_3": true,
+    "bsai_sites": [],
+    "bbsi_sites": []
+  }
 }

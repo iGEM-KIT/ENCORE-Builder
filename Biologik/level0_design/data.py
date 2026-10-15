@@ -140,14 +140,13 @@ TARGETING_PEPTIDES = [
 
 
 def _ncs_slots() -> dict:
-    """Which NCS variants ("plain" / "stop") exist per site and slot: {"nc": {"1": ["plain"], ...}, "cargo": {...}}."""
+    """Where an NCS spacer exists per site and slot: {"nc": {"1": ["plain"], ...}, "cargo": {...}}. There is one NCS sequence
+    (no NCS with stop codon: the stop codon is added behind the last coding part), so the only variant is "plain"."""
     out = {"nc": {}, "cargo": {}}
     for entry in find_inserts("ncs"):
         if entry.get("type_slot") is None:
             continue  # combined spacers (covers_slots) are not offered in the slot dropdowns yet
-        roles = out[SITE_KEY[entry["site"]]].setdefault(str(entry["type_slot"]), [])
-        if entry.get("ncs_role") not in roles:
-            roles.append(entry.get("ncs_role"))
+        out[SITE_KEY[entry["site"]]][str(entry["type_slot"])] = ["plain"]
     return out
 
 
@@ -156,7 +155,7 @@ def _ncs_status() -> dict:
     out = {"nc": {}, "cargo": {}}
     for entry in find_inserts("ncs"):
         if entry.get("type_slot") is not None:
-            out[SITE_KEY[entry["site"]]].setdefault(str(entry["type_slot"]), {})[entry.get("ncs_role")] = plasmid_status(entry)
+            out[SITE_KEY[entry["site"]]][str(entry["type_slot"])] = {"plain": plasmid_status(entry)}
     return out
 
 

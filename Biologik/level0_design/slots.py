@@ -40,7 +40,7 @@ def resolve_slots(raw, module: str = "nc") -> dict:
 
         ``module`` is "nc" (central part = shell, ORF from Type 0.1 to 0.5) or "cargo"
         (central part = cargo, ORF runs from Type 0.5 to 0.1, because the cargo module sits on the
-        antisense strand). Every slot is an NCS spacer, an NCS with stop codon, a
+        antisense strand). Every slot is an NCS spacer, a
         linker, a surface marker, in the cargo module also the targeting peptide, or
         an own sequence. Own sequences go through the same check as the cargo.
         Missing slots stay NCS.
@@ -51,7 +51,7 @@ def resolve_slots(raw, module: str = "nc") -> dict:
     for n in NC_SLOTS:
         cfg = raw.get(str(n)) or raw.get(n) or {}
         kind = cfg.get("kind") or "ncs"
-        if kind in ("ncs", "ncsstop"):
+        if kind == "ncs":
             slots[n] = {"kind": kind}
         elif kind == "tp":
             if module != "cargo":
@@ -78,28 +78,11 @@ def resolve_slots(raw, module: str = "nc") -> dict:
     if sum(1 for n in NC_SLOTS if slots[n]["kind"] == "tp") > 1:
         raise ValueError("Only one targeting peptide can be used.")
 
-    # Slots behind the central part, in ORF direction: shell -> 4, 5; cargo (antisense) -> 2, 1.
-    behind = (4, 5) if module == "nc" else (2, 1)
-    part_name = "shell" if module == "nc" else "cargo"
-
-    # NCS with stop codon: only behind the central part, at most once, and nothing
-    # may be translated after it.
-    stops = [n for n in NC_SLOTS if slots[n]["kind"] == "ncsstop"]
-    for n in stops:
-        if n not in behind:
-            raise ValueError(
-                f"Type 0.{n}: an NCS with stop codon can only sit behind the {part_name} (Type 0.{behind[0]} or 0.{behind[1]})."
-            )
-    if len(stops) > 1:
-        raise ValueError("Only one NCS can carry the stop codon.")
-    if slots[behind[0]]["kind"] == "ncsstop" and slots[behind[1]]["kind"] != "ncs":
-        raise ValueError(f"Type 0.{behind[1]}: nothing can follow the stop codon in Type 0.{behind[0]}.")
-
     # If the outer slot (Type 0.1 or 0.5) is used, the inner one (0.2 or 0.4) must not be an
     # NCS spacer. If a CDS (marker, TP or own sequence) sits outside, a
     # linker must sit inside; a second marker is not enough there.
     for outer, inner in ((1, 2), (5, 4)):
-        if slots[outer]["kind"] not in ("ncs", "ncsstop") and slots[inner]["kind"] == "ncs":
+        if slots[outer]["kind"] != "ncs" and slots[inner]["kind"] == "ncs":
             raise ValueError(f"Type 0.{inner}: cannot be an NCS spacer while Type 0.{outer} is in use.")
         if slots[outer]["kind"] in ("marker", "tp", "custom", "intein") and slots[inner]["kind"] in ("marker", "intein"):
             raise ValueError(
@@ -123,16 +106,24 @@ def _slot_part(n: int, cfg: dict, tp_label: str = "TP") -> dict:
     if kind == "custom":
         return {"role": "custom-part", "label": cfg["label"], "kind": f"t{n}", "note": "Your sequence",
                 "bp": cfg["bp"], "isNew": True}
-    if kind == "ncsstop":
-        return {"role": "ncs", "label": "NCS", "kind": "ncs", "note": "Spacer · stop codon", "bp": NOMINAL_BP["NCS"], "stop": True}
     return {"role": "ncs", "label": "NCS", "kind": "ncs", "note": "Spacer", "bp": NOMINAL_BP["NCS"]}
 
 
-def _module_layout(slots: dict, middle: dict, tp_label: str = "TP") -> list:
-    """The five parts of a module in Type order. The stop codon is only carried by an "NCS with stop codon"
-        explicitly chosen by the user; it is not set automatically."""
+def orf_slots(slots: dict, module: str) -> list:
+    """The coding slots of a module in reading direction: NC module Type 0.1 -> 0.5, cargo module (antisense) Type 0.5 -> 0.1.
+    The central part (Type 0.3) is always coding; NCS spacers never are. The first one gets the start codon, the last one the stop codon."""
+    order = (1, 2, 3, 4, 5) if module == "nc" else (5, 4, 3, 2, 1)
+    return [n for n in order if n == 3 or slots[n]["kind"] != "ncs"]
+
+
+def _module_layout(slots: dict, middle: dict, module: str, tp_label: str = "TP") -> list:
+    """The five parts of a module in Type order. The part that ends the ORF (the last coding part in reading direction, marked
+    "stop") carries the stop codon, which the builder adds automatically."""
     parts = {n: _slot_part(n, slots[n], tp_label) for n in NC_SLOTS}
-    return [parts[1], parts[2], middle, parts[4], parts[5]]
+    parts[3] = middle
+    last = orf_slots(slots, module)[-1]
+    parts[last] = {**parts[last], "stop": True}
+    return [parts[1], parts[2], parts[3], parts[4], parts[5]]
 
 
 def level0_part(slot: int, spec: dict) -> dict:
@@ -159,13 +150,13 @@ def build_modules(nc: dict, cargo_label: str, cargo_bp: int, cargo_slots: dict, 
     # A module consists of five Level 0 parts. The cargo and NC modules are built here.
     cg = {"role": "cargo", "label": cargo_label, "kind": "t3", "note": "Cargo", "bp": cargo_bp, "isCargo": True}
     # Cargo module (antisense): the ORF runs from Type 0.5 to 0.1.
-    cargo_layout = _module_layout(cargo_slots, cg, tp_label=nc["tp"])
+    cargo_layout = _module_layout(cargo_slots, cg, "cargo", tp_label=nc["tp"])
     cargo_module = [level0_part(index + 1, spec) for index, spec in enumerate(cargo_layout)]
 
     shell = {"role": "shell", "label": nc["shell"], "kind": "shell", "note": "Shell", "bp": nc["shellBp"],
              "isNew": bool(nc.get("custom"))}
     # NC module (sense): the ORF runs from Type 0.1 to 0.5.
-    nc_layout = _module_layout(nc_slots, shell)
+    nc_layout = _module_layout(nc_slots, shell, "nc")
     nc_module = [level0_part(index + 1, spec) for index, spec in enumerate(nc_layout)]
     return cargo_module, nc_module
 
