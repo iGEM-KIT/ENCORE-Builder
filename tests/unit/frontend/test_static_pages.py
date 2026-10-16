@@ -330,3 +330,12 @@ def test_the_dyslexia_mode_ships_the_font_and_does_not_load_it_from_another_serv
     assert "enc-dyslexic" in css and "dyslexiaToggle" in css
     guide = re.sub(r"<[^>]*>", " ", GUIDE.read_text(encoding="utf8"))
     assert "Dyslexia-friendly font" in guide
+
+
+def test_the_download_boxes_of_the_three_levels_carry_no_explaining_note():
+    text = INDEX.read_text(encoding="utf8")
+    for gone in ("no need to open every module separately", "Record names end in", "GenBank files of the finished construct"):
+        assert gone not in text
+    for box in ("Level 0 downloads", "Level 1 downloads", "Level 2 downloads"):
+        assert box in text                                                           # the boxes and their buttons stay
+    assert "Download GenBank (.gb)" in text and "Module sequences (.gb)" in text and "Level 2 plasmid (.gb)" in text
