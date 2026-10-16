@@ -17,5 +17,12 @@
   "structure_id": "9ZW4",
   "source": "Siddiquee et al. 2026 (bioRxiv preprint)",
   "notes": "Directed-evolution-derived 11-residue deletion variant. Letter11 forms a dimorphic homomeric population containing approximately 70% T=4 particles and approximately 30% T=3 particles. This row represents the 180-subunit T=3 fraction and constitutes the first reported access to a latent T=3 architecture for QtEnc. PDB 9ZW4 / EMD-74905 was determined at 2.42 Å.",
-  "source_doi": "10.64898/2026.01.12.698938"
+  "source_doi": "10.64898/2026.01.12.698938",
+  "shell_sequence_status": "modified",
+  "shell_sequence_change": "11-residue pore-loop deletion (Letter11 variant; same shell sequence as T=4).",
+  "comparison_reference_assembly_id": "A0A0F5HPP7_T4_empty",
+  "shell_change_reference_positions_aa": "193–209",
+  "shell_change_original_aa": "HRVHKDTNVLEIEHVRE",
+  "shell_change_variant_aa": "GSGGSG",
+  "shell_change_alignment_note": "Curated Letter11 protein vs WT reference: 17 aa replaced by 6 aa, net shortening of 11 residues; same sequence for T=3 and T=4."
 }

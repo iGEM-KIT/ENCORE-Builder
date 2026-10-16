@@ -524,7 +524,7 @@
   </div>
   <nav class="site-tabs" aria-label="Switch tool">
     <a href="/#step-1" id="tabBuilder">ENCORE Builder</a>
-    <a href="/selector/selector-alpha.html">Encapsulin Filter</a>
+    <a href="/selector/overview.html">Open Database</a>
   </nav>
   <div class="spacer"></div>
   <span class="commec-status checking" id="commecStatus" style="display:none" title="Whether the optional COMMEC biosecurity-screening sidecar is reachable right now">
@@ -632,7 +632,7 @@
         <div class="slotrow" id="slotsBottom"></div>
         <div class="helplink">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-          Not sure which fits? <a href="/selector/selector-alpha.html">Use the separate nanocompartment filter</a> first to find the best match for your use case.
+          Not sure which fits? <a href="/selector/builder-filter.html">Find an approved shell in the Builder Filter</a> first.
         </div>
         <div class="nav">
           <button class="btn btn-primary" id="next0" disabled>Continue to Cargo Site
@@ -2491,10 +2491,10 @@ function renderLevel2Backbone(){
   $('#plat2bactions').style.display = (bb && bb.genbank) ? '' : 'none';
   if(!bb){ svg.innerHTML=''; $('#plat2btitle').textContent='Level 2 destination backbone'; $('#plat2bexplain').textContent='Backend not connected: the real Level 2 backbone (pESC-HIS) is only available with the server running.'; $('#plat2bfeats').innerHTML=''; return; }
   const o5=locRange(bb.receiver_overhangs['5_prime'].location), o3=locRange(bb.receiver_overhangs['3_prime'].location), cassette=o3[1]-o5[0]+1;
-  const segs = level2Segs(bb, cassette, 'tsPurple', false);
+  const segs = level2Segs(bb, cassette, 'Test cassette', false);
   const sum = drawPlasmidRing(svg, segs, l2Name(bb), 'HIS3 · Level 2 acceptor');
   $('#plat2btitle').textContent = `${l2Name(bb)} · ${sum.toLocaleString('en-US')} bp`;
-  $('#plat2bexplain').textContent = `Real Level 2 acceptor backbone as delivered, with its ${cassette.toLocaleString('en-US')} bp tsPurple cassette between BbLvl2N (${bb.sequence.slice(o5[0]-1,o5[0]+3)}) and BbLvl2C. BbsI replaces that cassette with the assembled insert; click the finished construct above to see it.`;
+  $('#plat2bexplain').textContent = `Real Level 2 acceptor backbone as delivered, with its ${cassette.toLocaleString('en-US')} bp test cassette between BbLvl2N (${bb.sequence.slice(o5[0]-1,o5[0]+3)}) and BbLvl2C. BbsI replaces that cassette with the assembled insert; click the finished construct above to see it.`;
   $('#plat2bfeats').innerHTML = segLegendHtml(segs);
 }
 function downloadGenbank(){

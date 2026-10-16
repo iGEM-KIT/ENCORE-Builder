@@ -19,7 +19,7 @@
   "curation_confidence": "medium",
   "needs_review_flag": false,
   "entry_warning": null,
-  "reference_assembly_id": "D0LZ74_ref",
+  "reference_assembly_id": "D0LZ74_T1_empty",
   "loading_info": "Cargo: ferritin-like protein (EncFtn) - 4 decamers in tetrahedral arrangement (symmetry mismatch with shell). Mechanism: cargo C-terminal TP (GSLGIGSLR).",
   "source_uniprot": "https://www.uniprot.org/uniprotkb/D0LZ74/entry",
   "source_pdb": "7ODW;7OE2;7OEU",

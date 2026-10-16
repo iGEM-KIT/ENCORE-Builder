@@ -17,5 +17,12 @@
   "structure_id": "7KQ5;9Y8P",
   "source": "Wiryaman & Toor 2021; Torres et al., PDB 9Y8P, to \nbe published",
   "notes": "Recombinant WT cargo-free shell. 7KQ5 is the high-resolution flavin-bound WT shell. 9Y8P is a later WT shell reconstruction and does not represent a distinct geometry, so both PDBs are grouped in this assembly. Nakamura et al. 2026 further showed that recombinant TmEnc can undergo acid-induced disassembly followed by reassembly upon return to neutral pH, supporting the reversible assembly behavior of the T=1 scaffold; this study used a C-terminally His-tagged construct rather than the exact WT constructs represented by 7KQ5/9Y8P.",
-  "source_doi": "10.1107/S2052252521001949"
+  "source_doi": "10.1107/S2052252521001949",
+  "shell_sequence_status": "unmodified",
+  "shell_sequence_change": "No engineered alteration of the WT shell protein is recorded for this assembly.",
+  "comparison_reference_assembly_id": "Q9WZP2_T1_empty",
+  "shell_change_reference_positions_aa": null,
+  "shell_change_original_aa": null,
+  "shell_change_variant_aa": null,
+  "shell_change_alignment_note": null
 }

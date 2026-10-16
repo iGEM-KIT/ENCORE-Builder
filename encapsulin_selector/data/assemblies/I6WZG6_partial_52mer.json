@@ -17,5 +17,12 @@
   "structure_id": "9HQ7",
   "source": "Berger et al. 2025",
   "notes": "Stable incomplete WT shell assembly intermediate containing 52 Enc monomers. Retains an overall icosahedral-like geometry with a single opening. Relative to the 48-mer, two additional Enc dimers are incorporated around a threefold region.",
-  "source_doi": "10.1038/s42003-025-07660-5"
+  "source_doi": "10.1038/s42003-025-07660-5",
+  "shell_sequence_status": "unmodified",
+  "shell_sequence_change": "No engineered alteration of the WT shell protein is recorded for this assembly.",
+  "comparison_reference_assembly_id": "I6WZG6_ref",
+  "shell_change_reference_positions_aa": null,
+  "shell_change_original_aa": null,
+  "shell_change_variant_aa": null,
+  "shell_change_alignment_note": null
 }

@@ -17,5 +17,12 @@
   "structure_id": "6X8T",
   "source": "Nichols/LaFrance et al. 2021",
   "notes": "Experimentally prepared cargo-free apo-SrpI assembly. PDB 6X8T / EMD-22095 represents the cargo-free apo-SrpI shell and is an icosahedral homo-60-mer. T=1 is inferred from the experimentally established 60-subunit icosahedral architecture; the paper directly reports T=1 for SrpI but does not separately state the apo-state T-number. Negative-stain TEM showed no internal cargo density, and the apo shell density was reported to be indistinguishable from the holo shell. No separate apo shell diameter was explicitly reported, so shell_diameter_nm is left blank rather than inheriting the 24.5 nm value from the holo structure. The C-terminal expression tag present in the structural construct is not treated as a separate assembly.",
-  "source_doi": "10.7554/eLife.59288"
+  "source_doi": "10.7554/eLife.59288",
+  "shell_sequence_status": "unmodified",
+  "shell_sequence_change": "No engineered alteration of the WT shell protein is recorded for this assembly.",
+  "comparison_reference_assembly_id": "Q55032_T1_empty",
+  "shell_change_reference_positions_aa": null,
+  "shell_change_original_aa": null,
+  "shell_change_variant_aa": null,
+  "shell_change_alignment_note": null
 }

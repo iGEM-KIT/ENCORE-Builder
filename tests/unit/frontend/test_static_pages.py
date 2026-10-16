@@ -199,14 +199,3 @@ def test_the_candidate_card_shows_sequence_data_before_the_source():
     js = SELECTOR_JS.read_text(encoding="utf8")
     card = js[js.index('<article class="candidate-card">'):]
     assert card.index("Sequence data (") < card.index('citationBlock("databank"')
-
-
-def test_the_guide_advises_the_combined_ncs_for_two_neighbouring_spacers():
-    guide = re.sub(r"<[^>]*>", " ", GUIDE.read_text(encoding="utf8"))
-    assert "Prefer the combined NCS" in guide and "E. coli" in guide and "repeat" in guide
-
-
-def test_the_empty_level2_backbone_names_its_cassette_tspurple():
-    text = INDEX.read_text(encoding="utf8")
-    assert "'tsPurple'" in text and "bp tsPurple cassette" in text
-    assert "'Test cassette'" not in text and "bp test cassette" not in text

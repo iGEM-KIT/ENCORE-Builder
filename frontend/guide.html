@@ -76,7 +76,7 @@
   </div>
   <nav class="site-tabs" aria-label="Switch tool">
     <a href="/#step-1">ENCORE Builder</a>
-    <a href="/selector/selector-alpha.html">Encapsulin Filter</a>
+    <a href="/selector/overview.html">Open Database</a>
   </nav>
   <div class="spacer"></div>
   <button class="hbtn" id="themeToggle" title="Toggle light / dark mode">
@@ -104,7 +104,7 @@
   <section id="checklist" class="card">
     <h2>Checklist</h2>
     <ul class="checks">
-      <li><b>Pick the nanocompartment.</b> Not sure which one fits your use case? Use the separate <a href="/selector/selector-alpha.html">nanocompartment filter</a> first; its <b>Use this nanocompartment</b> button hands a library shell over to the builder.</li>
+      <li><b>Pick the nanocompartment.</b> Not sure which one fits your use case? Use the separate <a href="/selector/builder-filter.html">nanocompartment filter</a> first; its <b>Use this nanocompartment</b> button hands a library shell over to the builder.</li>
       <li><b>Have your sequences ready</b>: DNA (CDS) or amino acids, <b>with or without start and stop codon</b> (the builder adds them where needed), and <b>without overhangs or restriction sites</b> added by you. The builder adds the overhangs itself.</li>
       <li><b>Know your fusion.</b> Decide what sits in the four modules (Type 0.1, 0.2, 0.4, 0.5) around the shell and around the cargo; see <a href="#modules">The modules</a>.</li>
       <li><b>Plan a biosafety review.</b> The built-in screening is a helper check, not a replacement for your institution's review.</li>
@@ -201,8 +201,6 @@
           <td>If you use your own shell, the builder does not know a matching peptide. The human vault (major vault protein) is no encapsulin and has no targeting peptide of the toolkit either. Put your own sequence into the cargo module instead.</td></tr>
       <tr><td><span class="tag req">Required</span> <b>Combined NCS: both slots at once</b></td>
           <td>If you choose <b>NCS 0.12</b> in Type 0.1 or 0.2 (or <b>NCS 0.45</b> in Type 0.4 or 0.5), the neighbouring slot becomes the same combined NCS automatically and is locked. To release it, change the slot where you made the choice to something else. A combined NCS cannot be chosen next to a slot that holds a linker, marker or your own sequence. In the results the pair appears as one part (Type 0.12 or Type 0.45) with one plasmid, one Level 0 construct and one entry in the order list.</td></tr>
-      <tr><td><span class="tag info">Tip</span> <b>Prefer the combined NCS for two neighbouring spacers</b></td>
-          <td>If Type 0.1 and 0.2, or Type 0.4 and 0.5, of a module would both be an NCS, choose <b>NCS 0.12</b> or <b>NCS 0.45</b> instead of two single NCS parts. All NCS parts share one sequence, so two single spacers next to each other repeat that sequence. Repeats in a plasmid make <i>E. coli</i> prone to recombination and can stress the cell while it replicates the plasmid. The combined part avoids the repeat and also needs only one Level 0 plasmid.</td></tr>
       <tr><td><span class="tag warn">Check</span> <b>The stop codon is added automatically</b></td>
           <td>Behind the last coding part of each ORF the builder adds a stop codon (TAA) by itself; there is nothing to choose. The part that carries it is marked with an asterisk <b>*</b>, and the stop codon is highlighted in its sequence. There is one NCS sequence for all spacers; it contains no stop codon.</td></tr>
     </table>
@@ -261,7 +259,7 @@
     <a class="start-cta" href="/#step-1">Start builder
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
     </a>
-    <a class="ghost" href="/selector/selector-alpha.html">Open the nanocompartment filter</a>
+    <a class="ghost" href="/selector/builder-filter.html">Open the nanocompartment filter</a>
   </div>
 </main>
 

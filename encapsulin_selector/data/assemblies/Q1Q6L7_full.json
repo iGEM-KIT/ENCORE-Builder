@@ -17,5 +17,12 @@
   "structure_id": null,
   "source": "Giessen & Silver 2017",
   "notes": "Canonical recombinant WT T=3 cEnc assembly. Giessen & Silver 2017 placed the K. stuttgartiensis shell in the T=3 class \nand measured 33 nm particles by negative-stain TEM. The N-terminal diheme cytochrome domain is a native fusion and is therefore part of the WT shell protein rather than an engineered modification. The experimental construct omitted the predicted 36-residue N-terminal signal peptide. When the isolated NIR domain of the cognate NIR-HAO protein was coexpressed, ~30 NIR copies co-purified per 180-mer capsid, but this truncated cargo-loading condition did not demonstrate a distinct global shell architecture and is not treated as a separate assembly.",
-  "source_doi": "10.1038/nmicrobiol.2017.29"
+  "source_doi": "10.1038/nmicrobiol.2017.29",
+  "shell_sequence_status": "modified",
+  "shell_sequence_change": "Signal peptide omitted from the expressed cEnc construct; native N-terminal cytochrome domain retained.",
+  "comparison_reference_assembly_id": "Q1Q6L7_full",
+  "shell_change_reference_positions_aa": "1–36",
+  "shell_change_original_aa": "MVMGILNTFKKVYAVTGFFALLAVFSLSQVGSSAFA",
+  "shell_change_variant_aa": null,
+  "shell_change_alignment_note": "Predicted 36-aa N-terminal signal peptide omitted from recombinant construct (paper note). Complete expression construct sequence was not verified."
 }

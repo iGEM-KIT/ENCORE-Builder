@@ -17,5 +17,12 @@
   "structure_id": "7BCV",
   "source": "Snijder et al. 2016; Putri et al. 2017; PDB 7BCV / EMD-12144 (Allende-Ballestero et al., to be published)",
   "notes": "Canonical cargo-free WT T=1 assembly. Putri et al. 2017 directly characterized nonloaded B. linens encapsulin (nl-E) as an icosahedral T=1 shell with an outer diameter of 22.8 nm and an average shell thickness of 2.8-3.0 nm; the internal volume of the B. linens encapsulin particle was reported as ~2.6 × 10^6 Å^3. The inner diameter was reported to be identical to the DyP- and TFP-loaded maps, but no separate numerical inner-diameter value was given, so inner_diameter_nm is left blank. Native mass spectrometry in Snijder et al. 2016 directly detected the cargo-free 60-mer and lower-abundance assembly species. PDB 7BCV / EMD-12144 provides a 2.28 Å high-resolution cryo-EM structure of the recombinant apo shell and is an icosahedral homo-60-mer; Cuthbert et al. 2024 independently refers to 7BCV as apo-Enc. The nl-E preparation could contain nonspecifically packaged cellular material in a subset of particles, but no defined cognate cargo was present. The 30-mer, 58-mer and other lower-order species observed by native mass spectrometry are not treated as separate assemblies because they were not established as stable, structurally characterized nanocage states.",
-  "source_doi": "10.1021/acs.biomac.6b00469; 10.1021/acsnano.7b07669"
+  "source_doi": "10.1021/acs.biomac.6b00469; 10.1021/acsnano.7b07669",
+  "shell_sequence_status": "unmodified",
+  "shell_sequence_change": "No engineered alteration of the WT shell protein is recorded for this assembly.",
+  "comparison_reference_assembly_id": "Q45296_ref",
+  "shell_change_reference_positions_aa": null,
+  "shell_change_original_aa": null,
+  "shell_change_variant_aa": null,
+  "shell_change_alignment_note": null
 }

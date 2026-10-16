@@ -427,22 +427,48 @@ function sequenceCard(s) {
       : `<span class="chip eng">Engineered</span>`;
     const refChip = refId === a.assembly_id ? `<span class="chip ref">Reference assembly</span>` : "";
     const unknownChip = matchState === "potential" ? `<span class="chip unknown">Missing required data</span>` : "";
+    const sequenceStatus = a.shell_sequence_status === "modified" ? "modified" : "unmodified";
+    const sequenceChip = sequenceStatus === "modified"
+      ? `<span class="chip eng">Modified shell</span>`
+      : `<span class="chip wt">Unmodified shell</span>`;
+    const modificationNote = sequenceStatus === "modified" ? (() => {
+      const pos = a.shell_change_reference_positions_aa;
+      const before = a.shell_change_original_aa;
+      const after = a.shell_change_variant_aa;
+      const hasBefore = typeof before === 'string' && before.length > 0;
+      const hasAfter = typeof after === 'string' && after.length > 0;
+      return `<section class="sequence-change-panel" aria-label="Shell protein modification details">
+        <div class="change-head"><strong>Shell protein modification</strong>
+          <span class="change-location">${pos ? `Reference position: ${esc(pos)} aa` : 'Position not verified'}</span></div>
+        ${a.shell_sequence_change ? `<p class="change-description">${esc(a.shell_sequence_change)}</p>` : ''}
+        ${hasBefore || hasAfter ? `<div class="change-residues">
+          ${hasBefore ? `<div><span class="change-label">WT reference</span><code class="change-before">${esc(before)}</code></div>` : ''}
+          ${hasBefore && hasAfter ? '<span class="change-arrow" aria-hidden="true">→</span>' : ''}
+          ${hasAfter ? `<div><span class="change-label">Modified</span><code class="change-after">${esc(after)}</code></div>` : ''}
+          ${hasBefore && !hasAfter ? '<span class="change-arrow">→ deleted</span>' : ''}
+          ${!hasBefore && hasAfter ? '<span class="change-arrow">Inserted</span>' : ''}
+        </div>` : '<p class="change-unverified">Exact changed amino-acid sequence not verified.</p>'}
+        ${a.shell_change_alignment_note ? `<p class="change-note">${esc(a.shell_change_alignment_note)}</p>` : ''}
+      </section>`;
+    })() : "";
     return `
       <article class="assembly-card">
         <div class="assembly-top">
           <div>
             <div class="assembly-display-name">${esc(assemblyDisplayName(a))}</div>
-            <div class="chips">${variantChip}${refChip}${unknownChip}</div>
+            <div class="chips">${variantChip}${refChip}${sequenceChip}${unknownChip}</div>
           </div>
           <div class="chip">${esc(a.assembly_symmetry ? humanValue(a.assembly_symmetry) : "Symmetry unknown")}</div>
         </div>
         <div class="why">${esc(assemblyWhy(a))}</div>
+        ${modificationNote}
         <details class="details">
           <summary>Assembly details</summary>
         <div class="property-grid">
           ${property("Record ID", a.assembly_id)}
           ${property("Construct", a.construct)}
-          ${property("T-number", a.T_number === null ? null : `T=${a.T_number}`)}
+          ${property("Shell protein", sequenceStatus === "modified" ? "Modified" : "Unmodified")}
+          ${property("T-number", a.assembly_symmetry === "tetrahedral" ? "N/A (tetrahedral)" : (a.T_number == null ? null : `T=${a.T_number}`))}
           ${property("Subunits", a.shell_subunit_count)}
           ${property("Shell diameter", a.shell_diameter_nm === null ? null : `${a.shell_diameter_nm} nm`)}
           ${property("Inner diameter", a.inner_diameter_nm === null ? null : `${a.inner_diameter_nm} nm`)}
@@ -470,33 +496,6 @@ function sequenceCard(s) {
         ${citationBlock("assemblies", a.assembly_id)}
       </article>`;
   }
-
-  // "Use this nanocompartment": hands the shell CDS and a name over to the builder (step 1, "your own sequence").
-  // genomic_sequence is stored in genomic-record orientation, so a "-" strand CDS is reverse-complemented first.
-  const revComp = seq => seq.split("").reverse().map(b => ({A:"T", T:"A", G:"C", C:"G"}[b] || "N")).join("");
-  function builderSequence(c) {
-    const rec = (sequencesByCandidate.get(c.candidate_id) || []).find(s => s.genomic_sequence);
-    if (!rec) return null;
-    const dna = rec.genomic_sequence.toUpperCase().replace(/[^ACGT]/g, "");
-    return rec.strand === "-" ? revComp(dna) : dna;
-  }
-  function builderName(c) {
-    return `${c.organism || c.protein_name || "Encapsulin"} ${c.candidate_id}`.slice(0, 60);
-  }
-  document.addEventListener("click", e => {
-    const btn = e.target.closest("[data-use-nc]");
-    if (!btn) return;
-    const c = candidates.find(x => x.candidate_id === btn.dataset.useNc);
-    const seq = c && builderSequence(c);
-    if (!seq) return;
-    try {
-      sessionStorage.setItem("encore.selector.handoff", JSON.stringify({label: builderName(c), seq, candidate_id: c.candidate_id}));
-    } catch (err) {
-      alert("The sequence could not be handed over to the builder (browser storage is blocked).");
-      return;
-    }
-    location.href = "/#step-1";
-  });
 
   function candidateCard(c, assemblySubset=null, stateMap=null) {
     const linked = assemblySubset ?? (byCandidate.get(c.candidate_id) || []);
@@ -527,9 +526,7 @@ function sequenceCard(s) {
               ${poreCount ? `<span class="chip">${poreCount} pore ${poreCount === 1 ? "observation" : "observations"}</span>` : ""}
             </div>
           </div>
-          ${builderSequence(c)
-            ? `<button type="button" class="use-nc" data-use-nc="${esc(c.candidate_id)}">Use this nanocompartment</button>`
-            : `<span class="use-nc-none" title="No genomic sequence record for this candidate yet">No sequence to use</span>`}
+          <span class="chip ref">${linked.length} assembly record${linked.length === 1 ? "" : "s"}</span>
         </div>
         <details class="details">
           <summary>Sequence data (${linkedSequences.length})</summary>
@@ -569,7 +566,7 @@ function sequenceCard(s) {
   function runSearch() {
     const q = norm($("globalSearch").value);
     if (!q) {
-      $("searchSummary").textContent = "Type a query to search all databank candidates.";
+      $("searchSummary").textContent = "Type a query to search all database candidates.";
       $("searchResults").innerHTML = "";
       return;
     }

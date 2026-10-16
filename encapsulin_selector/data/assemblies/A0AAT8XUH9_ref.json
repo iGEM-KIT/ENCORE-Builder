@@ -17,5 +17,12 @@
   "structure_id": "8U50;8U51",
   "source": "Jones, Andreas & Giessen 2024",
   "notes": "Canonical cognate DyP-loaded WT T=1 KpEnc assembly. Jones, Andreas & Giessen 2024 directly reported a 24 nm \nicosahedral shell composed of 60 KpEnc subunits. PDB 8U50 / EMD-41905 represents the WT shell coexpressed with cognate full-length KpDyP cargo, with an average loading of ~12 DyP monomers per shell; most cargo remained flexible and was not resolved in the icosahedrally averaged shell model. PDB 8U51 / EMD-41906 represents the same WT T=1 shell loaded with heterologous SUMO fused to the native DyP targeting peptide to increase targeting-peptide occupancy and resolve the TP-shell interaction; this engineered cargo-loading condition is not treated as a distinct assembly because the global shell architecture is unchanged. PDB 8U4Z / EMD-41904 represents isolated KpDyP cargo and is not a shell assembly.",
-  "source_doi": "10.1038/s41467-024-46880-x"
+  "source_doi": "10.1038/s41467-024-46880-x",
+  "shell_sequence_status": "unmodified",
+  "shell_sequence_change": "No engineered alteration of the WT shell protein is recorded for this assembly.",
+  "comparison_reference_assembly_id": "A0AAT8XUH9_ref",
+  "shell_change_reference_positions_aa": null,
+  "shell_change_original_aa": null,
+  "shell_change_variant_aa": null,
+  "shell_change_alignment_note": null
 }

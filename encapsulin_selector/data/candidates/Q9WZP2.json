@@ -19,7 +19,7 @@
   "curation_confidence": "high",
   "needs_review_flag": false,
   "entry_warning": null,
-  "reference_assembly_id": "Q9WZP2_ref",
+  "reference_assembly_id": "Q9WZP2_T1_empty",
   "loading_info": "Cargo: decameric ferritin-like protein (FLP), oxidative-stress/iron handling. Mechanism: cargo C-terminal targeting peptide (TP).",
   "source_uniprot": "https://www.uniprot.org/uniprotkb/Q9WZP2/entry",
   "source_pdb": "3DKT;6WKV;7K5W;7KQ5;7LII;7LIJ;7LIK;7LIL;7LIM;7LIS;7LIT;7MU1;9Y8P",

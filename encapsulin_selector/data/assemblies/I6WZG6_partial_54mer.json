@@ -17,5 +17,12 @@
   "structure_id": "9HQC",
   "source": "Berger et al. 2025",
   "notes": "Stable incomplete WT shell assembly intermediate containing 54 Enc monomers. The particle has a single opening and retains an overall icosahedral-like organization, but is measurably distorted, appearing flattened in one direction and elongated in the perpendicular direction.",
-  "source_doi": "10.1038/s42003-025-07660-5"
+  "source_doi": "10.1038/s42003-025-07660-5",
+  "shell_sequence_status": "unmodified",
+  "shell_sequence_change": "No engineered alteration of the WT shell protein is recorded for this assembly.",
+  "comparison_reference_assembly_id": "I6WZG6_ref",
+  "shell_change_reference_positions_aa": null,
+  "shell_change_original_aa": null,
+  "shell_change_variant_aa": null,
+  "shell_change_alignment_note": null
 }

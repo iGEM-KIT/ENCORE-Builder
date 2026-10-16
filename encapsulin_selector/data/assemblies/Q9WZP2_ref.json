@@ -17,5 +17,12 @@
   "structure_id": "3DKT; 7MU1",
   "source": "Sutter et al. 2008; LaFrance et al. 2021",
   "notes": "Canonical WT T=1 assembly. Sutter et al. 2008 directly reported 60 shell subunits, T=1 icosahedral symmetry, a 23-24 nm \nshell diameter, and a 2-2.5 nm shell thickness. PDB 3DKT contains the native 8-residue C-terminal targeting peptide of FLP (Q9WZP3) bound to the shell; full FLP cargo was not resolved in that structure. LaFrance et al. 2021 later used cryo-EM to characterize recombinant FLP-loaded TmEnc and demonstrated symmetry-matched association of FLP decamers with shell fivefold axes; PDB 7MU1 represents the corresponding WT shell structure.",
-  "source_doi": "10.1038/nsmb.1473; 10.1038/s41598-021-01932-w"
+  "source_doi": "10.1038/nsmb.1473; 10.1038/s41598-021-01932-w",
+  "shell_sequence_status": "unmodified",
+  "shell_sequence_change": "No engineered alteration of the WT shell protein is recorded for this assembly.",
+  "comparison_reference_assembly_id": "Q9WZP2_T1_empty",
+  "shell_change_reference_positions_aa": null,
+  "shell_change_original_aa": null,
+  "shell_change_variant_aa": null,
+  "shell_change_alignment_note": null
 }
