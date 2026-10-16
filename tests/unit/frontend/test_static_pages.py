@@ -206,7 +206,7 @@ def test_the_candidate_card_shows_sequence_data_before_the_source():
 
 def test_the_guide_advises_the_combined_ncs_for_two_neighbouring_spacers():
     guide = re.sub(r"<[^>]*>", " ", GUIDE.read_text(encoding="utf8"))
-    assert "Prefer the combined NCS" in guide and "E. coli" in guide and "repeat" in guide
+    assert "Prefer the combined NCS" in guide and "E. coli" in guide and "S. cerevisiae" in guide and "repeat" in guide
 
 
 def test_the_empty_level2_backbone_names_its_cassette_tspurple():
