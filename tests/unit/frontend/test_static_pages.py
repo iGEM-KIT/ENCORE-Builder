@@ -258,3 +258,10 @@ def test_every_page_has_the_same_light_dark_switch(page):
     assert SUN in text and MOON in text, f"{page.name}: sun or moon icon missing or malformed"
     assert "'Dark'" in text.replace('"', "'") and "'Light'" in text.replace('"', "'")
     assert "encore.theme" in text
+
+
+def test_the_builder_header_has_an_overview_button_next_to_the_screening_badge_that_opens_the_guide():
+    text = INDEX.read_text(encoding="utf8")
+    link = text.index('id="overviewLink"')
+    assert 'href="/guide.html"' in text[link - 60:link + 120] and "<span>Overview</span>" in text[link:link + 500]
+    assert link < text.index('id="commecStatus"') < text.index('id="themeToggle"')
