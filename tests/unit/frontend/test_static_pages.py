@@ -256,3 +256,77 @@ def test_the_info_buttons_of_both_sites_say_which_types_are_the_n_and_the_c_term
     assert "Type 0.4 and 0.5 form the <b>C-terminus of the shell</b> and are fused behind the shell" in nc
     assert "Type 0.4 and 0.5 form the <b>N-terminus of the cargo</b> and are fused in front of the cargo" in cargo
     assert "Type 0.1 and 0.2 form the <b>C-terminus of the cargo</b> and are fused behind the cargo" in cargo
+
+
+THEME_PAGES = [INDEX, GUIDE, SELECTOR_HTML, ROOT / "encapsulin_selector" / "overview.html", ROOT / "encapsulin_selector" / "builder-filter.html"]
+SUN = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/>'
+MOON = '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>'
+
+
+@pytest.mark.parametrize("page", THEME_PAGES, ids=lambda p: p.name)
+def test_every_page_has_the_same_light_dark_switch(page):
+    """Same label (Light or Dark), the same sun and moon icon and the same stored value on every page."""
+    text = page.read_text(encoding="utf8")
+    if page == SELECTOR_HTML:
+        text += SELECTOR_JS.read_text(encoding="utf8")
+    if page.name == "builder-filter.html":
+        text += (page.parent / "builder-filter.js").read_text(encoding="utf8")
+    assert 'id="themeToggle"' in text and 'id="themeIcon"' in text and 'id="themeLabel"' in text
+    assert SUN in text and MOON in text, f"{page.name}: sun or moon icon missing or malformed"
+    assert "'Dark'" in text.replace('"', "'") and "'Light'" in text.replace('"', "'")
+    assert "encore.theme" in text
+
+
+def test_the_builder_header_has_an_overview_button_next_to_the_screening_badge_that_opens_the_guide():
+    text = INDEX.read_text(encoding="utf8")
+    link = text.index('id="overviewLink"')
+    assert 'href="/guide.html"' in text[link - 60:link + 120] and "<span>Overview</span>" in text[link:link + 500]
+    assert link < text.index('id="commecStatus"') < text.index('id="themeToggle"')
+
+
+def test_every_page_uses_the_font_of_the_wiki_and_loads_no_web_font():
+    """One typeface on the whole site, the one of the toolKIT wiki (Segoe UI, Helvetica, Arial): no web fonts are loaded."""
+    pages = [INDEX, GUIDE, SELECTOR_HTML, ROOT / "encapsulin_selector" / "overview.html", ROOT / "encapsulin_selector" / "builder-filter.html",
+             ROOT / "frontend" / "site.css", ROOT / "encapsulin_selector" / "selector-alpha.css", ROOT / "encapsulin_selector" / "overview.css"]
+    for page in pages:
+        text = page.read_text(encoding="utf8")
+        assert "Grotesk" not in text and "JetBrains" not in text and "fonts.googleapis.com" not in text and "fonts.gstatic.com" not in text, page.name
+        assert "'Inter'" not in text and "font-family: Inter" not in text and "font-family:Inter" not in text, page.name
+    assert '"Segoe UI",Helvetica,Arial,sans-serif' in (ROOT / "frontend" / "site.css").read_text(encoding="utf8")
+    assert '"Segoe UI",Helvetica,Arial,sans-serif' in (ROOT / "encapsulin_selector" / "selector-alpha.css").read_text(encoding="utf8")
+
+
+
+def test_builder_and_filter_share_the_wiki_colours():
+    """The chrome colours of the Builder (site.css) and of the Filter (selector-alpha.css) come from the toolKIT wiki and agree."""
+    site = (ROOT / "frontend" / "site.css").read_text(encoding="utf8")
+    filt = (ROOT / "encapsulin_selector" / "selector-alpha.css").read_text(encoding="utf8")
+    for color in ("#1F342E", "#17261F", "#1C8070", "#F0F5F3", "#DDE9E5", "#111A18", "#2BBFA6", "#DCE5E2"):
+        assert color.lower() in site.lower() and color.lower() in filt.lower(), color
+    for old in ("#12283a", "#0072B2", "#3fa9d8"):
+        assert old.lower() not in site.lower() and old.lower() not in filt.lower(), old
+
+
+DYSLEXIA_PAGES = [INDEX, GUIDE, SELECTOR_HTML, ROOT / "encapsulin_selector" / "overview.html", ROOT / "encapsulin_selector" / "builder-filter.html"]
+
+
+@pytest.mark.parametrize("page", DYSLEXIA_PAGES, ids=lambda p: p.name)
+def test_every_page_offers_the_dyslexia_mode(page):
+    text = page.read_text(encoding="utf8")
+    assert '<link rel="stylesheet" href="/dyslexia.css">' in text and '<script src="/dyslexia.js"></script>' in text
+    assert 'id="themeToggle"' in text                                               # the script puts its button in front of the theme switch
+
+
+def test_the_dyslexia_mode_ships_the_font_and_does_not_load_it_from_another_server():
+    fonts = ROOT / "frontend" / "fonts" / "opendyslexic"
+    for name in ("regular", "bold", "italic", "bolditalic"):
+        data = (fonts / f"opendyslexic-{name}.woff2").read_bytes()
+        assert data[:4] == b"wOF2" and len(data) > 50_000, name                     # a real WOFF2 file
+    assert "SIL Open Font License" in (fonts / "LICENSE.txt").read_text(encoding="utf8")
+    css = (ROOT / "frontend" / "dyslexia.css").read_text(encoding="utf8")
+    assert css.count("@font-face") == 4 and "http" not in css                       # four faces, all from this project
+    js = (ROOT / "frontend" / "dyslexia.js").read_text(encoding="utf8")
+    assert "encore.dyslexia" in js and "enc-dyslexic" in js and "aria-pressed" in js
+    assert "enc-dyslexic" in css and "dyslexiaToggle" in css
+    guide = re.sub(r"<[^>]*>", " ", GUIDE.read_text(encoding="utf8"))
+    assert "Dyslexia-friendly font" in guide

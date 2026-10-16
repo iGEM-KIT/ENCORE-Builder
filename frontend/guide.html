@@ -5,16 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Before you start · ENCORE toolKIT</title>
 <script>try{if(localStorage.getItem('encore.theme')==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/site.css">
+<link rel="stylesheet" href="/site.css"><link rel="stylesheet" href="/dyslexia.css"><script src="/dyslexia.js"></script>
 <style>
   /* ============ GUIDE PAGE ============ */
   .guide{max-width:860px;margin:0 auto;padding:34px 24px 70px}
   .guide .back{display:block;width:fit-content;color:var(--teal-deep);font-weight:600;font-size:13.5px;text-decoration:none;margin-bottom:22px}
   .guide .back:hover{text-decoration:underline}
-  .kicker{display:inline-flex;align-items:center;gap:8px;font-family:'Space Grotesk';font-size:15px;letter-spacing:.01em;
+  .kicker{display:inline-flex;align-items:center;gap:8px;font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-size:15px;letter-spacing:.01em;
     color:var(--teal-deep);font-weight:800;background:var(--teal-soft);padding:6px 15px;border-radius:999px;margin:0 0 18px}
   .kicker b{color:var(--ink)}
   .guide h1{font-size:clamp(30px,5vw,42px);line-height:1.1;margin:0 0 14px}
@@ -30,25 +27,25 @@
   .card h3{margin:20px 0 8px;font-size:15.5px}
   .card p{margin:0 0 10px;color:var(--ink-soft)}
   .card a{color:var(--teal-deep);font-weight:600}
-  .card code{font-family:'JetBrains Mono',monospace;font-size:12.5px;background:var(--line-soft);padding:1px 6px;border-radius:5px;color:var(--ink)}
+  .card code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12.5px;background:var(--line-soft);padding:1px 6px;border-radius:5px;color:var(--ink)}
   .checks,.plain,.steps{margin:0 0 6px;padding-left:20px;color:var(--ink-soft)}
   .checks li,.plain li,.steps li{margin:0 0 8px}
   .checks li::marker{color:var(--teal-deep)}
   .steps{padding-left:22px}
-  .steps li::marker{font-family:'Space Grotesk';font-weight:700;color:var(--teal-deep)}
+  .steps li::marker{font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-weight:700;color:var(--teal-deep)}
   .note{font-size:13px;background:var(--teal-soft);border-left:3px solid var(--teal-deep);border-radius:6px;padding:9px 12px;margin:12px 0 0 !important;color:var(--ink-soft)}
   .twocol{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:6px}
   .twocol>div{background:var(--card-2);border:1px solid var(--line-soft);border-radius:11px;padding:4px 14px 8px}
   @media(max-width:640px){.twocol{grid-template-columns:1fr}}
   .rules{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px}
-  .rules th{text-align:left;font-family:'Space Grotesk';font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);
+  .rules th{text-align:left;font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);
     padding:6px 10px;border-bottom:1px solid var(--line)}
   .rules td{vertical-align:top;padding:11px 10px;border-bottom:1px solid var(--line-soft);color:var(--ink-soft)}
   .rules td:first-child{width:34%;color:var(--ink)}
   .rules tr:last-child td{border-bottom:0}
   @media(max-width:640px){.rules td:first-child{width:auto}.rules,.rules tbody,.rules tr,.rules td,.rules th{display:block}
     .rules tr:first-child{display:none}.rules td{padding:3px 0}.rules tr{padding:10px 0;border-bottom:1px solid var(--line-soft)}}
-  .tag{display:inline-block;font-family:'Space Grotesk';font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
+  .tag{display:inline-block;font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
     padding:2px 8px;border-radius:999px;margin-right:6px;vertical-align:1px}
   .tag.req{background:#fde4d2;color:#7a2d00}
   .tag.warn{background:#fdf0c4;color:#5c4300}
@@ -59,7 +56,7 @@
   [data-theme="dark"] .tag.auto{background:#133d33;color:#9FD9CD}
   .cta-row{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:26px}
   .start-cta{display:inline-flex;align-items:center;gap:10px;background:var(--orange);color:var(--orange-ink);border:0;text-decoration:none;
-    font-family:'Space Grotesk';font-weight:600;font-size:15.5px;padding:14px 26px;border-radius:12px;
+    font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-weight:600;font-size:15.5px;padding:14px 26px;border-radius:12px;
     cursor:pointer;box-shadow:0 8px 22px rgba(230,159,0,.32);transition:.15s}
   .start-cta:hover{transform:translateY(-1px);filter:brightness(1.03)}
   .ghost{color:var(--teal-deep);font-weight:600;font-size:14px}
@@ -252,6 +249,7 @@
     <ul class="plain">
       <li><b>Your inputs stay in this browser tab.</b> A refresh keeps your steps and sequences; <b>New construct</b> in step 5 clears them.</li>
       <li><b>Your sequences are processed on your own computer</b>, by the Builder and the screening container in Docker. They are not sent to a third-party service.</li>
+      <li><b>Dyslexia-friendly font.</b> The button with the letters b and d in the header of every page switches the whole site to the OpenDyslexic font and back. Your choice is kept in this browser.</li>
       <li><b>Draft status.</b> The builder is a prototype of the iGEM KIT team. Check every sequence you order against your own plan before you send it.</li>
     </ul>
   </section>
@@ -266,12 +264,13 @@
 
 <script>
   (function(){
-    var root=document.documentElement, btn=document.getElementById('themeToggle'), lab=document.getElementById('themeLabel');
-    function sync(){ lab.textContent = root.getAttribute('data-theme')==='dark' ? 'Dark' : 'Light'; }
+    var SUN='<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/>', MOON='<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';
+    var root=document.documentElement, btn=document.getElementById('themeToggle'), lab=document.getElementById('themeLabel'), icon=document.getElementById('themeIcon');
+    function sync(){ var dark = root.getAttribute('data-theme')==='dark'; lab.textContent = dark ? 'Dark' : 'Light'; icon.innerHTML = dark ? MOON : SUN; }
     btn.addEventListener('click', function(){
-      var dark = root.getAttribute('data-theme')==='dark';
-      if(dark) root.removeAttribute('data-theme'); else root.setAttribute('data-theme','dark');
-      try{ localStorage.setItem('encore.theme', dark ? 'light' : 'dark'); }catch(e){}
+      var dark = root.getAttribute('data-theme')!=='dark';
+      root.setAttribute('data-theme', dark ? 'dark' : 'light');
+      try{ localStorage.setItem('encore.theme', dark ? 'dark' : 'light'); }catch(e){}
       sync();
     });
     sync();
