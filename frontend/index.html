@@ -605,7 +605,7 @@
         </div>
       </div>
       <div class="card-body">
-        <div class="termlab"><span class="tbadge">N</span>N-terminus of the shell<small>Type 0.1 &amp; 0.2 · fused in front of the shell</small></div>
+        <div class="termlab"><span class="tbadge">N</span>N-terminus of the shell</div>
         <div class="slotrow" id="slotsTop"></div>
         <label class="field">
           <span class="lab">Nanocompartment · Type 0.3 <span class="hint">choose from library or use your own</span></span>
@@ -628,7 +628,7 @@
           </label>
           <div id="shellStopArea"></div>
         </div>
-        <div class="termlab gap"><span class="tbadge">C</span>C-terminus of the shell<small>Type 0.4 &amp; 0.5 · fused behind the shell</small></div>
+        <div class="termlab gap"><span class="tbadge">C</span>C-terminus of the shell</div>
         <div class="slotrow" id="slotsBottom"></div>
         <div class="helplink">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
@@ -659,7 +659,7 @@
           Complete step 1 first to enter the cargo.
         </div>
         <div id="body1">
-          <div class="termlab"><span class="tbadge">C</span>C-terminus of the cargo<small>Type 0.1 &amp; 0.2 · fused behind the cargo</small></div>
+          <div class="termlab"><span class="tbadge">C</span>C-terminus of the cargo</div>
           <div class="slotrow" id="cargoSlotsTop"></div>
           <label class="field">
             <span class="lab">Cargo · Type 0.3 <span class="hint">choose an example or use your own</span></span>
@@ -679,7 +679,7 @@
             <div class="seqmeta" id="cargoMeta"></div>
           </label>
           <div id="cargoStopArea"></div>
-          <div class="termlab gap"><span class="tbadge">N</span>N-terminus of the cargo<small>Type 0.4 &amp; 0.5 · fused in front of the cargo</small></div>
+          <div class="termlab gap"><span class="tbadge">N</span>N-terminus of the cargo</div>
           <div class="slotrow" id="cargoSlotsBottom"></div>
           <div class="nav">
             <button class="btn btn-ghost" id="back1">Back</button>
@@ -1173,10 +1173,12 @@ const INFO = {
   nc: { title:'What is a nanocompartment?', img:'Diagram: encapsulin shell with cargo',
     body:`<p>Encapsulins are hollow protein cages that self-assemble and encapsulate cargo proteins inside.</p>
           <p>The variant you choose determines the matching <b>targeting peptide (TP)</b>, which directs your cargo into the compartment.</p>
-          <p>The four modules around the shell (Type 0.1, 0.2, 0.4 and 0.5) are freely configurable: keep them as <b>NCS</b> spacers, or place a <b>linker</b>, a display marker such as <b>SpyCatcher</b> / <b>SpyTag</b>, or <b>your own sequence</b> there. A marker is presented on the <i>outside</i> of the cage; handy for attaching binders, tags or a second protein.</p>` },
+          <p>The four modules around the shell (Type 0.1, 0.2, 0.4 and 0.5) are freely configurable: keep them as <b>NCS</b> spacers, or place a <b>linker</b>, a display marker such as <b>SpyCatcher</b> / <b>SpyTag</b>, or <b>your own sequence</b> there. A marker is presented on the <i>outside</i> of the cage; handy for attaching binders, tags or a second protein.</p>
+          <p><b>Where the modules sit:</b> Type 0.1 and 0.2 form the <b>N-terminus of the shell</b> and are fused in front of the shell. Type 0.4 and 0.5 form the <b>C-terminus of the shell</b> and are fused behind the shell.</p>` },
   cargo: { title:'Cargo / gene of interest', img:'Diagram: cargo CDS in reading frame',
     body:`<p>The cargo is the protein that should end up inside the compartment, e.g. an enzyme or a reporter like GFP.</p>
-          <p>You provide the coding sequence (CDS). It is directed into the compartment via the targeting peptide.</p>` },
+          <p>You provide the coding sequence (CDS). It is directed into the compartment via the targeting peptide.</p>
+          <p><b>Where the modules sit:</b> Type 0.4 and 0.5 form the <b>N-terminus of the cargo</b> and are fused in front of the cargo. Type 0.1 and 0.2 form the <b>C-terminus of the cargo</b> and are fused behind the cargo.</p>` },
   stop: { title:'Start and stop codon', img:'Diagram: TP-linker-cargo reading frame',
     body:`<p>The cargo is fused with the linker and targeting peptide into <b>one continuous protein</b>.</p>
           <p>You do not have to add a start or stop codon: the builder puts an <b>ATG</b> in front of the first coding part of each ORF and a <b>stop codon</b> behind the last one, in whichever slot it sits: the stop always follows the last coding part of the ORF (for example behind a linker or marker at Type 0.4 or 0.5 of the NC module, or directly behind the shell if only NCS spacers follow it). The part that carries the stop is marked with a <b>*</b>. A stop codon you enter at the end is removed; an ATG you enter is kept (not doubled).</p>

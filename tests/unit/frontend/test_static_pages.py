@@ -239,3 +239,20 @@ def test_the_guide_names_the_intein_as_the_targeting_peptide_of_the_vault_and_po
 def test_the_builder_page_has_no_separate_intein_choice_because_int_is_the_targeting_peptide_of_the_vault():
     text = INDEX.read_text(encoding="utf8")
     assert "group('Intein" not in text and "noIntHere" not in text
+
+
+def test_the_module_headings_of_both_sites_carry_no_fused_in_front_or_behind_note():
+    text = INDEX.read_text(encoding="utf8")
+    for heading in ("N-terminus of the shell", "C-terminus of the shell", "C-terminus of the cargo", "N-terminus of the cargo"):
+        assert heading in text
+    assert not re.search(r"<small>Type 0\.[145] &amp; 0\.[245]", text)                  # the notes now live in the info buttons of the sites
+
+
+def test_the_info_buttons_of_both_sites_say_which_types_are_the_n_and_the_c_terminus():
+    text = INDEX.read_text(encoding="utf8")
+    nc = text[text.index("  nc: { title:'What is a nanocompartment?'"):text.index("  cargo: { title:'Cargo / gene of interest'")]
+    cargo = text[text.index("  cargo: { title:'Cargo / gene of interest'"):text.index("  stop: { title:")]
+    assert "Type 0.1 and 0.2 form the <b>N-terminus of the shell</b> and are fused in front of the shell" in nc
+    assert "Type 0.4 and 0.5 form the <b>C-terminus of the shell</b> and are fused behind the shell" in nc
+    assert "Type 0.4 and 0.5 form the <b>N-terminus of the cargo</b> and are fused in front of the cargo" in cargo
+    assert "Type 0.1 and 0.2 form the <b>C-terminus of the cargo</b> and are fused behind the cargo" in cargo
