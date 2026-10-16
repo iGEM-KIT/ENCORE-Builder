@@ -276,3 +276,13 @@ def test_every_page_uses_the_font_of_the_filter_inter_and_the_system_monospace()
         assert "Grotesk" not in text and "JetBrains" not in text, page.name
         for url in re.findall(r"fonts\.googleapis\.com/css2\?family=([^\"&]*)", text):
             assert url.startswith("Inter"), f"{page.name}: loads {url}"
+
+
+def test_builder_and_filter_share_the_wiki_colours():
+    """The chrome colours of the Builder (site.css) and of the Filter (selector-alpha.css) come from the toolKIT wiki and agree."""
+    site = (ROOT / "frontend" / "site.css").read_text(encoding="utf8")
+    filt = (ROOT / "encapsulin_selector" / "selector-alpha.css").read_text(encoding="utf8")
+    for color in ("#1F342E", "#17261F", "#1C8070", "#F0F5F3", "#DDE9E5", "#111A18", "#2BBFA6", "#DCE5E2"):
+        assert color.lower() in site.lower() and color.lower() in filt.lower(), color
+    for old in ("#12283a", "#0072B2", "#3fa9d8"):
+        assert old.lower() not in site.lower() and old.lower() not in filt.lower(), old
