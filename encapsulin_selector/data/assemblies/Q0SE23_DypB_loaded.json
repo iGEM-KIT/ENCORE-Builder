@@ -17,5 +17,12 @@
   "structure_id": null,
   "source": "Rahmanpour & Bugg 2013; Jones & Giessen 2021",
   "notes": "Experimentally reconstituted cognate DypB-loaded WT nanocompartment. The Enc-DypB complex eluted at a retention time \nsimilar to the encapsulin-only particle and contained both proteins, with a measured encapsulin:DypB molar ratio of 8.6:1. The loaded complex also showed enhanced lignin-degradation activity per mole of DypB. A 60-shell-subunit/6-DypB model was proposed by comparison with T. maritima rather than directly determined for Q0SE23. Jones & Giessen 2021 classify the R. jostii shell as a 60-subunit T=1 encapsulin; icosahedral symmetry, T=1 and 60 shell subunits are therefore recorded here as supported inferences. No loaded-state shell diameter was directly measured.",
-  "source_doi": "10.1111/febs.12234; 10.1002/bit.27564"
+  "source_doi": "10.1111/febs.12234; 10.1002/bit.27564",
+  "shell_sequence_status": "unmodified",
+  "shell_sequence_change": "No engineered alteration of the WT shell protein is recorded for this assembly.",
+  "comparison_reference_assembly_id": "Q0SE23_ref",
+  "shell_change_reference_positions_aa": null,
+  "shell_change_original_aa": null,
+  "shell_change_variant_aa": null,
+  "shell_change_alignment_note": null
 }

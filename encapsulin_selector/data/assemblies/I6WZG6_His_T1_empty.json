@@ -17,5 +17,12 @@
   "structure_id": null,
   "source": "Contreras et al. 2014",
   "notes": "Recombinant C-terminally His-tagged Mt-Enc formed shell-like nanoparticles approximately 22 nm in diameter with an \napproximately 2.5 nm shell thickness, both measured from EM images using ImageJ by Contreras et al. 2014. Based on the similarity to the known T. maritima 60-subunit icosahedral encapsulin, the authors proposed that Mt-Enc also forms a 60-subunit icosahedral shell. T=1 is therefore inferred from the proposed icosahedral 60-mer architecture rather than directly reported for this construct.",
-  "source_doi": "10.1074/jbc.M114.570119"
+  "source_doi": "10.1074/jbc.M114.570119",
+  "shell_sequence_status": "modified",
+  "shell_sequence_change": "C-terminal His-tag appended to the shell protein.",
+  "comparison_reference_assembly_id": "I6WZG6_ref",
+  "shell_change_reference_positions_aa": "C-terminus, after position 265",
+  "shell_change_original_aa": null,
+  "shell_change_variant_aa": null,
+  "shell_change_alignment_note": "C-terminal His-tag reported; exact tag residues and complete construct sequence not recovered. Position follows reference shell length."
 }

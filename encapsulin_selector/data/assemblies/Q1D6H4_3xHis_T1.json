@@ -17,5 +17,12 @@
   "structure_id": "8V4N",
   "source": "Szyszka et al. 2024",
   "notes": "Triple pore-lining point mutant. Forms a dimorphic population containing T=1 60-mer and tetrahedral 36-mer assemblies. Shell diameter (~24 nm) was determined by negative-stain TEM.",
-  "source_doi": "10.1073/pnas.2321260121"
+  "source_doi": "10.1073/pnas.2321260121",
+  "shell_sequence_status": "modified",
+  "shell_sequence_change": "K199H, T200H and G201H substitutions (3×His pore variant; not a terminal His-tag).",
+  "comparison_reference_assembly_id": "Q1D6H4_T3",
+  "shell_change_reference_positions_aa": "199–201",
+  "shell_change_original_aa": "KTG",
+  "shell_change_variant_aa": "HHH",
+  "shell_change_alignment_note": "Direct comparison of curated WT and 3×His protein sequences; 1-based reference protein numbering."
 }

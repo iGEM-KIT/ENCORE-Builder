@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Open Encapsulin Selector</title>
+  <title>Explore Encapsulins | ENCORE</title>
   <script>try{if(localStorage.getItem('encore.theme')==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,7 +21,7 @@
   </div>
     <nav class="site-tabs" aria-label="Switch tool">
       <a href="/#step-1">ENCORE Builder</a>
-      <a href="/selector/selector-alpha.html" class="on">Encapsulin Filter</a>
+      <a href="/selector/overview.html" class="on">Open Database</a>
     </nav>
     <div class="spacer"></div>
     <button class="hbtn" id="themeToggle" title="Toggle light / dark mode">
@@ -29,12 +29,17 @@
       <span id="themeLabel">Light</span>
     </button>
   </header>
+  <nav class="databank-nav" aria-label="Database sections">
+    <a href="/selector/overview.html">Overview <small>Start here &amp; user guide</small></a>
+      <a href="/selector/builder-filter.html">Builder Filter <small>24 approved shell sequences</small></a>
+      <a href="/selector/selector-alpha.html" class="on" aria-current="page">Explore Encapsulins <small>All scientific records</small></a>
+    </nav>
   <main class="selector-shell">
     <header class="selector-header">
       <div>
-        <p class="eyebrow">OPEN ENCAPSULIN DATABANK</p>
-        <h1>Encapsulin Selector</h1>
-        <p class="lede">Search a known encapsulin or find assemblies by structural requirements.</p>
+
+        <h1>Explore Encapsulins</h1>
+        <p class="lede">Browse the complete scientific dataset using the original selector: candidates, assemblies, structures and documented pore observations.</p>
       </div>
       <div class="dataset-badge" id="datasetBadge"></div>
     </header>

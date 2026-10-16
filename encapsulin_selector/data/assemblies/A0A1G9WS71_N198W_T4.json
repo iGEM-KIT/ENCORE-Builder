@@ -17,5 +17,12 @@
   "structure_id": "9I8F",
   "source": "Pecanac et al. 2025",
   "notes": "Structurally characterized pore-engineered T=4 variant. PDB 9I8F / EMD-52716 is an icosahedral homo-240-mer resolved at \n3.6 Å; T=4 is inferred from the 240-subunit icosahedral architecture. N198W narrows the 5-fold pore from ~10 Å to ~5 Å, while the 6-fold pore remains fully closed with a hydrophobic barrier, without altering the overall cage architecture. No separate mutant shell diameter was explicitly reported, so shell_diameter_nm is left blank.",
-  "source_doi": "10.1039/D5MA00268K"
+  "source_doi": "10.1039/D5MA00268K",
+  "shell_sequence_status": "modified",
+  "shell_sequence_change": "N198W amino-acid substitution at the shell pore.",
+  "comparison_reference_assembly_id": "A0A1G9WS71_ref",
+  "shell_change_reference_positions_aa": "198",
+  "shell_change_original_aa": "N",
+  "shell_change_variant_aa": "W",
+  "shell_change_alignment_note": "N198W substitution explicitly annotated in the curated assembly record; residue numbering follows reported notation."
 }

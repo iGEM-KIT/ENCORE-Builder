@@ -17,5 +17,12 @@
   "structure_id": "2E0Z",
   "source": "Namba et al. 2005; Akita et al. 2007; \nKumamoto et al. 2024",
   "notes": "Canonical WT T=3 assembly of the naturally occurring full-length ferritin-like–encapsulin fusion protein from Pyrococcus \nfuriosus. Namba et al. 2005 reported endogenous spherical particles approximately 30 nm in diameter and showed that recombinant full-length protein expressed in E. coli forms morphologically similar particles. Akita et al. 2007 subsequently determined PDB 2E0Z and directly reported an icosahedral T=3 capsid composed of 180 subunits. The N-terminal ferritin-like domain (approximately residues 1–109) is covalently fused to each encapsulin shell subunit and is therefore part of the native WT protein architecture rather than a separately loaded cargo; this internal domain was not resolved in 2E0Z, consistent with conformational mobility within the shell. PDB 5N5E represents only an isolated N-terminal ferritin-like domain construct forming a D5 decamer and is not treated as a distinct encapsulin assembly. Kumamoto et al. 2024 experimentally characterized recombinant full-length Pf-enc expressed in E. coli, denatured and refolded in vitro; negative-stain TEM showed spherical particles measuring 39 ± 2 nm, which the authors considered similar to the previously reported T=3 particles. This condition-specific recombinant measurement is retained here as supporting information and does not replace the approximately 30 nm diameter reported for the canonical native particles. VUVCD analysis further indicated that the N-terminal ferritin-like domain adopts a substantially different secondary structure within full-length Pf-enc than when studied as the isolated truncated domain, supporting the interpretation that the 5N5E decamer may reflect truncation-dependent oligomerization rather than the organization of the domain inside the intact T=3 cage. No alternative T-number, symmetry, stable assembly intermediate, expanded/contracted shell architecture, or structurally distinct engineered shell has been experimentally demonstrated for Q8U1L4. Planar shell walls were reported to be approximately 33 Å thick.",
-  "source_doi": "10.1093/jb/mvi111; 10.1016/j.jmb.2007.02.075; 10.1002/chir.23700"
+  "source_doi": "10.1093/jb/mvi111; 10.1016/j.jmb.2007.02.075; 10.1002/chir.23700",
+  "shell_sequence_status": "unmodified",
+  "shell_sequence_change": "No engineered alteration of the WT shell protein is recorded for this assembly.",
+  "comparison_reference_assembly_id": "Q8U1L4_ref",
+  "shell_change_reference_positions_aa": null,
+  "shell_change_original_aa": null,
+  "shell_change_variant_aa": null,
+  "shell_change_alignment_note": null
 }

@@ -17,5 +17,12 @@
   "structure_id": "6NJ8",
   "source": "Giessen et al. 2019",
   "notes": "Canonical WT cargo-loaded T=4 assembly. Giessen et al. 2019 directly reported a 240-subunit T=4 icosahedral shell approximately 42 nm in diameter and 9.6 MDa in mass. PDB 6NJ8 / EMD-9383 represents the IMEF cargo-loaded compartment; targeting-peptide density is modeled in the atomic shell structure while the full IMEF cargo is less ordered. The cargo-loaded compartment has a reported melting temperature of 88.9 °C. Compartments isolated under high-iron conditions reached 91.8 °C, but this represents increased stabilization by internal mineralized material rather than a distinct shell assembly.",
-  "source_doi": "10.7554/eLife.46070"
+  "source_doi": "10.7554/eLife.46070",
+  "shell_sequence_status": "unmodified",
+  "shell_sequence_change": "No engineered alteration of the WT shell protein is recorded for this assembly.",
+  "comparison_reference_assembly_id": "A0A0F5HPP7_T4_empty",
+  "shell_change_reference_positions_aa": null,
+  "shell_change_original_aa": null,
+  "shell_change_variant_aa": null,
+  "shell_change_alignment_note": null
 }

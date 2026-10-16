@@ -17,5 +17,12 @@
   "structure_id": "7ODW",
   "source": "Ross et al. 2022",
   "notes": "Canonical WT native-cargo-loaded T=1 assembly. Loaded-Enc formed regular nanocompartments approximately 21 nm in diameter. Cryo-EM directly resolved a T=1 icosahedral shell composed of 60 Enc subunits. Asymmetric reconstruction revealed four EncFtn decamers arranged tetrahedrally inside the shell, producing a symmetry mismatch with the icosahedral cage. PDB 7OE2 and 7OEU represent closed and open fivefold-pore pentamer conformations derived from symmetry expansion of this same Loaded-Enc assembly and are therefore handled in pore_records rather than as separate assemblies.",
-  "source_doi": "10.1126/sciadv.abj4461"
+  "source_doi": "10.1126/sciadv.abj4461",
+  "shell_sequence_status": "unmodified",
+  "shell_sequence_change": "No engineered alteration of the WT shell protein is recorded for this assembly.",
+  "comparison_reference_assembly_id": "D0LZ74_T1_empty",
+  "shell_change_reference_positions_aa": null,
+  "shell_change_original_aa": null,
+  "shell_change_variant_aa": null,
+  "shell_change_alignment_note": null
 }

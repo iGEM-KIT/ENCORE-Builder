@@ -19,7 +19,7 @@
   "curation_confidence": "high",
   "needs_review_flag": false,
   "entry_warning": null,
-  "reference_assembly_id": "Q55032_ref",
+  "reference_assembly_id": "Q55032_T1_empty",
   "loading_info": "Cargo: cysteine desulfurase (CyD); sulfur metabolism, induced by sulfate starvation; activity enhanced on encapsulation. Mechanism: cargo N-terminal targeting sequence (Family 2A).",
   "source_uniprot": "https://www.uniprot.org/uniprotkb/Q55032/entry",
   "source_pdb": "6X8M;6X8T",

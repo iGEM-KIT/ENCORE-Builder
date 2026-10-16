@@ -9,9 +9,6 @@ It runs on your own computer, inside a program called Docker. Nothing you type l
 computer. This page explains every way to start it, step by step. You do not need programming
 skills.
 
-If you have questions, suggestions for improvement or anything else, please contact the
-contributor [Fese1000](https://github.com/Fese1000).
-
 **Contents**
 
 1. [Which way is right for me?](#which-way-is-right-for-me)

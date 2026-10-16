@@ -17,5 +17,12 @@
   "structure_id": "7LIK",
   "source": "Adamson et al. 2022",
   "notes": "Engineered pore point mutant. Intact T=1 shell retained. Fivefold pore diameter ~3.5 Å was calculated from the cryo-EM structure, not directly measured. Shell diameter of 24 nm observed by negative-stain TEM.",
-  "source_doi": "10.1126/sciadv.abl7346"
+  "source_doi": "10.1126/sciadv.abl7346",
+  "shell_sequence_status": "modified",
+  "shell_sequence_change": "Engineered pore-loop variant S1R; exact changed residues are not specified in the assembly record.",
+  "comparison_reference_assembly_id": "Q9WZP2_T1_empty",
+  "shell_change_reference_positions_aa": "187",
+  "shell_change_original_aa": "H",
+  "shell_change_variant_aa": "R",
+  "shell_change_alignment_note": "Protein alignment of curated design vs WT reference; reference numbering is 1-based. The NLBT-tagged published coding source is not asserted to be identical to the structural construct."
 }

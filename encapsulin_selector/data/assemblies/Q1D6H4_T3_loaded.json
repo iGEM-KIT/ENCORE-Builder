@@ -17,5 +17,12 @@
   "structure_id": "8TK7",
   "source": "Kwon et al. 2023",
   "notes": "Highly cargo-loaded WT T=3 shell. SNAP-tag-TP occupancy was ~95%, corresponding to >170 occupied TP-binding sites\n out of 180. High cargo loading was also associated with distorted, expanded and fused shell particles.",
-  "source_doi": "10.1016/j.jsb.2023.108022"
+  "source_doi": "10.1016/j.jsb.2023.108022",
+  "shell_sequence_status": "unmodified",
+  "shell_sequence_change": "No engineered alteration of the WT shell protein is recorded for this assembly.",
+  "comparison_reference_assembly_id": "Q1D6H4_T3",
+  "shell_change_reference_positions_aa": null,
+  "shell_change_original_aa": null,
+  "shell_change_variant_aa": null,
+  "shell_change_alignment_note": null
 }

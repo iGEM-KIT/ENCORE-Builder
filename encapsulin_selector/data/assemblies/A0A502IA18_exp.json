@@ -17,5 +17,12 @@
   "structure_id": null,
   "source": "Babar et al. 2022; Babar et al. 2023",
   "notes": "Experimentally observed putative WT encapsulin assembly from B. laterosporus Bl 1821L. Babar et al. 2023 identified the \n~30 kDa purified preparation as consistent with A0A502IA18/WP_113757162 and observed predominantly globular or hexagonal capsid-like particles by TEM; related preparations had already shown encapsulin-like particles in Babar et al. 2022. Sequence analysis supports classification as a family 1 encapsulin shell protein. No quantitative particle diameter, T-number, shell subunit count or high-resolution shell structure was determined, so these fields are left blank. N-terminal analysis indicated possible co-migration with an adjacent ~25 kDa hypothetical protein.",
-  "source_doi": "10.3390/pr10101932; 10.1007/s00253-023-12563-8"
+  "source_doi": "10.3390/pr10101932; 10.1007/s00253-023-12563-8",
+  "shell_sequence_status": "unmodified",
+  "shell_sequence_change": "No engineered alteration of the WT shell protein is recorded for this assembly.",
+  "comparison_reference_assembly_id": "A0A502IA18_exp",
+  "shell_change_reference_positions_aa": null,
+  "shell_change_original_aa": null,
+  "shell_change_variant_aa": null,
+  "shell_change_alignment_note": null
 }

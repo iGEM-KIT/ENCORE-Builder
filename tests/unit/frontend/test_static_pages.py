@@ -83,7 +83,9 @@ def test_every_id_the_selector_script_looks_up_exists_in_the_page():
 
 def test_internal_links_point_to_pages_that_exist():
     served = {"/": INDEX, "/index.html": INDEX, "/guide.html": GUIDE, "/selector/selector-alpha.html": SELECTOR_HTML,
-              "/selector/": SELECTOR_HTML}
+              "/selector/": SELECTOR_HTML,
+              "/selector/overview.html": ROOT / "encapsulin_selector" / "overview.html",
+              "/selector/builder-filter.html": ROOT / "encapsulin_selector" / "builder-filter.html"}
     for page in PAGES:
         for href in parse(page).hrefs:
             if href.startswith(("http://", "https://", "mailto:", "#")):

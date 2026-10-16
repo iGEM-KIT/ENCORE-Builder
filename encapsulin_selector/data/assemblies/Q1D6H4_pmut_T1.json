@@ -17,5 +17,12 @@
   "structure_id": "9B9I",
   "source": "Kwon et al. 2024",
   "notes": "Pore-engineered EncA lacking the I195–L202 pore loop, with two Gly residues introduced to form the shortened loop. Without cargo co-expression, Mx_pmut exclusively formed ~20 nm T=1 shells.",
-  "source_doi": "10.1021/acsnano.4c08186"
+  "source_doi": "10.1021/acsnano.4c08186",
+  "shell_sequence_status": "modified",
+  "shell_sequence_change": "Pore-loop replacement: ΔI195–L202 plus GG, as annotated for Mx_pmut.",
+  "comparison_reference_assembly_id": "Q1D6H4_T3",
+  "shell_change_reference_positions_aa": "196–203",
+  "shell_change_original_aa": "IYEKTGVL",
+  "shell_change_variant_aa": "GG",
+  "shell_change_alignment_note": "Sequence alignment to 287-aa WT: I196–L203 → GG. Source text labels ΔI195–L202 (different residue numbering); keep both conventions distinct."
 }

@@ -17,5 +17,12 @@
   "structure_id": "8V4Q",
   "source": "Szyszka et al. 2024",
   "notes": "36-mer assembly with tetrahedral symmetry rather than icosahedral symmetry; therefore T-number is not applicable. \nCoexists with the T=1 60-mer 3×His assembly.",
-  "source_doi": "10.1073/pnas.2321260121"
+  "source_doi": "10.1073/pnas.2321260121",
+  "shell_sequence_status": "modified",
+  "shell_sequence_change": "K199H, T200H and G201H substitutions (same protein variant as the T=1 assembly).",
+  "comparison_reference_assembly_id": "Q1D6H4_T3",
+  "shell_change_reference_positions_aa": "199–201",
+  "shell_change_original_aa": "KTG",
+  "shell_change_variant_aa": "HHH",
+  "shell_change_alignment_note": "Direct comparison of curated WT and 3×His protein sequences; 1-based reference protein numbering."
 }

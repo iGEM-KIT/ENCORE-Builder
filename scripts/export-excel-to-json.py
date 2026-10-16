@@ -55,7 +55,7 @@ LIST_TABLES = {"doi_index": "doi_index.json", "citation_links": "citation_links.
 INT_FIELDS = {
     "taxonomy_id", "length_aa", "pdb_count", "assembly_count", "pore_record_count",
     "evidence_record_count", "T_number", "shell_subunit_count", "cds_start",
-    "cds_end", "cds_length_nt", "linked_record_count",
+    "cds_end", "cds_length_nt", "linked_record_count", "protein_length_aa",
 }
 BOOLEAN_FIELDS = {"needs_review_flag", "used_in_databank"}
 FLOAT_FIELDS = {"pore_diameter_nm", "pH", "value_numeric"}
@@ -144,7 +144,7 @@ def read_xlsx(path: Path) -> dict[str, list[dict]]:
         tables = {}
         for item in book.findall("x:sheets/x:sheet", NS):
             sheet_name = item.attrib["name"]
-            if sheet_name not in (*TABLES.keys(), *LIST_TABLES.keys(), "vocabularies"):
+            if sheet_name not in (*TABLES.keys(), *LIST_TABLES.keys(), "vocabularies", "builder_catalog"):
                 continue
             worksheet_target = find_xml_target(rel[item.attrib["{%s}id" % NS["r"]]])
             try:
@@ -283,6 +283,23 @@ def make_export(tables: dict[str, list[dict]]):
                 vocab[key].append(casted)
     sources["vocabularies"] = dict(vocab)
 
+    # The reviewed CDS catalog is a separate, strict 24-row view of the same
+    # workbook. Never infer additional Builder-eligible sequences from DNA availability.
+    catalog = []
+    for row in tables.get("builder_catalog", []):
+        if is_missing(row.get("sequence_id")):
+            continue
+        mapping = {
+            "shell_name": "name", "organism": "organism", "candidate_id": "candidate_id",
+            "assembly_id": "assembly_id", "sequence_id": "sequence_id",
+            "protein_length_aa": "protein_length_aa", "cds_length_nt": "cds_length_nt",
+            "translation_qc": "translation_qc", "coding_DNA_5to3": "cds",
+            "protein_variant_id": "protein_variant_id",
+        }
+        output = {target:cast_cell(row.get(source),target,"builder_catalog") for source,target in mapping.items()}
+        catalog.append(output)
+    sources["builder_catalog"] = catalog
+
     # Derived formula results in XLSX may lack cached <v> values if the
     # workbook was last saved by a library rather than Excel itself.
     # Recover only counts that can be calculated exactly from data here.
@@ -296,6 +313,19 @@ def make_export(tables: dict[str, list[dict]]):
             candidate["evidence_record_count"] = evidence_per[cid]
         if candidate.get("pdb_count") is None and candidate.get("source_pdb"):
             candidate["pdb_count"] = len([x for x in candidate["source_pdb"].split(";") if x.strip()])
+    if len(sources["builder_catalog"]) != 24:
+        raise ExportError(f"builder_catalog must contain exactly 24 approved designs, found {len(sources['builder_catalog'])}")
+    catalog_ids=set()
+    assembly_candidates = {r["assembly_id"]:r["candidate_id"] for r in sources["assemblies"]}
+    for c in sources["builder_catalog"]:
+        if c["sequence_id"] in catalog_ids:
+            raise ExportError(f"builder_catalog: duplicate sequence ID {c['sequence_id']}")
+        catalog_ids.add(c["sequence_id"])
+        if c["translation_qc"] != "PASS" or assembly_candidates.get(c["assembly_id"]) != c["candidate_id"]:
+            raise ExportError(f"builder_catalog: not approved or unknown assembly for {c['sequence_id']}")
+        cds = c["cds"]
+        if not isinstance(cds,str) or not re.fullmatch(r"[ACGT]+",cds) or len(cds) != c["cds_length_nt"] or len(cds)%3:
+            raise ExportError(f"builder_catalog: invalid CDS/length {c['sequence_id']}")
     return sources
 
 
@@ -407,6 +437,7 @@ def output_targets(data: dict):
     for name, filename in LIST_TABLES.items():
         targets[filename] = data[name]
     targets["vocabularies.json"] = data["vocabularies"]
+    targets["builder_catalog.json"] = data["builder_catalog"]
     return targets
 
 
@@ -491,7 +522,7 @@ def main():
         targets = output_targets(data)
         added, changed, unchanged, deletions = compare(targets, args.data_dir)
         print("Validated:", ", ".join(f"{sheet}={len(data[sheet])}" for sheet in TABLES))
-        print(f"  doi_index={len(data['doi_index'])}, citation_links={len(data['citation_links'])}")
+        print(f"  doi_index={len(data['doi_index'])}, citation_links={len(data['citation_links'])}, approved_builder_sequences={len(data['builder_catalog'])}")
         print(f"  genomic sequences available={sum(bool(x.get('genomic_sequence')) for x in data['sequence_links'])}")
         print(f"Compared: {len(added)} new, {len(changed)} different, {len(unchanged)} unchanged, {len(deletions)} unexpected old files")
         for rel in added[:args.show]:
@@ -512,7 +543,7 @@ def main():
         for rel in added + [r for r, _ in changed]:
             atomic_json(args.data_dir / rel, targets[rel])
         print(f"WRITE COMPLETE: {len(added)+len(changed)} JSON files created/updated. Excel untouched.")
-        print("Next step (not done here): update build-selector-data.mjs to consume pores/evidence/citations.")
+        print("Next step: run node scripts/build-selector-data.mjs to refresh the browser data files.")
         return 0
     except (ExportError, OSError, ET.ParseError, ValueError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)

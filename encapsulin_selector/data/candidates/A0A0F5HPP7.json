@@ -19,7 +19,7 @@
   "curation_confidence": "high",
   "needs_review_flag": false,
   "entry_warning": "STRUCTURE_SCOPE: linked PDBs include wild-type 6NJ8 and engineered constructs 7MH2 (T4GALA) and 8RVJ (P3P4); use assemblies.variant_status before assigning structure-specific properties.",
-  "reference_assembly_id": "A0A0F5HPP7_ref",
+  "reference_assembly_id": "A0A0F5HPP7_T4_empty",
   "loading_info": "Cargo: IMEF (iron-mineralizing encapsulin-associated firmicute; ferroxidase) + minor 2Fe-2S ferredoxin (Fdx); high-capacity iron storage (>23,000 Fe). Mechanism: cargo C-terminal TP.",
   "source_uniprot": "https://www.uniprot.org/uniprotkb/A0A0F5HPP7/entry",
   "source_pdb": "6NJ8;7MH2;8RVJ;9ZW3;9ZW4;9ZVV",

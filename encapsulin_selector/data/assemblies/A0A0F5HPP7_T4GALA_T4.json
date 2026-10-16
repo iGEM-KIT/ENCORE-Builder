@@ -17,5 +17,12 @@
   "structure_id": "7MH2",
   "source": "Jones et al. 2021",
   "notes": "Engineered E-loop insertion variant designed for triggered reversible disassembly. T4GALA retains the global T=4 240-mer architecture and is approximately 42 nm in diameter, nearly identical to WT QtEnc, but cryo-EM shows substantial loss of ordered density around the engineered E-loop/GALA insertion site, consistent with increased local structural dynamics. PDB 7MH2 / EMD-23834.",
-  "source_doi": "10.1002/anie.202110318"
+  "source_doi": "10.1002/anie.202110318",
+  "shell_sequence_status": "modified",
+  "shell_sequence_change": "Engineered E-loop insertion (T4GALA variant).",
+  "comparison_reference_assembly_id": "A0A0F5HPP7_T4_empty",
+  "shell_change_reference_positions_aa": "After position 61 (inserted residues 62–83)",
+  "shell_change_original_aa": null,
+  "shell_change_variant_aa": "GGGEALAEALAEALAEALAGGG",
+  "shell_change_alignment_note": "22-aa insertion aligned from the curated T4GALA design to 282-aa WT QtEnc reference; not a claim of experimentally verified plasmid identity."
 }
