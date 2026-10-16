@@ -172,7 +172,8 @@ def test_the_level2_compatibility_hint_is_in_the_guide_and_in_the_builder_and_is
     index = re.sub(r"<[^>]*>", " ", INDEX.read_text(encoding="utf8"))
     for text in (guide, index):
         assert "CCAA" in text and "AATG" in text and "BbsI" in text
-        assert "not" in text.split("Which plasmids does")[1][:700]                   # says that it is not every Golden Gate plasmid
+    assert "not" in guide.split("Which plasmids does")[1][:700]                      # the guide says that it is not every Golden Gate plasmid
+    assert "not every Golden Gate plasmid" in index                                  # so does the short text of the info window
     assert "compatible with all Golden Gate" not in guide + index
 
 
@@ -347,8 +348,30 @@ def test_the_how_this_level_works_texts_live_in_the_info_button_next_to_golden_g
     for gone in ("data-info=\"level0\"", "data-info=\"level1\"", "data-info=\"level2\""):
         assert gone not in text
     info = text[text.index("  levels: { title:'Level 0 → 1 → 2'"):text.index("  codonOpt: { title:")]
-    for part in ("Level 0 · individual parts (BbsI).", "Level 1 · modules (BsaI).", "Level 2 · finished construct (BbsI).",
-                 "Which plasmids does this insert fit?", "Basis of the assembly."):
+    for part in ("Level 0 (BbsI)", "Level 1 (BsaI)", "Level 2 (BbsI)"):
         assert part in info, part
     assert "Level 1 → 2 (BsaI)" not in info                                                              # the old text named the wrong enzyme for Level 2
     assert 'data-info="levels"' in text and text.count("Golden Gate assembly<button") == 1
+    guide = GUIDE.read_text(encoding="utf8")                                                             # the full text sits in the guide
+    for part in ("Level 0 · individual parts (BbsI).", "Level 1 · modules (BsaI).", "Level 2 · finished construct (BbsI).",
+                 "Which plasmids does this insert fit?", "Basis of the assembly."):
+        assert part in guide, part
+
+
+INFO_TO_GUIDE = {"primers": "bg-primers", "levels": "bg-levels", "codonOpt": "bg-codon", "commec": "bg-commec", "stop": "bg-stop"}
+
+
+def test_the_long_info_windows_are_short_and_point_to_the_full_text_in_the_overview():
+    text = INDEX.read_text(encoding="utf8")
+    start = text.index("const INFO = {")
+    block = text[start:text.index("\n};", start)]
+    entries = dict(re.findall(r"\n  ([A-Za-z0-9]+): \{ title(.*?)(?=\n  [A-Za-z0-9]+: \{ title|\Z)", block, flags=re.S))
+    guide = GUIDE.read_text(encoding="utf8")
+    for key, anchor in INFO_TO_GUIDE.items():
+        body = re.sub(r"<[^>]+>", " ", entries[key])
+        assert len(body.split()) <= 160, f"{key}: {len(body.split())} words"                              # short enough to read at a glance
+        assert f'href="/guide.html#{anchor}"' in entries[key], key
+        assert f'id="{anchor}"' in guide, anchor
+    for key in ("nc", "cargo", "promoter"):                                                              # the short windows are in the guide as well
+        assert f'id="bg-{ {"nc": "nc", "cargo": "cargo", "promoter": "promoter"}[key] }"' in guide
+    assert 'id="background"' in guide and 'href="#background"' in guide
