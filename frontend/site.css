@@ -9,8 +9,9 @@
   --orange:#FF9900; --orange-ink:#3a2200; --orange-deep:#8a5a00;
   --paper:#F0F5F3; --card:#FFFFFF; --card-2:#FAFCFA;
   --line:#DDE9E5; --line-soft:#E9F1EE; --muted:#4A5754;
-  --shadow:0 1px 2px rgba(20,38,32,.06), 0 10px 30px rgba(20,38,32,.07);
-  --radius:14px; --hdr-h:64px; --stepper-h:74px; --band-h:52px; --side-w:214px;
+  --shadow:0 1px 2px rgba(15,79,70,.06), 0 12px 32px -18px rgba(15,79,70,.35);
+  --input-bg:#FCFCFB;
+  --radius:12px; --hdr-h:64px; --stepper-h:74px; --band-h:52px; --side-w:214px;
   /* ---- ENCORE brand palette (taken from the toolKIT artwork) ----
      Deep-teal outline · mint shell spheres · pale-mint panel · olive and
      orange connector squiggles · yellow and purple accents. These drive the
@@ -53,7 +54,8 @@
   --orange:#FF9900; --orange-deep:#FF9900;
   --paper:#111A18; --card:#182420; --card-2:#1C2B26;
   --line:#26362f; --line-soft:#1d2c25; --muted:#8da095;
-  --shadow:0 1px 2px rgba(0,0,0,.3), 0 12px 32px rgba(0,0,0,.35);
+  --shadow:0 1px 2px rgba(0,0,0,.35), 0 12px 32px -18px rgba(0,0,0,.8);
+  --input-bg:#14201c;
   /* Part fills stay at their brand values on a dark card (they are opaque chips
      carrying their own ink). Only the pale-mint panel field and the near-black
      surface marker have to flip. */
@@ -64,9 +66,9 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 html,body{margin:0}
-body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;
+body{background:var(--paper);color:var(--ink);font-family:"Segoe UI",Helvetica,Arial,sans-serif;
   font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;transition:background .25s,color .25s}
-h1,h2,h3,h4,.display{font-family:'Inter',system-ui,sans-serif;letter-spacing:-.01em}
+h1,h2,h3,h4,.display{font-family:"Segoe UI",Helvetica,Arial,sans-serif;letter-spacing:-.01em;font-weight:800}
 img,svg{max-width:100%}
 
 /* ============ HEADER ============ */

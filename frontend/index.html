@@ -4,9 +4,6 @@
 <title>ENCORE toolKIT</title>
 <script>try{if(localStorage.getItem('encore.theme')==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}</script>
 <script>try{if(/^#step-[1-5]$/.test(location.hash))document.documentElement.setAttribute('data-entry','builder')}catch(e){}</script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/site.css">
 <style>
   /* Primer structure check (hairpin / self-dimer / primer-primer dimer) in the Level 0 popup */
@@ -37,7 +34,7 @@
 
   /* ============ INFO-BUBBLE ============ */
   .info{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;
-    background:var(--teal-soft);color:var(--teal-deep);border:0;cursor:pointer;font-family:'Inter';
+    background:var(--teal-soft);color:var(--teal-deep);border:0;cursor:pointer;font-family:"Segoe UI",Helvetica,Arial,sans-serif;
     font-weight:700;font-size:11px;margin-left:7px;flex:none;transition:.15s;vertical-align:middle;padding:0}
   .info:hover{background:var(--teal-deep);color:#fff}
   /* Popover */
@@ -49,7 +46,7 @@
   .popover .pop-img .ph-tag{position:absolute;top:8px;left:8px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:9px;
     background:rgba(0,0,0,.06);padding:2px 6px;border-radius:4px;color:var(--muted)}
   .popover .pop-body{padding:14px 16px}
-  .popover h5{margin:0 0 7px;font-size:14px;font-family:'Inter'}
+  .popover h5{margin:0 0 7px;font-size:14px;font-family:"Segoe UI",Helvetica,Arial,sans-serif}
   .popover p{margin:0 0 8px;font-size:12.5px;color:var(--ink-soft);line-height:1.55}
   .popover p:last-child{margin-bottom:0}
   .popover .pop-close{position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;
@@ -62,7 +59,7 @@
      would flash visible for a moment before showBuilder() runs and hides it via JS. */
   html[data-entry="builder"] .intro{display:none}
   .intro{max-width:860px;margin:0 auto;padding:60px 24px 52px}
-  .intro .kicker{display:inline-flex;align-items:center;gap:8px;font-family:'Inter';font-size:16px;
+  .intro .kicker{display:inline-flex;align-items:center;gap:8px;font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-size:16px;
     letter-spacing:.01em;color:var(--teal-deep);font-weight:800;background:var(--teal-soft);padding:7px 16px;border-radius:999px;margin-bottom:22px}
   .intro .kicker b{color:var(--ink)}
   .intro h1{font-size:clamp(30px,5vw,44px);line-height:1.09;margin:0 0 18px}
@@ -83,7 +80,7 @@
   .prereq-go{margin-left:auto;color:var(--teal-deep);font-weight:700;white-space:nowrap}
   @media(max-width:520px){.prereq{flex-wrap:wrap}.prereq-go{margin-left:0}}
   .start-cta{display:inline-flex;align-items:center;gap:10px;background:var(--orange);color:var(--orange-ink);border:0;
-    font-family:'Inter';font-weight:600;font-size:15.5px;padding:14px 26px;border-radius:12px;
+    font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-weight:600;font-size:15.5px;padding:14px 26px;border-radius:12px;
     cursor:pointer;box-shadow:0 8px 22px rgba(230,159,0,.32);transition:.15s}
   .start-cta:hover{transform:translateY(-1px);filter:brightness(1.03)}
 
@@ -95,10 +92,10 @@
   .s-step{flex:1;display:flex;align-items:center;min-width:0;height:100%}
   .s-node{display:flex;align-items:center;gap:10px;cursor:pointer;background:none;border:0;font-family:inherit;text-align:left;padding:0;min-width:0;height:100%}
   .s-node:disabled{cursor:default}
-  .s-dot{width:30px;height:30px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:'Inter';
+  .s-dot{width:30px;height:30px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:"Segoe UI",Helvetica,Arial,sans-serif;
     font-weight:600;font-size:13px;border:2px solid var(--line);background:var(--card);color:var(--muted);transition:.2s}
   .s-text{display:flex;flex-direction:column;min-width:0}
-  .s-text .t{font-family:'Inter';font-weight:600;font-size:13.5px;color:var(--muted);line-height:1.2;transition:.2s;white-space:nowrap}
+  .s-text .t{font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-weight:600;font-size:13.5px;color:var(--muted);line-height:1.2;transition:.2s;white-space:nowrap}
   .s-text .sub{font-size:10.5px;color:var(--muted);opacity:.8;white-space:nowrap}
   .s-line{flex:1;height:2px;background:var(--line);margin:0 12px;border-radius:2px;align-self:center;transition:.3s;min-width:20px}
   .s-step.active .s-dot{border-color:var(--teal-deep);color:var(--teal-deep);box-shadow:0 0 0 4px var(--teal-soft)}
@@ -136,7 +133,7 @@
     align-items:stretch;flex:1;min-width:0;height:30px;overflow-x:auto;scrollbar-width:none}
   .gs-map::-webkit-scrollbar{display:none}
   .gs-arm{display:contents}
-  .gs-seg{position:relative;display:flex;align-items:center;justify-content:center;padding:0 10px;font-family:'Inter';
+  .gs-seg{position:relative;display:flex;align-items:center;justify-content:center;padding:0 10px;font-family:"Segoe UI",Helvetica,Arial,sans-serif;
     font-weight:600;font-size:10.5px;white-space:nowrap;color:#fff;min-width:0;transition:background .3s,color .3s}
   .gs-seg span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
   .gs-arm.right .gs-seg{clip-path:polygon(0 0,calc(100% - 6px) 0,100% 50%,calc(100% - 6px) 100%,0 100%);margin-right:-3px}
@@ -145,7 +142,7 @@
   .gs-arm.left .gs-seg:last-child{border-radius:0 6px 6px 0}
   .gs-seg.empty{background:var(--line-soft)!important;color:var(--muted)}
   .gs-hub{display:flex;align-items:center;justify-content:center;gap:5px;padding:0 8px;margin:0 3px;border-radius:6px;
-    font-family:'Inter';font-weight:700;font-size:10.5px;color:#fff;white-space:nowrap;z-index:2;min-width:0}
+    font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-weight:700;font-size:10.5px;color:#fff;white-space:nowrap;z-index:2;min-width:0}
   .gs-hub.empty{background:var(--line-soft);color:var(--muted)}
   .gs-hub .gs-ar{opacity:.9;display:inline-flex}
   .gs-map.fused .gs-hub{box-shadow:0 0 0 2px var(--card),0 1px 6px rgba(0,0,0,.16)}
@@ -159,7 +156,7 @@
   .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
   .card-head{padding:18px 22px;border-bottom:1px solid var(--line-soft);display:flex;align-items:flex-start;gap:14px}
   .card-head .num-badge{flex:none;width:34px;height:34px;border-radius:9px;background:var(--forest);color:#fff;
-    display:grid;place-items:center;font-family:'Inter';font-weight:700;font-size:14px;margin-top:1px}
+    display:grid;place-items:center;font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-weight:700;font-size:14px;margin-top:1px}
   [data-theme="dark"] .card-head .num-badge{background:var(--teal);color:#062019}
   .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--teal-deep);font-weight:600}
   .card-head h2{font-size:19px;margin:3px 0 0;display:flex;align-items:center}
@@ -173,12 +170,12 @@
   .field:last-child{margin-bottom:0}
   .field > .lab{display:flex;align-items:center;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--ink)}
   .field .hint{font-weight:400;color:var(--muted);font-size:11.5px;margin-left:auto}
-  textarea,select,input[type=text]{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;
-    font-family:inherit;font-size:14px;color:var(--ink);background:var(--card);outline:none;transition:.15s}
+  textarea,select,input[type=text]{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 14px;
+    font-family:inherit;font-size:14px;color:var(--ink);background:var(--input-bg);outline:none;transition:.15s}
   textarea{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12.5px;line-height:1.6;min-height:120px;resize:vertical;letter-spacing:.02em;word-break:break-all}
   textarea:focus,select:focus,input:focus{border-color:var(--teal-deep);box-shadow:0 0 0 3px rgba(15,107,90,.16)}
   select{appearance:none;cursor:pointer;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%230072B2' stroke-width='2'%3E%3Cpath d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%231C8070' stroke-width='2'%3E%3Cpath d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
     background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
   .seqmeta{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px;font-size:11.5px;color:var(--muted)}
   .seqmeta b{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--teal-deep);font-weight:700}
@@ -191,7 +188,7 @@
     box-shadow:inset 0 0 0 1px rgba(11,58,51,.3)}
 
   /* group sub-headings inside a step */
-  .grouplab{font-family:'Inter';font-weight:700;font-size:13.5px;color:var(--ink);margin:24px 0 12px;padding-top:18px;border-top:1px solid var(--line-soft);display:flex;align-items:center;gap:8px}
+  .grouplab{font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-weight:700;font-size:13.5px;color:var(--ink);margin:24px 0 12px;padding-top:18px;border-top:1px solid var(--line-soft);display:flex;align-items:center;gap:8px}
   .grouplab:first-child{margin-top:0;padding-top:0;border-top:0}
   .grouplab > span{font-weight:400;font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
 
@@ -210,7 +207,7 @@
   .stopwarn svg,.stopok svg,.stophint svg{flex:none;margin-top:1px}
 
   .nav{display:flex;justify-content:flex-end;align-items:center;margin-top:22px;gap:12px}
-  .btn{border:0;border-radius:11px;padding:12px 22px;font-family:'Inter';font-weight:600;font-size:14.5px;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:8px}
+  .btn{border:0;border-radius:11px;padding:12px 22px;font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-weight:600;font-size:14.5px;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:8px}
   .btn-primary{background:var(--orange);color:var(--orange-ink);box-shadow:0 6px 16px rgba(230,159,0,.28);font-weight:700}
   .btn-primary:hover{filter:brightness(1.04);transform:translateY(-1px)}
   .btn-primary:disabled{background:var(--line);color:var(--muted);box-shadow:none;cursor:not-allowed;transform:none}
@@ -219,7 +216,7 @@
 
   /* ============ LEVEL VISUALIZATION ============ */
   .sectitle{display:flex;align-items:center;gap:9px;margin:0 0 2px}
-  .sectitle h3{font-size:17px;margin:0;font-family:'Inter';font-weight:600;display:flex;align-items:center}
+  .sectitle h3{font-size:17px;margin:0;font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-weight:600;display:flex;align-items:center}
   .secsub{color:var(--muted);font-size:13px;margin:0 0 14px}
   .block{margin-bottom:34px}
   .block:last-child{margin-bottom:0}
@@ -261,7 +258,7 @@
   .lvltab-badge{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:11px;font-weight:700;color:#fff;
     background:var(--forest);padding:4px 10px;border-radius:7px;letter-spacing:.04em;flex:none}
   [data-theme="dark"] .lvltab-badge{background:var(--teal);color:#062019}
-  .lvltab-title{font-family:'Inter';font-weight:600;font-size:15px}
+  .lvltab-title{font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-weight:600;font-size:15px}
   .lvltab-chev{flex:none;margin-left:auto;color:var(--muted);transition:transform .15s}
   .lvltab.open .lvltab-chev{transform:rotate(180deg)}
   .lvltab-body{padding:0 18px 20px;display:none}
@@ -471,7 +468,7 @@
   .platrow svg{width:100%;height:auto;display:block;overflow:visible}
   @media(max-width:760px){.platrow{grid-template-columns:1fr}}
   #plasmid{width:100%;height:auto;display:block}
-  .platext h4{font-size:14px;margin:0 0 6px;color:var(--teal-deep);font-family:'Inter'}
+  .platext h4{font-size:14px;margin:0 0 6px;color:var(--teal-deep);font-family:"Segoe UI",Helvetica,Arial,sans-serif}
   .platext p{font-size:13px;color:var(--ink-soft);margin:0 0 12px}
   .featlist{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:7px}
   .featlist li{display:flex;align-items:center;gap:9px;font-size:12.5px}
@@ -2451,7 +2448,7 @@ function drawPlasmidRing(svg, segs, name, subtitle){
   svg.innerHTML=`
     <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--line-soft)" stroke-width="16"/>
     ${paths}
-    <text x="${cx}" y="${cy-10}" text-anchor="middle" font-family="Inter" font-weight="700" font-size="14" fill="var(--ink)">${name}</text>
+    <text x="${cx}" y="${cy-10}" text-anchor="middle" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-weight="700" font-size="14" fill="var(--ink)">${name}</text>
     <text x="${cx}" y="${cy+8}" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Consolas,monospace" font-size="11" fill="var(--muted)">${sum.toLocaleString('en-US')} bp</text>
     <text x="${cx}" y="${cy+26}" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Consolas,monospace" font-size="9" fill="var(--muted)">${subtitle}</text>`;
   return sum;

@@ -267,15 +267,17 @@ def test_the_builder_header_has_an_overview_button_next_to_the_screening_badge_t
     assert link < text.index('id="commecStatus"') < text.index('id="themeToggle"')
 
 
-def test_every_page_uses_the_font_of_the_filter_inter_and_the_system_monospace():
-    """One typeface on the whole site: no Space Grotesk or JetBrains Mono, and the pages load Inter only."""
+def test_every_page_uses_the_font_of_the_wiki_and_loads_no_web_font():
+    """One typeface on the whole site, the one of the toolKIT wiki (Segoe UI, Helvetica, Arial): no web fonts are loaded."""
     pages = [INDEX, GUIDE, SELECTOR_HTML, ROOT / "encapsulin_selector" / "overview.html", ROOT / "encapsulin_selector" / "builder-filter.html",
-             ROOT / "frontend" / "site.css", ROOT / "encapsulin_selector" / "selector-alpha.css"]
+             ROOT / "frontend" / "site.css", ROOT / "encapsulin_selector" / "selector-alpha.css", ROOT / "encapsulin_selector" / "overview.css"]
     for page in pages:
         text = page.read_text(encoding="utf8")
-        assert "Grotesk" not in text and "JetBrains" not in text, page.name
-        for url in re.findall(r"fonts\.googleapis\.com/css2\?family=([^\"&]*)", text):
-            assert url.startswith("Inter"), f"{page.name}: loads {url}"
+        assert "Grotesk" not in text and "JetBrains" not in text and "fonts.googleapis.com" not in text and "fonts.gstatic.com" not in text, page.name
+        assert "'Inter'" not in text and "font-family: Inter" not in text and "font-family:Inter" not in text, page.name
+    assert '"Segoe UI",Helvetica,Arial,sans-serif' in (ROOT / "frontend" / "site.css").read_text(encoding="utf8")
+    assert '"Segoe UI",Helvetica,Arial,sans-serif' in (ROOT / "encapsulin_selector" / "selector-alpha.css").read_text(encoding="utf8")
+
 
 
 def test_builder_and_filter_share_the_wiki_colours():
