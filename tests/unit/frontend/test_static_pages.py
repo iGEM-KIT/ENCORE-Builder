@@ -330,3 +330,9 @@ def test_the_dyslexia_mode_ships_the_font_and_does_not_load_it_from_another_serv
     assert "enc-dyslexic" in css and "dyslexiaToggle" in css
     guide = re.sub(r"<[^>]*>", " ", GUIDE.read_text(encoding="utf8"))
     assert "Dyslexia-friendly font" in guide
+
+
+def test_the_promoter_step_has_the_field_label_only_and_no_extra_promoter_heading_above_it():
+    text = INDEX.read_text(encoding="utf8")
+    body = text[text.index('<div id="body2">'):text.index('id="promoter"')]
+    assert 'class="grouplab"' not in body and body.count("Promoter") == 1
