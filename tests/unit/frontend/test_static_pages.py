@@ -239,3 +239,10 @@ def test_the_guide_names_the_intein_as_the_targeting_peptide_of_the_vault_and_po
 def test_the_builder_page_has_no_separate_intein_choice_because_int_is_the_targeting_peptide_of_the_vault():
     text = INDEX.read_text(encoding="utf8")
     assert "group('Intein" not in text and "noIntHere" not in text
+
+
+def test_the_module_headings_of_both_sites_carry_no_fused_in_front_or_behind_note():
+    text = INDEX.read_text(encoding="utf8")
+    for heading in ("N-terminus of the shell", "C-terminus of the shell", "C-terminus of the cargo", "N-terminus of the cargo"):
+        assert heading in text
+    assert "fused in front of the" not in text and "fused behind the" not in text
