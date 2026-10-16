@@ -104,7 +104,7 @@
   <section id="checklist" class="card">
     <h2>Checklist</h2>
     <ul class="checks">
-      <li><b>Pick the nanocompartment.</b> Not sure which one fits your use case? Use the separate <a href="/selector/selector-alpha.html">nanocompartment filter</a> first; its <b>Use this nanocompartment</b> button hands a library shell over to the builder.</li>
+      <li><b>Pick the nanocompartment.</b> Not sure which one fits your use case? Use the separate <a href="/selector/selector-alpha.html">nanocompartment filter</a> first; its <b>Use this nanocompartment</b> button hands the shell over to the builder as your own sequence. Nanocompartments beyond the list of the builder are only available this way.</li>
       <li><b>Have your sequences ready</b>: DNA (CDS) or amino acids, <b>with or without start and stop codon</b> (the builder adds them where needed), and <b>without overhangs or restriction sites</b> added by you. The builder adds the overhangs itself.</li>
       <li><b>Know your fusion.</b> Decide what sits in the four modules (Type 0.1, 0.2, 0.4, 0.5) around the shell and around the cargo; see <a href="#modules">The modules</a>.</li>
       <li><b>Plan a biosafety review.</b> The built-in screening is a helper check, not a replacement for your institution's review.</li>
@@ -181,8 +181,8 @@
       <li><b>Targeting peptide (TP)</b>: only in the cargo module; the matching TP for your nanocompartment is chosen automatically.</li>
       <li><b>Linker</b>, e.g. GGS or GSSS repeats.</li>
       <li><b>Surface display marker</b>, e.g. SpyCatcher or SpyTag, displayed on the outside of the cage.</li>
-      <li><b>Intein.</b></li>
-      <li><b>Your own sequence.</b></li>
+      <li><b>Intein (INT)</b>: the targeting peptide of the human vault (major vault protein, MVP).</li>
+      <li><b>Your own sequence.</b> This is also the way to get a toolkit part that is codon-optimized and free of the unwanted cut sites: search the part in the <a href="https://registry.igem.org" target="_blank" rel="noopener">iGEM Registry</a> and enter its sequence under <b>Use your own sequence</b>. The builder then optimizes it. Toolkit parts you pick from the lists are used as they are.</li>
     </ul>
     <p class="note">The list shows only parts that are part of the toolkit as a Level 0 plasmid at that exact site and Type. A part that is not offered in a position does not exist there. A part marked <b>(not built)</b> is planned in the toolkit, but its plasmid has not been built yet: you can still choose it, the builder designs with its sequence, and you order it like your own part (oligos or DNA, see Ordering).</p>
 
@@ -197,8 +197,8 @@
           <td>If the outer module holds a coding part (marker, intein, targeting peptide or your own sequence), the inner module must be a linker or your own linker sequence. Not a marker, intein or targeting peptide.</td></tr>
       <tr><td><span class="tag req">Required</span> <b>Targeting peptide: only once, only at the ends</b></td>
           <td>Only in the cargo module, only in Type 0.1 or Type 0.5, at most once. In Type 0.1 it is fused behind the cargo, in Type 0.5 in front of it.</td></tr>
-      <tr><td><span class="tag req">Required</span> <b>Own shell or vault → no targeting peptide choice</b></td>
-          <td>If you use your own shell, the builder does not know a matching peptide. The human vault (major vault protein) is no encapsulin and has no targeting peptide of the toolkit either. Put your own sequence into the cargo module instead.</td></tr>
+      <tr><td><span class="tag req">Required</span> <b>Own shell → no targeting peptide choice</b></td>
+          <td>If you use your own shell, the builder does not know a matching peptide. Put your own sequence into the cargo module instead. For the human vault (major vault protein, MVP) the intein INT is the targeting peptide.</td></tr>
       <tr><td><span class="tag req">Required</span> <b>Combined NCS: both slots at once</b></td>
           <td>If you choose <b>NCS 0.12</b> in Type 0.1 or 0.2 (or <b>NCS 0.45</b> in Type 0.4 or 0.5), the neighbouring slot becomes the same combined NCS automatically and is locked. To release it, change the slot where you made the choice to something else. A combined NCS cannot be chosen next to a slot that holds a linker, marker or your own sequence. In the results the pair appears as one part (Type 0.12 or Type 0.45) with one plasmid, one Level 0 construct and one entry in the order list.</td></tr>
       <tr><td><span class="tag info">Tip</span> <b>Prefer the combined NCS for two neighbouring spacers</b></td>
@@ -252,7 +252,7 @@
     <h2>Good to know</h2>
     <ul class="plain">
       <li><b>Your inputs stay in this browser tab.</b> A refresh keeps your steps and sequences; <b>New construct</b> in step 5 clears them.</li>
-      <li><b>Your sequences are processed by the builder's own server</b> (and the local screening container). They are not sent to a third-party service.</li>
+      <li><b>Your sequences are processed on your own computer</b>, by the Builder and the screening container in Docker. They are not sent to a third-party service.</li>
       <li><b>Draft status.</b> The builder is a prototype of the iGEM KIT team. Check every sequence you order against your own plan before you send it.</li>
     </ul>
   </section>

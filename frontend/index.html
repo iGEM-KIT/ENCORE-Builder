@@ -527,7 +527,7 @@
     <a href="/selector/selector-alpha.html">Encapsulin Filter</a>
   </nav>
   <div class="spacer"></div>
-  <span class="commec-status checking" id="commecStatus" style="display:none" title="Whether the optional COMMEC biosecurity-screening sidecar is reachable right now">
+  <span class="commec-status checking" id="commecStatus" style="display:none" title="Whether the COMMEC biosecurity screening is reachable right now">
     <span class="commec-dot"></span>
     <span class="commec-status-label" id="commecStatusLabel">Biosecurity screening: checking…</span>
   </span>
@@ -1183,11 +1183,11 @@ const INFO = {
           <p><b>Basis of the checks.</b> Everything is simple sequence logic, no model: the input is read as DNA if at least 90 % of its letters are A/C/G/T, otherwise as protein; the length must be a multiple of 3; every codon in the reading frame is compared with TAA, TAG and TGA to find in-frame stops; GC content = (G+C) ÷ length; amino acids = length ÷ 3. A terminal stop codon is cut off, and an ATG at the start is not doubled.</p>` },
   commec: { title:'Biosecurity screening (COMMEC)', img:'Diagram: your sequence → COMMEC → curated biorisk database',
     body:`<p><b>COMMEC</b> (<i>Common Mechanism</i>, from IBBIS, the International Biosecurity and Biosafety Initiative for Science) is an open-source tool that checks DNA for similarity to known biosecurity concerns. It is the same kind of check DNA synthesis providers run before they ship an order.</p>
-          <p><b>What is screened:</b> only sequences you typed or pasted yourself (cargo, your own shell, your own module parts). Toolkit parts are not screened.</p>
+          <p><b>What is screened:</b> only sequences you typed or pasted yourself (cargo, your own shell, your own module parts). Toolkit parts are not screened, because their sequences are known and harmless. If the screening is not running, the builder does not continue with sequences you entered yourself.</p>
           <p><b>Against which database:</b> this installation uses COMMEC's curated <b>Biorisk + Low-concern</b> database (about 1.2&nbsp;GB): known toxins, virulence factors and regulated pathogens, plus a list of harmless related sequences so common genes are not over-flagged.</p>
           <p><b>Not included:</b> the full protein (NR, ~530&nbsp;GB) and nucleotide (NT, ~580&nbsp;GB) taxonomy databases. So there is no best-match against arbitrary organisms; only direct hits against the curated list count, and only a real biorisk hit raises a warning here.</p>
           <p>A hit never blocks you silently: you review it and confirm before continuing. The screening runs locally in its own container and is a helper check, not a replacement for your institution's biosafety review.</p>
-          <p><b>Basis of the check.</b> Your sequence is compared by sequence similarity (profile HMM searches with HMMER and BLAST-type alignments) against the curated COMMEC databases; the result (Pass, Warning, Flag) is taken over unchanged from COMMEC (version 2.1.0, IBBIS). The builder calculates nothing itself here: it only decides, from COMMEC's biorisk field, whether to show a warning.</p>` },
+          <p><b>Basis of the check.</b> Your sequence is compared by sequence similarity (profile HMM searches with HMMER and BLAST-type alignments) against the curated COMMEC databases; the result (Pass, Warning, Flag) is taken over unchanged from COMMEC (version 1.0.4, IBBIS). The builder calculates nothing itself here: it only decides, from COMMEC's biorisk field, whether to show a warning.</p>` },
   promoter: { title:'Bidirectional promoter', img:'Diagram: GAL1-10 transcribing both ways',
     body:`<p><b>GAL1-10</b> is a bidirectional yeast promoter: it drives <b>two genes at once</b> in opposite directions. Both transcripts <b>start (5′) at the promoter</b> and run outward.</p>
           <p>The nanocompartment module is read off the <b>sense (plus) strand</b> (to the right), the cargo module off the <b>antisense (minus) strand</b> (to the left); that is why they point away from each other. Inducible via galactose.</p>` },
@@ -1991,6 +1991,11 @@ $('#next2').addEventListener('click', async ()=>{
     }
     btn.innerHTML=btnLabel;
   }
+  if(items.length && api && api.available && !(screening && screening.available)){
+    showCalcError('The biosecurity screening is not available, so the sequences you entered cannot be checked and the design cannot continue. Start the screening container (in Docker Desktop both containers must be green), wait until the header shows "Biosecurity screening: on" and try again.');
+    btn.disabled=false;
+    return;
+  }
   let flaggedCount=0;
   if(screening && screening.available){
     const flagged = items.map((it,i)=>({label:it.label, status:screening.results[i]?.status})).filter(f=>f.status && biosecRiskClass(biosecEffectiveStatus(f.status))!=='low');
@@ -2226,7 +2231,7 @@ function renderLevel0Plasmid(res){
   $('#plat0actions').style.display = (bb && bb.genbank) ? '' : 'none';
   if(!ring){
     svg.innerHTML=''; $('#plat0title').textContent='Level 0 acceptor plasmid';
-    $('#plat0explain').textContent='Backend not connected: the real Level 0 backbone (pAGM9121) is only available with the server running.';
+    $('#plat0explain').textContent='Backend not connected: the real Level 0 backbone (pAGM9121) is only available while the Builder is running.';
     $('#plat0feats').innerHTML=''; return;
   }
   const name = bb.id.split('-')[0];
@@ -2489,7 +2494,7 @@ function renderLevel2Plasmid(res){
 function renderLevel2Backbone(){
   const bb=(LIB.level2Backbones||[])[0], svg=$('#plasmid2b');
   $('#plat2bactions').style.display = (bb && bb.genbank) ? '' : 'none';
-  if(!bb){ svg.innerHTML=''; $('#plat2btitle').textContent='Level 2 destination backbone'; $('#plat2bexplain').textContent='Backend not connected: the real Level 2 backbone (pESC-HIS) is only available with the server running.'; $('#plat2bfeats').innerHTML=''; return; }
+  if(!bb){ svg.innerHTML=''; $('#plat2btitle').textContent='Level 2 destination backbone'; $('#plat2bexplain').textContent='Backend not connected: the real Level 2 backbone (pESC-HIS) is only available while the Builder is running.'; $('#plat2bfeats').innerHTML=''; return; }
   const o5=locRange(bb.receiver_overhangs['5_prime'].location), o3=locRange(bb.receiver_overhangs['3_prime'].location), cassette=o3[1]-o5[0]+1;
   const segs = level2Segs(bb, cassette, 'tsPurple', false);
   const sum = drawPlasmidRing(svg, segs, l2Name(bb), 'HIS3 · Level 2 acceptor');
@@ -2552,7 +2557,7 @@ function renderLevel1Backbone(list){
   const ring = bb && o5 && o3 && level0RingSegs(bb, { name:'lacZα stuffer', from:o5[0], to:o3[1], total:bb.length_bp }, L1_MARKERS);
   if(!ring){
     svg.innerHTML=''; $('#plat1title').textContent='Level 1 acceptor plasmid';
-    $('#plat1explain').textContent='Backend not connected: the real Level 1 backbone (pAGM1311) is only available with the server running.';
+    $('#plat1explain').textContent='Backend not connected: the real Level 1 backbone (pAGM1311) is only available while the Builder is running.';
     $('#plat1feats').innerHTML=''; return;
   }
   const name = bb.id.split('-')[0];
@@ -2707,7 +2712,7 @@ function renderOrder(res){
   $('#ordOligoMeta').textContent=$('#ordPrimerMeta').textContent=$('#ordDsMeta').textContent='';
   ['#ordOligoActions','#ordPrimerActions','#ordDsActions'].forEach(id=>{ $(id).innerHTML=''; $(id).onclick=null; });
   if(!list.length){
-    ['#ordOligoList','#ordPrimerList','#ordDsList'].forEach(id=>empty(id,'Backend not connected: the order lists are only available with the server running.'));
+    ['#ordOligoList','#ordPrimerList','#ordDsList'].forEach(id=>empty(id,'Backend not connected: the order lists are only available while the Builder is running.'));
     return;
   }
 
@@ -2815,7 +2820,7 @@ function showCalcError(message){
 }
 function showBackendDown(){
   const el=$('#backendDown');
-  el.textContent = 'The builder server is not reachable, so nothing can be selected or calculated. Start it (docker compose up) and reload this page.';
+  el.textContent = 'The Builder is not reachable, so nothing can be selected or calculated. Start it (docker compose up) and reload this page.';
   el.style.display = '';
 }
 
@@ -2823,7 +2828,7 @@ function showBackendDown(){
    rejects the inputs; the caller shows the message. */
 async function compute(){
   const api=window.ENCORE_API;
-  if(!api || !api.available) throw new Error('The builder server is not reachable.');
+  if(!api || !api.available) throw new Error('The Builder is not reachable.');
   const d=await api.designFromState(state);
   const json=JSON.stringify(d);
   let prev=null; try{ prev=sessionStorage.getItem(DESIGN_KEY); }catch(e){}
@@ -3005,7 +3010,7 @@ function applySelectorHandoff(){
 }
 
 /* ===================== Init ===================== */
-/* Header badge: is the optional COMMEC biosecurity-screening sidecar up right
+/* Header badge: is the COMMEC biosecurity screening up right
    now? Purely informational (no click action); refreshed on load and every
    30s afterwards, since the container can be started/stopped independently
    of this page being open. */
@@ -3023,13 +3028,13 @@ async function refreshCommecStatus(){
     } else {
       badge.classList.add('off');
       label.textContent='Biosecurity screening: off';
-      badge.title=s.reason || 'COMMEC is not configured for this deployment; sequences are not screened. See README.md.';
+      badge.title=s.reason || 'COMMEC is not reachable. Sequences you enter cannot be designed until the screening is running. See README.md.';
     }
   }catch(err){
     badge.classList.remove('on','off','checking');
     badge.classList.add('off');
     label.textContent='Biosecurity screening: off';
-    badge.title='Could not check COMMEC status.';
+    badge.title='Could not check COMMEC status. Sequences you enter cannot be designed until the screening is running.';
   }
 }
 async function boot(){
@@ -3072,8 +3077,8 @@ window.ENCORE_API = (function(){
     let r;
     try{ r = await fetch(url, opts); }
     catch(e){
-      // The browser could not reach the Builder server at all (stopped or restarting containers, wrong address): say so in plain words
-      throw Object.assign(new Error('The Builder server cannot be reached. Check that it is running (in Docker Desktop, the app container must be green), then reload this page and try again.'), {network:true});
+      // The browser could not reach the Builder at all (stopped or restarting containers, wrong address): say so in plain words
+      throw Object.assign(new Error('The Builder cannot be reached. Check that it is running (in Docker Desktop, the app container must be green), then reload this page and try again.'), {network:true});
     }
     if(!r.ok){ const e = await r.json().catch(()=>({})); throw Object.assign(new Error(e.statusMessage||('HTTP '+r.status)), {status:r.status, data:e.data}); }
     return r.json();

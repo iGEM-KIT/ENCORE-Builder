@@ -210,3 +210,25 @@ def test_the_empty_level2_backbone_names_its_cassette_tspurple():
     text = INDEX.read_text(encoding="utf8")
     assert "'tsPurple'" in text and "bp tsPurple cassette" in text
     assert "'Test cassette'" not in text and "bp test cassette" not in text
+
+
+def test_the_builder_does_not_continue_when_the_screening_is_not_available():
+    text = INDEX.read_text(encoding="utf8")
+    gate = text[text.index("if(items.length && api && api.available && !(screening && screening.available))"):]
+    assert "showCalcError(" in gate[:600] and "return;" in gate[:700]
+    assert "skipping biosecurity screen" in text                                     # the failed call is still turned into 'not available' ...
+    assert "screening = {available:false}" in text                                   # ... and the gate above stops the design
+
+
+def test_the_pages_never_assume_a_remote_server():
+    for path in (INDEX, GUIDE, ROOT / "README.md"):
+        visible = re.sub(r"<[^>]*>", " ", path.read_text(encoding="utf8"))
+        assert "builder's own server" not in visible and "Builder server" not in visible and "builder server" not in visible, path.name
+        assert "with the server running" not in visible, path.name
+
+
+def test_the_guide_names_the_intein_as_the_targeting_peptide_of_the_vault_and_points_to_the_registry():
+    guide = re.sub(r"<[^>]*>", " ", GUIDE.read_text(encoding="utf8"))
+    assert "Intein (INT)" in guide and "MVP" in guide
+    assert "registry.igem.org" in GUIDE.read_text(encoding="utf8") and "Use your own sequence" in guide
+    assert "has no targeting peptide of the toolkit either" not in guide
