@@ -2491,10 +2491,10 @@ function renderLevel2Backbone(){
   $('#plat2bactions').style.display = (bb && bb.genbank) ? '' : 'none';
   if(!bb){ svg.innerHTML=''; $('#plat2btitle').textContent='Level 2 destination backbone'; $('#plat2bexplain').textContent='Backend not connected: the real Level 2 backbone (pESC-HIS) is only available with the server running.'; $('#plat2bfeats').innerHTML=''; return; }
   const o5=locRange(bb.receiver_overhangs['5_prime'].location), o3=locRange(bb.receiver_overhangs['3_prime'].location), cassette=o3[1]-o5[0]+1;
-  const segs = level2Segs(bb, cassette, 'Test cassette', false);
+  const segs = level2Segs(bb, cassette, 'tsPurple', false);
   const sum = drawPlasmidRing(svg, segs, l2Name(bb), 'HIS3 · Level 2 acceptor');
   $('#plat2btitle').textContent = `${l2Name(bb)} · ${sum.toLocaleString('en-US')} bp`;
-  $('#plat2bexplain').textContent = `Real Level 2 acceptor backbone as delivered, with its ${cassette.toLocaleString('en-US')} bp test cassette between BbLvl2N (${bb.sequence.slice(o5[0]-1,o5[0]+3)}) and BbLvl2C. BbsI replaces that cassette with the assembled insert; click the finished construct above to see it.`;
+  $('#plat2bexplain').textContent = `Real Level 2 acceptor backbone as delivered, with its ${cassette.toLocaleString('en-US')} bp tsPurple cassette between BbLvl2N (${bb.sequence.slice(o5[0]-1,o5[0]+3)}) and BbLvl2C. BbsI replaces that cassette with the assembled insert; click the finished construct above to see it.`;
   $('#plat2bfeats').innerHTML = segLegendHtml(segs);
 }
 function downloadGenbank(){
