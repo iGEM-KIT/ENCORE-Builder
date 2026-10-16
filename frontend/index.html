@@ -326,6 +326,7 @@
   .l0frag .part{flex:1}
   .l0frag .part{box-shadow:inset 0 0 0 2px rgba(11,58,51,.75),0 2px 10px rgba(11,58,51,.18)}
   .lvlinfo{display:flex;align-items:center;gap:8px;margin:12px 0 0;font-size:12px;font-weight:600;color:var(--muted)}
+  .lvltab-body > .lvlinfo:first-child{margin:0 0 12px}
   [data-theme="dark"] .l0frag .part{box-shadow:inset 0 0 0 2px rgba(0,0,0,.55),0 2px 10px rgba(0,0,0,.35)}
   .l0ohcol{display:flex;flex-direction:column;justify-content:space-between;gap:6px}
   .l0oh{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:9.5px;font-weight:700;color:var(--muted);background:var(--card-2);border:1px solid var(--line);border-radius:6px;padding:3px 5px;white-space:nowrap}
@@ -769,9 +770,8 @@
                   <svg class="lvltab-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
                 <div class="lvltab-body">
+                  <div class="lvlinfo"><button class="info" type="button" data-info="level0" aria-label="How this level works">i</button><span>How this level works</span></div>
                   <div class="strandwrap"><div class="strand" id="lvl0strand"></div></div>
-                                    <div class="lvlinfo"><button class="info" type="button" data-info="level0" aria-label="How this level works">i</button><span>How this level works</span></div>
-
                   <div class="lvlsubhead">Destination plasmid</div>
                   <div class="platrow">
                     <svg id="plasmid0" viewBox="-70 0 570 380"></svg>
@@ -810,6 +810,7 @@
                   <svg class="lvltab-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
                 <div class="lvltab-body">
+                  <div class="lvlinfo" id="l1fold"><button class="info" type="button" data-info="level1" aria-label="How this level works">i</button><span>How this level works</span></div>
                   <div class="levelblock">
                     <div class="levellabel"><h4>Cargo module</h4><span class="l0m-badge antisense">antisense strand</span></div>
                     <div class="strandwrap"><div class="strand" id="lvl1cargo"></div></div>
@@ -822,8 +823,6 @@
                     <div class="levellabel"><h4>Nanocompartment module</h4><span class="l0m-badge sense">sense strand</span></div>
                     <div class="strandwrap"><div class="strand" id="lvl1nc"></div></div>
                   </div>
-                                    <div class="lvlinfo" id="l1fold"><button class="info" type="button" data-info="level1" aria-label="How this level works">i</button><span>How this level works</span></div>
-
                   <div class="lvlsubhead">Destination plasmid</div>
                   <div class="platrow">
                     <svg id="plasmid1" viewBox="-70 0 570 380"></svg>
@@ -853,9 +852,8 @@
                   <svg class="lvltab-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
                 <div class="lvltab-body">
+                  <div class="lvlinfo"><button class="info" type="button" data-info="level2" aria-label="How this level works">i</button><span>How this level works</span></div>
                   <div class="strandwrap"><div class="strand" id="lvl2strand"></div></div>
-                                    <div class="lvlinfo"><button class="info" type="button" data-info="level2" aria-label="How this level works">i</button><span>How this level works</span></div>
-
                   <div class="lvlsubhead">Destination backbone</div>
                   <div class="platrow">
                     <svg id="plasmid2b" viewBox="-70 0 570 380"></svg>

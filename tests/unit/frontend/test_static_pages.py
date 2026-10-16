@@ -339,3 +339,13 @@ def test_the_download_boxes_of_the_three_levels_carry_no_explaining_note():
     for box in ("Level 0 downloads", "Level 1 downloads", "Level 2 downloads"):
         assert box in text                                                           # the boxes and their buttons stay
     assert "Download GenBank (.gb)" in text and "Module sequences (.gb)" in text and "Level 2 plasmid (.gb)" in text
+
+
+def test_the_how_this_level_works_button_is_the_first_thing_in_every_level_tab():
+    text = INDEX.read_text(encoding="utf8")
+    for level in "012":
+        start = text.index(f'<div class="lvltab" data-level="{level}">')
+        body = text.index('<div class="lvltab-body">', start) + len('<div class="lvltab-body">')
+        assert text[body:].lstrip().startswith('<div class="lvlinfo"'), f"level {level}"
+        assert f'data-info="level{level}"' in text[body:body + 400]
+    assert text.count('aria-label="How this level works"') == 3                       # exactly one per level, no copy left further down
