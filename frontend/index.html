@@ -325,8 +325,6 @@
   .l0frag{display:flex}
   .l0frag .part{flex:1}
   .l0frag .part{box-shadow:inset 0 0 0 2px rgba(11,58,51,.75),0 2px 10px rgba(11,58,51,.18)}
-  .lvlinfo{display:flex;align-items:center;gap:8px;margin:12px 0 0;font-size:12px;font-weight:600;color:var(--muted)}
-  .lvltab-body > .lvlinfo:first-child{margin:0 0 12px}
   [data-theme="dark"] .l0frag .part{box-shadow:inset 0 0 0 2px rgba(0,0,0,.55),0 2px 10px rgba(0,0,0,.35)}
   .l0ohcol{display:flex;flex-direction:column;justify-content:space-between;gap:6px}
   .l0oh{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:9.5px;font-weight:700;color:var(--muted);background:var(--card-2);border:1px solid var(--line);border-radius:6px;padding:3px 5px;white-space:nowrap}
@@ -770,7 +768,6 @@
                   <svg class="lvltab-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
                 <div class="lvltab-body">
-                  <div class="lvlinfo"><button class="info" type="button" data-info="level0" aria-label="How this level works">i</button><span>How this level works</span></div>
                   <div class="strandwrap"><div class="strand" id="lvl0strand"></div></div>
                   <div class="lvlsubhead">Destination plasmid</div>
                   <div class="platrow">
@@ -810,7 +807,6 @@
                   <svg class="lvltab-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
                 <div class="lvltab-body">
-                  <div class="lvlinfo" id="l1fold"><button class="info" type="button" data-info="level1" aria-label="How this level works">i</button><span>How this level works</span></div>
                   <div class="levelblock">
                     <div class="levellabel"><h4>Cargo module</h4><span class="l0m-badge antisense">antisense strand</span></div>
                     <div class="strandwrap"><div class="strand" id="lvl1cargo"></div></div>
@@ -852,7 +848,6 @@
                   <svg class="lvltab-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg>
                 </button>
                 <div class="lvltab-body">
-                  <div class="lvlinfo"><button class="info" type="button" data-info="level2" aria-label="How this level works">i</button><span>How this level works</span></div>
                   <div class="strandwrap"><div class="strand" id="lvl2strand"></div></div>
                   <div class="lvlsubhead">Destination backbone</div>
                   <div class="platrow">
@@ -1159,13 +1154,6 @@ const INFO = {
           <p><b>Why the TTTT clamp?</b> Restriction enzymes cut badly when their recognition site sits at the very end of a DNA fragment. The four extra bases give BbsI room to bind and cut; they are cut off again and never end up in the plasmid. A/T-only bases add no extra GC-rich structure to the primer.</p>
           <p><b>Only when it makes sense.</b> Primers are designed for your own sequences of at least 150 bp. Shorter parts are ordered as an oligo pair, toolbox parts are ordered as DNA. If the insert already contains a BbsI or BsaI site, you get a warning; it has to be domesticated first. Without <code>primer3</code> only a rough Wallace estimate (2 °C per A/T, 4 °C per G/C) is shown.</p>
           <p><b>Basis of the calculation.</b> <b>Tm:</b> <code>primer3-py</code> (<code>calc_tm</code>), nearest-neighbour thermodynamics (SantaLucia 1998) with primer3's defaults (50 mM monovalent ions, 1.5 mM Mg²⁺, 0.6 mM dNTP, 50 nM oligo). <b>Length balancing:</b> a plain search from 25 down to 18 nt (see above). <b>Structure checks</b> (shown in the table below the primers): <code>calc_hairpin</code>, <code>calc_homodimer</code> and <code>calc_heterodimer</code> of primer3 give the free energy ΔG of the most stable structure on the <i>complete</i> primer. A structure counts as <i>too stable</i> if ΔG is below −3 kcal/mol (hairpin) or −9 kcal/mol (self-dimer, primer-primer dimer) <i>and</i> it melts above 45 °C, because colder structures do not matter during PCR. <b>Q5 annealing temperature:</b> a simple rule of thumb (lower Tm minus 2 to 5 °C), not the NEB online calculator. <b>Oligo pairs</b> (parts under 150 bp) are not calculated at all: the top strand is the part plus the 5′ overhang, the bottom strand its complement. Without primer3 the Wallace rule (2 °C per A/T, 4 °C per G/C) is used and the structure table is left out.</p>` },
-  level0: { title:'Level 0 · individual parts', img:'Diagram: ten parts, one plasmid each',
-    body:`<p>Level 0 parts are cloned <b>separately</b>; one plasmid each. They are not joined yet: the <b>Type number</b> alone fixes where each part ends up once BsaI assembles them into the Level 1 module.</p>` },
-  level1: { title:'Level 1 · modules (BsaI)', img:'Diagram: BsaI assembly of five Level 0 parts',
-    body:`<p>The Level 0 parts are <b>joined</b> through their shared overhangs by BsaI and sit between the acceptor overhangs of the Level 1 backbone. <span class="l1oh" style="display:inline-block">grey</span> acceptor overhangs (BsaI) · <span class="l1oh l2" style="display:inline-block">orange</span> Level 2 overhangs (BbsI, cut later). Sticky ends as they pair: top strand 5′→3′ at the upper left, bottom strand at the lower right (3′→5′); the right end of one construct matches the left end of the next. Click a module to see its sequence and the Level 1 plasmid.</p>` },
-  level2: { title:'Level 2 · finished construct (BbsI)', img:'Diagram: cargo ← promoter → NC module',
-    body:`<p>Both transcripts <b>start (5′) at the central promoter</b> and run outward (3′): the NC module on the <b>sense (plus) strand</b> (right), the cargo module on the <b>antisense (minus) strand</b> (left). The four modules around the shell (Type 0.1, 0.2, 0.4, 0.5) can be NCS spacers, linkers, display markers (e.g. <b>SpyCatcher</b>, displayed on the encapsulin exterior) or your own sequences. A <b style="color:#A35C00">*</b> marks the part carrying the <b>stop codon</b> (each ORF's 3′ end); its position follows the C/N fusion and the modules next to the shell.</p>
-      <p><b>Which plasmids does this insert fit?</b> It is released with BbsI and carries the overhangs <b>CCAA</b> (left) and <b>AATG</b> (right). It fits any plasmid whose BbsI acceptor site gives exactly these two overhangs, not every Golden Gate plasmid. The insert has no terminators, marker or origin: the Level 2 destination pESC-HIS supplies them, and another vector has to as well.</p>` },
   nc: { title:'What is a nanocompartment?', img:'Diagram: encapsulin shell with cargo',
     body:`<p>Encapsulins are hollow protein cages that self-assemble and encapsulate cargo proteins inside.</p>
           <p>The variant you choose determines the matching <b>targeting peptide (TP)</b>, which directs your cargo into the compartment.</p>
@@ -1190,9 +1178,11 @@ const INFO = {
     body:`<p><b>GAL1-10</b> is a bidirectional yeast promoter: it drives <b>two genes at once</b> in opposite directions. Both transcripts <b>start (5′) at the promoter</b> and run outward.</p>
           <p>The nanocompartment module is read off the <b>sense (plus) strand</b> (to the right), the cargo module off the <b>antisense (minus) strand</b> (to the left); that is why they point away from each other. Inducible via galactose.</p>` },
   levels: { title:'Level 0 → 1 → 2', img:'Diagram: hierarchical Golden Gate assembly',
-    body:`<p><b>Domestication (BbsI):</b> external sequences are cloned into standardized Level 0 parts using BbsI; internal sites are removed and the fixed 4 nt fusion overhangs are added.</p>
-          <p><b>Level 0 → 1 (BsaI):</b> several Level 0 parts are assembled via BsaI into one module (cargo module, NC module).</p>
-          <p><b>Level 1 → 2 (BsaI):</b> the modules plus the promoter form the finished construct in the target vector.</p>
+    body:`<p>The construct is built in three levels. Each level has its own tab below; this is how they work and how they fit together.</p>
+          <p><b>Level 0 · individual parts (BbsI).</b> External sequences are cloned into standardized Level 0 parts using BbsI; internal sites are removed and the fixed 4 nt fusion overhangs are added. Level 0 parts are cloned <b>separately</b>, one plasmid each. They are not joined yet: the <b>Type number</b> alone fixes where each part ends up once BsaI assembles them into the Level 1 module.</p>
+          <p><b>Level 1 · modules (BsaI).</b> Several Level 0 parts are <b>joined</b> through their shared overhangs by BsaI into one module (cargo module, NC module) and sit between the acceptor overhangs of the Level 1 backbone. <span class="l1oh" style="display:inline-block">grey</span> acceptor overhangs (BsaI) · <span class="l1oh l2" style="display:inline-block">orange</span> Level 2 overhangs (BbsI, cut later). Sticky ends as they pair: top strand 5′→3′ at the upper left, bottom strand at the lower right (3′→5′); the right end of one construct matches the left end of the next. Click a module to see its sequence and the Level 1 plasmid.</p>
+          <p><b>Level 2 · finished construct (BbsI).</b> The modules plus the promoter form the finished construct in the target vector. Both transcripts <b>start (5′) at the central promoter</b> and run outward (3′): the NC module on the <b>sense (plus) strand</b> (right), the cargo module on the <b>antisense (minus) strand</b> (left). The four modules around the shell (Type 0.1, 0.2, 0.4, 0.5) can be NCS spacers, linkers, display markers (e.g. <b>SpyCatcher</b>, displayed on the encapsulin exterior) or your own sequences. A <b style="color:#A35C00">*</b> marks the part carrying the <b>stop codon</b> (each ORF's 3′ end); its position follows the C/N fusion and the modules next to the shell.</p>
+          <p><b>Which plasmids does this insert fit?</b> It is released with BbsI and carries the overhangs <b>CCAA</b> (left) and <b>AATG</b> (right). It fits any plasmid whose BbsI acceptor site gives exactly these two overhangs, not every Golden Gate plasmid. The insert has no terminators, marker or origin: the Level 2 destination pESC-HIS supplies them, and another vector has to as well.</p>
           <p><b>Basis of the assembly.</b> The builder simulates Golden Gate cloning as sequence assembly, not as a reaction: each part carries its two 4-nt overhangs, the right overhang of one part must be identical to the left overhang of the next (otherwise the design stops with an error), and the parts are joined through them. Internal BsaI (GGTCTC / GAGACC) and BbsI (GAAGAC / GTCTTC) sites are searched on both strands and reported. Between two fused parts the 4-nt overhang plus the 2-nt GC frame spacer add 6 nt, so the reading frame is kept; the overhangs and the GC spacer are chosen so that none of the junction codons is a stop codon, read in either direction. Enzyme kinetics, efficiency or mis-ligation are not simulated.</p>` },
   codonOpt: { title:'Codon optimization for <i>S. cerevisiae</i>', img:'Diagram: synonymous codons, restriction sites removed',
     body:`<p>Every sequence you enter yourself (cargo, your own shell, your own sequence in a module) is <b>translated and back-translated</b> with the codon usage of <i>Saccharomyces cerevisiae</i> (Kazusa table). The <b>protein stays exactly the same</b>; only synonymous codons change. Library parts are toolkit sequences and are never touched.</p>
@@ -2535,13 +2525,11 @@ function renderLevel1(res){
     $('#lvl1cargo').innerHTML = l1Row('cargo_site', cargo, [...m.l1cargo].reverse());
     $('#lvl1nc').innerHTML = l1Row('nc_site', nc, m.l1nc);
     $('#lvl1promo').innerHTML = l1Row('promoter', promo, [{ label:m.promo.label, kind:'promo', note:'bidirectional', type:'' }]);
-    $('#l1fold').style.display='';
   } else {
     renderStrand('#lvl1cargo', m.l1cargo, {antisense:true});
     renderStrand('#lvl1nc', m.l1nc);
     $('#lvl1promo').innerHTML = `<div class="partsrow"><div class="part" style="background:${cvar('promo')};color:${cink('promo')}">
       <span class="ptype">Promoter</span><span class="plab">${esc(m.promo.label)}</span><small>bidirectional</small></div></div>`;
-    $('#l1fold').style.display='none';
   }
   renderLevel1Backbone(list);
 }

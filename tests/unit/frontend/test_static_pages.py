@@ -341,11 +341,14 @@ def test_the_download_boxes_of_the_three_levels_carry_no_explaining_note():
     assert "Download GenBank (.gb)" in text and "Module sequences (.gb)" in text and "Level 2 plasmid (.gb)" in text
 
 
-def test_the_how_this_level_works_button_is_the_first_thing_in_every_level_tab():
+def test_the_how_this_level_works_texts_live_in_the_info_button_next_to_golden_gate_assembly():
     text = INDEX.read_text(encoding="utf8")
-    for level in "012":
-        start = text.index(f'<div class="lvltab" data-level="{level}">')
-        body = text.index('<div class="lvltab-body">', start) + len('<div class="lvltab-body">')
-        assert text[body:].lstrip().startswith('<div class="lvlinfo"'), f"level {level}"
-        assert f'data-info="level{level}"' in text[body:body + 400]
-    assert text.count('aria-label="How this level works"') == 3                       # exactly one per level, no copy left further down
+    assert "How this level works" not in text and "lvlinfo" not in text and "l1fold" not in text       # no separate button in the level tabs
+    for gone in ("data-info=\"level0\"", "data-info=\"level1\"", "data-info=\"level2\""):
+        assert gone not in text
+    info = text[text.index("  levels: { title:'Level 0 → 1 → 2'"):text.index("  codonOpt: { title:")]
+    for part in ("Level 0 · individual parts (BbsI).", "Level 1 · modules (BsaI).", "Level 2 · finished construct (BbsI).",
+                 "Which plasmids does this insert fit?", "Basis of the assembly."):
+        assert part in info, part
+    assert "Level 1 → 2 (BsaI)" not in info                                                              # the old text named the wrong enzyme for Level 2
+    assert 'data-info="levels"' in text and text.count("Golden Gate assembly<button") == 1
