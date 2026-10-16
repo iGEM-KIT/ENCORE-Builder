@@ -73,8 +73,8 @@ NANOCOMPARTMENTS = [
     {"id": "tmari", "label": "Thermotoga maritima", "T": 1, "dia": "24 nm", "tp": "TP-Tm", "shell": "E-Tm"},
     {"id": "mxan", "label": "Myxococcus xanthus", "T": 3, "dia": "32 nm", "tp": "TP-Mx", "shell": "E-Mx"},
     {"id": "qther", "label": "Quasibacillus thermotolerans", "T": 4, "dia": "42 nm", "tp": "TP-Qt", "shell": "E-Qt"},
-    # The human vault is no encapsulin: no triangulation number and no targeting peptide of the toolkit (tp None), barrel of about 41 x 73 nm.
-    {"id": "mvp", "label": "Major vault protein (vault)", "T": None, "dia": "41 x 73 nm", "tp": None, "shell": "mvp"},
+    # The human vault is no encapsulin: no triangulation number, barrel of about 41 x 73 nm. Its targeting peptide is the intein INT.
+    {"id": "mvp", "label": "Major vault protein (vault)", "T": None, "dia": "41 x 73 nm", "tp": "INT", "shell": "mvp"},
 ]
 for _nc in NANOCOMPARTMENTS:
     _nc["shellBp"] = _length("shell", _nc["shell"]) or 0
@@ -134,9 +134,16 @@ INTEINS = [
     {"id": "int", "label": "INT", "aa": (_length("intein", "int") or 0) // 3, "bp": _length("intein", "int") or 0,
      "desc": "INT", "slots": _slots("intein", "int"), "status": _status("intein", "int")}
 ] if _length("intein", "int") else []
-TARGETING_PEPTIDES = [
-    {"id": nc["tp"], "label": f"Targeting peptide {nc['tp']}", "slots": _slots("tp", nc["tp"]), "status": _status("tp", nc["tp"])} for nc in NANOCOMPARTMENTS if nc["tp"]
-]
+def _tp_entry(nc: dict) -> dict:
+    """Targeting peptide of a nanocompartment. For the vault it is the intein INT (a Level 0 part of the category intein), offered like the other targeting peptides in the cargo module only."""
+    if nc["id"] == "mvp":
+        slots, status = _slots("intein", "int"), _status("intein", "int")
+        return {"id": nc["tp"], "label": f"Targeting peptide {nc['tp']}", "bp": _length("intein", "int") or 0,
+                "slots": {"nc": [], "cargo": slots.get("cargo", [])}, "status": {"nc": {}, "cargo": (status or {}).get("cargo", {})}}
+    return {"id": nc["tp"], "label": f"Targeting peptide {nc['tp']}", "bp": NOMINAL_BP["TP"], "slots": _slots("tp", nc["tp"]), "status": _status("tp", nc["tp"])}
+
+
+TARGETING_PEPTIDES = [_tp_entry(nc) for nc in NANOCOMPARTMENTS if nc["tp"]]
 
 
 def _ncs_slots() -> dict:

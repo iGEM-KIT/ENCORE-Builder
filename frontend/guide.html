@@ -178,10 +178,9 @@
     <ul class="plain">
       <li><b>NCS (spacer)</b>: a neutral spacer; the default filler.</li>
       <li><b>NCS 0.12 / NCS 0.45 (combined spacer)</b>: one spacer part that fills two neighbouring slots at once (Type 0.1 and 0.2, or Type 0.4 and 0.5). Only one Level 0 plasmid is needed instead of two.</li>
-      <li><b>Targeting peptide (TP)</b>: only in the cargo module; the matching TP for your nanocompartment is chosen automatically.</li>
+      <li><b>Targeting peptide (TP)</b>: only in the cargo module; the matching TP for your nanocompartment is chosen automatically. For the human vault (major vault protein, MVP) this is the intein <b>INT</b>.</li>
       <li><b>Linker</b>, e.g. GGS or GSSS repeats.</li>
       <li><b>Surface display marker</b>, e.g. SpyCatcher or SpyTag, displayed on the outside of the cage.</li>
-      <li><b>Intein (INT)</b>: the targeting peptide of the human vault (major vault protein, MVP). It is offered only when the human vault is the nanocompartment.</li>
       <li><b>Your own sequence.</b> This is also the way to get a toolkit part that is codon-optimized and free of the unwanted cut sites: search the part in the <a href="https://registry.igem.org" target="_blank" rel="noopener">iGEM Registry</a> and enter its sequence under <b>Use your own sequence</b>. The builder then optimizes it. Toolkit parts you pick from the lists are used as they are.</li>
     </ul>
     <p class="note">The list shows only parts that are part of the toolkit as a Level 0 plasmid at that exact site and Type. A part that is not offered in a position does not exist there. A part marked <b>(not built)</b> is planned in the toolkit, but its plasmid has not been built yet: you can still choose it, the builder designs with its sequence, and you order it like your own part (oligos or DNA, see Ordering).</p>
@@ -198,7 +197,7 @@
       <tr><td><span class="tag req">Required</span> <b>Targeting peptide: only once, only at the ends</b></td>
           <td>Only in the cargo module, only in Type 0.1 or Type 0.5, at most once. In Type 0.1 it is fused behind the cargo, in Type 0.5 in front of it.</td></tr>
       <tr><td><span class="tag req">Required</span> <b>Own shell → no targeting peptide choice</b></td>
-          <td>If you use your own shell, the builder does not know a matching peptide. Put your own sequence into the cargo module instead. For the human vault (major vault protein, MVP) the intein INT is the targeting peptide, and INT is offered only with the vault.</td></tr>
+          <td>If you use your own shell, the builder does not know a matching peptide. Put your own sequence into the cargo module instead. For the human vault (major vault protein, MVP) the matching targeting peptide is the intein INT, which is chosen like the other targeting peptides.</td></tr>
       <tr><td><span class="tag req">Required</span> <b>Combined NCS: both slots at once</b></td>
           <td>If you choose <b>NCS 0.12</b> in Type 0.1 or 0.2 (or <b>NCS 0.45</b> in Type 0.4 or 0.5), the neighbouring slot becomes the same combined NCS automatically and is locked. To release it, change the slot where you made the choice to something else. A combined NCS cannot be chosen next to a slot that holds a linker, marker or your own sequence. In the results the pair appears as one part (Type 0.12 or Type 0.45) with one plasmid, one Level 0 construct and one entry in the order list.</td></tr>
       <tr><td><span class="tag info">Tip</span> <b>Prefer the combined NCS for two neighbouring spacers</b></td>

@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from .assembly import assemble_level1_module, assemble_level1_promoter, assemble_level2, finish_level1
 from .constructs import build_level0_constructs, resolve_seq
-from .data import CARGO_L1_FLANK, NOMINAL_BP, find_nanocompartment, find_promoter
+from .data import CARGO_L1_FLANK, NOMINAL_BP, TARGETING_PEPTIDES, find_nanocompartment, find_promoter
 from .parts_db import find_real_sequence, load_parts
 from .primers import make_primer_pair
 from .sequence import reverse_complement, validate_cargo
@@ -60,7 +60,7 @@ def design_construct(decisions: dict = None):
     for cfg in cargo_slots.values():
         if cfg["kind"] == "tp":
             cfg["label"] = nc["tp"]
-            cfg["bp"] = NOMINAL_BP["TP"]
+            cfg["bp"] = next((t["bp"] for t in TARGETING_PEPTIDES if t["id"] == nc["tp"]), NOMINAL_BP["TP"]) if nc.get("tp") else NOMINAL_BP["TP"]
     nc_slots = resolve_slots(decisions.get("ncSlots"), "nc")
     if not nc.get("tp") and any(cfg["kind"] == "tp" for cfg in cargo_slots.values()):
         raise ValueError(f"{'A custom' if nc.get('custom') else 'This'} nanocompartment has no targeting peptide; use your own sequence in that slot.")

@@ -112,7 +112,7 @@ def resolve_slots(raw, module: str = "nc") -> dict:
 def _slot_part(n: int, cfg: dict, tp_label: str = "TP") -> dict:
     kind = cfg["kind"]
     if kind == "tp":
-        return {"role": "targeting-peptide", "label": tp_label, "kind": f"t{n}", "note": "Targeting peptide", "bp": NOMINAL_BP["TP"]}
+        return {"role": "targeting-peptide", "label": tp_label, "kind": f"t{n}", "note": "Targeting peptide", "bp": cfg.get("bp", NOMINAL_BP["TP"])}
     if kind == "linker":
         return {"role": "nc-linker", "label": cfg["label"], "kind": "t2", "note": "Linker", "bp": cfg["bp"]}
     if kind == "marker":

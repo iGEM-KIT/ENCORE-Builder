@@ -138,7 +138,7 @@ def test_visible_text_has_no_spaced_hyphens_used_as_dashes(path):
 def test_the_guide_describes_the_options_the_builder_offers():
     """The guide must keep up with the dropdown options (these were missing or wrong before)."""
     guide = re.sub(r"<[^>]*>", " ", GUIDE.read_text(encoding="utf8"))
-    for phrase in ("NCS 0.12", "NCS 0.45", "Targeting peptide", "SpyCatcher", "Intein", "Registry",
+    for phrase in ("NCS 0.12", "NCS 0.45", "Targeting peptide", "SpyCatcher", "INT", "Registry",
                    "BsaI", "BbsI", "COMMEC", "150 bp", "Overview"):
         assert phrase in guide, f"the guide no longer mentions {phrase!r}"
     assert "NCS with stop codon" not in guide.replace("There is one NCS sequence for all spacers", ""), "that option no longer exists"
@@ -229,13 +229,11 @@ def test_the_pages_never_assume_a_remote_server():
 
 def test_the_guide_names_the_intein_as_the_targeting_peptide_of_the_vault_and_points_to_the_registry():
     guide = re.sub(r"<[^>]*>", " ", GUIDE.read_text(encoding="utf8"))
-    assert "Intein (INT)" in guide and "MVP" in guide
+    assert "intein INT" in guide and "MVP" in guide
     assert "registry.igem.org" in GUIDE.read_text(encoding="utf8") and "Use your own sequence" in guide
     assert "has no targeting peptide of the toolkit either" not in guide
 
 
-def test_the_builder_page_offers_the_intein_only_with_the_vault_and_the_guide_says_so():
+def test_the_builder_page_has_no_separate_intein_choice_because_int_is_the_targeting_peptide_of_the_vault():
     text = INDEX.read_text(encoding="utf8")
-    assert "v.startsWith('intein:') && noIntHere" in text and "state.nc.id==='mvp'" in text
-    guide = re.sub(r"<[^>]*>", " ", GUIDE.read_text(encoding="utf8"))
-    assert "offered only when the human vault is the nanocompartment" in guide
+    assert "group('Intein" not in text and "noIntHere" not in text

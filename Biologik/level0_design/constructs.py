@@ -73,7 +73,10 @@ def _toolkit_part(cfg: dict, nc: dict, site: str, n: int) -> Part:
     if kind == "custom":
         return Part(cfg["label"], cfg["seq"], True, True, "your own part", None)
     if kind == "tp":
-        found = resolve_insert("tp", nc["tp"], site, n, "TP" + nc["tp"], NOMINAL_BP["TP"])
+        if nc["id"] == "mvp":                                                  # the targeting peptide of the vault is the intein INT
+            found = resolve_insert("intein", "int", site, n, "INTint", cfg["bp"])
+        else:
+            found = resolve_insert("tp", nc["tp"], site, n, "TP" + nc["tp"], NOMINAL_BP["TP"])
         return Part(nc["tp"], found[0], found[1], False, "targeting peptide (toolkit part)", found[2])
     if kind == "linker":
         found = resolve_insert("linker", cfg["id"], site, n, "LINK" + cfg["id"], cfg["bp"])

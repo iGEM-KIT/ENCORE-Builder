@@ -818,7 +818,7 @@ def test_libraries_offer_each_part_only_where_a_level0_plasmid_exists():
                        'GSSS3': {'nc': [2, 4], 'cargo': [2, 4]}, 'GSSS4': {'nc': [2, 4], 'cargo': [2, 4]}}
     assert {m['id']: m['slots'] for m in libs['surfaceMarkers']} == {'spycatcher': {'nc': [1, 5], 'cargo': [1, 5]}, 'spytag': {'nc': [1, 5], 'cargo': [1, 5]}}
     assert libs['inteins'][0]['slots'] == {'nc': [1, 5], 'cargo': [1, 5]}
-    assert all(t['slots'] == {'nc': [], 'cargo': [1, 5]} for t in libs['targetingPeptides'])
+    assert all(t['slots'] == {'nc': [], 'cargo': [1, 5]} for t in libs['targetingPeptides'])        # also INT, the targeting peptide of the vault
     # NCS: one plain spacer at every slot of both sites (no NCS with stop codon: the stop is added behind the last coding part)
     assert libs['ncs'] == {'nc': {'1': ['plain'], '2': ['plain'], '4': ['plain'], '5': ['plain']},
                            'cargo': {'1': ['plain'], '2': ['plain'], '4': ['plain'], '5': ['plain']}}
@@ -1154,13 +1154,16 @@ def test_an_own_sequence_keeps_its_atg_and_gets_no_second_one():
     assert translate(_insert_of(bare, 'nc_site', 1)) == 'M' + 'A' * 20            # no ATG entered: the builder adds it
 
 
-def test_the_vault_is_a_nanocompartment_without_a_targeting_peptide():
-    design = _design(nanocompartment='mvp', cargo_slots={'1': {'kind': 'ncs'}})
-    assert design['nanocompartment']['id'] == 'mvp' and design['targetingPeptide'] is None
+def test_the_vault_has_the_intein_int_as_its_targeting_peptide():
+    design = _design(nanocompartment='mvp', cargo_slots={'1': {'kind': 'tp'}, '2': {'kind': 'linker', 'id': 'GSSS2'}})
+    assert design['nanocompartment']['id'] == 'mvp' and design['targetingPeptide'] == 'INT'
     shell = next(c for c in design['level0Constructs'] if c['module'] == 'nc_site' and c['slot'] == 3)
     assert shell['what'] == 'nanocompartment shell (toolkit part)' and shell['insert']['sequence'].startswith('ATG')
-    with pytest.raises(ValueError, match='no targeting peptide'):
-        _design(nanocompartment='mvp', cargo_slots={'1': {'kind': 'tp'}, '2': {'kind': 'linker', 'id': 'GSSS2'}})
+    tp = next(c for c in design['level0Constructs'] if c['module'] == 'cargo_site' and c['slot'] == 1)
+    assert tp['label'] == 'INT' and len(tp['insert']['sequence']) == 486 + 3 and tp['insert']['sequence'].endswith('TAA') and tp['what'] == 'targeting peptide (toolkit part)'
+    assert design['level0']['cargoModule'][0]['label'] == 'INT'                  # Type 0.1 is the last coding part of the cargo module in reading direction and carries the stop codon
+    libs = __import__('Biologik.level0_design.data', fromlist=['get_libraries']).get_libraries()
+    assert {t['id']: t['slots'] for t in libs['targetingPeptides']}['INT'] == {'nc': [], 'cargo': [1, 5]}
 
 
 def test_parts_and_constructs_tell_whether_their_plasmid_is_built():
