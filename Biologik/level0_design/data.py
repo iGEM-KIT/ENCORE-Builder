@@ -74,7 +74,7 @@ NANOCOMPARTMENTS = [
     {"id": "mxan", "label": "Myxococcus xanthus", "T": 3, "dia": "32 nm", "tp": "TP-Mx", "shell": "E-Mx"},
     {"id": "qther", "label": "Quasibacillus thermotolerans", "T": 4, "dia": "42 nm", "tp": "TP-Qt", "shell": "E-Qt"},
     # The human vault is no encapsulin: no triangulation number, barrel of about 41 x 73 nm. Its targeting peptide is the intein INT.
-    {"id": "mvp", "label": "Major vault protein (vault)", "T": None, "dia": "41 x 73 nm", "tp": "INT", "shell": "mvp"},
+    {"id": "mvp", "label": "Major vault protein (vault)", "T": None, "dia": "41 x 73 nm", "tp": "INT", "shell": "MVP"},
 ]
 for _nc in NANOCOMPARTMENTS:
     _nc["shellBp"] = _length("shell", _nc["shell"]) or 0

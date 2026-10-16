@@ -1420,3 +1420,15 @@ def test_the_intein_int_is_offered_only_with_the_human_vault():
     for shell in ('tmari', 'mxan', 'qther'):
         with pytest.raises(ValueError, match='targeting peptide of the human vault'):
             _design(nanocompartment=shell, cargo_slots=slots)
+
+
+def test_the_vault_shell_is_named_MVP_in_capitals_like_the_other_shells():
+    from Biologik.level0_design.data import get_libraries
+    from Biologik.level0_design.parts_db import find_inserts
+    shells = {n['id']: n['shell'] for n in get_libraries()['nanocompartments']}
+    assert shells == {'tmari': 'E-Tm', 'mxan': 'E-Mx', 'qther': 'E-Qt', 'mvp': 'MVP'}
+    assert len(find_inserts('shell', 'MVP')) == 1 and not find_inserts('shell', 'mvp')         # the part is called MVP in the database
+    design = _design(nanocompartment='mvp')
+    shell = next(c for c in design['level0Constructs'] if c['module'] == 'nc_site' and c['slot'] == 3)
+    assert shell['label'] == 'MVP' and 'Level0.3_MVP_NC' in shell['genbank']
+    assert 'mvp' not in shell['genbank'].split('\n')[0]
