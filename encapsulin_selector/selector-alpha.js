@@ -531,11 +531,11 @@ function sequenceCard(s) {
             ? `<button type="button" class="use-nc" data-use-nc="${esc(c.candidate_id)}">Use this nanocompartment</button>`
             : `<span class="use-nc-none" title="No genomic sequence record for this candidate yet">No sequence to use</span>`}
         </div>
-        ${citationBlock("databank", c.candidate_id)}
         <details class="details">
           <summary>Sequence data (${linkedSequences.length})</summary>
           <div class="assembly-list sequence-list">${sequenceHtml}</div>
         </details>
+        ${citationBlock("databank", c.candidate_id)}
         <div class="assembly-list">${assemblyHtml}</div>
       </article>`;
   }

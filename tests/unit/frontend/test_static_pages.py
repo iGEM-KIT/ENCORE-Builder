@@ -193,3 +193,9 @@ def test_visible_text_never_mentions_stock(path):
 def test_the_documentation_does_not_mention_stock_either():
     for path in (ROOT / "README.md", ROOT / "Biologik" / "level0_design" / "parts" / "README.md"):
         assert "stock" not in path.read_text(encoding="utf8").lower(), path.name
+
+
+def test_the_candidate_card_shows_sequence_data_before_the_source():
+    js = SELECTOR_JS.read_text(encoding="utf8")
+    card = js[js.index('<article class="candidate-card">'):]
+    assert card.index("Sequence data (") < card.index('citationBlock("databank"')
