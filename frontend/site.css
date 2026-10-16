@@ -67,7 +67,7 @@ html{scroll-behavior:smooth}
 html,body{margin:0}
 body{background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;
   font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;transition:background .25s,color .25s}
-h1,h2,h3,h4,.display{font-family:'Space Grotesk',sans-serif;letter-spacing:-.01em}
+h1,h2,h3,h4,.display{font-family:'Inter',system-ui,sans-serif;letter-spacing:-.01em}
 img,svg{max-width:100%}
 
 /* ============ HEADER ============ */

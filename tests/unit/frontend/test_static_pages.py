@@ -265,3 +265,14 @@ def test_the_builder_header_has_an_overview_button_next_to_the_screening_badge_t
     link = text.index('id="overviewLink"')
     assert 'href="/guide.html"' in text[link - 60:link + 120] and "<span>Overview</span>" in text[link:link + 500]
     assert link < text.index('id="commecStatus"') < text.index('id="themeToggle"')
+
+
+def test_every_page_uses_the_font_of_the_filter_inter_and_the_system_monospace():
+    """One typeface on the whole site: no Space Grotesk or JetBrains Mono, and the pages load Inter only."""
+    pages = [INDEX, GUIDE, SELECTOR_HTML, ROOT / "encapsulin_selector" / "overview.html", ROOT / "encapsulin_selector" / "builder-filter.html",
+             ROOT / "frontend" / "site.css", ROOT / "encapsulin_selector" / "selector-alpha.css"]
+    for page in pages:
+        text = page.read_text(encoding="utf8")
+        assert "Grotesk" not in text and "JetBrains" not in text, page.name
+        for url in re.findall(r"fonts\.googleapis\.com/css2\?family=([^\"&]*)", text):
+            assert url.startswith("Inter"), f"{page.name}: loads {url}"
