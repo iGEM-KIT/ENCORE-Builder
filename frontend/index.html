@@ -46,6 +46,8 @@
   .popover .pop-img .ph-tag{position:absolute;top:8px;left:8px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:9px;
     background:rgba(0,0,0,.06);padding:2px 6px;border-radius:4px;color:var(--muted)}
   .popover .pop-body{padding:14px 16px}
+  .popover .infomore{margin:10px 0 0;font-size:12px}
+  .popover .infomore a{color:var(--teal-deep);font-weight:600}
   .popover h5{margin:0 0 7px;font-size:14px;font-family:"Segoe UI",Helvetica,Arial,sans-serif}
   .popover p{margin:0 0 8px;font-size:12.5px;color:var(--ink-soft);line-height:1.55}
   .popover p:last-child{margin-bottom:0}
@@ -325,7 +327,6 @@
   .l0frag{display:flex}
   .l0frag .part{flex:1}
   .l0frag .part{box-shadow:inset 0 0 0 2px rgba(11,58,51,.75),0 2px 10px rgba(11,58,51,.18)}
-  .lvlinfo{display:flex;align-items:center;gap:8px;margin:12px 0 0;font-size:12px;font-weight:600;color:var(--muted)}
   [data-theme="dark"] .l0frag .part{box-shadow:inset 0 0 0 2px rgba(0,0,0,.55),0 2px 10px rgba(0,0,0,.35)}
   .l0ohcol{display:flex;flex-direction:column;justify-content:space-between;gap:6px}
   .l0oh{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:9.5px;font-weight:700;color:var(--muted);background:var(--card-2);border:1px solid var(--line);border-radius:6px;padding:3px 5px;white-space:nowrap}
@@ -769,8 +770,6 @@
                 </button>
                 <div class="lvltab-body">
                   <div class="strandwrap"><div class="strand" id="lvl0strand"></div></div>
-                                    <div class="lvlinfo"><button class="info" type="button" data-info="level0" aria-label="How this level works">i</button><span>How this level works</span></div>
-
                   <div class="lvlsubhead">Destination plasmid</div>
                   <div class="platrow">
                     <svg id="plasmid0" viewBox="-70 0 570 380"></svg>
@@ -786,7 +785,6 @@
                   </div>
                   <div class="l0m-sec" id="l0bulk" style="display:none">
                     <div class="l0m-h">Level 0 downloads <span class="l0m-meta" id="l0bulkMeta"></span></div>
-                    <p class="l0m-note" style="margin:0">Multi-record GenBank files: no need to open every module separately: module sequences, PCR primers, and the Level 0 plasmids with the parts cloned in. Record names end in <code>_Cargo</code> or <code>_NC</code> (site).</p>
                     <div class="l0bulkrow"><span>All sites</span>
                       <button class="chip primary-chip" type="button" data-bulk="seq" data-site="all">Module sequences (.gb)</button>
                       <button class="chip primary-chip" type="button" data-bulk="prim" data-site="all">Primers (.gb)</button>
@@ -822,8 +820,6 @@
                     <div class="levellabel"><h4>Nanocompartment module</h4><span class="l0m-badge sense">sense strand</span></div>
                     <div class="strandwrap"><div class="strand" id="lvl1nc"></div></div>
                   </div>
-                                    <div class="lvlinfo" id="l1fold"><button class="info" type="button" data-info="level1" aria-label="How this level works">i</button><span>How this level works</span></div>
-
                   <div class="lvlsubhead">Destination plasmid</div>
                   <div class="platrow">
                     <svg id="plasmid1" viewBox="-70 0 570 380"></svg>
@@ -839,7 +835,6 @@
                   </div>
                   <div class="l0m-sec" id="l1bulk" style="display:none">
                     <div class="l0m-h">Level 1 downloads <span class="l0m-meta" id="l1bulkMeta"></span></div>
-                    <p class="l0m-note" style="margin:0">Multi-record GenBank files: no need to open every module separately.</p>
                     <div class="l0bulkrow"><span>All modules</span>
                       <button class="chip primary-chip" type="button" id="l1bulkIns">Module inserts (.gb)</button>
                       <button class="chip primary-chip" type="button" id="l1bulkPl">Level 1 plasmids (.gb)</button></div>
@@ -855,8 +850,6 @@
                 </button>
                 <div class="lvltab-body">
                   <div class="strandwrap"><div class="strand" id="lvl2strand"></div></div>
-                                    <div class="lvlinfo"><button class="info" type="button" data-info="level2" aria-label="How this level works">i</button><span>How this level works</span></div>
-
                   <div class="lvlsubhead">Destination backbone</div>
                   <div class="platrow">
                     <svg id="plasmid2b" viewBox="-70 0 570 380"></svg>
@@ -872,7 +865,6 @@
                   </div>
                   <div class="l0m-sec" id="l2bulk" style="display:none">
                     <div class="l0m-h">Level 2 downloads</div>
-                    <p class="l0m-note" style="margin:0">GenBank files of the finished construct; the assembled insert and the plasmid with the insert cloned into pESC-HIS.</p>
                     <div class="l0bulkrow"><span>Complete construct</span>
                       <button class="chip primary-chip" type="button" id="plat2DlIns">Insert (.gb)</button>
                       <button class="chip primary-chip" type="button" id="plat2Dl">Level 2 plasmid (.gb)</button></div>
@@ -1157,19 +1149,10 @@ async function loadLibraries(){
 /* ---------- Info bubble content (placeholder graphic + theory) ---------- */
 const INFO = {
   primers: { title:'How the PCR primers are calculated', img:'Diagram: clamp + BbsI site + overhangs + annealing part',
-    body:`<p><b>Annealing part.</b> At both ends of your part a 25-nt stretch is taken (forward = the 5′ end, reverse = the reverse complement of the 3′ end) and shortened base by base, down to 18 nt, until both primers have a melting temperature of at most 72 °C and differ by at most 2 °C. Tm is the nearest-neighbour value from <code>primer3</code>, calculated on the annealing part only.</p>
-          <p><b>Checks.</b> Heterodimers, homodimers and hairpins are evaluated by primer3 on the <i>complete</i> primer, because the 5′ extension changes the secondary structure. Anything critical is listed as a warning. The <b>Q5 annealing temperature</b> is the lower Tm of the pair minus 2 to 5 °C (the hotter the primers, the smaller the offset).</p>
-          <p><b>5′ extension.</b> Each primer carries, in front of the annealing part, the <b>TTTT clamp</b>, the adapter flank of this Type (BbsI site, the Level 0 and Level 1 overhangs, for Type 0.1/0.5 also the Level 2 overhang) and the 2-nt frame spacer. The PCR product therefore is exactly the Level 0 construct, ready for BbsI cloning into the backbone.</p>
-          <p><b>Why the TTTT clamp?</b> Restriction enzymes cut badly when their recognition site sits at the very end of a DNA fragment. The four extra bases give BbsI room to bind and cut; they are cut off again and never end up in the plasmid. A/T-only bases add no extra GC-rich structure to the primer.</p>
-          <p><b>Only when it makes sense.</b> Primers are designed for your own sequences of at least 150 bp. Shorter parts are ordered as an oligo pair, toolbox parts are ordered as DNA. If the insert already contains a BbsI or BsaI site, you get a warning; it has to be domesticated first. Without <code>primer3</code> only a rough Wallace estimate (2 °C per A/T, 4 °C per G/C) is shown.</p>
-          <p><b>Basis of the calculation.</b> <b>Tm:</b> <code>primer3-py</code> (<code>calc_tm</code>), nearest-neighbour thermodynamics (SantaLucia 1998) with primer3's defaults (50 mM monovalent ions, 1.5 mM Mg²⁺, 0.6 mM dNTP, 50 nM oligo). <b>Length balancing:</b> a plain search from 25 down to 18 nt (see above). <b>Structure checks</b> (shown in the table below the primers): <code>calc_hairpin</code>, <code>calc_homodimer</code> and <code>calc_heterodimer</code> of primer3 give the free energy ΔG of the most stable structure on the <i>complete</i> primer. A structure counts as <i>too stable</i> if ΔG is below −3 kcal/mol (hairpin) or −9 kcal/mol (self-dimer, primer-primer dimer) <i>and</i> it melts above 45 °C, because colder structures do not matter during PCR. <b>Q5 annealing temperature:</b> a simple rule of thumb (lower Tm minus 2 to 5 °C), not the NEB online calculator. <b>Oligo pairs</b> (parts under 150 bp) are not calculated at all: the top strand is the part plus the 5′ overhang, the bottom strand its complement. Without primer3 the Wallace rule (2 °C per A/T, 4 °C per G/C) is used and the structure table is left out.</p>` },
-  level0: { title:'Level 0 · individual parts', img:'Diagram: ten parts, one plasmid each',
-    body:`<p>Level 0 parts are cloned <b>separately</b>; one plasmid each. They are not joined yet: the <b>Type number</b> alone fixes where each part ends up once BsaI assembles them into the Level 1 module.</p>` },
-  level1: { title:'Level 1 · modules (BsaI)', img:'Diagram: BsaI assembly of five Level 0 parts',
-    body:`<p>The Level 0 parts are <b>joined</b> through their shared overhangs by BsaI and sit between the acceptor overhangs of the Level 1 backbone. <span class="l1oh" style="display:inline-block">grey</span> acceptor overhangs (BsaI) · <span class="l1oh l2" style="display:inline-block">orange</span> Level 2 overhangs (BbsI, cut later). Sticky ends as they pair: top strand 5′→3′ at the upper left, bottom strand at the lower right (3′→5′); the right end of one construct matches the left end of the next. Click a module to see its sequence and the Level 1 plasmid.</p>` },
-  level2: { title:'Level 2 · finished construct (BbsI)', img:'Diagram: cargo ← promoter → NC module',
-    body:`<p>Both transcripts <b>start (5′) at the central promoter</b> and run outward (3′): the NC module on the <b>sense (plus) strand</b> (right), the cargo module on the <b>antisense (minus) strand</b> (left). The four modules around the shell (Type 0.1, 0.2, 0.4, 0.5) can be NCS spacers, linkers, display markers (e.g. <b>SpyCatcher</b>, displayed on the encapsulin exterior) or your own sequences. A <b style="color:#A35C00">*</b> marks the part carrying the <b>stop codon</b> (each ORF's 3′ end); its position follows the C/N fusion and the modules next to the shell.</p>
-      <p><b>Which plasmids does this insert fit?</b> It is released with BbsI and carries the overhangs <b>CCAA</b> (left) and <b>AATG</b> (right). It fits any plasmid whose BbsI acceptor site gives exactly these two overhangs, not every Golden Gate plasmid. The insert has no terminators, marker or origin: the Level 2 destination pESC-HIS supplies them, and another vector has to as well.</p>` },
+    body:`<p><b>Annealing part.</b> At both ends of your part a 25-nt stretch is taken and shortened base by base, down to 18 nt, until both primers have a melting temperature of at most 72 °C and differ by at most 2 °C (<code>primer3</code>, annealing part only).</p>
+          <p><b>5′ extension.</b> Each primer carries the <b>TTTT clamp</b>, the adapter flank of this Type (BbsI site and overhangs) and the 2-nt frame spacer. The PCR product is exactly the Level 0 construct, ready for BbsI cloning.</p>
+          <p><b>Only when it makes sense.</b> Primers are designed for your own sequences of at least 150 bp. Shorter parts are ordered as an oligo pair, toolbox parts as DNA. Critical secondary structures are listed as warnings.</p>
+          <p class="infomore"><a href="/guide.html#bg-primers" target="_blank" rel="noopener">Full details in the Overview</a></p>` },
   nc: { title:'What is a nanocompartment?', img:'Diagram: encapsulin shell with cargo',
     body:`<p>Encapsulins are hollow protein cages that self-assemble and encapsulate cargo proteins inside.</p>
           <p>The variant you choose determines the matching <b>targeting peptide (TP)</b>, which directs your cargo into the compartment.</p>
@@ -1180,31 +1163,24 @@ const INFO = {
           <p>You provide the coding sequence (CDS). It is directed into the compartment via the targeting peptide.</p>
           <p><b>Where the modules sit:</b> Type 0.4 and 0.5 form the <b>N-terminus of the cargo</b> and are fused in front of the cargo. Type 0.1 and 0.2 form the <b>C-terminus of the cargo</b> and are fused behind the cargo.</p>` },
   stop: { title:'Start and stop codon', img:'Diagram: TP-linker-cargo reading frame',
-    body:`<p>The cargo is fused with the linker and targeting peptide into <b>one continuous protein</b>.</p>
-          <p>You do not have to add a start or stop codon: the builder puts an <b>ATG</b> in front of the first coding part of each ORF and a <b>stop codon</b> behind the last one, in whichever slot it sits: the stop always follows the last coding part of the ORF (for example behind a linker or marker at Type 0.4 or 0.5 of the NC module, or directly behind the shell if only NCS spacers follow it). The part that carries the stop is marked with a <b>*</b>. A stop codon you enter at the end is removed; an ATG you enter is kept (not doubled).</p>
-          <p><b>Basis of the checks.</b> Everything is simple sequence logic, no model: the input is read as DNA if at least 90 % of its letters are A/C/G/T, otherwise as protein; the length must be a multiple of 3; every codon in the reading frame is compared with TAA, TAG and TGA to find in-frame stops; GC content = (G+C) ÷ length; amino acids = length ÷ 3. A terminal stop codon is cut off, and an ATG at the start is not doubled.</p>` },
+    body:`<p>You do not have to add a start or stop codon: the builder puts an <b>ATG</b> in front of the first coding part of each ORF and a <b>stop codon</b> behind the last one, in whichever slot it sits. The part that carries the stop is marked with a <b>*</b>.</p>
+          <p>A stop codon you enter at the end is removed, an ATG you enter is kept and not doubled.</p>
+          <p class="infomore"><a href="/guide.html#bg-stop" target="_blank" rel="noopener">Full details in the Overview</a></p>` },
   commec: { title:'Biosecurity screening (COMMEC)', img:'Diagram: your sequence → COMMEC → curated biorisk database',
-    body:`<p><b>COMMEC</b> (<i>Common Mechanism</i>, from IBBIS, the International Biosecurity and Biosafety Initiative for Science) is an open-source tool that checks DNA for similarity to known biosecurity concerns. It is the same kind of check DNA synthesis providers run before they ship an order.</p>
-          <p><b>What is screened:</b> only sequences you typed or pasted yourself (cargo, your own shell, your own module parts). Toolkit parts are not screened, because their sequences are known and harmless. If the screening is not running, the builder does not continue with sequences you entered yourself.</p>
-          <p><b>Against which database:</b> this installation uses COMMEC's curated <b>Biorisk + Low-concern</b> database (about 1.2&nbsp;GB): known toxins, virulence factors and regulated pathogens, plus a list of harmless related sequences so common genes are not over-flagged.</p>
-          <p><b>Not included:</b> the full protein (NR, ~530&nbsp;GB) and nucleotide (NT, ~580&nbsp;GB) taxonomy databases. So there is no best-match against arbitrary organisms; only direct hits against the curated list count, and only a real biorisk hit raises a warning here.</p>
-          <p>A hit never blocks you silently: you review it and confirm before continuing. The screening runs locally in its own container and is a helper check, not a replacement for your institution's biosafety review.</p>
-          <p><b>Basis of the check.</b> Your sequence is compared by sequence similarity (profile HMM searches with HMMER and BLAST-type alignments) against the curated COMMEC databases; the result (Pass, Warning, Flag) is taken over unchanged from COMMEC (version 1.0.4, IBBIS). The builder calculates nothing itself here: it only decides, from COMMEC's biorisk field, whether to show a warning.</p>` },
+    body:`<p><b>COMMEC</b> (from IBBIS) checks DNA for similarity to known toxins, virulence factors and regulated pathogens, like the check DNA synthesis providers run before they ship an order.</p>
+          <p>Only sequences you typed or pasted yourself are screened; toolkit parts are not, because their sequences are known and harmless. A hit never blocks you silently: you review it and confirm before continuing. If the screening is not running, the builder does not continue with your own sequences. It is a helper check, not a replacement for your institution's biosafety review.</p>
+          <p class="infomore"><a href="/guide.html#bg-commec" target="_blank" rel="noopener">Full details in the Overview</a></p>` },
   promoter: { title:'Bidirectional promoter', img:'Diagram: GAL1-10 transcribing both ways',
     body:`<p><b>GAL1-10</b> is a bidirectional yeast promoter: it drives <b>two genes at once</b> in opposite directions. Both transcripts <b>start (5′) at the promoter</b> and run outward.</p>
           <p>The nanocompartment module is read off the <b>sense (plus) strand</b> (to the right), the cargo module off the <b>antisense (minus) strand</b> (to the left); that is why they point away from each other. Inducible via galactose.</p>` },
   levels: { title:'Level 0 → 1 → 2', img:'Diagram: hierarchical Golden Gate assembly',
-    body:`<p><b>Domestication (BbsI):</b> external sequences are cloned into standardized Level 0 parts using BbsI; internal sites are removed and the fixed 4 nt fusion overhangs are added.</p>
-          <p><b>Level 0 → 1 (BsaI):</b> several Level 0 parts are assembled via BsaI into one module (cargo module, NC module).</p>
-          <p><b>Level 1 → 2 (BsaI):</b> the modules plus the promoter form the finished construct in the target vector.</p>
-          <p><b>Basis of the assembly.</b> The builder simulates Golden Gate cloning as sequence assembly, not as a reaction: each part carries its two 4-nt overhangs, the right overhang of one part must be identical to the left overhang of the next (otherwise the design stops with an error), and the parts are joined through them. Internal BsaI (GGTCTC / GAGACC) and BbsI (GAAGAC / GTCTTC) sites are searched on both strands and reported. Between two fused parts the 4-nt overhang plus the 2-nt GC frame spacer add 6 nt, so the reading frame is kept; the overhangs and the GC spacer are chosen so that none of the junction codons is a stop codon, read in either direction. Enzyme kinetics, efficiency or mis-ligation are not simulated.</p>` },
+    body:`<p><b>Level 0 (BbsI):</b> every part is cloned separately; its Type number fixes where it ends up. <b>Level 1 (BsaI):</b> the parts of a site are joined through their shared overhangs into the cargo module and the NC module. <b>Level 2 (BbsI):</b> cargo module, promoter and NC module form the finished construct in the target vector.</p>
+          <p>The right overhang of one part must equal the left overhang of the next, otherwise the design stops with an error. The Level 2 insert carries the overhangs <b>CCAA</b> and <b>AATG</b> and fits plasmids whose BbsI acceptor site gives exactly these, not every Golden Gate plasmid.</p>
+          <p class="infomore"><a href="/guide.html#bg-levels" target="_blank" rel="noopener">Full details in the Overview</a></p>` },
   codonOpt: { title:'Codon optimization for <i>S. cerevisiae</i>', img:'Diagram: synonymous codons, restriction sites removed',
-    body:`<p>Every sequence you enter yourself (cargo, your own shell, your own sequence in a module) is <b>translated and back-translated</b> with the codon usage of <i>Saccharomyces cerevisiae</i> (Kazusa table). The <b>protein stays exactly the same</b>; only synonymous codons change. Library parts are toolkit sequences and are never touched.</p>
-          <p><b>How codons are chosen.</b> Each codon is drawn at random, weighted by how often yeast uses it (frequency to the power of 3, so frequent codons dominate), and codons below 10&nbsp;% of their amino acid's usage are never used. That gives a high <b>CAI</b> (codon adaptation index, 1 = only the most frequent codons) of about 0.85 to 0.9 at a natural GC content of about 35 to 40&nbsp;%; the same range the VectorBuilder optimizer gives for the same sequences. The draw is seeded with your sequence, so the same input always gives the same result.</p>
-          <p><b>What is kept out.</b> An exact search then corrects as few codons as needed so that <b>no BsaI site (GGTCTC / GAGACC), no BbsI site (GAAGAC / GTCTTC) and none of the sites the iGEM standards forbid in a part (SapI for RFC 1000; EcoRI, XbaI, SpeI, PstI and NotI for RFC 10)</b> remains (also not across the seam to the overhang adapter and the neighbouring part) and no run of 7 identical bases appears. Without that the Golden Gate digest would cut your part.</p>
-          <p>A DNA sequence that is already well adapted (CAI ≥ 0.85) and free of those sites is kept as entered.</p>
-          <p><b>Amino acid sequences.</b> Instead of DNA you can paste a protein sequence (one-letter code, no stop codon). It is detected automatically (a sequence whose letters are at least 90 % A/C/G/T is read as DNA, anything else as protein) and back-translated with the same codon choice and the same site-free rule.</p>
-          <p><b>Basis of the calculation.</b> Codon usage: Kazusa <i>S. cerevisiae</i> table (frequency per 1000 codons). <b>CAI</b> (codon adaptation index) after Sharp &amp; Li (1987): the geometric mean of w = codon frequency ÷ frequency of the most frequent synonymous codon. <b>Choice of codons:</b> weighted random draw (frequency³), seeded by a hash of your sequence, so it is reproducible. <b>Site removal:</b> dynamic programming over all codon choices, i.e. the fewest changes that leave no BsaI, BbsI, SapI, EcoRI, XbaI, SpeI, PstI or NotI site on either strand (including the seam to the adapter) and no run of 7 or more identical bases; not a greedy fix. <b>GC content</b> = (G+C) ÷ length. The optimizer is our own implementation; it is not a copy of a commercial tool, only tuned to give a similar CAI and GC range.</p>` },
+    body:`<p>Every sequence you enter yourself is translated and back-translated with the codon usage of <i>S. cerevisiae</i>. The <b>protein stays exactly the same</b>; only synonymous codons change. Library parts are never touched.</p>
+          <p>The result has a <b>CAI</b> of about 0.85 to 0.9 and a natural GC content. <b>No BsaI, BbsI, SapI, EcoRI, XbaI, SpeI, PstI or NotI site</b> remains, also not across the seam to the adapter, and no run of 7 identical bases appears. A sequence that is already well adapted (CAI ≥ 0.85) and free of these sites is kept as entered.</p>
+          <p class="infomore"><a href="/guide.html#bg-codon" target="_blank" rel="noopener">Full details in the Overview</a></p>` },
 };
 
 /* ---------- Color key (CSS variables, so theme/CB take effect) ---------- */
@@ -2539,13 +2515,11 @@ function renderLevel1(res){
     $('#lvl1cargo').innerHTML = l1Row('cargo_site', cargo, [...m.l1cargo].reverse());
     $('#lvl1nc').innerHTML = l1Row('nc_site', nc, m.l1nc);
     $('#lvl1promo').innerHTML = l1Row('promoter', promo, [{ label:m.promo.label, kind:'promo', note:'bidirectional', type:'' }]);
-    $('#l1fold').style.display='';
   } else {
     renderStrand('#lvl1cargo', m.l1cargo, {antisense:true});
     renderStrand('#lvl1nc', m.l1nc);
     $('#lvl1promo').innerHTML = `<div class="partsrow"><div class="part" style="background:${cvar('promo')};color:${cink('promo')}">
       <span class="ptype">Promoter</span><span class="plab">${esc(m.promo.label)}</span><small>bidirectional</small></div></div>`;
-    $('#l1fold').style.display='none';
   }
   renderLevel1Backbone(list);
 }
