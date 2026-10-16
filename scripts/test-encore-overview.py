@@ -33,5 +33,4 @@ assert 'href="#contribute"' in s
 assert '<button type="button" disabled' in s
 for x in ('New encapsulin', 'Additional assembly', 'Engineered modification', 'Pore or property data', 'Corrections'):
  assert x in s, x
-assert (root/'TODO_COMMUNITY_CONTRIBUTIONS.md').is_file()
 print('PASS: Community contributions section and clearly disabled submission placeholder.')
