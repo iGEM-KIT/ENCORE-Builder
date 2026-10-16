@@ -387,3 +387,11 @@ def test_the_shell_and_the_cargo_fields_carry_no_choose_or_use_your_own_hint():
     text = INDEX.read_text(encoding="utf8")
     assert "choose from library or use your own" not in text and "choose an example or use your own" not in text
     assert "Nanocompartment · Type 0.3" in text and "Cargo · Type 0.3" in text      # the labels stay
+
+
+def test_the_type_cards_of_both_sites_show_only_the_type_without_n_or_c_terminal_label():
+    text = INDEX.read_text(encoding="utf8")
+    card = text[text.index("function slotCardHtml"):]
+    card = card[:card.index("</div>")]
+    assert 'class="stype">Type 0.${n}</span>' in card
+    assert "sterm" not in text and "N-terminal'" not in text and "'C-terminal'" not in text
