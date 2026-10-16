@@ -1,0 +1,9 @@
+OpenDyslexic
+
+The four font files in this folder (opendyslexic-regular, bold, italic and bolditalic, WOFF2) are the OpenDyslexic typeface
+(https://opendyslexic.org). OpenDyslexic is licensed under the SIL Open Font License, Version 1.1. The license allows to use,
+study, copy, merge, embed, modify, redistribute and sell the fonts, as long as they are not sold by themselves and this notice
+stays with them. The full text of the license is at https://openfontlicense.org.
+
+The files were taken from the toolKIT wiki of iGEM Karlsruhe 2026 (static.igem.wiki, team 6296), where the same dyslexia-friendly
+font mode is offered.

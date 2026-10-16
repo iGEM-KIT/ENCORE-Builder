@@ -1,0 +1,17 @@
+/* Dyslexia-friendly font, shared by all pages (Builder, guide, Open Database, Filters). Switched by the button
+   #dyslexiaToggle (see dyslexia.js), which puts the class "enc-dyslexic" on <html>. The OpenDyslexic files are served
+   from this project, so the mode needs no connection to another server. */
+@font-face{font-family:OpenDyslexic;src:url("/fonts/opendyslexic/opendyslexic-regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:OpenDyslexic;src:url("/fonts/opendyslexic/opendyslexic-bold.woff2") format("woff2");font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:OpenDyslexic;src:url("/fonts/opendyslexic/opendyslexic-italic.woff2") format("woff2");font-weight:400;font-style:italic;font-display:swap}
+@font-face{font-family:OpenDyslexic;src:url("/fonts/opendyslexic/opendyslexic-bolditalic.woff2") format("woff2");font-weight:700;font-style:italic;font-display:swap}
+
+html.enc-dyslexic body,
+html.enc-dyslexic body *:not(svg):not(svg *){font-family:OpenDyslexic,"Segoe UI",Helvetica,Arial,sans-serif !important}
+html.enc-dyslexic svg,html.enc-dyslexic svg *{font-family:"Segoe UI",Helvetica,Arial,sans-serif !important}   /* maps and diagrams keep their layout */
+html.enc-dyslexic body{line-height:1.7;letter-spacing:.01em}
+html.enc-dyslexic p,html.enc-dyslexic li{text-align:left}
+
+#dyslexiaToggle{padding:7px 9px}
+#dyslexiaToggle svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#dyslexiaToggle[aria-pressed="true"]{background:var(--teal,#1C8070);border-color:var(--teal,#1C8070);color:#fff}

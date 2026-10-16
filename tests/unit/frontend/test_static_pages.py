@@ -288,3 +288,28 @@ def test_builder_and_filter_share_the_wiki_colours():
         assert color.lower() in site.lower() and color.lower() in filt.lower(), color
     for old in ("#12283a", "#0072B2", "#3fa9d8"):
         assert old.lower() not in site.lower() and old.lower() not in filt.lower(), old
+
+
+DYSLEXIA_PAGES = [INDEX, GUIDE, SELECTOR_HTML, ROOT / "encapsulin_selector" / "overview.html", ROOT / "encapsulin_selector" / "builder-filter.html"]
+
+
+@pytest.mark.parametrize("page", DYSLEXIA_PAGES, ids=lambda p: p.name)
+def test_every_page_offers_the_dyslexia_mode(page):
+    text = page.read_text(encoding="utf8")
+    assert '<link rel="stylesheet" href="/dyslexia.css">' in text and '<script src="/dyslexia.js"></script>' in text
+    assert 'id="themeToggle"' in text                                               # the script puts its button in front of the theme switch
+
+
+def test_the_dyslexia_mode_ships_the_font_and_does_not_load_it_from_another_server():
+    fonts = ROOT / "frontend" / "fonts" / "opendyslexic"
+    for name in ("regular", "bold", "italic", "bolditalic"):
+        data = (fonts / f"opendyslexic-{name}.woff2").read_bytes()
+        assert data[:4] == b"wOF2" and len(data) > 50_000, name                     # a real WOFF2 file
+    assert "SIL Open Font License" in (fonts / "LICENSE.txt").read_text(encoding="utf8")
+    css = (ROOT / "frontend" / "dyslexia.css").read_text(encoding="utf8")
+    assert css.count("@font-face") == 4 and "http" not in css                       # four faces, all from this project
+    js = (ROOT / "frontend" / "dyslexia.js").read_text(encoding="utf8")
+    assert "encore.dyslexia" in js and "enc-dyslexic" in js and "aria-pressed" in js
+    assert "enc-dyslexic" in css and "dyslexiaToggle" in css
+    guide = re.sub(r"<[^>]*>", " ", GUIDE.read_text(encoding="utf8"))
+    assert "Dyslexia-friendly font" in guide
