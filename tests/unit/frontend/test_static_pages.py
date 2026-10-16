@@ -199,3 +199,8 @@ def test_the_candidate_card_shows_sequence_data_before_the_source():
     js = SELECTOR_JS.read_text(encoding="utf8")
     card = js[js.index('<article class="candidate-card">'):]
     assert card.index("Sequence data (") < card.index('citationBlock("databank"')
+
+
+def test_the_guide_advises_the_combined_ncs_for_two_neighbouring_spacers():
+    guide = re.sub(r"<[^>]*>", " ", GUIDE.read_text(encoding="utf8"))
+    assert "Prefer the combined NCS" in guide and "E. coli" in guide and "repeat" in guide
