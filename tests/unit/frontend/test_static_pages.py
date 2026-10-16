@@ -232,3 +232,10 @@ def test_the_guide_names_the_intein_as_the_targeting_peptide_of_the_vault_and_po
     assert "Intein (INT)" in guide and "MVP" in guide
     assert "registry.igem.org" in GUIDE.read_text(encoding="utf8") and "Use your own sequence" in guide
     assert "has no targeting peptide of the toolkit either" not in guide
+
+
+def test_the_builder_page_offers_the_intein_only_with_the_vault_and_the_guide_says_so():
+    text = INDEX.read_text(encoding="utf8")
+    assert "v.startsWith('intein:') && noIntHere" in text and "state.nc.id==='mvp'" in text
+    guide = re.sub(r"<[^>]*>", " ", GUIDE.read_text(encoding="utf8"))
+    assert "offered only when the human vault is the nanocompartment" in guide

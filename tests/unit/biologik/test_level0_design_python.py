@@ -1275,6 +1275,8 @@ LEVEL2_SLOT_VARIANTS = [
 @pytest.mark.parametrize('variant', range(len(LEVEL2_SLOT_VARIANTS)))
 def test_the_level2_insert_has_the_two_level2_overhangs_and_no_bbsi_or_bsai_site(nanocompartment, variant):
     from Biologik.level0_design.design import design_construct
+    if 'intein' in str(LEVEL2_SLOT_VARIANTS[variant]) and nanocompartment != 'mvp':
+        pytest.skip('the intein INT is the targeting peptide of the vault and is offered only with the vault')
     design = design_construct({'nanocompartment': nanocompartment, 'cargoSeq': _long_cargo(), 'cargoLabel': 'X', **LEVEL2_SLOT_VARIANTS[variant]})
     insert = design['level2Construct']['sequence']
     assert insert[:4] == 'CCAA' and insert[-4:] == 'AATG'
@@ -1406,3 +1408,12 @@ def test_only_the_built_state_counts_and_the_data_only_field_never_reaches_the_u
     for name, text in (('libraries', json.dumps(libs)), ('design', json.dumps(design)), ('genbank', build_genbank(design))):
         assert 'stock' not in text.lower(), f'{name} mentions stock'
     assert all('on_stock' in e for e in load_parts()['level0_inserts'][0]['plasmids'])    # while the data files still keep it
+
+
+def test_the_intein_int_is_offered_only_with_the_human_vault():
+    slots = {'1': {'kind': 'intein', 'id': 'int'}, '2': {'kind': 'linker', 'id': 'GSSS2'}}
+    design = _design(nanocompartment='mvp', cargo_slots=slots)
+    assert any(p['label'] == 'INT' for p in design['level0']['cargoModule'])
+    for shell in ('tmari', 'mxan', 'qther'):
+        with pytest.raises(ValueError, match='targeting peptide of the human vault'):
+            _design(nanocompartment=shell, cargo_slots=slots)

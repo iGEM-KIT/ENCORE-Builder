@@ -1642,6 +1642,7 @@ function enforceSlotRules(mod){
     const inner = n===2 || n===4;
     const noNcs = inner && blocksNcs(mod,n), needLnk = inner && needsLinker(mod,n), outer=LINKER_FOR[n];
     const otherTp = SLOT_NUMBERS.some(m=>m!==n && sl[m].kind==='tp');
+    const noIntHere = !(state.nc && state.nc.id==='mvp');                  // the intein INT is the targeting peptide of the human vault and is offered only with the vault
     const noTpHere = !!(state.nc && !state.nc.tp);                         // an own shell or the vault brings no targeting peptide; use "Use your own sequence"
     [...sel.options].forEach(o=>{
       const v=o.value;
@@ -1649,6 +1650,7 @@ function enforceSlotRules(mod){
       if(v==='none'){ o.disabled=true; return; }                       // placeholder
       if(noNcs && (v==='ncs' || v in COMBINED)) off=true;
       if(needLnk && (v.startsWith('marker:') || v.startsWith('intein:') || v==='tp')) off=true;
+      if(v.startsWith('intein:') && noIntHere) off=true;
       if(v==='tp' && (inner || otherTp || noTpHere)) off=true;        // only Type 0.1 / 0.5, only once, and only with a toolkit nanocompartment
       o.disabled=off;
     });
@@ -1661,7 +1663,7 @@ function enforceSlotRules(mod){
     let bounce=null;
     if(sl[n].locked) bounce=null;
     else if((noNcs && isNcs(kind)) || (needLnk && (kind==='marker' || kind==='intein' || kind==='tp'))) bounce=firstLinker(mod,n);
-    else if(kind==='tp' && [...sel.options].find(o=>o.value===kind)?.disabled) bounce={kind:'ncs'};
+    else if((kind==='tp' || kind==='intein') && [...sel.options].find(o=>o.value===(kind==='tp' ? 'tp' : 'intein:'+sl[n].id))?.disabled) bounce={kind:'ncs'};
     if(bounce){
       sl[n]=bounce;
       sel.value = bounce.kind==='linker' ? 'linker:'+bounce.id : bounce.kind==='custom' ? 'custom' : 'ncs';
@@ -1695,7 +1697,7 @@ function slotOptionsHtml(mod, n){
     + (tpHere ? `<option value="tp">Targeting peptide${tpSt}</option>` : '')
     + group('Linker', LIB.linkers, 'linker')
     + group('Surface display', LIB.surfaceMarkers, 'marker')
-    + group('Intein', LIB.inteins||[], 'intein')
+    + group('Intein (human vault only)', LIB.inteins||[], 'intein')
     + `<option value="custom">Use your own sequence …</option>`;
 }
 function slotCardHtml(mod,n){
@@ -1844,6 +1846,7 @@ function updateConstructStrip(){
   const tpOpt=document.querySelector('.slotcard[data-mod="cargo"] .slotsel option[value="tp"]');
   if(tpOpt) document.querySelectorAll('.slotcard[data-mod="cargo"] .slotsel option[value="tp"]').forEach(o=>{ o.textContent = n && n.tp ? 'Targeting peptide '+n.tp : 'Targeting peptide'; });
   if(typeof enforceSlotRules==='function' && document.querySelector('.slotcard[data-mod="cargo"]')) enforceSlotRules('cargo');   // a TP choice may no longer be valid after the nanocompartment changed
+  if(typeof enforceSlotRules==='function' && document.querySelector('.slotcard[data-mod="nc"]')) enforceSlotRules('nc');         // so may an INT choice
 }
 const scrollToSection = id => { pushStep(+id.slice(-1)); document.getElementById(id).scrollIntoView({behavior:'smooth',block:'start'}); };
 $('#next0').addEventListener('click', ()=>{ state.unlocked[1]=true; applyLocks(); updateStepperLocks(); scrollToSection('sec-1'); });
