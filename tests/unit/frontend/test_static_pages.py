@@ -381,3 +381,9 @@ def test_the_long_info_windows_are_short_and_point_to_the_full_text_in_the_overv
     for key in ("nc", "cargo", "promoter"):                                                              # the short windows are in the guide as well
         assert f'id="bg-{ {"nc": "nc", "cargo": "cargo", "promoter": "promoter"}[key] }"' in guide
     assert 'id="background"' in guide and 'href="#background"' in guide
+
+
+def test_the_shell_and_the_cargo_fields_carry_no_choose_or_use_your_own_hint():
+    text = INDEX.read_text(encoding="utf8")
+    assert "choose from library or use your own" not in text and "choose an example or use your own" not in text
+    assert "Nanocompartment · Type 0.3" in text and "Cargo · Type 0.3" in text      # the labels stay
