@@ -16,7 +16,7 @@
 </nav>
 <div class="spacer"></div>
 <button class="hbtn" id="themeToggle" title="Toggle light / dark mode">
-<svg fill="none" height="14" id="themeIcon" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="14"></svg>
+<svg fill="none" height="14" id="themeIcon" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14"></svg>
 <span id="themeLabel">Light</span>
 </button>
 </header>
@@ -94,6 +94,6 @@
 
 </main><footer class="overview-footer">ENCORE · Open Encapsulin Database · Sources and assembly-specific conditions are provided in the scientific records.</footer>
 <script>
-(function(){const b=document.getElementById('themeToggle'),l=document.getElementById('themeLabel');if(l)l.textContent=document.documentElement.getAttribute('data-theme')==='dark'?'Dark':'Light';if(b)b.addEventListener('click',()=>{const dark=document.documentElement.getAttribute('data-theme')==='dark';document.documentElement.setAttribute('data-theme',dark?'light':'dark');if(l)l.textContent=dark?'Light':'Dark';try{localStorage.setItem('encore.theme',dark?'light':'dark')}catch(e){}});
+(function(){const SUN='<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/>',MOON='<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';const root=document.documentElement,b=document.getElementById('themeToggle'),l=document.getElementById('themeLabel'),ic=document.getElementById('themeIcon');function sync(){const dark=root.getAttribute('data-theme')==='dark';if(l)l.textContent=dark?'Dark':'Light';if(ic)ic.innerHTML=dark?MOON:SUN}if(b)b.addEventListener('click',()=>{const dark=root.getAttribute('data-theme')!=='dark';root.setAttribute('data-theme',dark?'dark':'light');try{localStorage.setItem('encore.theme',dark?'dark':'light')}catch(e){}sync()});sync();
 const q=document.getElementById('glossarySearch'),gr=[...document.querySelectorAll('.gloss-group')];if(q)q.addEventListener('input',()=>{const v=q.value.trim().toLowerCase();gr.forEach(g=>{let any=false;g.querySelectorAll('.term-card').forEach(c=>{const ok=!v||c.dataset.term.includes(v);c.hidden=!ok;if(ok)any=true});g.hidden=!any;if(v&&any)g.open=true;if(!v)g.open=false})});})();
 </script></body></html>

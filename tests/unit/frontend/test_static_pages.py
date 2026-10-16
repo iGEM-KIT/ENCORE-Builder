@@ -239,3 +239,22 @@ def test_the_guide_names_the_intein_as_the_targeting_peptide_of_the_vault_and_po
 def test_the_builder_page_has_no_separate_intein_choice_because_int_is_the_targeting_peptide_of_the_vault():
     text = INDEX.read_text(encoding="utf8")
     assert "group('Intein" not in text and "noIntHere" not in text
+
+
+THEME_PAGES = [INDEX, GUIDE, SELECTOR_HTML, ROOT / "encapsulin_selector" / "overview.html", ROOT / "encapsulin_selector" / "builder-filter.html"]
+SUN = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/>'
+MOON = '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>'
+
+
+@pytest.mark.parametrize("page", THEME_PAGES, ids=lambda p: p.name)
+def test_every_page_has_the_same_light_dark_switch(page):
+    """Same label (Light or Dark), the same sun and moon icon and the same stored value on every page."""
+    text = page.read_text(encoding="utf8")
+    if page == SELECTOR_HTML:
+        text += SELECTOR_JS.read_text(encoding="utf8")
+    if page.name == "builder-filter.html":
+        text += (page.parent / "builder-filter.js").read_text(encoding="utf8")
+    assert 'id="themeToggle"' in text and 'id="themeIcon"' in text and 'id="themeLabel"' in text
+    assert SUN in text and MOON in text, f"{page.name}: sun or moon icon missing or malformed"
+    assert "'Dark'" in text.replace('"', "'") and "'Light'" in text.replace('"', "'")
+    assert "encore.theme" in text
