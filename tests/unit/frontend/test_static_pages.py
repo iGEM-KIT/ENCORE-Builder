@@ -381,3 +381,11 @@ def test_the_long_info_windows_are_short_and_point_to_the_full_text_in_the_overv
     for key in ("nc", "cargo", "promoter"):                                                              # the short windows are in the guide as well
         assert f'id="bg-{ {"nc": "nc", "cargo": "cargo", "promoter": "promoter"}[key] }"' in guide
     assert 'id="background"' in guide and 'href="#background"' in guide
+
+
+def test_the_steps_in_the_left_bar_show_only_their_titles_without_a_subtitle():
+    text = INDEX.read_text(encoding="utf8")
+    bar = text[text.index('<nav class="stepper" id="stepper">'):text.index("</nav>", text.index('<nav class="stepper" id="stepper">'))]
+    titles = re.findall(r'<span class="t">([^<]*)</span>', bar)
+    assert titles == ["Nanocompartment Site", "Cargo Site", "Promoter", "Result", "Overview"]
+    assert 'class="sub"' not in bar and ".s-text .sub" not in text
