@@ -414,3 +414,13 @@ def test_the_readme_says_that_nothing_is_calculated_without_the_screening():
     readme = (ROOT / "README.md").read_text(encoding="utf8")
     assert "does not calculate a construct" in readme or "does not calculate any construct" in readme
     assert "the Builder already works, just without" not in readme and "runs without the screening container" not in readme
+
+
+def test_the_filter_hint_is_a_button_on_the_right_in_the_row_of_the_shell_facts():
+    text = INDEX.read_text(encoding="utf8")
+    row = text[text.index('<div class="nc-metarow">'):text.index('<div id="customNc"')]
+    assert 'id="ncMeta"' in row and 'id="filterBtn"' in row and 'href="/selector/builder-filter.html"' in row
+    assert row.index('id="ncMeta"') < row.index('id="filterBtn"')                      # the facts first, the button after them on the right
+    assert "Not sure which fits? Find an approved shell in the Builder Filter first." in row
+    assert ".filterbtn{" in text and "margin-left:auto" in text[text.index(".filterbtn{"):text.index(".filterbtn{") + 400]
+    assert "helplink" not in text and text.count("Not sure which fits") == 1            # the old line below the cards is gone

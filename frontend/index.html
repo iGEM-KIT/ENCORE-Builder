@@ -182,6 +182,11 @@
   .seqmeta b{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--teal-deep);font-weight:700}
   .seqmeta .err{color:#9a4100;font-weight:600}
 
+  .nc-metarow{display:flex;flex-wrap:wrap;align-items:flex-start;gap:8px;margin-top:12px}
+  .nc-metarow .nc-meta{margin-top:0;flex:0 1 auto}
+  .filterbtn{display:inline-flex;align-items:center;gap:7px;margin-left:auto;flex:0 1 250px;max-width:250px;font-size:11.5px;font-weight:600;line-height:1.3;color:var(--teal-deep);background:var(--card);
+    border:1px solid var(--teal);border-radius:8px;padding:8px 11px;text-decoration:none;transition:.15s}
+  .filterbtn:hover{background:var(--teal-soft)}
   .nc-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
   .nc-tag{font-size:11.5px;background:var(--card-2);border:1px solid var(--line);border-radius:8px;padding:7px 11px;color:var(--ink-soft)}
   .nc-tag b{color:var(--ink);font-weight:600}
@@ -193,9 +198,6 @@
   .grouplab:first-child{margin-top:0;padding-top:0;border-top:0}
   .grouplab > span{font-weight:400;font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
 
-  .helplink{display:flex;align-items:flex-start;gap:8px;font-size:12.5px;color:var(--teal-deep);margin-top:10px;line-height:1.45}
-  .helplink svg{flex:none;margin-top:2px}
-  .helplink a{color:var(--teal-deep);font-weight:600;white-space:nowrap}
 
   .stopwarn,.stopok,.stophint{display:flex;gap:9px;align-items:flex-start;border-radius:10px;padding:11px 13px;font-size:12.5px;margin-top:12px}
   .stopwarn{background:rgba(213,94,0,.12);border:1px solid rgba(213,94,0,.5);color:#9a4100}
@@ -613,7 +615,13 @@
             <option value="" disabled selected>Please select</option>
           </select>
         </label>
-        <div class="nc-meta" id="ncMeta"></div>
+        <div class="nc-metarow">
+          <div class="nc-meta" id="ncMeta"></div>
+          <a class="filterbtn" id="filterBtn" href="/selector/builder-filter.html">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            Not sure which fits? Find an approved shell in the Builder Filter first.
+          </a>
+        </div>
         <div id="customNc" style="display:none">
           <label class="field">
             <span class="lab">Name <span class="hint">optional</span></span>
@@ -630,10 +638,6 @@
         </div>
         <div class="termlab gap"><span class="tbadge">C</span>C-terminus of the shell</div>
         <div class="slotrow" id="slotsBottom"></div>
-        <div class="helplink">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-          Not sure which fits? <a href="/selector/builder-filter.html">Find an approved shell in the Builder Filter</a> first.
-        </div>
         <div class="nav">
           <button class="btn btn-primary" id="next0" disabled>Continue to Cargo Site
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12l7 7 7-7"/></svg></button>
