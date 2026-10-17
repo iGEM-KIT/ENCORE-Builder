@@ -222,6 +222,8 @@ def test_the_builder_does_not_calculate_a_construct_when_the_screening_is_not_av
     assert "api.screenSequences(items)" in gate and "api.commecStatus()" in gate
     assert "if(!screeningUp)" in gate and "showCalcError(" in gate and "return;" in gate
     assert "no construct can be calculated" in gate
+    assert 'try again.\', true);' in gate                                                               # shown without the prefix "The design could not be calculated:"
+    assert "plain ? message" in text
     assert "skipping biosecurity screen" in gate and "screening = {available:false}" in gate               # a failed screening call counts as not available
     assert "does not calculate a construct" in text and "does not continue with" not in text
 

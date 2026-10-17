@@ -1971,7 +1971,7 @@ $('#next2').addEventListener('click', async ()=>{
       try{ const st = await api.commecStatus(); screeningUp = !!(st && st.available); }catch(err){ screeningUp = false; }
     }
     if(!screeningUp){
-      showCalcError('The biosecurity screening is not available, so no construct can be calculated. Start the screening container (in Docker Desktop both containers must be green), wait until the header shows "Biosecurity screening: on" and try again.');
+      showCalcError('The biosecurity screening is not available, so no construct can be calculated. Start the screening container (in Docker Desktop both containers must be green), wait until the header shows "Biosecurity screening: on" and try again.', true);
       btn.disabled=false;
       return;
     }
@@ -2791,9 +2791,9 @@ function primersFromApi(primers){
 const DESIGN_KEY=buildKey('design');
 let renderedFromCache=false;
 const resultFromApi = d => ({ model:modelFromApi(d), primers:primersFromApi(d.primers), api:d });
-function showCalcError(message){
+function showCalcError(message, plain){                                         // plain: the message already says everything, no prefix
   const el=$('#calcError');
-  el.textContent = message ? `The design could not be calculated: ${message}` : '';
+  el.textContent = message ? (plain ? message : `The design could not be calculated: ${message}`) : '';
   el.style.display = message ? '' : 'none';
 }
 function showBackendDown(){
