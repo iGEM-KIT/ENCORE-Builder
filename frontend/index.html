@@ -289,7 +289,6 @@
   .termlab small{font-weight:500;font-size:11.5px;color:var(--muted)}
   .termlab.gap{margin-top:18px}
   .tbadge{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:10.5px;font-weight:700;background:var(--teal-soft);color:var(--teal-deep);border-radius:6px;padding:1px 7px}
-  .slothead .sterm{margin-left:auto;font-size:11px;color:var(--muted)}
   @media(max-width:700px){.slotrow{grid-template-columns:1fr}}
   .slotcard{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--card-2,var(--card))}
   .slotcard.locked{opacity:.7}
@@ -609,7 +608,7 @@
         <div class="termlab"><span class="tbadge">N</span>N-terminus of the shell</div>
         <div class="slotrow" id="slotsTop"></div>
         <label class="field">
-          <span class="lab">Nanocompartment · Type 0.3 <span class="hint">choose from library or use your own</span></span>
+          <span class="lab">Nanocompartment · Type 0.3</span>
           <select id="ncSelect">
             <option value="" disabled selected>Please select</option>
           </select>
@@ -663,7 +662,7 @@
           <div class="termlab"><span class="tbadge">C</span>C-terminus of the cargo</div>
           <div class="slotrow" id="cargoSlotsTop"></div>
           <label class="field">
-            <span class="lab">Cargo · Type 0.3 <span class="hint">choose an example or use your own</span></span>
+            <span class="lab">Cargo · Type 0.3</span>
             <select id="cargoSelect">
               <option value="" disabled selected>Please select</option>
             </select>
@@ -1675,9 +1674,8 @@ function slotOptionsHtml(mod, n){
     + `<option value="custom">Use your own sequence …</option>`;
 }
 function slotCardHtml(mod,n){
-  const nSide=MODS[mod].nSide.includes(n);
   return `<div class="slotcard" data-mod="${mod}" data-slot="${n}">
-    <div class="slothead"><span class="stype">Type 0.${n}</span><span class="sterm">${nSide?'N-terminal':'C-terminal'}</span></div>
+    <div class="slothead"><span class="stype">Type 0.${n}</span></div>
     <select class="slotsel" aria-label="Type 0.${n}">${slotOptionsHtml(mod,n)}</select>
     <div class="slothint" style="display:none"></div>
     <div class="slotcustom" style="display:none">
