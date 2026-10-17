@@ -41,18 +41,14 @@
   .popover{position:fixed;z-index:95;max-height:calc(100vh - 24px);overflow-y:auto;max-width:340px;background:var(--card);border:1px solid var(--line);
     border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.18);padding:0;display:none}
   .popover.show{display:block}
-  .popover .pop-img{height:120px;background:var(--line-soft);border-radius:12px 12px 0 0;display:grid;place-items:center;
-    color:var(--muted);font-size:12px;text-align:center;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
-  .popover .pop-img .ph-tag{position:absolute;top:8px;left:8px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:9px;
-    background:rgba(0,0,0,.06);padding:2px 6px;border-radius:4px;color:var(--muted)}
   .popover .pop-body{padding:14px 16px}
   .popover .infomore{margin:10px 0 0;font-size:12px}
   .popover .infomore a{color:var(--teal-deep);font-weight:600}
-  .popover h5{margin:0 0 7px;font-size:14px;font-family:"Segoe UI",Helvetica,Arial,sans-serif}
+  .popover h5{margin:0 0 7px;padding-right:26px;font-size:14px;font-family:"Segoe UI",Helvetica,Arial,sans-serif}
   .popover p{margin:0 0 8px;font-size:12.5px;color:var(--ink-soft);line-height:1.55}
   .popover p:last-child{margin-bottom:0}
   .popover .pop-close{position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;
-    background:rgba(0,0,0,.35);color:#fff;border:0;cursor:pointer;display:grid;place-items:center;z-index:2}
+    background:var(--line-soft);color:var(--ink-soft);border:0;cursor:pointer;display:grid;place-items:center;z-index:2}
 
   /* ============ INTRO ============ */
   /* Entering directly via a "#step-N" link (e.g. the header's "ENCORE Builder" tab): hide the intro
@@ -950,7 +946,6 @@
 
 <!-- Info popover (positioned/populated via JS) -->
 <div class="popover" id="popover">
-  <div class="pop-img" id="popImg"><span class="ph-tag">Graphic placeholder</span><span id="popImgText">Custom graphic to be added here later</span></div>
   <button class="pop-close" id="popClose"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
   <div class="pop-body"><h5 id="popTitle"></h5><div id="popText"></div></div>
 </div>
@@ -1146,36 +1141,36 @@ async function loadLibraries(){
 
 /* ---------- Info bubble content (placeholder graphic + theory) ---------- */
 const INFO = {
-  primers: { title:'How the PCR primers are calculated', img:'Diagram: clamp + BbsI site + overhangs + annealing part',
+  primers: { title:'How the PCR primers are calculated',
     body:`<p><b>Annealing part.</b> At both ends of your part a 25-nt stretch is taken and shortened base by base, down to 18 nt, until both primers have a melting temperature of at most 72 °C and differ by at most 2 °C (<code>primer3</code>, annealing part only).</p>
           <p><b>5′ extension.</b> Each primer carries the <b>TTTT clamp</b>, the adapter flank of this Type (BbsI site and overhangs) and the 2-nt frame spacer. The PCR product is exactly the Level 0 construct, ready for BbsI cloning.</p>
           <p><b>Only when it makes sense.</b> Primers are designed for your own sequences of at least 150 bp. Shorter parts are ordered as an oligo pair, toolbox parts as DNA. Critical secondary structures are listed as warnings.</p>
           <p class="infomore"><a href="/guide.html#bg-primers" target="_blank" rel="noopener">Full details in the Overview</a></p>` },
-  nc: { title:'What is a nanocompartment?', img:'Diagram: encapsulin shell with cargo',
+  nc: { title:'What is a nanocompartment?',
     body:`<p>Encapsulins are hollow protein cages that self-assemble and encapsulate cargo proteins inside.</p>
           <p>The variant you choose determines the matching <b>targeting peptide (TP)</b>, which directs your cargo into the compartment.</p>
           <p>The four modules around the shell (Type 0.1, 0.2, 0.4 and 0.5) are freely configurable: keep them as <b>NCS</b> spacers, or place a <b>linker</b>, a display marker such as <b>SpyCatcher</b> / <b>SpyTag</b>, or <b>your own sequence</b> there. A marker is presented on the <i>outside</i> of the cage; handy for attaching binders, tags or a second protein.</p>
           <p><b>Where the modules sit:</b> Type 0.1 and 0.2 form the <b>N-terminus of the shell</b> and are fused in front of the shell. Type 0.4 and 0.5 form the <b>C-terminus of the shell</b> and are fused behind the shell.</p>` },
-  cargo: { title:'Cargo / gene of interest', img:'Diagram: cargo CDS in reading frame',
+  cargo: { title:'Cargo / gene of interest',
     body:`<p>The cargo is the protein that should end up inside the compartment, e.g. an enzyme or a reporter like GFP.</p>
           <p>You provide the coding sequence (CDS). It is directed into the compartment via the targeting peptide.</p>
           <p><b>Where the modules sit:</b> Type 0.4 and 0.5 form the <b>N-terminus of the cargo</b> and are fused in front of the cargo. Type 0.1 and 0.2 form the <b>C-terminus of the cargo</b> and are fused behind the cargo.</p>` },
-  stop: { title:'Start and stop codon', img:'Diagram: TP-linker-cargo reading frame',
+  stop: { title:'Start and stop codon',
     body:`<p>You do not have to add a start or stop codon: the builder puts an <b>ATG</b> in front of the first coding part of each ORF and a <b>stop codon</b> behind the last one, in whichever slot it sits. The part that carries the stop is marked with a <b>*</b>.</p>
           <p>A stop codon you enter at the end is removed, an ATG you enter is kept and not doubled.</p>
           <p class="infomore"><a href="/guide.html#bg-stop" target="_blank" rel="noopener">Full details in the Overview</a></p>` },
-  commec: { title:'Biosecurity screening (COMMEC)', img:'Diagram: your sequence → COMMEC → curated biorisk database',
+  commec: { title:'Biosecurity screening (COMMEC)',
     body:`<p><b>COMMEC</b> (from IBBIS) checks DNA for similarity to known toxins, virulence factors and regulated pathogens, like the check DNA synthesis providers run before they ship an order.</p>
           <p>Only sequences you typed or pasted yourself are screened; toolkit parts are not, because their sequences are known and harmless. A hit never blocks you silently: you review it and confirm before continuing. If the screening is not running, the builder does not calculate a construct. It is a helper check, not a replacement for your institution's biosafety review.</p>
           <p class="infomore"><a href="/guide.html#bg-commec" target="_blank" rel="noopener">Full details in the Overview</a></p>` },
-  promoter: { title:'Bidirectional promoter', img:'Diagram: GAL1-10 transcribing both ways',
+  promoter: { title:'Bidirectional promoter',
     body:`<p><b>GAL1-10</b> is a bidirectional yeast promoter: it drives <b>two genes at once</b> in opposite directions. Both transcripts <b>start (5′) at the promoter</b> and run outward.</p>
           <p>The nanocompartment module is read off the <b>sense (plus) strand</b> (to the right), the cargo module off the <b>antisense (minus) strand</b> (to the left); that is why they point away from each other. Inducible via galactose.</p>` },
-  levels: { title:'Level 0 → 1 → 2', img:'Diagram: hierarchical Golden Gate assembly',
+  levels: { title:'Level 0 → 1 → 2',
     body:`<p><b>Level 0 (BbsI):</b> every part is cloned separately; its Type number fixes where it ends up. <b>Level 1 (BsaI):</b> the parts of a site are joined through their shared overhangs into the cargo module and the NC module. <b>Level 2 (BbsI):</b> cargo module, promoter and NC module form the finished construct in the target vector.</p>
           <p>The right overhang of one part must equal the left overhang of the next, otherwise the design stops with an error. The Level 2 insert carries the overhangs <b>CCAA</b> and <b>AATG</b> and fits plasmids whose BbsI acceptor site gives exactly these, not every Golden Gate plasmid.</p>
           <p class="infomore"><a href="/guide.html#bg-levels" target="_blank" rel="noopener">Full details in the Overview</a></p>` },
-  codonOpt: { title:'Codon optimization for <i>S. cerevisiae</i>', img:'Diagram: synonymous codons, restriction sites removed',
+  codonOpt: { title:'Codon optimization for <i>S. cerevisiae</i>',
     body:`<p>Every sequence you enter yourself is translated and back-translated with the codon usage of <i>S. cerevisiae</i>. The <b>protein stays exactly the same</b>; only synonymous codons change. Library parts are never touched.</p>
           <p>The result has a <b>CAI</b> of about 0.85 to 0.9 and a natural GC content. <b>No BsaI, BbsI, SapI, EcoRI, XbaI, SpeI, PstI or NotI site</b> remains, also not across the seam to the adapter, and no run of 7 identical bases appears. A sequence that is already well adapted (CAI ≥ 0.85) and free of these sites is kept as entered.</p>
           <p class="infomore"><a href="/guide.html#bg-codon" target="_blank" rel="noopener">Full details in the Overview</a></p>` },
@@ -1235,7 +1230,6 @@ function openPopover(key, anchor){
   const data = INFO[key]; if(!data) return;
   $('#popTitle').innerHTML = data.title;  // titles are static, developer-authored strings (may carry entities like &amp;), never user input
   $('#popText').innerHTML = data.body;
-  $('#popImgText').textContent = data.img;
   popAnchor = anchor;
   pop.classList.add('show');
   positionPopover();

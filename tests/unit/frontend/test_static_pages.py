@@ -414,3 +414,14 @@ def test_the_readme_says_that_nothing_is_calculated_without_the_screening():
     readme = (ROOT / "README.md").read_text(encoding="utf8")
     assert "does not calculate a construct" in readme or "does not calculate any construct" in readme
     assert "the Builder already works, just without" not in readme and "runs without the screening container" not in readme
+
+
+def test_the_info_windows_show_no_graphic_placeholder():
+    text = INDEX.read_text(encoding="utf8")
+    for gone in ("Graphic placeholder", "Custom graphic to be added", "pop-img", "popImg", "ph-tag"):
+        assert gone not in text, gone
+    start = text.index("const INFO = {")
+    block = text[start:text.index("\n};", start)]
+    assert "img:" not in block and "Diagram:" not in block                      # no caption of a graphic is kept in the data either
+    assert len(re.findall(r"\n  [A-Za-z0-9]+: \{ title:", block)) == 8
+    assert 'id="popTitle"' in text and 'id="popText"' in text and 'id="popClose"' in text
