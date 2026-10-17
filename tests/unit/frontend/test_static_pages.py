@@ -425,3 +425,13 @@ def test_the_info_windows_show_no_graphic_placeholder():
     assert "img:" not in block and "Diagram:" not in block                      # no caption of a graphic is kept in the data either
     assert len(re.findall(r"\n  [A-Za-z0-9]+: \{ title:", block)) == 8
     assert 'id="popTitle"' in text and 'id="popText"' in text and 'id="popClose"' in text
+
+
+def test_the_filter_hint_is_a_button_on_the_right_in_the_row_of_the_shell_facts():
+    text = INDEX.read_text(encoding="utf8")
+    row = text[text.index('<div class="nc-metarow">'):text.index('<div id="customNc"')]
+    assert 'id="ncMeta"' in row and 'id="filterBtn"' in row and 'href="/selector/builder-filter.html"' in row
+    assert row.index('id="ncMeta"') < row.index('id="filterBtn"')                      # the facts first, the button after them on the right
+    assert "Find more nanocompartments here" in row
+    assert ".filterbtn{" in text and "margin-left:auto" in text[text.index(".filterbtn{"):text.index(".filterbtn{") + 400]
+    assert "helplink" not in text and "Not sure which fits" not in text            # the old line below the cards is gone
