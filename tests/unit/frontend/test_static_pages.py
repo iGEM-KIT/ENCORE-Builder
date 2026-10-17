@@ -421,6 +421,6 @@ def test_the_filter_hint_is_a_button_on_the_right_in_the_row_of_the_shell_facts(
     row = text[text.index('<div class="nc-metarow">'):text.index('<div id="customNc"')]
     assert 'id="ncMeta"' in row and 'id="filterBtn"' in row and 'href="/selector/builder-filter.html"' in row
     assert row.index('id="ncMeta"') < row.index('id="filterBtn"')                      # the facts first, the button after them on the right
-    assert "Not sure which fits? Find an approved shell in the Builder Filter first." in row
+    assert "Find more nanocompartments here" in row
     assert ".filterbtn{" in text and "margin-left:auto" in text[text.index(".filterbtn{"):text.index(".filterbtn{") + 400]
-    assert "helplink" not in text and text.count("Not sure which fits") == 1            # the old line below the cards is gone
+    assert "helplink" not in text and "Not sure which fits" not in text            # the old line below the cards is gone
