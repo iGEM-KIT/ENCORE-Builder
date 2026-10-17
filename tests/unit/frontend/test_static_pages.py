@@ -406,3 +406,9 @@ def test_the_type_cards_of_both_sites_show_only_the_type_without_n_or_c_terminal
     card = card[:card.index("</div>")]
     assert 'class="stype">Type 0.${n}</span>' in card
     assert "sterm" not in text and "N-terminal'" not in text and "'C-terminal'" not in text
+
+
+def test_the_readme_says_that_nothing_is_calculated_without_the_screening():
+    readme = (ROOT / "README.md").read_text(encoding="utf8")
+    assert "does not calculate a construct" in readme or "does not calculate any construct" in readme
+    assert "the Builder already works, just without" not in readme and "runs without the screening container" not in readme

@@ -136,8 +136,8 @@ screening for you.
    by; that is normal. Later starts take seconds.
 6. Open your web browser and go to **[http://localhost:3000](http://localhost:3000)**.
 7. In the top right the page shows **"Biosecurity screening: on"** with a green dot as soon as
-   the screening is ready. Until then it says "off"; the Builder already works, just without
-   the check. If you want the screening, wait for the dot before you calculate a construct.
+   the screening is ready. Until then it says "off" and the Builder does not calculate a
+   construct (it shows a message instead). Wait for the green dot before you calculate.
 
 To stop the program, see [Stopping, updating and cleaning up](#stopping-updating-and-cleaning-up).
 
@@ -230,7 +230,7 @@ above): the folder with `docker-compose.pull.yml` for Way A and the project fold
 | "failed to connect to the docker API at unix:///var/run/docker.sock" | Docker Desktop is not running yet, or the terminal uses the wrong Docker connection. Start Docker Desktop and wait for "Engine running". If the message stays, run `docker context use desktop-linux` once and try again. |
 | "port is already allocated" or "address already in use" | Something else uses port 3000. Stop the other program, or change `"3000:3000"` in the compose file to `"3001:3000"` and open port 3001. |
 | The page shows "The Builder cannot be reached" (or "Failed to fetch") | The browser cannot reach the Builder. In Docker Desktop open the **Containers** tab and check that `app` is running (green); start it if not, wait a few seconds and reload the page. This also happens when the containers were restarted or updated while the page was still open. The screening container (`commec`) is not the cause: without it the Builder still calculates, only without the check. |
-| The header says "Biosecurity screening: off" | The screening container is still downloading its databases (first start only, a few minutes) or not running. Check the **Containers** tab: both `app` and `commec` should be green. |
+| The header says "Biosecurity screening: off" | The screening container is still downloading its databases (first start only, a few minutes) or not running. As long as it says "off", the Builder does not calculate any construct. Check the **Containers** tab: both `app` and `commec` should be green. |
 | The first start seems stuck | Watch the terminal: as long as lines keep appearing, it is downloading. A slow internet connection makes it take longer. |
 | "no space left on device" | Free up disk space, or in Docker Desktop use Settings, Resources to give it more disk. |
 | It is very slow or crashes on the first start | Give Docker Desktop more memory (Settings, Resources, at least 4 GB). |
@@ -260,8 +260,9 @@ fails (e.g. missing C compiler), Biologik keeps running anyway, only with
 a less accurate Wallace Tm estimate instead of primer3. A specific
 interpreter can be forced with `BIOLOGIK_PYTHON=/path/to/python`.
 
-The builder image alone (`docker build -t encore-builder .`) runs without the screening container;
-users should always start the Compose files so that the screening is included.
+The builder image alone (`docker build -t encore-builder .`) starts without the screening container,
+but then it does not calculate any construct. Users should always start the Compose files so that the
+screening is included.
 
 ### Publishing the Docker images
 
