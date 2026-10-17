@@ -215,12 +215,15 @@ def test_the_empty_level2_backbone_names_its_cassette_tspurple():
     assert "'Test cassette'" not in text and "bp test cassette" not in text
 
 
-def test_the_builder_does_not_continue_when_the_screening_is_not_available():
+def test_the_builder_does_not_calculate_a_construct_when_the_screening_is_not_available():
+    """With own sequences the screening call decides, with toolkit parts only the status of the screening does."""
     text = INDEX.read_text(encoding="utf8")
-    gate = text[text.index("if(items.length && api && api.available && !(screening && screening.available))"):]
-    assert "showCalcError(" in gate[:600] and "return;" in gate[:700]
-    assert "skipping biosecurity screen" in text                                     # the failed call is still turned into 'not available' ...
-    assert "screening = {available:false}" in text                                   # ... and the gate above stops the design
+    gate = text[text.index("  let screening=null, proceed=true;"):text.index("  let flaggedCount=0;")]
+    assert "api.screenSequences(items)" in gate and "api.commecStatus()" in gate
+    assert "if(!screeningUp)" in gate and "showCalcError(" in gate and "return;" in gate
+    assert "no construct can be calculated" in gate
+    assert "skipping biosecurity screen" in gate and "screening = {available:false}" in gate               # a failed screening call counts as not available
+    assert "does not calculate a construct" in text and "does not continue with" not in text
 
 
 def test_the_pages_never_assume_a_remote_server():

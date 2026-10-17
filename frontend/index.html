@@ -1166,7 +1166,7 @@ const INFO = {
           <p class="infomore"><a href="/guide.html#bg-stop" target="_blank" rel="noopener">Full details in the Overview</a></p>` },
   commec: { title:'Biosecurity screening (COMMEC)', img:'Diagram: your sequence → COMMEC → curated biorisk database',
     body:`<p><b>COMMEC</b> (from IBBIS) checks DNA for similarity to known toxins, virulence factors and regulated pathogens, like the check DNA synthesis providers run before they ship an order.</p>
-          <p>Only sequences you typed or pasted yourself are screened; toolkit parts are not, because their sequences are known and harmless. A hit never blocks you silently: you review it and confirm before continuing. If the screening is not running, the builder does not continue with your own sequences. It is a helper check, not a replacement for your institution's biosafety review.</p>
+          <p>Only sequences you typed or pasted yourself are screened; toolkit parts are not, because their sequences are known and harmless. A hit never blocks you silently: you review it and confirm before continuing. If the screening is not running, the builder does not calculate a construct. It is a helper check, not a replacement for your institution's biosafety review.</p>
           <p class="infomore"><a href="/guide.html#bg-commec" target="_blank" rel="noopener">Full details in the Overview</a></p>` },
   promoter: { title:'Bidirectional promoter', img:'Diagram: GAL1-10 transcribing both ways',
     body:`<p><b>GAL1-10</b> is a bidirectional yeast promoter: it drives <b>two genes at once</b> in opposite directions. Both transcripts <b>start (5′) at the promoter</b> and run outward.</p>
@@ -1955,20 +1955,26 @@ $('#next2').addEventListener('click', async ()=>{
   const api=window.ENCORE_API;
   const items=collectUserSequences();
   let screening=null, proceed=true;
-  if(api && api.available && items.length){
-    const btnLabel=btn.innerHTML; btn.innerHTML='Screening for biosecurity concerns…';
-    try{
-      screening = await api.screenSequences(items);
-    }catch(err){
-      console.warn('[ENCORE] /api/cargo/screen failed: skipping biosecurity screen', err);
-      screening = {available:false};
+  if(api && api.available){
+    let screeningUp;
+    if(items.length){
+      const btnLabel=btn.innerHTML; btn.innerHTML='Screening for biosecurity concerns…';
+      try{
+        screening = await api.screenSequences(items);
+      }catch(err){
+        console.warn('[ENCORE] /api/cargo/screen failed: skipping biosecurity screen', err);
+        screening = {available:false};
+      }
+      btn.innerHTML=btnLabel;
+      screeningUp = !!(screening && screening.available);
+    } else {                                                                       // only toolkit parts: nothing to screen, but the screening has to be running
+      try{ const st = await api.commecStatus(); screeningUp = !!(st && st.available); }catch(err){ screeningUp = false; }
     }
-    btn.innerHTML=btnLabel;
-  }
-  if(items.length && api && api.available && !(screening && screening.available)){
-    showCalcError('The biosecurity screening is not available, so the sequences you entered cannot be checked and the design cannot continue. Start the screening container (in Docker Desktop both containers must be green), wait until the header shows "Biosecurity screening: on" and try again.');
-    btn.disabled=false;
-    return;
+    if(!screeningUp){
+      showCalcError('The biosecurity screening is not available, so no construct can be calculated. Start the screening container (in Docker Desktop both containers must be green), wait until the header shows "Biosecurity screening: on" and try again.');
+      btn.disabled=false;
+      return;
+    }
   }
   let flaggedCount=0;
   if(screening && screening.available){
@@ -3000,13 +3006,13 @@ async function refreshCommecStatus(){
     } else {
       badge.classList.add('off');
       label.textContent='Biosecurity screening: off';
-      badge.title=s.reason || 'COMMEC is not reachable. Sequences you enter cannot be designed until the screening is running. See README.md.';
+      badge.title=s.reason || 'COMMEC is not reachable. No construct can be calculated until the screening is running. See README.md.';
     }
   }catch(err){
     badge.classList.remove('on','off','checking');
     badge.classList.add('off');
     label.textContent='Biosecurity screening: off';
-    badge.title='Could not check COMMEC status. Sequences you enter cannot be designed until the screening is running.';
+    badge.title='Could not check COMMEC status. No construct can be calculated until the screening is running.';
   }
 }
 async function boot(){
