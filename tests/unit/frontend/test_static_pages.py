@@ -496,3 +496,9 @@ def test_the_language_menu_lists_five_languages_with_their_own_names_and_english
         assert name in js, name
     assert "return 'en'" in js and "localStorage.getItem(KEY)" in js
     assert 'translate="no"' in (ROOT / "frontend" / "viewmenu.js").read_text(encoding="utf8")      # the names of the languages are never translated
+
+
+
+def test_the_guide_warns_that_the_translations_are_not_always_correct_and_that_english_is_the_reference():
+    guide = re.sub(r"<[^>]*>", " ", GUIDE.read_text(encoding="utf8"))
+    assert "Translations" in guide and "not always correct" in guide and "English text is the reference" in guide
