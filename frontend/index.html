@@ -4,7 +4,7 @@
 <title>ENCORE toolKIT</title>
 <script>try{if(localStorage.getItem('encore.theme')==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}</script>
 <script>try{if(/^#step-[1-5]$/.test(location.hash))document.documentElement.setAttribute('data-entry','builder')}catch(e){}</script>
-<link rel="stylesheet" href="/site.css"><link rel="stylesheet" href="/dyslexia.css"><script src="/dyslexia.js"></script>
+<link rel="stylesheet" href="/site.css"><link rel="stylesheet" href="/viewmenu.css"><script src="/i18n.js"></script><script src="/viewmenu.js"></script>
 <style>
   /* Primer structure check (hairpin / self-dimer / primer-primer dimer) in the Level 0 popup */
   .pstruct{margin-top:8px;font-size:12px}
@@ -951,7 +951,7 @@
 <!-- Info popover (positioned/populated via JS) -->
 <div class="popover" id="popover">
   <button class="pop-close" id="popClose"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
-  <div class="pop-body"><h5 id="popTitle"></h5><div id="popText"></div></div>
+  <div class="pop-body" translate="no"><h5 id="popTitle"></h5><div id="popText"></div></div>
 </div>
 
 <!-- Biosecurity screening (COMMEC) gate; appears before Step 4 if any user-entered
@@ -1232,8 +1232,9 @@ function positionPopover(){
 function closePopover(){ pop.classList.remove('show'); popAnchor = null; }
 function openPopover(key, anchor){
   const data = INFO[key]; if(!data) return;
-  $('#popTitle').innerHTML = data.title;  // titles are static, developer-authored strings (may carry entities like &amp;), never user input
-  $('#popText').innerHTML = data.body;
+  const I18N = window.ENCORE_I18N;
+  $('#popTitle').innerHTML = I18N ? I18N.html('info.'+key+'.title', data.title) : data.title;  // titles are static, developer-authored strings (may carry entities like &amp;), never user input
+  $('#popText').innerHTML = I18N ? I18N.html('info.'+key+'.body', data.body) : data.body;
   popAnchor = anchor;
   pop.classList.add('show');
   positionPopover();

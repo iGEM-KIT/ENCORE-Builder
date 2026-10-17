@@ -1,0 +1,33 @@
+/* View menu of all pages (see viewmenu.js) and the dyslexia-friendly font. The font mode is the class "enc-dyslexic" on <html>.
+   The OpenDyslexic files are served from this project, so the mode needs no connection to another server. */
+@font-face{font-family:OpenDyslexic;src:url("/fonts/opendyslexic/opendyslexic-regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:OpenDyslexic;src:url("/fonts/opendyslexic/opendyslexic-bold.woff2") format("woff2");font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:OpenDyslexic;src:url("/fonts/opendyslexic/opendyslexic-italic.woff2") format("woff2");font-weight:400;font-style:italic;font-display:swap}
+@font-face{font-family:OpenDyslexic;src:url("/fonts/opendyslexic/opendyslexic-bolditalic.woff2") format("woff2");font-weight:700;font-style:italic;font-display:swap}
+
+html.enc-dyslexic body,
+html.enc-dyslexic body *:not(svg):not(svg *){font-family:OpenDyslexic,"Segoe UI",Helvetica,Arial,sans-serif !important}
+html.enc-dyslexic svg,html.enc-dyslexic svg *{font-family:"Segoe UI",Helvetica,Arial,sans-serif !important}   /* maps and diagrams keep their layout */
+html.enc-dyslexic body{line-height:1.7;letter-spacing:.01em}
+html.enc-dyslexic p,html.enc-dyslexic li{text-align:left}
+
+.vm-oldtheme{display:none !important}
+.vm{position:relative;display:flex}
+.vm-btn{width:34px;height:34px;padding:0;justify-content:center}
+.vm-btn svg,.vm-item svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.vm-btn[aria-expanded="true"]{background:var(--teal,var(--accent,#1C8070));border-color:var(--teal,var(--accent,#1C8070));color:#fff}
+.vm-panel{position:absolute;top:calc(100% + 10px);right:0;display:flex;gap:6px;padding:8px;background:var(--card,#fff);color:var(--ink,#17211F);
+  border:1px solid var(--line,#DDE9E5);border-radius:12px;box-shadow:0 1px 2px rgba(15,79,70,.06),0 12px 32px -18px rgba(15,79,70,.35);z-index:90}
+.vm-panel[hidden],.vm-langs[hidden]{display:none}
+.vm-item{width:38px;height:38px;padding:0;border-radius:10px;border:1px solid var(--line,#DDE9E5);background:var(--card,#fff);color:var(--ink,#17211F);
+  display:grid;place-items:center;cursor:pointer;transition:.15s}
+.vm-item:hover{background:var(--teal-soft,var(--accent-soft,#DDF1EC))}
+.vm-item[aria-pressed="true"],.vm-item[aria-expanded="true"]{background:var(--teal-soft,var(--accent-soft,#DDF1EC));border-color:var(--teal,var(--accent,#1C8070));color:var(--teal-deep,var(--accent,#156557))}
+.vm-flag{display:block;width:24px;height:15px}
+.vm-langs{position:absolute;top:calc(100% + 8px);right:0;margin:0;padding:6px;list-style:none;min-width:170px;background:var(--card,#fff);
+  border:1px solid var(--line,#DDE9E5);border-radius:12px;box-shadow:0 1px 2px rgba(15,79,70,.06),0 12px 32px -18px rgba(15,79,70,.35)}
+.vm-langs button{display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border:0;border-radius:8px;background:transparent;color:var(--ink,#17211F);
+  font:inherit;font-size:13px;cursor:pointer;text-align:left}
+.vm-langs button:hover{background:var(--teal-soft,var(--accent-soft,#DDF1EC))}
+.vm-langs button[aria-selected="true"]{font-weight:700;background:var(--teal-soft,var(--accent-soft,#DDF1EC))}
+html[lang="zh-Hans"] body{font-family:"Segoe UI","PingFang SC","Microsoft YaHei","Noto Sans CJK SC",Helvetica,Arial,sans-serif}

@@ -39,4 +39,4 @@ jobs:
         with:
           python-version: "3.12"
       # the files are named one by one: `node --test <directory>` does not work on every Node version
-      - run: node --test tests/unit/server/biologik.test.mjs tests/unit/server/commec.test.mjs
+      - run: node --test tests/unit/server/biologik.test.mjs tests/unit/server/commec.test.mjs tests/unit/selector/builder-visibility.test.mjs tests/unit/selector/simple-filter.test.mjs tests/unit/frontend/i18n.test.mjs

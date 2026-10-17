@@ -317,10 +317,23 @@ DYSLEXIA_PAGES = [INDEX, GUIDE, SELECTOR_HTML, ROOT / "encapsulin_selector" / "o
 
 
 @pytest.mark.parametrize("page", DYSLEXIA_PAGES, ids=lambda p: p.name)
-def test_every_page_offers_the_dyslexia_mode(page):
+def test_every_page_loads_the_view_menu_and_the_language_engine(page):
     text = page.read_text(encoding="utf8")
-    assert '<link rel="stylesheet" href="/dyslexia.css">' in text and '<script src="/dyslexia.js"></script>' in text
-    assert 'id="themeToggle"' in text                                               # the script puts its button in front of the theme switch
+    assert '<link rel="stylesheet" href="/viewmenu.css">' in text
+    assert text.index('<script src="/i18n.js">') < text.index('<script src="/viewmenu.js">')      # the engine first, the menu uses it
+    assert 'id="themeToggle"' in text                                               # the menu presses the theme button of the page (hidden), so it must exist
+
+
+def test_the_view_menu_has_the_eye_button_and_the_three_buttons_of_the_wiki_menu():
+    js = (ROOT / "frontend" / "viewmenu.js").read_text(encoding="utf8")
+    for part in ('id="vmBtn"', 'aria-label="Reading options"', 'id="vmLang"', 'id="vmDys"', 'id="vmTheme"', 'id="vmLangs"'):
+        assert part in js, part
+    assert js.index('id="vmLang"') < js.index('id="vmDys"') < js.index('id="vmTheme"')       # language, dyslexia font, dark mode: same order as the wiki
+    for code in ("gb", "es", "de", "fr", "cn"):
+        assert f"    {code}:" in js, code                                                    # one flag per language
+    assert "encore.dyslexia" in js and "theme.click()" in js and "Escape" in js
+    css = (ROOT / "frontend" / "viewmenu.css").read_text(encoding="utf8")
+    assert ".vm-panel" in css and ".vm-oldtheme" in css and "enc-dyslexic" in css
 
 
 def test_the_dyslexia_mode_ships_the_font_and_does_not_load_it_from_another_server():
@@ -329,13 +342,10 @@ def test_the_dyslexia_mode_ships_the_font_and_does_not_load_it_from_another_serv
         data = (fonts / f"opendyslexic-{name}.woff2").read_bytes()
         assert data[:4] == b"wOF2" and len(data) > 50_000, name                     # a real WOFF2 file
     assert "SIL Open Font License" in (fonts / "LICENSE.txt").read_text(encoding="utf8")
-    css = (ROOT / "frontend" / "dyslexia.css").read_text(encoding="utf8")
+    css = (ROOT / "frontend" / "viewmenu.css").read_text(encoding="utf8")
     assert css.count("@font-face") == 4 and "http" not in css                       # four faces, all from this project
-    js = (ROOT / "frontend" / "dyslexia.js").read_text(encoding="utf8")
-    assert "encore.dyslexia" in js and "enc-dyslexic" in js and "aria-pressed" in js
-    assert "enc-dyslexic" in css and "dyslexiaToggle" in css
     guide = re.sub(r"<[^>]*>", " ", GUIDE.read_text(encoding="utf8"))
-    assert "Dyslexia-friendly font" in guide
+    assert "Reading options" in guide and "dyslexia-friendly font" in guide and "Mandarin" in guide
 
 
 def test_the_promoter_step_has_the_field_label_only_and_no_extra_promoter_heading_above_it():
@@ -435,3 +445,54 @@ def test_the_filter_hint_is_a_button_on_the_right_in_the_row_of_the_shell_facts(
     assert "Find more nanocompartments here" in row
     assert ".filterbtn{" in text and "margin-left:auto" in text[text.index(".filterbtn{"):text.index(".filterbtn{") + 400]
     assert "helplink" not in text and "Not sure which fits" not in text            # the old line below the cards is gone
+
+
+I18N_DIR = ROOT / "frontend" / "i18n"
+I18N_LANGS = ("es", "de", "fr", "zh")
+
+
+def _dictionary(code):
+    import json
+    return json.loads((I18N_DIR / f"{code}.json").read_text(encoding="utf8"))
+
+
+def test_the_four_dictionaries_have_exactly_the_same_entries():
+    keys = {code: set(_dictionary(code)) for code in I18N_LANGS}
+    assert keys["es"] == keys["de"] == keys["fr"] == keys["zh"]
+    assert len(keys["es"]) > 250
+
+
+@pytest.mark.parametrize("code", I18N_LANGS)
+def test_every_translation_is_filled_keeps_its_values_and_has_no_dashes(code):
+    for english, translated in _dictionary(code).items():
+        assert translated.strip(), f"{code}: empty translation of {english[:50]!r}"
+        assert set(re.findall(r"\{\d+\}", translated)) <= set(re.findall(r"\{\d+\}", english)), f"{code}: unknown value in {english[:50]!r}"
+        if "{" in english and "sequence you entered was" not in english:                   # a value may only be left out where the sentence needs no number ("the sequence", not "1 sequence")
+            assert sorted(re.findall(r"\{\d+\}", english)) == sorted(re.findall(r"\{\d+\}", translated)), f"{code}: values differ in {english[:50]!r}"
+        assert not re.search("[–—]", translated), f"{code}: dash in {english[:50]!r}"
+
+
+@pytest.mark.parametrize("code", I18N_LANGS)
+def test_the_info_windows_exist_in_every_language_with_the_same_html_structure(code):
+    text = INDEX.read_text(encoding="utf8")
+    start = text.index("const INFO = {")
+    block = text[start:text.index("\n};", start)]
+    keys = re.findall(r"\n  ([A-Za-z0-9]+): \{ title", block)
+    assert len(keys) == 8
+    dictionary = _dictionary(code)
+    english = {k: re.search(r"\n  %s: \{ title:'(.*?)',\n    body:`(.*?)` \}" % k, block, flags=re.S) for k in keys}
+    for key in keys:
+        title, body = dictionary[f"info.{key}.title"], dictionary[f"info.{key}.body"]
+        assert title.strip() and body.strip(), (code, key)
+        en_title, en_body = english[key].group(1), english[key].group(2)
+        for tag in ("<p>", "<b>", "<i>", "<code>", "<a "):
+            assert body.count(tag) == en_body.count(tag) or (tag in ("<p>",) and abs(body.count(tag) - en_body.count(tag)) == 0) or tag == "<a ", f"{code}: {key} {tag}"
+        assert title.count("<i>") == en_title.count("<i>"), (code, key)
+
+
+def test_the_language_menu_lists_five_languages_with_their_own_names_and_english_is_the_default():
+    js = (ROOT / "frontend" / "i18n.js").read_text(encoding="utf8")
+    for name in ("English", "Español", "Deutsch", "Français", "中文 (简体)"):
+        assert name in js, name
+    assert "return 'en'" in js and "localStorage.getItem(KEY)" in js
+    assert 'translate="no"' in (ROOT / "frontend" / "viewmenu.js").read_text(encoding="utf8")      # the names of the languages are never translated
