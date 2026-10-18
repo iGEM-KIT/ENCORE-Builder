@@ -35,3 +35,4 @@ html{scroll-behavior:smooth}section[id]{scroll-margin-top:88px}.overview-contain
 .contribute-action p#contribute-placeholder-note{font-size:.76rem;line-height:1.55;color:var(--muted);margin:12px 0 0}
 @media(max-width:790px){.contribute-panel{grid-template-columns:1fr;padding:21px}.contribute-action{max-width:none}}
 .route-card ol{margin:10px 0 12px;padding-left:20px;font-size:14px}.route-card ol li{margin:4px 0}
+.contribute-button{display:block;padding:13px 12px;border-radius:9px;background:var(--accent,#1C8070);color:#fff;font-size:.85rem;font-weight:800;text-decoration:none}.contribute-button:hover{filter:brightness(1.08)}
