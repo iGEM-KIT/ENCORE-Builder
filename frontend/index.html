@@ -65,14 +65,12 @@
   .intro p.lead{font-size:17px;color:var(--ink-soft);max-width:640px;margin:0 0 34px;line-height:1.6}
   .intro{max-width:1040px}
   .start-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:18px;margin:26px 0 22px}
-  .start-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 24px;display:flex;flex-direction:column;box-shadow:var(--shadow)}
-  .start-card.build{border-top:3px solid var(--orange)}.start-card.research{border-top:3px solid var(--teal)}
-  .start-card h2{margin:6px 0 10px;font-size:24px}
+  .start-card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:22px 24px;display:flex;flex-direction:column}
+  .start-card h2{margin:0 0 10px;font-size:22px}
   .start-card p{color:var(--ink-soft);line-height:1.55;margin:0 0 18px}
   .start-card .flowrow{margin-bottom:22px}
   .start-card .prereq{margin:0 0 18px}
   .start-card .start-cta{margin-top:auto;align-self:flex-start}
-  .start-tag{font-size:11.5px;font-weight:800;letter-spacing:.06em;color:var(--muted)}
   .start-cta.alt{background:var(--teal-soft);color:var(--teal-deep);text-decoration:none}
   @media(max-width:760px){.start-grid{grid-template-columns:1fr}}
   .flowrow{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:38px}
@@ -559,7 +557,6 @@
   <h1>Design your construct or find the right shell first.</h1>
   <div class="start-grid">
     <article class="start-card build">
-      <span class="start-tag">01 · DESIGN</span>
       <h2>ENCORE Builder</h2>
       <p>Turn your gene of interest into a complete encapsulin cargo construct: standardized Golden Gate modules, cargo primers and the final Level&nbsp;2 plasmid.</p>
       <div class="flowrow">
@@ -587,7 +584,6 @@
       </button>
     </article>
     <article class="start-card research">
-      <span class="start-tag">02 · RESEARCH</span>
       <h2>Open NC Database</h2>
       <p>Find a suitable shell sequence or look up what experiments reveal about it.</p>
       <a class="start-cta alt" href="/selector/overview.html">Open the database&nbsp;→</a>
