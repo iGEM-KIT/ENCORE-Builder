@@ -28,7 +28,7 @@
   "pore_record_count": 0,
   "evidence_record_count": 0,
   "curation_source": "UniProt A0A024K4U0",
-  "curator_notes": "Predicted Type 1 encapsulin shell protein from Mycobacterium triplex. No direct experimental shell characterization identified. Pending systematic genomic-context cargo audit.",
+  "curator_notes": "Predicted Type 1 encapsulin shell protein from Mycobacterium triplex. No direct experimental shell characterization identified.",
   "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
   "curation_source_doi": null
 }

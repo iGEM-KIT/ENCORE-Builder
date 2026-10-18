@@ -70,6 +70,8 @@ const pores = readJsonDir(resolve(dataDir, 'pores'))
 const evidence = readJsonDir(resolve(dataDir, 'evidence'))
 const doiIndex = JSON.parse(readFileSync(resolve(dataDir, 'doi_index.json'), 'utf8'))
 const citationLinks = JSON.parse(readFileSync(resolve(dataDir, 'citation_links.json'), 'utf8'))
+const targetingPeptides = JSON.parse(readFileSync(resolve(dataDir, 'targeting_peptides.json'), 'utf8'))
+const tpAssemblyLinks = JSON.parse(readFileSync(resolve(dataDir, 'tp_assembly_links.json'), 'utf8'))
 const vocabularies = JSON.parse(readFileSync(resolve(dataDir, 'vocabularies.json'), 'utf8'))
 // Check consistency instead of silently building a broken database.
 const errors = []
@@ -173,12 +175,62 @@ for (const d of doiIndex) {
   doiIds.add(d.doi)
 }
 
+// TP entries and their Builder-design links must be validated before citations.
+const tpById = new Map()
+for (const tp of targetingPeptides) {
+  const id = tp.tp_id
+  if (typeof id !== 'string' || !/^[A-Za-z0-9_.-]+$/.test(id)) {
+    errors.push(`Invalid TP id: ${JSON.stringify(id)}.`)
+    continue
+  }
+  if (tpById.has(id)) errors.push(`Duplicate TP id ${id}.`)
+  tpById.set(id, tp)
+  if (!candidateIds.has(tp.candidate_id)) errors.push(`TP ${id} refers to unknown candidate.`)
+  if (typeof tp.tp_sequence_aa !== 'string' || !/^[ACDEFGHIKLMNPQRSTVWY]+$/.test(tp.tp_sequence_aa)) {
+    errors.push(`TP ${id} has an invalid amino-acid sequence.`)
+  } else if (tp.tp_length_aa !== tp.tp_sequence_aa.length) {
+    errors.push(`TP ${id} amino-acid length differs from its sequence.`)
+  }
+}
+const tpLinkIds = new Set()
+const tpPairs = new Set()
+const tpDesignIds = new Set()
+const builderCatalogForLinks = JSON.parse(readFileSync(resolve(dataDir, 'builder_catalog.json'), 'utf8'))
+const builderById = new Map(builderCatalogForLinks.map(x => [x.sequence_id, x]))
+for (const link of tpAssemblyLinks) {
+  const id = link.tp_assembly_link_id
+  if (typeof id !== 'string' || !id.trim() || tpLinkIds.has(id)) {
+    errors.push(`Invalid or duplicate TP–assembly link id ${JSON.stringify(id)}.`)
+  }
+  tpLinkIds.add(id)
+  const design = builderById.get(link.sequence_id)
+  const tp = tpById.get(link.tp_id)
+  const pair = `${link.sequence_id}::${link.tp_id}`
+  if (tpPairs.has(pair)) errors.push(`Duplicate design/TP association ${pair}.`)
+  tpPairs.add(pair)
+  if (!design || design.assembly_id !== link.assembly_id || design.candidate_id !== link.candidate_id) {
+    errors.push(`TP link ${id} refers to an unknown or inconsistent Builder design.`)
+  } else {
+    tpDesignIds.add(link.sequence_id)
+  }
+  if (!tp || tp.candidate_id !== link.candidate_id) {
+    errors.push(`TP link ${id} refers to an unknown or inconsistent TP.`)
+  }
+}
+if (targetingPeptides.length !== 19 || tpAssemblyLinks.length !== 50) {
+  errors.push(`Expected 19 targeting peptides and 50 TP–assembly links, got ${targetingPeptides.length} and ${tpAssemblyLinks.length}.`)
+}
+if (builderById.size !== 24 || tpDesignIds.size !== 24) {
+  errors.push(`Expected associations covering 24 Builder designs, found ${tpDesignIds.size}.`)
+}
+
 // Join citations by DOI (not citation_label: spellings and abbreviations vary).
 const idsByTable = {
   databank: candidateIds,
   assemblies: assemblyIds,
   pores: new Set(poresById.keys()),
   evidence: evidenceIds,
+  targeting_peptides: new Set(tpById.keys()),
 }
 const linksByDoi = new Map()
 const citationKeys = new Set()
@@ -209,7 +261,9 @@ for (const link of citationLinks) {
       ? assemblies.find(a => a.assembly_id === link.record_id)
       : link.table === 'pores'
         ? poresById.get(link.record_id)
-        : evidence.find(e => e.evidence_id === link.record_id)
+        : link.table === 'targeting_peptides'
+          ? tpById.get(link.record_id)
+          : evidence.find(e => e.evidence_id === link.record_id)
   if (owner && owner.candidate_id !== link.candidate_id) {
     errors.push(`Citation ${link.table}/${link.record_id} has an inconsistent candidate_id.`)
   }
@@ -258,6 +312,8 @@ const data = {
     evidence_count: evidence.length,
     doi_count: doiIndex.length,
     citation_link_count: citationLinks.length,
+    targeting_peptide_count: targetingPeptides.length,
+    tp_assembly_link_count: tpAssemblyLinks.length,
     candidates_with_curated_assemblies: candidatesOut.filter((c) => c.reference_assembly_id).length,
   },
   candidates: candidatesOut,
@@ -267,6 +323,8 @@ const data = {
   evidence,
   doi_index: doiIndex,
   citation_links: citationLinks,
+  targeting_peptides: targetingPeptides,
+  tp_assembly_links: tpAssemblyLinks,
   vocabularies,
 }
 

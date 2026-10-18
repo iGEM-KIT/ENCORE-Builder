@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_TP_K7RV67_SI",
+  "candidate_id": "K7RV67",
+  "field_name": "targeting_peptide_record",
+  "value_text": "tp_id=K7RV67_DyP_C26; tp_sequence_aa=PRDDSLGVGGLRGTPQLGSIPTPGRT; tp_length_aa=26; fusion eGFP-GGSGGSGGSGG-PRDDSLGVGGLRGTPQLGSIPTPGRT; experimental cargo loading in AaEnc.",
+  "value_numeric": null,
+  "unit": "aa",
+  "support_type": "direct_experimental",
+  "source_type": "paper",
+  "source_id": "Jones, Andreas & Giessen 2023, SI Table S2, p.5",
+  "source_url": "https://doi.org/10.1021/acs.biomac.2c01424",
+  "method": "Full protein fusion sequence; eGFP co-expression/loading",
+  "structure_id": "8DN9;8DNA;8DNL",
+  "condition": "Reported AaEnc system; link to individual variant assemblies not independently tested",
+  "used_in_databank": false,
+  "notes": "Direct peptide sequence and gly/ser linker recorded separately. No nucleotide insert from this SI. Native DyP coordinates not assigned.",
+  "source_doi": "10.1021/acs.biomac.2c01424"
+}

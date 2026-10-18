@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_TP_0007",
+  "candidate_id": "Q2RVS0",
+  "field_name": "targeting_peptide_record",
+  "value_text": "tp_id=Q2RVS0_EncFtn_C_motif; tp_sequence_aa=IEAADTAGEGSGGDAAKGATAQGDGSLGIGSLKGEAALARPPRL; tp_length_aa=44; sequence_scope=reference_cargo_C_terminal_region_44aa_not_minimal_TP",
+  "value_numeric": null,
+  "unit": "aa",
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "He et al. 2016; McIver et al. 2026; PDB 9RZM",
+  "source_url": "https://doi.org/10.7554/eLife.18972",
+  "method": "Literature reported segment or follow-up required",
+  "structure_id": null,
+  "condition": "As specified in source; no default interchangeability with other shell assemblies",
+  "used_in_databank": false,
+  "notes": "targeting_peptides.tp_id=Q2RVS0_EncFtn_C_motif; research record; literal sequence alone does not establish Builder eligibility.",
+  "source_doi": "10.7554/eLife.18972"
+}

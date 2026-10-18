@@ -19,7 +19,7 @@
   "notes": "Engineered pore-loop deletion variant. Intact T=1 shell retained. Fivefold pore diameter ~6.7 Å was calculated from the cryo-EM structure, not directly measured. Shell diameter of 24 nm observed by negative-stain TEM.",
   "source_doi": "10.1126/sciadv.abl7346",
   "shell_sequence_status": "modified",
-  "shell_sequence_change": "Engineered pore-loop variant S6E; exact changed residues are not specified in the assembly record.",
+  "shell_sequence_change": "Engineered pore-loop variant S6E; WT residues 185–191 (AGHYPLE) deleted without replacement (curated sequence alignment).",
   "comparison_reference_assembly_id": "Q9WZP2_T1_empty",
   "shell_change_reference_positions_aa": "185–191",
   "shell_change_original_aa": "AGHYPLE",

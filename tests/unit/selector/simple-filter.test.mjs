@@ -55,6 +55,8 @@ test('one-click Builder transfer carries the exact curated CDS and NO scientific
  const h=JSON.parse(storage.get('encore.selector.handoff'))
  assert.equal(h.seq,d.cds);assert.equal(h.seq.length,816);assert.equal(h.design_id,d.sequence_id)
  assert.equal(h.warning,undefined);assert.equal(context.location.href,'/#step-1')
+ assert(h.tp_options.length>0)
+ assert(h.tp_options.every(x=>typeof x.tp_id==='string' && typeof x.tp_sequence_aa==='string'))
 })
 test('every assembly has comparison status; original Explore does not transfer',()=>{
  const {context}=setup();
@@ -65,4 +67,18 @@ test('every assembly has comparison status; original Explore does not transfer',
  assert.equal(data.candidates.find(c=>c.candidate_id==='Q9WZP2').reference_assembly_id,'Q9WZP2_T1_empty')
  assert(!read('encapsulin_selector/selector-alpha.js').includes('[data-use-nc]'))
  assert(!read('encapsulin_selector/selector-alpha.html').includes('Select for Builder'))
+})
+
+test('TP associations are passed by exact assembly and reference-only motifs stay reference-only',()=>{
+ const {context,storage,documentListeners}=setup();
+ const d=context.window.ENCORE_BUILDER_CATALOG.find(x=>x.candidate_id==='Q9WZP2' && x.assembly_id==='Q9WZP2_S1K_T1');
+ assert(d)
+ documentListeners.click({target:{closest:()=>({dataset:{designId:d.sequence_id}})}})
+ const h=JSON.parse(storage.get('encore.selector.handoff'));
+ const options=h.tp_options;
+ const table=context.window.ENCAPSULIN_SELECTOR_DATA.tp_assembly_links;
+ assert.equal(options.length,table.filter(x=>x.sequence_id===d.sequence_id && x.assembly_id===d.assembly_id).length)
+ assert(options.some(x=>x.builder_transfer_status==='TOOLKIT_EXACT_AA_DNA' && /^[ACGT]+$/.test(x.builder_dna_5to3)))
+ assert(options.some(x=>x.builder_transfer_status==='REFERENCE_ONLY_NOT_AUTODESIGN'))
+ assert(options.some(x=>x.pair_specific_evidence_status==='exact_engineered_variant_TP_loading_not_tested'))
 })

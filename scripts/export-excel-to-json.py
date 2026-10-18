@@ -49,12 +49,18 @@ TABLES = {
     "pores": ("pore_record_id", "pores"),
     "evidence": ("evidence_id", "evidence"),
 }
-LIST_TABLES = {"doi_index": "doi_index.json", "citation_links": "citation_links.json"}
+LIST_TABLES = {
+    "doi_index": "doi_index.json",
+    "citation_links": "citation_links.json",
+    # Keep public TP records and pair-specific evidence in separate JSON lists.
+    "targeting_peptides": "targeting_peptides.json",
+    "tp_assembly_links": "tp_assembly_links.json",
+}
 
 # Fields with specific types in the public JSON, not default text.
 INT_FIELDS = {
     "taxonomy_id", "length_aa", "pdb_count", "assembly_count", "pore_record_count",
-    "evidence_record_count", "T_number", "shell_subunit_count", "cds_start",
+    "evidence_record_count", "T_number", "shell_subunit_count", "tp_length_aa", "cds_start",
     "cds_end", "cds_length_nt", "linked_record_count", "protein_length_aa",
 }
 BOOLEAN_FIELDS = {"needs_review_flag", "used_in_databank"}
@@ -353,10 +359,62 @@ def validate(data: dict) -> list[str]:
             uniques[sheet][item] = row
     candidates = uniques["databank"]
     assemblies = uniques["assemblies"]
-    for sheet in ("assemblies", "sequence_links", "pores", "evidence"):
+    for sheet in ("assemblies", "sequence_links", "pores", "evidence", "targeting_peptides"):
         for row in data[sheet]:
             if row.get("candidate_id") not in candidates:
                 errors.append(f"{sheet}: missing candidate {row.get('candidate_id')!r}")
+
+    # Public release TP records are not necessarily validated for every shell.
+    # Validate their identity and sequences without upgrading evidence status.
+    tps = {}
+    for tp in data["targeting_peptides"]:
+        tp_id = tp.get("tp_id")
+        if not isinstance(tp_id, str) or not re.fullmatch(r"[A-Za-z0-9_.-]+", tp_id):
+            errors.append(f"targeting_peptides: invalid tp_id {tp_id!r}")
+            continue
+        if tp_id in tps:
+            errors.append(f"targeting_peptides: duplicate tp_id {tp_id}")
+        tps[tp_id] = tp
+        sequence = tp.get("tp_sequence_aa")
+        if not isinstance(sequence, str) or not re.fullmatch(r"[ACDEFGHIKLMNPQRSTVWY]+", sequence):
+            errors.append(f"targeting_peptides: invalid protein sequence {tp_id}")
+        elif len(sequence) != tp.get("tp_length_aa"):
+            errors.append(f"targeting_peptides: length mismatch {tp_id}")
+        motif = tp.get("tp_core_motif_aa")
+        if motif and isinstance(sequence, str) and motif not in sequence:
+            errors.append(f"targeting_peptides: motif not found in sequence {tp_id}")
+        dna = tp.get("builder_dna_5to3")
+        if dna and (not isinstance(dna, str) or not re.fullmatch(r"[ACGT]+", dna) or len(dna) % 3):
+            errors.append(f"targeting_peptides: invalid Builder DNA {tp_id}")
+
+    # Check 50 specific shell-design/TP associations, not mere candidate matches.
+    catalog = {r["sequence_id"]: r for r in data["builder_catalog"]}
+    pair_ids, pairs, covered = set(), set(), set()
+    for link in data["tp_assembly_links"]:
+        lid = link.get("tp_assembly_link_id")
+        sid = link.get("sequence_id")
+        aid = link.get("assembly_id")
+        cid = link.get("candidate_id")
+        tid = link.get("tp_id")
+        if not lid or lid in pair_ids:
+            errors.append(f"tp_assembly_links: duplicate or missing link ID {lid!r}")
+        pair_ids.add(lid)
+        if (sid, tid) in pairs:
+            errors.append(f"tp_assembly_links: duplicate design/TP pair {sid}/{tid}")
+        pairs.add((sid, tid))
+        design = catalog.get(sid)
+        if design is None or design["assembly_id"] != aid or design["candidate_id"] != cid:
+            errors.append(f"tp_assembly_links: invalid Builder design {lid}: {sid}/{aid}/{cid}")
+        else:
+            covered.add(sid)
+        tp = tps.get(tid)
+        if tp is None or tp["candidate_id"] != cid:
+            errors.append(f"tp_assembly_links: invalid TP {lid}: {tid}/{cid}")
+    if len(tps) != 19 or len(data["tp_assembly_links"]) != 50:
+        errors.append("TP release count mismatch: expected 19 TPs and 50 assembly links")
+    if covered != set(catalog):
+        errors.append(f"tp_assembly_links: only {len(covered)}/24 Builder designs covered")
+    uniques["targeting_peptides"] = tps
     for row in data["databank"]:
         ref = row.get("reference_assembly_id")
         if ref and (ref not in assemblies or assemblies[ref].get("candidate_id") != row["candidate_id"]):
@@ -384,7 +442,8 @@ def validate(data: dict) -> list[str]:
         if doi.lower() in index:
             errors.append(f"doi_index: duplicate DOI {doi}")
         index[doi.lower()] = row
-    keys = {"databank": "candidate_id", "assemblies": "assembly_id", "pores": "pore_record_id"}
+    keys = {"databank": "candidate_id", "assemblies": "assembly_id",
+            "pores": "pore_record_id", "targeting_peptides": "tp_id"}
     for row in data["citation_links"]:
         doi = row.get("doi")
         table = row.get("table")
@@ -399,7 +458,7 @@ def validate(data: dict) -> list[str]:
             errors.append(f"citation_links: candidate mismatch for {table}/{record_id}")
     # A DOI in source_doi should be in doi_index; we cannot reliably guess its
     # bibliography if absent, so fail rather than silently exporting orphan DOIs.
-    for sheet in ("databank", "assemblies", "pores", "evidence"):
+    for sheet in ("databank", "assemblies", "pores", "evidence", "targeting_peptides"):
         field = "curation_source_doi" if sheet == "databank" else "source_doi"
         for row in data[sheet]:
             for doi in split_dois(row.get(field)):
@@ -523,6 +582,7 @@ def main():
         added, changed, unchanged, deletions = compare(targets, args.data_dir)
         print("Validated:", ", ".join(f"{sheet}={len(data[sheet])}" for sheet in TABLES))
         print(f"  doi_index={len(data['doi_index'])}, citation_links={len(data['citation_links'])}, approved_builder_sequences={len(data['builder_catalog'])}")
+        print(f"  targeting_peptides={len(data['targeting_peptides'])}, tp_assembly_links={len(data['tp_assembly_links'])}")
         print(f"  genomic sequences available={sum(bool(x.get('genomic_sequence')) for x in data['sequence_links'])}")
         print(f"Compared: {len(added)} new, {len(changed)} different, {len(unchanged)} unchanged, {len(deletions)} unexpected old files")
         for rel in added[:args.show]:

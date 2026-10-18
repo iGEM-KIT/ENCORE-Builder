@@ -11,6 +11,43 @@
   const escape = val => String(val ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   const assemblies = new Map(full.assemblies.map(a => [a.assembly_id, a]));
   const candidates = new Map(full.candidates.map(c => [c.candidate_id, c]));
+  const tpById = new Map((full.targeting_peptides || []).map(tp => [tp.tp_id, tp]));
+  const tpLinksBySequence = new Map();
+  (full.tp_assembly_links || []).forEach(link => {
+    if (!link.sequence_id || !tpById.has(link.tp_id)) return;
+    const matches = tpLinksBySequence.get(link.sequence_id) || [];
+    matches.push(link);
+    tpLinksBySequence.set(link.sequence_id, matches);
+  });
+  const tpOptions = d => (tpLinksBySequence.get(d.sequence_id) || [])
+    .filter(link => link.assembly_id === d.assembly_id && link.candidate_id === d.candidate_id)
+    .map(link => {
+      const tp = tpById.get(link.tp_id);
+      return {
+        tp_id: tp.tp_id, tp_sequence_aa: tp.tp_sequence_aa,
+        builder_dna_5to3: tp.builder_dna_5to3 || null,
+        cargo_terminus: tp.cargo_terminus,
+        builder_transfer_status: link.builder_transfer_status,
+        pair_specific_evidence_status: link.pair_specific_evidence_status,
+        cargo_protein: tp.cargo_protein || '', source_doi: tp.source_doi || ''
+      };
+    });
+  const transferable = tp => ['TOOLKIT_EXACT_AA_DNA','AA_ONLY_REQUIRES_DESIGN_DNA'].includes(tp.builder_transfer_status);
+  function tpDetails(d) {
+    const options = tpOptions(d);
+    if (!options.length) return '';
+    const usable = options.filter(transferable).length;
+    return `<details class="details"><summary>Targeting peptides · ${options.length} associated (${usable} Builder option${usable === 1 ? '' : 's'})</summary>
+      <p class="modification-note">Associated with this shell system; exact loading performance is not assumed for engineered variants. No TP is inserted into the shell sequence.</p>
+      ${options.map(tp => `<div class="property-grid">
+        ${property('TP', tp.tp_id)}
+        ${property('Amino acids', tp.tp_sequence_aa)}
+        ${property('Position', tp.cargo_terminus)}
+        ${property('Builder transfer', transferable(tp) ? 'Optional cargo-site part' : 'Reference only')}
+        ${property('Pair evidence', String(tp.pair_specific_evidence_status || '').replaceAll('_',' '))}
+      </div>`).join('')}
+    </details>`;
+  }
   // Cite only the selected assembly, never a different pore mutant or related construct.
   const assemblyCitations = new Map();
   (full.citation_links || []).forEach(link => {
@@ -117,6 +154,7 @@
       ${other.length ? `<div class="variants"><strong>Other observed assembly of the same shell:</strong> ${other.map(x => escape(tName(x)) + ' · ' + escape(diameter(x))).join('  |  ')}</div>` : ''}
       ${engineered && a.shell_sequence_change ? `<p class="modification-note"><strong>Modification:</strong> ${escape(a.shell_sequence_change)}</p>` : ''}
       ${sourceBlock(a)}
+      ${tpDetails(d)}
       ${sequencePreview(d)}
       <details class="details"><summary>Structure details</summary>
         <div class="property-grid">
@@ -190,7 +228,7 @@
       sessionStorage.setItem('encore.selector.handoff', JSON.stringify({
         label: `${d.name} · ${d.candidate_id}`.slice(0, 60),
         seq: d.cds, candidate_id: d.candidate_id, assembly_id: d.assembly_id,
-        design_id: d.sequence_id
+        design_id: d.sequence_id, tp_options: tpOptions(d)
       }));
     } catch (error) {
       alert('Browser storage is unavailable. Cannot transfer the sequence in this tab.');

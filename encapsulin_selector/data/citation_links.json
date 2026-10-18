@@ -1538,5 +1538,275 @@
     "doi_url": "https://doi.org/10.1016/j.jsb.2026.108357",
     "relationship": "record-specific source",
     "notes": null
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "Q1D6H4_EncB_C11",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "McHugh et al. 2014; Jones et al. 2024",
+    "doi": "10.15252/embj.201488566",
+    "doi_url": "https://doi.org/10.15252/embj.201488566",
+    "relationship": "TP sequence / experiment-specific source",
+    "notes": null
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "Q1D6H4_EncB_C11",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "McHugh et al. 2014; Jones et al. 2024",
+    "doi": "10.1038/s41467-024-46880-x",
+    "doi_url": "https://doi.org/10.1038/s41467-024-46880-x",
+    "relationship": "TP sequence / experiment-specific source",
+    "notes": null
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "Q1D6H4_EncC_C12",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Kwon et al. 2023, molecular cloning/Table S1",
+    "doi": "10.1016/j.jsb.2023.108022",
+    "doi_url": "https://doi.org/10.1016/j.jsb.2023.108022",
+    "relationship": "TP sequence / experiment-specific source",
+    "notes": null
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "Q1D6H4_EncD_C8",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Eren et al. 2022; Jones et al. 2024",
+    "doi": "10.1016/j.str.2022.01.008",
+    "doi_url": "https://doi.org/10.1016/j.str.2022.01.008",
+    "relationship": "TP sequence / experiment-specific source",
+    "notes": null
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "Q1D6H4_EncD_C8",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Eren et al. 2022; Jones et al. 2024",
+    "doi": "10.1073/pnas.2400426121",
+    "doi_url": "https://doi.org/10.1073/pnas.2400426121",
+    "relationship": "TP sequence / experiment-specific source",
+    "notes": null
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "Q1D6H4_TOOLKIT_MX",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "ENCORE Builder tp-TP-Mx.json; Sigmund et al. 2018, Methods",
+    "doi": "10.1038/s41467-018-04227-3",
+    "doi_url": "https://doi.org/10.1038/s41467-018-04227-3",
+    "relationship": "TP sequence / experiment-specific source",
+    "notes": null
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "Q9WZP2_FLP_C8",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Sutter et al. 2008; Jones et al. 2024",
+    "doi": "10.1038/nsmb.1473",
+    "doi_url": "https://doi.org/10.1038/nsmb.1473",
+    "relationship": "TP sequence / experiment-specific source",
+    "notes": null
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "Q9WZP2_FLP_C8",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Sutter et al. 2008; Jones et al. 2024",
+    "doi": "10.1038/s41467-024-46880-x",
+    "doi_url": "https://doi.org/10.1038/s41467-024-46880-x",
+    "relationship": "TP sequence / experiment-specific source",
+    "notes": null
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "Q9WZP2_TOOLKIT_TM",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "ENCORE Builder tp-TP-Tm.json; Sutter et al. 2008",
+    "doi": "10.1038/nsmb.1473",
+    "doi_url": "https://doi.org/10.1038/nsmb.1473",
+    "relationship": "TP sequence / experiment-specific source",
+    "notes": null
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "A0A0F5HPP7_IMEF_C7",
+    "candidate_id": "A0A0F5HPP7",
+    "citation_label": "Giessen et al. 2019, bound TP structure",
+    "doi": "10.7554/eLife.46070",
+    "doi_url": "https://doi.org/10.7554/eLife.46070",
+    "relationship": "TP sequence / experiment-specific source",
+    "notes": null
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "A0A0F5HPP7_TOOLKIT_QT",
+    "candidate_id": "A0A0F5HPP7",
+    "citation_label": "ENCORE Builder tp-TP-Qt.json; Giessen et al. 2019",
+    "doi": "10.7554/eLife.46070",
+    "doi_url": "https://doi.org/10.7554/eLife.46070",
+    "relationship": "TP sequence / experiment-specific source",
+    "notes": null
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "A0A0F5HPP7_Fdx_N",
+    "candidate_id": "A0A0F5HPP7",
+    "citation_label": "Kwon et al. 2026, Fig. 2a and Supplementary Table 1, p.17",
+    "doi": "10.1038/s41467-026-76849-x",
+    "doi_url": "https://doi.org/10.1038/s41467-026-76849-x",
+    "relationship": "TP sequence / experiment-specific source",
+    "notes": null
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "D0LZ74_FLP_C9",
+    "candidate_id": "D0LZ74",
+    "citation_label": "Jones et al. 2024, TP comparison; H. ochraceum structure",
+    "doi": "10.1038/s41467-024-46880-x",
+    "doi_url": "https://doi.org/10.1038/s41467-024-46880-x",
+    "relationship": "TP sequence / experiment-specific source",
+    "notes": null
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "I6WZG6_DyP_C29",
+    "candidate_id": "I6WZG6",
+    "citation_label": "Rahmanpour & Bugg 2013, Table 1; Cuthbert et al. 2024 (9BKX)",
+    "doi": "10.1111/febs.12234",
+    "doi_url": "https://doi.org/10.1111/febs.12234",
+    "relationship": "TP sequence / experiment-specific source",
+    "notes": null
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "I6WZG6_DyP_C29",
+    "candidate_id": "I6WZG6",
+    "citation_label": "Rahmanpour & Bugg 2013, Table 1; Cuthbert et al. 2024 (9BKX)",
+    "doi": "10.3390/microorganisms12122465",
+    "doi_url": "https://doi.org/10.3390/microorganisms12122465",
+    "relationship": "TP sequence / experiment-specific source",
+    "notes": null
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "K5BEG2_MhDyP_C30",
+    "candidate_id": "K5BEG2",
+    "citation_label": "Loncar et al. 2020, Sec. 3.2",
+    "doi": "10.1016/j.bbrc.2020.06.059",
+    "doi_url": "https://doi.org/10.1016/j.bbrc.2020.06.059",
+    "relationship": "TP sequence / experiment-specific source",
+    "notes": null
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "A0A1G9WS71_Dendro_crossTP30",
+    "candidate_id": "A0A1G9WS71",
+    "citation_label": "Robust bacterial protein nanocages, Materials Advances 2025",
+    "doi": "10.1039/D5MA00268K",
+    "doi_url": "https://doi.org/10.1039/D5MA00268K",
+    "relationship": "TP sequence / experiment-specific source",
+    "notes": null
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "Q55032_CyD_N_domain",
+    "candidate_id": "Q55032",
+    "citation_label": "Nichols et al. 2021, eLife, Fig. 3C / Fig. 4",
+    "doi": "10.7554/eLife.59288",
+    "doi_url": "https://doi.org/10.7554/eLife.59288",
+    "relationship": "TP sequence / experiment-specific source",
+    "notes": null
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "Q2RVS0_EncFtn_C_motif",
+    "candidate_id": "Q2RVS0",
+    "citation_label": "He et al. 2016; McIver et al. 2026; PDB 9RZM",
+    "doi": "10.7554/eLife.18972",
+    "doi_url": "https://doi.org/10.7554/eLife.18972",
+    "relationship": "TP sequence / experiment-specific source",
+    "notes": null
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "Q2RVS0_EncFtn_C_motif",
+    "candidate_id": "Q2RVS0",
+    "citation_label": "He et al. 2016; McIver et al. 2026; PDB 9RZM",
+    "doi": "10.1016/j.jsb.2026.108357",
+    "doi_url": "https://doi.org/10.1016/j.jsb.2026.108357",
+    "relationship": "TP sequence / experiment-specific source",
+    "notes": null
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "Q45296_DyP_C37",
+    "candidate_id": "Q45296",
+    "citation_label": "Putri et al. 2017, ACS Nano: B. linens DyP C-terminal fusion to TFP",
+    "doi": "10.1021/acsnano.7b07669",
+    "doi_url": "https://doi.org/10.1021/acsnano.7b07669",
+    "relationship": "TP sequence / experiment-specific source",
+    "notes": null
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "K7RV67_DyP_C26",
+    "candidate_id": "K7RV67",
+    "citation_label": "Jones, Andreas & Giessen 2023, Supporting Information Table S2, p.5; Fig. 6",
+    "doi": "10.1021/acs.biomac.2c01424",
+    "doi_url": "https://doi.org/10.1021/acs.biomac.2c01424",
+    "relationship": "Full 26-aa TP insert in eGFP fusion, plus 11-aa Gly/Ser linker; experimental loading",
+    "notes": "Literal eGFP-TP_AaEnc protein sequence. Linker excluded from tp_sequence_aa; exact natural DyP residue coordinates not inferred."
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "I3E3I1_BmCLP_C12",
+    "candidate_id": "I3E3I1",
+    "citation_label": "Kwon et al. 2026, Fig. 2b and Supplementary Table 1, p.18",
+    "doi": "10.1038/s41467-026-76849-x",
+    "doi_url": "https://doi.org/10.1038/s41467-026-76849-x",
+    "relationship": "TP sequence / experiment-specific source",
+    "notes": null
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "A0A1G9WS71_Dq_CLP_C13",
+    "candidate_id": "A0A1G9WS71",
+    "citation_label": "Kwon et al. 2026, Fig. 2b; Supplementary Table 1 p.18",
+    "doi": "10.1038/s41467-026-76849-x",
+    "doi_url": "https://doi.org/10.1038/s41467-026-76849-x",
+    "relationship": "TP sequence / experiment-specific source",
+    "notes": null
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "A0A0F5HPP7_IMEF_C7",
+    "candidate_id": "A0A0F5HPP7",
+    "citation_label": "Kwon et al. 2026",
+    "doi": "10.1038/s41467-026-76849-x",
+    "doi_url": "https://doi.org/10.1038/s41467-026-76849-x",
+    "relationship": "additional independent tested CLP construct",
+    "notes": null
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "Q9WZP2_FLP_C8",
+    "candidate_id": "Q9WZP2",
+    "citation_label": "Kwon et al. 2026",
+    "doi": "10.1038/s41467-026-76849-x",
+    "doi_url": "https://doi.org/10.1038/s41467-026-76849-x",
+    "relationship": "additional independent tested CLP construct",
+    "notes": null
+  },
+  {
+    "table": "targeting_peptides",
+    "record_id": "Q1D6H4_EncC_C12",
+    "candidate_id": "Q1D6H4",
+    "citation_label": "Kwon et al. 2026",
+    "doi": "10.1038/s41467-026-76849-x",
+    "doi_url": "https://doi.org/10.1038/s41467-026-76849-x",
+    "relationship": "additional independent tested CLP construct",
+    "notes": null
   }
 ]

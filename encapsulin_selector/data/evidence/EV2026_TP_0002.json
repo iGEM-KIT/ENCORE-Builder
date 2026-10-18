@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_TP_0002",
+  "candidate_id": "I3E3I1",
+  "field_name": "targeting_peptide_record",
+  "value_text": "tp_id=I3E3I1_BmCLP_C12; tp_sequence_aa=NKKKGFTVGSLI; tp_length_aa=12; sequence_scope=experimentally_tested_heterologous_C_terminal_CLP_12aa",
+  "value_numeric": null,
+  "unit": "aa",
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Kwon et al. 2026, Fig. 2b and Supplementary Table 1, p.18",
+  "source_url": "https://doi.org/10.1038/s41467-026-76849-x",
+  "method": "Supplementary Table 1 protein construct; loading experiment",
+  "structure_id": "9FY6",
+  "condition": "As specified in source; no default interchangeability with other shell assemblies",
+  "used_in_databank": false,
+  "notes": "targeting_peptides.tp_id=I3E3I1_BmCLP_C12; research record; literal sequence alone does not establish Builder eligibility.",
+  "source_doi": "10.1038/s41467-026-76849-x"
+}

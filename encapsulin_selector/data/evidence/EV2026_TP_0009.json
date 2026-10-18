@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_TP_0009",
+  "candidate_id": "Q55032",
+  "field_name": "targeting_peptide_record",
+  "value_text": "tp_id=Q55032_CyD_N_domain; tp_sequence_aa=MTNTVPSVPAVPNLPTQSDPFFNERSLEQLTQTVLQDLQQAGVSEAESAPTPLSVPTPALPTTSALAVPQSPTAIANVPAPPSSIDERSLAQLAQAVLQDPQLASAIASIFPSVTLPTSASVPRSVPVPPSFLPSLVPTAPPIHDEVGVIPHHQLPVPSQPTPAGLQQTASSKSGSGFYFIDEQVETAIAALHSNLTVFPQLTTSSIPTLTGAHSAGAVGFDIHQ; tp_length_aa=225; sequence_scope=experimentally_tested_N_terminal_domain_225aa_not_short_TP",
+  "value_numeric": null,
+  "unit": "aa",
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Nichols et al. 2021, eLife, Fig. 3C / Fig. 4",
+  "source_url": "https://www.ncbi.nlm.nih.gov/nuccore/AF441790",
+  "method": "Primary database cargo sequence / literature mapping",
+  "structure_id": null,
+  "condition": "As specified in source; no default interchangeability with other shell assemblies",
+  "used_in_databank": false,
+  "notes": "targeting_peptides.tp_id=Q55032_CyD_N_domain; research record; literal sequence alone does not establish Builder eligibility.",
+  "source_doi": "10.7554/eLife.18972; 10.1016/j.jsb.2026.108357"
+}

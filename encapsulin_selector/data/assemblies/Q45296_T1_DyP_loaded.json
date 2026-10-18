@@ -10,7 +10,7 @@
   "shell_diameter_nm": 23.2,
   "inner_diameter_nm": null,
   "wall_thickness_nm": "2.8-3.0",
-  "inner_volume_A3": "~2.6 × 106",
+  "inner_volume_A3": "~2.6 × 10^6",
   "thermostability_tm_c": null,
   "condition": "recombinant WT B. linens encapsulin coexpressed/reconstituted with cognate DyP cargo in E. coli; DyP-loaded (DyP-E)",
   "method": "cryo-EM; native mass spectrometry; AFM; SEC; DLS; TEM",

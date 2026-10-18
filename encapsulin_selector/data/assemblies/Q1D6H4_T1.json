@@ -10,7 +10,7 @@
   "shell_diameter_nm": 18,
   "inner_diameter_nm": null,
   "wall_thickness_nm": null,
-  "inner_volume_A3": "8.71 × 105",
+  "inner_volume_A3": "8.71 × 10^5",
   "thermostability_tm_c": null,
   "condition": "recombinant empty shell expressed in E. coli",
   "method": "cryo-EM/structural study",

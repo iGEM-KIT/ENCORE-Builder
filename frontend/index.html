@@ -599,7 +599,7 @@
         <div class="htext">
           <div class="eyebrow">Step 1</div>
           <h2>Nanocompartment Site<button class="info" data-info="nc">i</button></h2>
-          <p>Choose the shell and what sits in the four modules around it. The matching targeting peptide for the cargo fusion is determined automatically.</p>
+          <p>Choose the shell and the modules around it. For a shell imported from the Database, targeting peptides are optional and selected separately at the cargo site.</p>
         </div>
       </div>
       <div class="card-body">
@@ -1152,7 +1152,7 @@ const INFO = {
           <p class="infomore"><a href="/guide.html#bg-primers" target="_blank" rel="noopener">Full details in the Overview</a></p>` },
   nc: { title:'What is a nanocompartment?',
     body:`<p>Encapsulins are hollow protein cages that self-assemble and encapsulate cargo proteins inside.</p>
-          <p>The variant you choose determines the matching <b>targeting peptide (TP)</b>, which directs your cargo into the compartment.</p>
+          <p>Toolkit shell presets provide a matching TP. Shells imported from the Database offer optional associated TPs at the Cargo Site. Loading is not experimentally established for every shell variant.</p>
           <p>The four modules around the shell (Type 0.1, 0.2, 0.4 and 0.5) are freely configurable: keep them as <b>NCS</b> spacers, or place a <b>linker</b>, a display marker such as <b>SpyCatcher</b> / <b>SpyTag</b>, or <b>your own sequence</b> there. A marker is presented on the <i>outside</i> of the cage; handy for attaching binders, tags or a second protein.</p>
           <p><b>Where the modules sit:</b> Type 0.1 and 0.2 form the <b>N-terminus of the shell</b> and are fused in front of the shell. Type 0.4 and 0.5 form the <b>C-terminus of the shell</b> and are fused behind the shell.</p>` },
   cargo: { title:'Cargo / gene of interest',
@@ -1310,11 +1310,12 @@ function initNcDropdown(){
   sel.addEventListener('change', ()=>{
     const custom = sel.value===CUSTOM_NC;
     $('#customNc').style.display = custom ? 'block' : 'none';
-    if(custom){ applyCustomNc(); return; }
+    if(custom){ applyCustomNc(); enforceSlotRules('cargo'); return; }
     state.nc = LIB.nanocompartments.find(n=>n.id===sel.value);
     renderNcMeta();
     refreshNext0();
     updateConstructStrip();
+    enforceSlotRules('cargo');
   });
 }
 const CUSTOM_NC='custom';
@@ -1333,6 +1334,9 @@ function handleShellInput(){
   state.customNc.seqRaw=raw;
   $('#shellLen').textContent=seqLenLabel(clean(raw));
   renderShellValidation(validateCargoLocal(raw,'shell'));
+  // A shell sequence edit can change which Databank TPs are available; re-check
+  // both cargo menus immediately (including after stripping terminal codons).
+  enforceSlotRules('cargo');
   scheduleServerShellCheck(clean(raw));
 }
 function renderShellValidation(v){
@@ -1588,6 +1592,7 @@ const MOD_NAMES=Object.keys(MODS);
 const slotsOf=mod=>state[MODS[mod].key];
 const defaultSlots=()=>({ 1:{kind:'none'}, 2:{kind:'none'}, 4:{kind:'none'}, 5:{kind:'none'} });
 function slotsValid(mod){ const sl=slotsOf(mod); return SLOT_NUMBERS.every(n=>sl[n].kind!=='custom' || sl[n].valid); }
+const isTpPart = c => c && (c.kind==='tp' || !!c.databaseTpId);
 /* Rules for the slots:
    - Type 0.2 next to 0.1 / Type 0.4 next to 0.5: if the outer slot is in use (linker, marker, TP or own sequence)
      the inner slot cannot be an NCS spacer; if it holds a CDS (marker, TP or own sequence) the inner slot must be
@@ -1605,7 +1610,7 @@ const needsLinker=(mod,n)=>isCds(slotsOf(mod)[LINKER_FOR[n]]);
 function slotRulesOk(mod){
   const sl=slotsOf(mod), k=n=>sl[n].kind;
   if(SLOT_NUMBERS.some(n=>k(n)==='none')) return false;             // every slot needs a choice
-  if(SLOT_NUMBERS.filter(n=>k(n)==='tp').length>1) return false;
+  if(SLOT_NUMBERS.filter(n=>isTpPart(sl[n])).length>1) return false;
   return [2,4].every(n=>(!blocksNcs(mod,n) || !isNcs(k(n))) && (!needsLinker(mod,n) || ['linker','custom'].includes(k(n))));
 }
 function enforceSlotRules(mod){
@@ -1616,7 +1621,7 @@ function enforceSlotRules(mod){
     el.classList.toggle('locked', !!sl[n].locked);
     const inner = n===2 || n===4;
     const noNcs = inner && blocksNcs(mod,n), needLnk = inner && needsLinker(mod,n), outer=LINKER_FOR[n];
-    const otherTp = SLOT_NUMBERS.some(m=>m!==n && sl[m].kind==='tp');
+    const otherTp = SLOT_NUMBERS.some(m=>m!==n && isTpPart(sl[m]));
     const noTpHere = !!(state.nc && !state.nc.tp);                         // an own shell brings no targeting peptide; use "Use your own sequence" (the vault has the intein INT)
     [...sel.options].forEach(o=>{
       const v=o.value;
@@ -1624,7 +1629,8 @@ function enforceSlotRules(mod){
       if(v==='none'){ o.disabled=true; return; }                       // placeholder
       if(noNcs && (v==='ncs' || v in COMBINED)) off=true;
       if(needLnk && (v.startsWith('marker:') || v.startsWith('intein:') || v==='tp')) off=true;
-      if(v==='tp' && (inner || otherTp || noTpHere)) off=true;        // only Type 0.1 / 0.5, only once, and only with a toolkit nanocompartment
+      if(v==='tp' && (inner || otherTp || noTpHere)) off=true;        // toolkit TP: only for toolkit shells
+      if(v.startsWith('dbtp:') && (inner || otherTp || !databaseTpForCurrentShell())) off=true;
       o.disabled=off;
     });
     const hint=el.querySelector('.slothint');
@@ -1632,13 +1638,19 @@ function enforceSlotRules(mod){
     if(sl[n].locked){ const p=COMBINED[kind]; text=`Part of the combined NCS 0.${p[0]}${p[1]}: it replaces Type 0.${p[0]} and 0.${p[1]}. Change the other slot to release it.`; }
     else if(noNcs) text = needLnk ? `Type 0.${outer} holds a sequence: a linker is required here.`
                                   : `Type 0.${outer} is in use: this position cannot be an NCS spacer.`;
+    else if(mod==='cargo' && !inner && otherTp && databaseTpOptions.some(canAutoDesignTp))
+      text='Another targeting peptide is already selected in the other cargo terminal. Remove it there before choosing a different one here.';
+    else if(mod==='cargo' && !inner && databaseTpOptions.some(canAutoDesignTp) && !databaseTpForCurrentShell())
+      text='Databank TP options are available only while the shell imported by Select for Builder remains selected and unchanged.';
     hint.textContent=text; hint.style.display = text ? 'block' : 'none';
     let bounce=null;
     if(sl[n].locked) bounce=null;
     else if((noNcs && isNcs(kind)) || (needLnk && (kind==='marker' || kind==='intein' || kind==='tp'))) bounce=firstLinker(mod,n);
     else if(kind==='tp' && [...sel.options].find(o=>o.value===kind)?.disabled) bounce={kind:'ncs'};
+    else if(sl[n].databaseTpId && (!sel.querySelector(`option[value="dbtp:${sl[n].databaseTpId}"]`) || sel.querySelector(`option[value="dbtp:${sl[n].databaseTpId}"]`)?.disabled || !databaseTpForCurrentShell())) bounce={kind:'ncs'};
     if(bounce){
       sl[n]=bounce;
+      const note=el.querySelector('.slotdbnote'); if(note) { note.textContent=''; note.style.display='none'; }
       sel.value = bounce.kind==='linker' ? 'linker:'+bounce.id : bounce.kind==='custom' ? 'custom' : 'ncs';
       el.querySelector('.slotcustom').style.display = bounce.kind==='custom' ? 'flex' : 'none';
       if(bounce.kind==='custom') handleSlotSeq(mod,n);
@@ -1664,10 +1676,20 @@ function slotOptionsHtml(mod, n){
   const tpHere = mod==='cargo' && (LIB.targetingPeptides && LIB.targetingPeptides.length ? LIB.targetingPeptides.some(t=>availableAt(t,mod,n)) : true);
   const group = (label, items, kind) => { const list = items.filter(x=>availableAt(x,mod,n));
     return list.length ? `<optgroup label="${label}">${list.map(m=>`<option value="${kind}:${m.id}">${m.label}: ${m.aa} aa${statusHint(m.status && m.status[mod] && m.status[mod][n])}</option>`).join('')}</optgroup>` : ''; };
+  // A TP's documented cargo terminus is evidence, not a restriction on new designs.
+  // Offer curated, Builder-eligible TPs at both positions; visibly flag alternative placement.
+  const dbTps = mod==='cargo' && [1,5].includes(n) ? databaseTpOptions.filter(canAutoDesignTp) : [];
+  const dbChoices = dbTps.length ? `<optgroup label="Open Encapsulin Databank · targeting peptides">${dbTps.map(tp=>{
+    const documentedHere=tp.cargo_terminus===(n===5?'N_terminal':'C_terminal');
+    const reported=tp.cargo_terminus==='N_terminal'?'N-terminal':'C-terminal';
+    const positioning=documentedHere ? `reported ${reported}` : `reported ${reported}; alternative position (not validated)`;
+    return `<option value="dbtp:${tp.tp_id}">${tp.tp_id} (${tp.tp_sequence_aa.length} aa, ${tp.builder_dna_5to3?'curated DNA':'AA-only'}; ${positioning})</option>`;
+  }).join('')}</optgroup>` : '';
   return `<option value="none" disabled selected>Please select</option>`
     + (roles.includes('plain') ? `<option value="ncs">NCS (spacer)${ncsSt('plain')}</option>` : '')
     + (LIB.ncsCombined||[]).filter(x=>x.slots.includes(n)).map(x=>`<option value="${x.id}">${x.label} (spacer for Type 0.${x.slots[0]} and 0.${x.slots[1]})${statusHint(x.status && x.status[mod])}</option>`).join('')
     + (tpHere ? `<option value="tp">Targeting peptide${tpSt}</option>` : '')
+    + dbChoices
     + group('Linker', LIB.linkers, 'linker')
     + group('Surface display', LIB.surfaceMarkers, 'marker')
     + `<option value="custom">Use your own sequence …</option>`;
@@ -1677,6 +1699,7 @@ function slotCardHtml(mod,n){
     <div class="slothead"><span class="stype">Type 0.${n}</span></div>
     <select class="slotsel" aria-label="Type 0.${n}">${slotOptionsHtml(mod,n)}</select>
     <div class="slothint" style="display:none"></div>
+    <div class="slotdbnote alpha-note" style="display:none" aria-live="polite"></div>
     <div class="slotcustom" style="display:none">
       <input type="text" class="slotlabel" placeholder="Name (optional)" maxlength="60">
       <textarea class="slotseq" placeholder="CDS of your part (DNA, A/T/G/C) or its amino acid sequence; start and stop codon optional, the builder adds them …"></textarea>
@@ -1693,10 +1716,30 @@ function initSlots(){
     SLOT_NUMBERS.forEach(n=>{
       const el=slotEl(mod,n);
       el.querySelector('.slotsel').addEventListener('change', ()=>setSlotFromSelect(mod,n));
-      el.querySelector('.slotlabel').addEventListener('input', ()=>{ slotsOf(mod)[n].label=el.querySelector('.slotlabel').value; updateConstructStrip(); });
-      el.querySelector('.slotseq').addEventListener('input', ()=>handleSlotSeq(mod,n));
+      el.querySelector('.slotlabel').addEventListener('input', ()=>{ detachDatabaseTp(mod,n); slotsOf(mod)[n].label=el.querySelector('.slotlabel').value; updateConstructStrip(); });
+      el.querySelector('.slotseq').addEventListener('input', ()=>{ detachDatabaseTp(mod,n); handleSlotSeq(mod,n); });
     });
   });
+}
+// An imported TP remains a custom coding part for the existing validation,
+// synthesis and screening pipelines, but its option stays selected in Type 0.1/0.5.
+function detachDatabaseTp(mod,n){
+  const part=slotsOf(mod)[n];
+  if(!part.databaseTpId) return;
+  delete part.databaseTpId;
+  const el=slotEl(mod,n); el.querySelector('.slotsel').value='custom';
+  el.querySelector('.slotdbnote').style.display='none';
+}
+function refreshDatabaseTpSlotOptions(){
+  for(const n of [1,5]){
+    const el=slotEl('cargo',n), sel=el.querySelector('.slotsel');
+    const id=slotsOf('cargo')[n].databaseTpId;
+    const old=sel.value;
+    sel.innerHTML=slotOptionsHtml('cargo',n);
+    sel.value=id ? 'dbtp:'+id : old;
+    if(!sel.value) sel.value='none';
+  }
+  enforceSlotRules('cargo');
 }
 function setSlotSelect(mod,n,value){
   const el=slotEl(mod,n);
@@ -1715,9 +1758,35 @@ function setSlotFromSelect(mod,n){
   }
   else if(v==='ncs' || v==='tp') sl[n]={kind:v};
   else if(v==='custom') sl[n]={kind:'custom', label:prev.label||'', seqRaw:prev.seqRaw||'', valid:false};
+  else if(mod==='cargo' && (n===1 || n===5) && v.startsWith('dbtp:')){
+    const tp=databaseTpOptions.find(item=>item.tp_id===v.slice(5));
+    if(!tp || !canAutoDesignTp(tp) || !databaseTpForCurrentShell()){
+      sl[n]={kind:'ncs'};
+      el.querySelector('.slotsel').value='ncs';
+      el.querySelector('.slotcustom').style.display='none';
+      enforceSlotRules(mod); updateConstructStrip(); refreshNav(mod); return;
+    }
+    sl[n]={kind:'custom', label:tp.tp_id, seqRaw:tp.builder_dna_5to3||tp.tp_sequence_aa, valid:false, databaseTpId:tp.tp_id};
+    el.querySelector('.slotlabel').value=tp.tp_id;
+    el.querySelector('.slotseq').value=sl[n].seqRaw;
+  }
   else { const [kind,id]=v.split(':'); sl[n]={kind,id}; }
-  el.querySelector('.slotcustom').style.display = v==='custom' ? 'flex' : 'none';
-  if(v==='custom') handleSlotSeq(mod,n);
+  const imported=!!sl[n].databaseTpId;
+  el.querySelector('.slotcustom').style.display = v==='custom' || imported ? 'flex' : 'none';
+  const note=el.querySelector('.slotdbnote');
+  if(imported){
+    const tp=databaseTpOptions.find(item=>item.tp_id===sl[n].databaseTpId);
+    const pairing=String(tp.pair_specific_evidence_status||'not reported').replaceAll('_',' ');
+    const dna=tp.builder_dna_5to3 ? 'Curated DNA provided; the existing custom-part workflow may recode it.' : 'AA-only: the Builder will design a coding sequence.';
+    const reported=tp.cargo_terminus==='N_terminal'?'N-terminal':'C-terminal';
+    const selected=n===5?'N-terminal':'C-terminal';
+    const placement=reported===selected
+      ? `Reported TP placement: ${reported}. This does not establish compatibility with every shell variant.`
+      : `Alternative TP placement: reported ${reported}, selected ${selected}. Targeting and encapsulation at this terminus are not experimentally established by the cited evidence; verify linker, fusion orientation and function.`;
+    note.textContent=`Databank TP · ${placement} Shell-pair evidence: ${pairing}. ${dna} This is attached to the cargo, not the shell. Check the linker in the adjacent Type 0.${n===1?2:4} slot.`;
+    note.style.display='block';
+  } else { note.textContent=''; note.style.display='none'; }
+  if(v==='custom' || imported) handleSlotSeq(mod,n);
   enforceSlotRules(mod);
   updateConstructStrip(); refreshNav(mod);
 }
@@ -2002,6 +2071,7 @@ $('#next3').addEventListener('click', ()=>scrollToSection('sec-4'));
 $('#back4').addEventListener('click', ()=>scrollToSection('sec-3'));
 /* "New construct": wipe every input and every derived result, then start over at step 1. */
 function resetBuilder(){
+  databaseTpOptions=[]; importedShellSeq='';
   // state back to its initial shape
   state.nc=null; state.customNc={label:'', seqRaw:'', valid:false};
   state.cargoSeq=''; state.cargoLabel='Custom cargo';
@@ -2029,6 +2099,7 @@ function resetBuilder(){
     enforceSlotRules(mod);
   });
 
+  refreshDatabaseTpSlotOptions();
   // derived output
   $('#cargoLen').textContent='0 bp';
   ['#ncMeta','#shellMeta','#shellStopArea','#cargoMeta','#cargoStopArea','#lvl0strand','#lvl1cargo','#lvl1nc','#lvl2strand',
@@ -2861,7 +2932,7 @@ window.addEventListener('scroll',updateProgress,{passive:true}); window.addEvent
 /* ===================== Session persistence (survive a page refresh) ===================== */
 history.scrollRestoration='manual';
 const SESSION_KEY='encore.builder.v1';
-const packSlots=mod=>SLOT_NUMBERS.reduce((o,n)=>{ const c=slotsOf(mod)[n]; o[n]={ kind:c.kind, id:c.id, label:c.label, seqRaw:c.seqRaw, locked:!!c.locked }; return o; },{});
+const packSlots=mod=>SLOT_NUMBERS.reduce((o,n)=>{ const c=slotsOf(mod)[n]; o[n]={ kind:c.kind, id:c.id, label:c.label, seqRaw:c.seqRaw, databaseTpId:c.databaseTpId, locked:!!c.locked }; return o; },{});
 function saveSession(){
   try{
     sessionStorage.setItem(SESSION_KEY, JSON.stringify({
@@ -2871,6 +2942,7 @@ function saveSession(){
       cargoRaw:$('#cargoSeq').value, cargoFromPreset:state.cargoFromPreset, cargoLabel:state.cargoLabel,
       promoter:$('#promoter').value,
       ncSlots:packSlots('nc'), cargoSlots:packSlots('cargo'),
+      databaseTpOptions, importedShellSeq,
       unlocked:state.unlocked, scrollY:window.scrollY,
     }));
   }catch(e){}
@@ -2890,6 +2962,9 @@ async function restoreSession(){
     $('#ncSelect').value=s.nc; $('#ncSelect').dispatchEvent(new Event('change'));
     if(s.nc===CUSTOM_NC) handleShellInput();
   }
+  databaseTpOptions=Array.isArray(s.databaseTpOptions) ? s.databaseTpOptions.filter(validDatabaseTp) : [];
+  importedShellSeq=typeof s.importedShellSeq==='string'? s.importedShellSeq : '';
+  refreshDatabaseTpSlotOptions();
 
   if(s.cargoRaw){
     $('#cargoSeq').value=s.cargoRaw;
@@ -2913,7 +2988,9 @@ async function restoreSession(){
       if(c.kind==='ncsstop') c.kind='ncs';                 // the NCS with stop codon no longer exists (older saved sessions)
       if(c.locked) return;                                  // the partner slot of a combined NCS is set by the slot that owns it
       const el=slotEl(mod,n), sel=el.querySelector('.slotsel');
-      sel.value = ['none','ncs','tp','ncs12','ncs45'].includes(c.kind) ? c.kind : c.kind==='custom' ? 'custom' : c.kind+':'+c.id;
+      sel.value = c.kind==='custom' && c.databaseTpId && databaseTpOptions.some(tp=>tp.tp_id===c.databaseTpId)
+        ? 'dbtp:'+c.databaseTpId
+        : ['none','ncs','tp','ncs12','ncs45'].includes(c.kind) ? c.kind : c.kind==='custom' ? 'custom' : c.kind+':'+c.id;
       if(!sel.value) sel.value='none';
       el.querySelector('.slotlabel').value=c.label||'';
       el.querySelector('.slotseq').value=c.seqRaw||'';
@@ -2972,16 +3049,43 @@ document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState=
 /* The filter page ("Use this nanocompartment") leaves the shell CDS and a name in sessionStorage (same tab, same origin) and
    opens the builder. Here it is taken over as "your own sequence" in step 1 and removed again, so a later refresh does not apply it twice. */
 const HANDOFF_KEY='encore.selector.handoff';
+let databaseTpOptions=[];
+let importedShellSeq='';
+const canAutoDesignTp = tp => ['TOOLKIT_EXACT_AA_DNA','AA_ONLY_REQUIRES_DESIGN_DNA'].includes(tp.builder_transfer_status);
+const validDatabaseTp = tp => tp && typeof tp.tp_id==='string' && /^[A-Za-z0-9_.-]+$/.test(tp.tp_id) &&
+  typeof tp.tp_sequence_aa==='string' && /^[ACDEFGHIKLMNPQRSTVWY]{1,250}$/.test(tp.tp_sequence_aa) &&
+  (tp.cargo_terminus==='N_terminal' || tp.cargo_terminus==='C_terminal') &&
+  (!tp.builder_dna_5to3 || (/^[ACGT]+$/.test(tp.builder_dna_5to3) && tp.builder_dna_5to3.length===tp.tp_sequence_aa.length*3));
+// Preserve TP eligibility when the user uses the Builder's own "Remove start/stop
+// codon" action on the imported shell. Only these terminal-codon removals are
+// equivalent to the exact curated CDS; an arbitrary edit still breaks the link.
+const importedShellVariants = raw => {
+  const original=clean(raw);
+  const versions=new Set([original]);
+  if(!/^[ACGT]+$/.test(original)) return versions;
+  const noStop=endsWithStop(original) ? original.slice(0,-3) : original;
+  versions.add(noStop);
+  if(original.startsWith('ATG') && original.length>3) versions.add(original.slice(3));
+  if(noStop.startsWith('ATG') && noStop.length>3) versions.add(noStop.slice(3));
+  return versions;
+};
+// Sequence validation still controls progression; TP options remain selectable
+// for this shell's exact CDS or a Builder-generated terminal-codon variant.
+const databaseTpForCurrentShell = () => !!importedShellSeq && $('#ncSelect').value===CUSTOM_NC &&
+  !!clean(state.customNc.seqRaw||'') && importedShellVariants(importedShellSeq).has(clean(state.customNc.seqRaw||''));
 function applySelectorHandoff(){
   let h=null;
   try{ h=JSON.parse(sessionStorage.getItem(HANDOFF_KEY)); sessionStorage.removeItem(HANDOFF_KEY); }catch(e){}
   if(!h || !h.seq) return;
+  databaseTpOptions=Array.isArray(h.tp_options) ? h.tp_options.filter(validDatabaseTp) : [];
+  importedShellSeq=h.seq;
   showBuilder();
   const sel=$('#ncSelect');
   sel.value=CUSTOM_NC; sel.dispatchEvent(new Event('change'));
   $('#customNcLabel').value=h.label||''; state.customNc.label=h.label||'';
   $('#shellSeq').value=h.seq;
   handleShellInput();
+  refreshDatabaseTpSlotOptions();
   history.replaceState(null,'','#step-1');
   scrollToSection('sec-0');
 }

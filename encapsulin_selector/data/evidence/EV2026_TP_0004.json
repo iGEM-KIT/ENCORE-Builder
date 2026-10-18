@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_TP_0004",
+  "candidate_id": "I6WZG6",
+  "field_name": "targeting_peptide_record",
+  "value_text": "tp_id=I6WZG6_DyP_C29; tp_sequence_aa=DHPPPLPQAATPTLAAGSLSIGSLKGSPR; tp_length_aa=29; sequence_scope=published_natural_C_terminal_region_29aa_not_minimal_TP",
+  "value_numeric": null,
+  "unit": "aa",
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Rahmanpour & Bugg 2013, Table 1; Cuthbert et al. 2024 (9BKX)",
+  "source_url": "https://doi.org/10.1111/febs.12234",
+  "method": "Literature reported segment or follow-up required",
+  "structure_id": "9BKX",
+  "condition": "As specified in source; no default interchangeability with other shell assemblies",
+  "used_in_databank": false,
+  "notes": "targeting_peptides.tp_id=I6WZG6_DyP_C29; research record; literal sequence alone does not establish Builder eligibility.",
+  "source_doi": "10.1111/febs.12234; 10.3390/microorganisms12122465"
+}

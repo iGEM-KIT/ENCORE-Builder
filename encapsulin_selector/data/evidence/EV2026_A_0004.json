@@ -2,7 +2,7 @@
   "evidence_id": "EV2026_A_0004",
   "candidate_id": "Q1D6H4",
   "field_name": "assembly_observation",
-  "value_text": "construct=3×His-MxEnc (K199H/T200H/G201H); variant_status=engineered; assembly_symmetry=icosahedral; T_number=1; T_number_basis=directly_reported; shell_subunit_count=60; shell_diameter_nm=~24; inner_volume_A3=1.944 × 106; curated_notes=Triple pore-lining point mutant. Forms a dimorphic population containing T=1 60-mer and tetrahedral 36-mer assemblies. Shell diameter (~24 nm) was determined by negative-stain TEM.",
+  "value_text": "construct=3×His-MxEnc (K199H/T200H/G201H); variant_status=engineered; assembly_symmetry=icosahedral; T_number=1; T_number_basis=directly_reported; shell_subunit_count=60; shell_diameter_nm=~24; inner_volume_A3=1.944 × 10^6; curated_notes=Triple pore-lining point mutant. Forms a dimorphic population containing T=1 60-mer and tetrahedral 36-mer assemblies. Shell diameter (~24 nm) was determined by negative-stain TEM.",
   "value_numeric": null,
   "unit": null,
   "support_type": "curated_from_sheet",

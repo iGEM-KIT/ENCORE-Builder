@@ -387,3 +387,16 @@ input:focus, select:focus { outline:3px solid var(--focus); border-color:var(--a
 .builder-copy-sequence{color:var(--accent);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 11px;cursor:pointer;font-size:.78rem;font-weight:750}
 .builder-copy-sequence:hover{border-color:var(--accent)}
 .builder-cds-sequence{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;background:var(--card);border:1px solid var(--line);border-radius:8px;color:var(--ink);padding:12px;font-size:.75rem;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere;max-height:260px;overflow-y:auto;margin:0}
+
+/* Scientific TP records, scoped to candidate; AA and curated DNA are collapsed by default. */
+.tp-group > .tp-help { padding: 0 18px; }
+.tp-list { margin: 12px 14px 16px; }
+.tp-record { min-width: 0; overflow: hidden; }
+.tp-sequence { margin: 8px 16px 16px; padding: 12px 14px; border-radius: 9px;
+  background: var(--list-bg); border: 1px solid var(--line); color: var(--ink);
+  white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-all;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 12.5px;
+  line-height: 1.65; }
+.tp-missing-dna { padding: 0 16px; }
+.tp-associated-assemblies { margin: 10px 16px 18px; padding-left: 20px;
+  font-size: 13px; color: var(--body-ink); line-height: 1.7; overflow-wrap: anywhere; }

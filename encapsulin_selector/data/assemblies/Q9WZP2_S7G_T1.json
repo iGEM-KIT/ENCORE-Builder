@@ -19,7 +19,7 @@
   "notes": "Complete pore-loop deletion/enlarged-pore variant. 6WKV and 7LIT represent the same S7G design and are therefore grouped. Williams et al. estimated an ~11 Å pore; Adamson et al. later calculated ~11.3 Å from the higher-resolution structure. Shell diameter of 24 nm observed by negative-stain TEM.",
   "source_doi": "10.1021/acssynbio.8b00295; 10.1126/sciadv.abl7346",
   "shell_sequence_status": "modified",
-  "shell_sequence_change": "Engineered pore-loop variant S7G; exact changed residues are not specified in the assembly record.",
+  "shell_sequence_change": "Engineered pore-loop variant S7G; WT residues 182–190 (KEEAGHYPL) replaced by GG (curated sequence alignment).",
   "comparison_reference_assembly_id": "Q9WZP2_T1_empty",
   "shell_change_reference_positions_aa": "182–190",
   "shell_change_original_aa": "KEEAGHYPL",

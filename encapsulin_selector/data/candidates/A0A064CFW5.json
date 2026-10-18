@@ -28,7 +28,7 @@
   "pore_record_count": 0,
   "evidence_record_count": 0,
   "curation_source": "UniProt A0A064CFW5",
-  "curator_notes": "Potential peroxidase cargo candidate Y900_009670 identified by genomic adjacency to predicted shell gene Y900_009675; not experimentally demonstrated. Pending systematic genomic-context cargo audit.",
+  "curator_notes": "Potential peroxidase cargo candidate Y900_009670 identified by genomic adjacency to predicted shell gene Y900_009675; not experimentally demonstrated.",
   "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
   "curation_source_doi": null
 }

@@ -10,7 +10,7 @@
   "shell_diameter_nm": "~24",
   "inner_diameter_nm": null,
   "wall_thickness_nm": null,
-  "inner_volume_A3": "1.944 × 106",
+  "inner_volume_A3": "1.944 × 10^6",
   "thermostability_tm_c": null,
   "condition": "recombinant cargo-free mutant shell expressed in E. coli",
   "method": "cryo-EM / negative-stain TEM",

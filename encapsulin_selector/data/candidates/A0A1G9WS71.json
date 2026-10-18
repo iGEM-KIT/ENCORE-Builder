@@ -26,7 +26,7 @@
   "source_emdb": "EMD-52715; EMD-52716",
   "pdb_count": 2,
   "pore_record_count": 3,
-  "evidence_record_count": 6,
+  "evidence_record_count": 7,
   "curation_source": "PDB 9I8E/9I8F (deposited); RSC Materials Advances 2025 DendroEnc study",
   "curator_notes": "DendroEnc: T=4, 240 subunits, ~40 nm. Legacy row reports a ~1.0 nm pore. Heterologous cargo loading was demonstrated via a C-terminal targeting peptide.",
   "missing_fields_for_curation": null,

@@ -40,7 +40,7 @@ test('24 eligible designs have actual assembly sources with DOI/PDB where availa
   assert(!html.includes('https://doi.org/undefined'))
   assert.match(html,/I3E3I1/);assert.match(html,/McIver 2024/)
   assert.match(html,/View transferred DNA sequence \(CDS · 5′→3′/)
-  assert.match(read('encapsulin_selector/builder-filter.html'),/No cargo protein or targeting peptide is included/)
+  assert.match(read('encapsulin_selector/builder-filter.html'),/optional choices at the cargo site/)
 })
 test('copy action retrieves exactly the same curated CDS passed to Builder',async()=>{
   const {ctx,docEvents,copied}=setup();const d=ctx.window.ENCORE_BUILDER_CATALOG.find(x=>x.name.includes('Letter11'))

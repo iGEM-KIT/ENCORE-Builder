@@ -28,7 +28,7 @@
   "pore_record_count": 0,
   "evidence_record_count": 0,
   "curation_source": "UniProt A0A069RM29",
-  "curator_notes": "Unreviewed predicted Type 1 shell from Peptoclostridium litorale DSM 5388. No direct characterization identified. Pending systematic genomic-context cargo audit.",
+  "curator_notes": "Unreviewed predicted Type 1 shell from Peptoclostridium litorale DSM 5388. No direct characterization identified.",
   "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
   "curation_source_doi": null
 }

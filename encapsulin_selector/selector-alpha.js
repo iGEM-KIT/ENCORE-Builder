@@ -4,6 +4,18 @@
   const assemblies = DATA.assemblies;
   const sequences = DATA.sequences ?? [];
   const pores = DATA.pores ?? [];
+  const targetingPeptides = DATA.targeting_peptides ?? [];
+  const tpAssemblyLinks = DATA.tp_assembly_links ?? [];
+  const tpsByCandidate = new Map();
+  for (const tp of targetingPeptides) {
+    if (!tpsByCandidate.has(tp.candidate_id)) tpsByCandidate.set(tp.candidate_id, []);
+    tpsByCandidate.get(tp.candidate_id).push(tp);
+  }
+  const tpLinksById = new Map();
+  for (const link of tpAssemblyLinks) {
+    if (!tpLinksById.has(link.tp_id)) tpLinksById.set(link.tp_id, []);
+    tpLinksById.get(link.tp_id).push(link);
+  }
   const doiById = new Map((DATA.doi_index ?? []).map(ref => [ref.doi.toLowerCase(), ref]));
   const citationsByRecord = new Map();
   (DATA.citation_links ?? []).forEach(link => {
@@ -110,7 +122,7 @@ sequences.forEach(s => {
   }
 
   $("datasetBadge").textContent =
-    `${candidates.length} candidates • ${assemblies.length} assemblies • ${pores.length} pore observations`;
+    `${candidates.length} candidates • ${assemblies.length} assemblies • ${pores.length} pore observations • ${targetingPeptides.length} TP records`;
   $("alphaNote").textContent =
     "Pore filters use recorded observations for a specific assembly, not an assumed property of every variant. " +
     "Missing pore measurements are kept as potential matches. " +
@@ -497,9 +509,49 @@ function sequenceCard(s) {
       </article>`;
   }
 
+  // TP records belong to a candidate protein system. Links indicate exactly which
+  // Builder assemblies a TP is associated with, but are NOT blanket evidence of
+  // successful loading by every engineered variant.
+  function tpCard(tp) {
+    const links = tpLinksById.get(tp.tp_id) || [];
+    const dna = tp.builder_dna_5to3;
+    return `<article class="assembly-card tp-record">
+      <div class="assembly-top"><div>
+        <div class="assembly-display-name">${esc(tp.tp_id)}</div>
+        <p class="hint">${esc(tp.cargo_protein || 'Cargo not reported')}</p>
+      </div></div>
+      <div class="property-grid">
+        ${property('Cargo accession', tp.cargo_accession)}
+        ${enumProperty('Cargo terminus', tp.cargo_terminus)}
+        ${enumProperty('TP origin', tp.tp_origin)}
+        ${enumProperty('Sequence scope', tp.sequence_scope)}
+        ${property('Core motif (AA)', tp.tp_core_motif_aa)}
+        ${enumProperty('Builder use', tp.builder_use_status)}
+        ${property('Cargo residue range', tp.cargo_residue_range)}
+      </div>
+      <details class="details tp-sequence-details"><summary>Amino-acid sequence (${esc(tp.tp_length_aa || tp.tp_sequence_aa?.length || 0)} aa)</summary>
+        <pre class="tp-sequence" aria-label="Targeting peptide amino-acid sequence">${esc(tp.tp_sequence_aa || '')}</pre>
+      </details>
+      ${dna ? `<details class="details tp-sequence-details"><summary>Curated DNA sequence (5′→3′ · ${dna.length} nt)</summary>
+        <pre class="tp-sequence" aria-label="Targeting peptide DNA sequence">${esc(dna)}</pre>
+      </details>` : '<p class="hint tp-missing-dna">No curated DNA sequence for this TP/region. An amino-acid sequence is not experimental DNA.</p>'}
+      <details class="details"><summary>Evidence and associated Builder assemblies (${links.length})</summary>
+        <div class="property-grid">
+          ${enumProperty('Validation evidence', tp.validation_evidence)}
+          ${property('Source', tp.source)}
+        </div>
+        <p class="hint">A Builder association does not establish that TP loading was tested with that specific engineered shell.</p>
+        ${links.length ? `<ul class="tp-associated-assemblies">${links.map(link => `<li><strong>${esc(link.assembly_id)}</strong> — ${esc(humanValue(link.builder_transfer_status))}; ${esc(humanValue(link.pair_specific_evidence_status))}</li>`).join('')}</ul>` : '<p class="hint">No Builder assembly relation curated.</p>'}
+        ${tp.notes ? `<div class="readable-panel">${readableText(tp.notes)}</div>` : ''}
+      </details>
+      ${citationBlock('targeting_peptides', tp.tp_id)}
+    </article>`;
+  }
+
   function candidateCard(c, assemblySubset=null, stateMap=null) {
     const linked = assemblySubset ?? (byCandidate.get(c.candidate_id) || []);
     const linkedSequences = sequencesByCandidate.get(c.candidate_id) || [];
+    const linkedTps = tpsByCandidate.get(c.candidate_id) || [];
     const poreCount = (byCandidate.get(c.candidate_id) || [])
       .reduce((sum, a) => sum + (poresByAssembly.get(a.assembly_id) || []).length, 0);
     const assemblyHtml = linked.length
@@ -532,6 +584,11 @@ function sequenceCard(s) {
           <summary>Sequence data (${linkedSequences.length})</summary>
           <div class="assembly-list sequence-list">${sequenceHtml}</div>
         </details>
+        ${linkedTps.length ? `<details class="details tp-group">
+          <summary>Targeting peptides / cargo-targeting regions (${linkedTps.length})</summary>
+          <p class="hint tp-help">The records below include both design-eligible TPs and research-only motifs/regions. Open a record to inspect its literal sequence and assembly-specific evidence.</p>
+          <div class="assembly-list tp-list">${linkedTps.map(tpCard).join('')}</div>
+        </details>` : ''}
         ${citationBlock("databank", c.candidate_id)}
         <div class="assembly-list">${assemblyHtml}</div>
       </article>`;
@@ -541,16 +598,19 @@ function sequenceCard(s) {
   function candidateSearchText(c) {
     const linked = byCandidate.get(c.candidate_id) || [];
     const linkedSequences = sequencesByCandidate.get(c.candidate_id) || [];
+    const linkedTps = tpsByCandidate.get(c.candidate_id) || [];
     const linkedPores = linked.flatMap(a => poresByAssembly.get(a.assembly_id) || []);
     const sourceLinks = [
       ...(citationsByRecord.get(`databank:${c.candidate_id}`) || []),
       ...linked.flatMap(a => citationsByRecord.get(`assemblies:${a.assembly_id}`) || []),
-      ...linkedPores.flatMap(p => citationsByRecord.get(`pores:${p.pore_record_id}`) || [])
+      ...linkedPores.flatMap(p => citationsByRecord.get(`pores:${p.pore_record_id}`) || []),
+      ...linkedTps.flatMap(tp => citationsByRecord.get(`targeting_peptides:${tp.tp_id}`) || [])
     ];
     return norm([
       c.candidate_id, c.entry_name, c.protein_name, c.organism, c.strain,
       c.genus, c.gene, c.locus_tag, c.orf_name, c.encapsulin_family,
       ...linked.map(a => a.construct),
+      ...linkedTps.flatMap(tp => [tp.tp_id, tp.cargo_protein, tp.tp_sequence_aa, tp.tp_core_motif_aa]),
       ...linkedPores.flatMap(p => [p.pore_record_id, p.pore_type, p.construct, p.structure_id]),
       ...sourceLinks.flatMap(link => [link.doi, link.citation_label]),
 ...linkedSequences.flatMap(s => [

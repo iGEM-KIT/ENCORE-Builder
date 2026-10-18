@@ -1,0 +1,18 @@
+{
+  "evidence_id": "EV2026_TP_0008",
+  "candidate_id": "Q45296",
+  "field_name": "targeting_peptide_record",
+  "value_text": "tp_id=Q45296_DyP_C37; tp_sequence_aa=SASARVEETDPPNPASADDPAPADDSLGIGSLRRRDQ; tp_length_aa=37; sequence_scope=published_natural_C_terminal_region_37aa_not_tested_fragment",
+  "value_numeric": null,
+  "unit": "aa",
+  "support_type": "curated_from_sheet",
+  "source_type": "curated_sheet",
+  "source_id": "Putri et al. 2017, ACS Nano: B. linens DyP C-terminal fusion to TFP",
+  "source_url": "https://doi.org/10.1021/acsnano.7b07669",
+  "method": "Literature reported segment or follow-up required",
+  "structure_id": null,
+  "condition": "As specified in source; no default interchangeability with other shell assemblies",
+  "used_in_databank": false,
+  "notes": "targeting_peptides.tp_id=Q45296_DyP_C37; research record; literal sequence alone does not establish Builder eligibility.",
+  "source_doi": "10.1021/acsnano.7b07669"
+}

@@ -28,7 +28,7 @@
   "pore_record_count": 0,
   "evidence_record_count": 0,
   "curation_source": "UniProt A0A076EZF5; InterPro PIRSF019254; Rahmanpour & Bugg 2013 (R. opacus B4 homologous system)",
-  "curator_notes": "Unreviewed predicted Type 1 shell from Rhodococcus opacus. Type 1 encapsulin-DypB systems are described in other R. opacus strains, but those observations were not assigned directly to A0A076EZF5. Pending systematic genomic-context cargo audit.",
+  "curator_notes": "Unreviewed predicted Type 1 shell from Rhodococcus opacus. Type 1 encapsulin-DypB systems are described in other R. opacus strains, but those observations were not assigned directly to A0A076EZF5.",
   "missing_fields_for_curation": "T_number;shell_diameter;pore_data;loading_info",
   "curation_source_doi": "10.1111/febs.12234"
 }

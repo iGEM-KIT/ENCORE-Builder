@@ -26,7 +26,7 @@
   "source_emdb": "EMD-27558; EMD-27560; \nEMD-27573",
   "pdb_count": 3,
   "pore_record_count": 3,
-  "evidence_record_count": 5,
+  "evidence_record_count": 6,
   "curation_source": "Giessen 2024 ChemBioChem (10.1002/cbic.202400535, PMC11664910); PDB 8DN9/8DNA/8DNL",
   "curator_notes": "T=1, 60 protomers, ~24 nm. Strongly pH-responsive 5-fold pore dynamics; both states observed at pH 7.5 and only the closed state at pH 3.0. Overall exterior surface is negatively charged.",
   "missing_fields_for_curation": null,
