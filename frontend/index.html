@@ -206,6 +206,10 @@
   .stopwarn svg,.stopok svg,.stophint svg{flex:none;margin-top:1px}
 
   .nav{display:flex;justify-content:flex-end;align-items:center;margin-top:22px;gap:12px}
+  .optck{display:flex;align-items:center;gap:6px;margin-left:auto;font-size:13px;color:var(--ink-soft)}
+  .optck label{display:flex;align-items:center;gap:8px;cursor:pointer}
+  .optck input{width:16px;height:16px;accent-color:var(--teal);cursor:pointer}
+  #back2 + .optck{margin-left:auto}
   .btn{border:0;border-radius:11px;padding:12px 22px;font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-weight:600;font-size:14.5px;cursor:pointer;transition:.15s;display:inline-flex;align-items:center;gap:8px}
   .btn-primary{background:var(--orange);color:var(--orange-ink);box-shadow:0 6px 16px rgba(230,159,0,.28);font-weight:700}
   .btn-primary:hover{filter:brightness(1.04);transform:translateY(-1px)}
@@ -382,7 +386,6 @@
   .orderitem .oi-kind{margin:5px 0 3px}
   .oi-badge.reg{background:var(--card-2);color:var(--teal-deep);border:1px solid var(--line);text-decoration:none}
   a.oi-badge.reg:hover{border-color:var(--teal-deep)}
-  .oi-badge.reg.soon{color:var(--muted);border-style:dashed;cursor:default}
   .oi-badge.synth{background:rgba(230,159,0,.16);color:var(--orange-deep)}
 
   /* ============ PRIMER ============ */
@@ -717,6 +720,10 @@
           <div class="stopwarn" id="calcError" style="display:none" role="alert"></div>
           <div class="nav">
             <button class="btn btn-ghost" id="back2">Back</button>
+            <div class="optck">
+              <label for="optToolkit"><input type="checkbox" id="optToolkit"><span>Also optimize the toolKIT sequences</span></label>
+              <button class="info" type="button" data-info="optToolkit" aria-label="About optimizing the toolKIT sequences">i</button>
+            </div>
             <button class="btn btn-primary" id="next2">Calculate construct
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12l7 7 7-7"/></svg></button>
           </div>
@@ -742,6 +749,8 @@
           Complete step 3 first.
         </div>
         <div id="body3" style="display:none">
+
+          <div class="stopok" id="optNote" style="display:none"></div>
 
           <div class="biosec-result" id="biosecNote" data-state="ok" role="status" style="display:none">
             <div class="br-icon" id="biosecIcon"></div>
@@ -1170,6 +1179,10 @@ const INFO = {
   promoter: { title:'Bidirectional promoter',
     body:`<p><b>GAL1-10</b> is a bidirectional yeast promoter: it drives <b>two genes at once</b> in opposite directions. Both transcripts <b>start (5′) at the promoter</b> and run outward.</p>
           <p>The nanocompartment module is read off the <b>sense (plus) strand</b> (to the right), the cargo module off the <b>antisense (minus) strand</b> (to the left); that is why they point away from each other. Inducible via galactose.</p>` },
+  optToolkit: { title:'Optimize the toolKIT sequences',
+    body:`<p>Normally the parts of the toolKIT stay as they are. If you tick this box, the sequences of the toolKIT that code for protein (shells, cargos, linkers, markers and targeting peptides) are optimized again for <i>S. cerevisiae</i>, with the same method as your own sequences, and the sites of RFC 10 and RFC 1000 are removed.</p>
+          <p>A part whose sequence changes is no longer the sequence of its plasmid: it has no Registry link in the order lists and is ordered as DNA (as oligos if it is shorter than 150 bp). Parts that were already fine stay unchanged.</p>
+          <p class="infomore"><a href="/guide.html#bg-optimize" target="_blank" rel="noopener">Full details in the Overview</a></p>` },
   levels: { title:'Level 0 → 1 → 2',
     body:`<p><b>Level 0 (BbsI):</b> every part is cloned separately; its Type number fixes where it ends up. <b>Level 1 (BsaI):</b> the parts of a site are joined through their shared overhangs into the cargo module and the NC module. <b>Level 2 (BbsI):</b> cargo module, promoter and NC module form the finished construct in the target vector.</p>
           <p>The right overhang of one part must equal the left overhang of the next, otherwise the design stops with an error. The Level 2 insert carries the overhangs <b>CCAA</b> and <b>AATG</b> and fits plasmids whose BbsI acceptor site gives exactly these, not every Golden Gate plasmid.</p>
@@ -1191,6 +1204,7 @@ const state = {
   nc:null, customNc:{label:'', seqRaw:'', valid:false},
   cargoSeq:'', cargoLabel:'Custom cargo', cargoFromPreset:null, cargoValid:false,
   promoter:'',
+  optToolkit:false,
   ncSlots:{ 1:{kind:'none'}, 2:{kind:'none'}, 4:{kind:'none'}, 5:{kind:'none'} },
   cargoSlots:{ 1:{kind:'none'}, 2:{kind:'none'}, 4:{kind:'none'}, 5:{kind:'none'} },
   unlocked:[true,false,false,false,false],
@@ -1576,6 +1590,7 @@ function initPromoterDropdown(){
     sel.appendChild(o);
   });
   sel.addEventListener('change', ()=>{ state.promoter=sel.value; updateConstructStrip(); refreshNext2(); });
+  $('#optToolkit').addEventListener('change', ()=>{ state.optToolkit=$('#optToolkit').checked; saveSession(); });
   refreshNext2();
 }
 // The promoter has to be chosen on purpose: the bar keeps a grey "Promoter" until then.
@@ -2076,7 +2091,7 @@ function resetBuilder(){
   state.nc=null; state.customNc={label:'', seqRaw:'', valid:false};
   state.cargoSeq=''; state.cargoLabel='Custom cargo';
   state.cargoFromPreset=null; state.cargoValid=false;
-  state.promoter='';
+  state.promoter=''; state.optToolkit=false; $('#optToolkit').checked=false;
   state.ncSlots=defaultSlots(); state.cargoSlots=defaultSlots();
   state.unlocked=[true,false,false,false,false];
   lastResult=null;
@@ -2725,12 +2740,13 @@ $('#lvl2strand').addEventListener('keydown', e=>{ if((e.key==='Enter'||e.key==='
 
 
 /* ===================== Step 5: order ===================== */
-/* Link to a toolkit part in the iGEM Registry, shown in the order lists. The URL comes from the parts database
-   (`registry_url`); until it is filled in, a placeholder is shown in its place. */
+/* Link to a toolkit part in the iGEM Registry, shown in the order lists. The URL comes from the parts database (`registry_url`).
+   A part without a link shows nothing (no placeholder), and a toolkit part whose sequence was optimized again has no link, because its
+   sequence no longer is the one of the Registry entry (the server leaves `registryUrl` empty for it). */
 function registryLinkHtml(c){
   return c.registryUrl
     ? `<a class="oi-badge reg" href="${esc(c.registryUrl)}" target="_blank" rel="noopener" title="Open this part in the iGEM Registry">iGEM Registry ↗</a>`
-    : `<span class="oi-badge reg soon" title="The link to this part in the iGEM Registry will be added here">iGEM Registry ↗</span>`;
+    : '';
 }
 function orderRow(name, sub, status, seqHtml, construct){
   const badge = status==='oligo' ? '<span class="oi-badge synth">oligo pair</span>'
@@ -2768,7 +2784,7 @@ function renderOrder(res){
   const oligo = list.filter(c=>c.oligos);
   $('#ordOligoMeta').textContent = oligo.length ? `${oligo.length} pair${oligo.length>1?'s':''} · ${oligo.length*2} oligos` : '';
   if(oligo.length){
-    $('#ordOligoList').innerHTML = oligo.map(c=>orderRow(orderName(c), `${orderWhere(c)} · ${c.insert.sequence.length} bp part · anneals to ${c.oligos.annealedLength} bp with 5′ overhangs ${c.oligos.overhangs.left} / ${c.oligos.overhangs.right}`, 'oligo',
+    $('#ordOligoList').innerHTML = oligo.map(c=>orderRow(orderName(c), `${orderWhere(c)} · ${c.insert.sequence.length} bp part · anneals to ${c.oligos.annealedLength} bp with 5′ overhangs ${c.oligos.overhangs.left} / ${c.oligos.overhangs.right}${c.reoptimized ? ' · toolbox part, re-optimized' : ''}`, 'oligo',
       seqLine(c.oligos.top.name, c.oligos.top.sequence, c.oligos.stop && c.oligos.stop.top)+seqLine(c.oligos.bottom.name, c.oligos.bottom.sequence, c.oligos.stop && c.oligos.stop.bottom), c)).join('');
     const rows = oligo.flatMap(c=>[c.oligos.top, c.oligos.bottom]);
     listActions($('#ordOligoActions'), rows.map(o=>`${o.name}\t${o.sequence}`).join('\n'),
@@ -2792,7 +2808,7 @@ function renderOrder(res){
   const ds = list.filter(c=>c.isReal && !c.oligos);          // parts that are ordered as oligos are not listed again
   $('#ordDsMeta').textContent = ds.length ? `${ds.length} fragment${ds.length>1?'s':''}` : '';
   if(ds.length){
-    $('#ordDsList').innerHTML = ds.map(c=>orderRow(orderName(c), `${orderWhere(c)} · ${c.length} bp fragment (part ${c.insert.sequence.length} bp)${c.isUser ? ' · your own sequence' : ' · toolbox part'}`, 'dsdna', '', c)).join('');
+    $('#ordDsList').innerHTML = ds.map(c=>orderRow(orderName(c), `${orderWhere(c)} · ${c.length} bp fragment (part ${c.insert.sequence.length} bp)${c.isUser ? ' · your own sequence' : c.reoptimized ? ' · toolbox part, re-optimized' : ' · toolbox part'}`, 'dsdna', '', c)).join('');
     const names = ds.map(recName);
     $('#ordDsActions').innerHTML = `<button class="chip" type="button" data-act="copy">Copy list</button><button class="chip primary-chip" type="button" data-act="csv">Download list (.csv)</button><button class="chip primary-chip" type="button" data-act="gb">Download GenBank (.gb)</button>`;
     $('#ordDsActions').onclick = e=>{ const b=e.target.closest('button[data-act]'); if(!b) return;
@@ -2889,6 +2905,20 @@ async function compute(){
   renderAll(lastResult);
 }
 
+/* Step 4: what the option "Also optimize the toolKIT sequences" did (only when it was ticked). */
+function renderOptNote(res){
+  const el=$('#optNote'), t=res.api && res.api.toolkitOptimization;
+  if(!t || !t.enabled){ el.style.display='none'; el.innerHTML=''; return; }
+  const n=t.parts.length;
+  const first = n
+    ? `The toolKIT sequences were optimized again for S. cerevisiae: ${n} part${n>1?'s':''} changed (${t.parts.map(p=>esc(p.label)).join(', ')}). They are ordered as DNA and have no Registry link, because their sequences differ from the plasmids of the toolKIT.`
+    : 'All toolKIT sequences of this design were already optimized: no part changed.';
+  const second = t.sitesInInsert && t.sitesInInsert.length
+    ? `The Level 2 insert still contains: ${t.sitesInInsert.map(esc).join(', ')}.`
+    : 'The Level 2 insert contains none of the RFC 10 and RFC 1000 sites (BsaI, BbsI, SapI, EcoRI, XbaI, SpeI, PstI, NotI).';
+  el.innerHTML=`${ICON_OK}<div>${first} ${second}</div>`; el.style.display='';
+}
+
 function renderAll(res){
   const m=res.model;
 
@@ -2903,6 +2933,7 @@ function renderAll(res){
   renderLevel0Extras(res);
   renderLevel2Plasmid(res);
   renderOrder(res);
+  renderOptNote(res);
 }
 
 /* ===================== Stepper scroll-spy ===================== */
@@ -2940,7 +2971,7 @@ function saveSession(){
       nc:state.nc?state.nc.id:($('#ncSelect').value===CUSTOM_NC?CUSTOM_NC:null),
       customNc:{ label:state.customNc.label, seqRaw:$('#shellSeq').value },
       cargoRaw:$('#cargoSeq').value, cargoFromPreset:state.cargoFromPreset, cargoLabel:state.cargoLabel,
-      promoter:$('#promoter').value,
+      promoter:$('#promoter').value, optToolkit:!!state.optToolkit,
       ncSlots:packSlots('nc'), cargoSlots:packSlots('cargo'),
       databaseTpOptions, importedShellSeq,
       unlocked:state.unlocked, scrollY:window.scrollY,
@@ -2954,6 +2985,7 @@ async function restoreSession(){
   try{ s=JSON.parse(sessionStorage.getItem(SESSION_KEY)); }catch(e){}
   if(!s) return;
 
+  state.optToolkit=!!s.optToolkit; $('#optToolkit').checked=state.optToolkit;
   if(s.customNc){
     $('#customNcLabel').value=s.customNc.label||''; state.customNc.label=s.customNc.label||'';
     $('#shellSeq').value=s.customNc.seqRaw||'';
@@ -3170,6 +3202,7 @@ window.ENCORE_API = (function(){
     cargoSeq: s.cargoSeq, cargoLabel: s.cargoLabel,
     promoter: s.promoter,
     ncSlots: slotsPayload('nc'), cargoSlots: slotsPayload('cargo'),
+    optimizeToolkit: !!s.optToolkit,
   });
   const post = (path, body) => json(base+path, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body||{}) });
   const api = {

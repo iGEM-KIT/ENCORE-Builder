@@ -95,7 +95,10 @@ def _toolkit_part(cfg: dict, nc: dict, site: str, n: int) -> Part:
     return Part("NCS", found[0], found[1], False, "NCS spacer (toolkit part)", found[2])
 
 
-def _middle_parts(nc: dict, cargo_label: str, cargo_antisense: str) -> tuple:
+CODING_TOOLKIT_KINDS = ("linker", "marker", "intein", "tp")       # toolkit parts of the slots that code for protein (NCS spacers do not)
+
+
+def _middle_parts(nc: dict, cargo_label: str, cargo_antisense: str, cargo_reoptimized: bool = False) -> tuple:
     """(shell, cargo) as parts of Type 0.3. An own shell and an own cargo are user inputs; if the cargo comes
     unchanged from the cargo library it is a toolkit part. The cargo sequence is only inserted later
     (as antisense)."""
@@ -105,6 +108,8 @@ def _middle_parts(nc: dict, cargo_label: str, cargo_antisense: str) -> tuple:
         found = resolve_insert("shell", nc["shell"], "nc_site", 3, "SHELL" + nc["shell"], nc["shellBp"])
         shell = Part(nc["shell"], found[0], found[1], False, "nanocompartment shell (toolkit part)", found[2])
     preset = find_library_cargo(reverse_complement(cargo_antisense))
+    if cargo_reoptimized:                                   # a library cargo whose sequence was optimized again: no longer the sequence of the plasmid
+        return shell, Part(cargo_label, None, True, False, "cargo (toolkit part, re-optimized)", None)
     cargo = Part(cargo_label, None, True, preset is None, "cargo gene of interest" if preset is None else "cargo (toolkit part)",
                  preset)
     return shell, cargo
@@ -150,13 +155,16 @@ def _construct_features(shown: dict, part: Part, n: int, adapter_id: str, orient
     return features
 
 
-def _ordering_options(part: Part, built: dict, shown: dict, n: int, module: str, adapter_id: str, features: list) -> tuple:
+def _ordering_options(part: Part, built: dict, shown: dict, n: int, module: str, adapter_id: str, features: list,
+                      reoptimized: bool = False) -> tuple:
     """(primers, oligo pair) of a part. Primers exist only for own sequences (which one wants to build into the toolbox) and only
     if they are long enough for PCR; toolkit parts are ordered as DNA/oligos. Every part
     with a real sequence below MIN_PCR_INSERT_BP gets an oligo pair, whether own input or toolkit part.
     The primer binding sites are added to `features` as features."""
     if not part.is_real:
         primers = {"possible": False, "reason": "No real sequence in the parts database yet; primers can only be designed for a real sequence."}
+    elif reoptimized:
+        primers = {"possible": False, "reason": "Re-optimized toolbox part: its sequence differs from the existing plasmid, so there is no template for primers; order it as DNA."}
     elif not part.is_user:
         primers = {"possible": False, "reason": "Toolbox part: order it as DNA; primers are only designed for your own sequences."}
     else:
@@ -182,7 +190,7 @@ def _definition(label: str, adapter_id: str, antisense: bool, is_real: bool) -> 
 
 
 def _build_construct(part: Part, module: str, n: int, codon: dict | None, backbone: dict | None, cargo_antisense: str,
-                     start: bool = False, stop: bool = False) -> tuple:
+                     start: bool = False, stop: bool = False, reoptimized: bool = False) -> tuple:
     """The Level 0 construct of Type 0.`n` of module `module` and the BsaI fragment of this part for Level 1.
     Start and stop codon are added here per slot (`start`/`stop`, see `_orf_flags`). Cargo module parts sit on the antisense
     strand and are inserted as a reverse complement; the cargo site is displayed rotated by 180 degrees so that the cargo reads in its own
@@ -211,7 +219,7 @@ def _build_construct(part: Part, module: str, n: int, codon: dict | None, backbo
     orientation = ("antisense strand (cargo module): shown 5'->3' left to right, rotated 180° vs. the Level 0 plasmid top strand"
                    if antisense else "sense strand: as entered")
     features = _construct_features(shown, part, n, adapter_id, orientation, codon)
-    primers, oligos = _ordering_options(part, built, shown, n, module, adapter_id, features)
+    primers, oligos = _ordering_options(part, built, shown, n, module, adapter_id, features, reoptimized)
     features.sort(key=lambda f: location_span(f["location"])[0])
     record_name = level0_record_name(part.label, n, module)
     construct = {
@@ -219,7 +227,7 @@ def _build_construct(part: Part, module: str, n: int, codon: dict | None, backbo
         "slot": n, "type": f"Type 0.{n}", "orientation": orientation,
         "strand": "antisense" if antisense else "sense", "rotated": antisense,
         "plasmidStrand": "antisense" if antisense else "sense",
-        "isUser": part.is_user, "isReal": part.is_real,
+        "isUser": part.is_user, "isReal": part.is_real, "reoptimized": reoptimized,
         "adapter": built["adapter"], "usedForModules": built["usedForModules"],
         "sequence": shown["sequence"], "length": shown["length"], "insert": shown["insert"],
         "overhangs": shown["overhangs"], "bbsiSites": shown["bbsiSites"],
@@ -227,8 +235,8 @@ def _build_construct(part: Part, module: str, n: int, codon: dict | None, backbo
         # link to the part in the iGEM Registry (parts database field `registry_url`); None until it is filled in, and for own parts
         "registryUrl": None if part.is_user or not part.source else part.source.get("registry_url"),
         # state of the Level 0 plasmid of a toolkit part: "built" or "not_built" (None for your own sequences)
-        "plasmidStatus": None if part.is_user else plasmid_status(part.source),
-        "codon": codon if part.is_user else None,
+        "plasmidStatus": None if part.is_user or reoptimized else plasmid_status(part.source),
+        "codon": codon if part.is_user or reoptimized else None,
         "stopCodon": bool(shown["stops"]), "stopLocation": shown["stops"][0]["location"] if shown["stops"] else None,
         "genbank": format_genbank_record(record_name, shown["sequence"], features, False,
                                          _definition(part.label, adapter_id, antisense, part.is_real)),
@@ -238,7 +246,8 @@ def _build_construct(part: Part, module: str, n: int, codon: dict | None, backbo
 
 
 def build_level0_constructs(nc: dict, cargo_label: str, cargo_antisense: str, cargo_slots: dict, nc_slots: dict,
-                            fragments: list | None = None, cargo_codon: dict | None = None) -> list:
+                            fragments: list | None = None, cargo_codon: dict | None = None, reoptimize=None,
+                            cargo_reoptimized: bool = False) -> list:
     """The Level 0 construct of each of the ten modules (cargo site + NC site, Type 0.1-0.5): the part sequence in the
     overhang adapter of its Type slot (attach_adapter) and, if the Level 0 backbone is in the database,
     the plasmid cloned from it by BbsI (clone_into_level0_backbone), each with a finished GenBank text.
@@ -246,7 +255,13 @@ def build_level0_constructs(nc: dict, cargo_label: str, cargo_antisense: str, ca
     `isUser` = entered by the user (cargo, own shell/parts), otherwise toolkit part; `isReal` = real
     sequence (user input or parts database) instead of a deterministic placeholder. The BsaI fragments of all parts
     (for the Level 1 assembly) go into `fragments` if it is passed."""
-    shell, cargo = _middle_parts(nc, cargo_label, cargo_antisense)
+    shell, cargo = _middle_parts(nc, cargo_label, cargo_antisense, cargo_reoptimized)
+    shell_summary = None
+    if reoptimize and not shell.is_user and shell.is_real and shell.seq:           # option "optimize the toolKIT sequences again"
+        new_seq, summary = reoptimize(shell.seq, "nc", 3)
+        if new_seq != shell.seq:                                  # a sequence that was already fine stays the sequence of the plasmid
+            shell_summary = summary
+            shell = shell._replace(seq=new_seq, source=None, what=shell.what.replace("(toolkit part)", "(toolkit part, re-optimized)"))
     backbone = next(iter(load_parts()["level0_backbones"]), None)
     if backbone and not backbone.get("sequence"):
         backbone = None
@@ -256,9 +271,19 @@ def build_level0_constructs(nc: dict, cargo_label: str, cargo_antisense: str, ca
         site = "cargo_site" if module == "cargo" else "nc_site"
         flags = _orf_flags(slots, module)
         for n, covers in module_units(slots):
-            part = middle if n == 3 else _toolkit_part(slots[covers[0]], nc, site, covers[0])
-            codon = (cargo_codon if module == "cargo" else nc.get("codon")) if n == 3 else slots[covers[0]].get("codon")
-            construct, fragment = _build_construct(part, module, n, codon, backbone, cargo_antisense, *flags.get(n, (False, False)))
+            if n == 3:
+                part = middle
+                codon = cargo_codon if module == "cargo" else (shell_summary or nc.get("codon"))
+                again = cargo_reoptimized if module == "cargo" else shell_summary is not None
+            else:
+                cfg = slots[covers[0]]
+                part, codon, again = _toolkit_part(cfg, nc, site, covers[0]), cfg.get("codon"), False
+                if reoptimize and cfg["kind"] in CODING_TOOLKIT_KINDS and part.is_real and part.seq:
+                    new_seq, summary = reoptimize(part.seq, module, covers[0])
+                    if new_seq != part.seq:
+                        codon, again = summary, True
+                        part = part._replace(seq=new_seq, source=None, what=part.what.replace("(toolkit part)", "(toolkit part, re-optimized)"))
+            construct, fragment = _build_construct(part, module, n, codon, backbone, cargo_antisense, *flags.get(n, (False, False)), reoptimized=again)
             constructs.append(construct)
             if fragments is not None:
                 fragments.append(fragment)

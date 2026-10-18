@@ -14,6 +14,13 @@ def codon_optimize_part(sequence: str, module: str, slot: int, protein: bool = F
     return optimize_cds(sequence, lefts, rights, protein)
 
 
+def optimize_toolkit_part(sequence: str, module: str, slot: int) -> tuple:
+    """Codon optimization of a part of the toolKIT (optional, see the design option "optimizeToolkit"): the same method and the same
+    forbidden sites as for the own sequences (S. cerevisiae, RFC 10 and RFC 1000 sites, BsaI, BbsI). Returns (sequence, summary)."""
+    result = codon_optimize_part(sequence, module, slot)
+    return result["sequence"], codon_summary(result)
+
+
 def codon_summary(result: dict) -> dict:
     """What the design response and the GenBank notes need from an optimization (without the sequences)."""
     return {"status": result["status"], "fromProtein": result["fromProtein"], "optimized": result["optimized"],

@@ -391,7 +391,7 @@ def test_libraries_ship_the_level0_backbone_with_a_ready_genbank_text():
 def test_design_response_only_carries_what_the_ui_and_export_use():
     design = _design()
     assert sorted(design) == ['cargo', 'cargoSlots', 'codonOptimization', 'level0', 'level0Constructs', 'level1Constructs', 'level2',
-                              'level2Construct', 'nanocompartment', 'ncSlots', 'primers', 'targetingPeptide']
+                              'level2Construct', 'nanocompartment', 'ncSlots', 'primers', 'targetingPeptide', 'toolkitOptimization']
     assert sorted(design['cargo']) == ['bp', 'label', 'sequence', 'sequenceAntisense']
     assert sorted(design['level2']['promoter']) == ['bp', 'id', 'label']
 
@@ -1432,3 +1432,81 @@ def test_the_vault_shell_is_named_MVP_in_capitals_like_the_other_shells():
     shell = next(c for c in design['level0Constructs'] if c['module'] == 'nc_site' and c['slot'] == 3)
     assert shell['label'] == 'MVP' and 'Level0.3_MVP_NC' in shell['genbank']
     assert 'mvp' not in shell['genbank'].split('\n')[0]
+
+
+# Option "optimize the toolKIT sequences again" (decision optimizeToolkit)
+
+def _toolkit_coding_parts():
+    from Biologik.level0_design.parts_db import find_inserts
+    for category in ('shell', 'cargo', 'linker', 'marker', 'intein', 'tp'):
+        seen = set()
+        for entry in find_inserts(category):
+            if entry['part'] not in seen and entry.get('sequence'):
+                seen.add(entry['part'])
+                yield category, entry['part'], entry['sequence']
+
+
+def test_every_coding_toolkit_part_keeps_its_protein_and_loses_the_forbidden_sites_when_optimized():
+    from Biologik.level0_design.codon import FORBIDDEN_SITES, translate
+    from Biologik.level0_design.user_codons import optimize_toolkit_part
+    rc = lambda s: s[::-1].translate(str.maketrans('ACGT', 'TGCA'))
+    count = 0
+    for category, name, seq in _toolkit_coding_parts():
+        for module, slot in (('nc', 3), ('cargo', 3)) if category in ('shell', 'cargo') else (('nc', 2), ('cargo', 1)):
+            new, summary = optimize_toolkit_part(seq, module, slot)
+            assert translate(new) == translate(seq), f'{category} {name}: the protein changed'
+            assert len(new) == len(seq)
+            assert not any(site in new or site in rc(new) for sites in FORBIDDEN_SITES.values() for site in sites), f'{category} {name}: a site is left'
+            assert optimize_toolkit_part(seq, module, slot)[0] == new                       # the same input gives the same result
+        count += 1
+    assert count >= 20
+
+
+def _opt_design(optimize, cargo='yegfp', **extra):
+    from Biologik.level0_design.design import design_construct
+    from Biologik.level0_design.parts_db import find_inserts
+    seq = find_inserts('cargo', cargo)[0]['sequence']
+    slots = {'cargoSlots': {'1': {'kind': 'tp'}, '2': {'kind': 'linker', 'id': 'GSSS2'}},
+             'ncSlots': {'1': {'kind': 'marker', 'id': 'spycatcher'}, '2': {'kind': 'linker', 'id': 'GSSS2'}}}
+    return design_construct({'nanocompartment': 'tmari', 'cargoSeq': seq, 'cargoLabel': cargo, 'optimizeToolkit': optimize, **slots, **extra})
+
+
+def test_without_the_option_nothing_of_the_toolkit_changes():
+    design = _opt_design(False)
+    assert design['toolkitOptimization']['enabled'] is False and design['toolkitOptimization']['parts'] == []
+    assert not any(c['reoptimized'] for c in design['level0Constructs'])
+    assert 'XbaI (TCTAGA)' in design['toolkitOptimization']['sitesInInsert']              # the shell E-Tm has an XbaI site (RFC 10)
+
+
+def test_with_the_option_the_changed_toolkit_parts_lose_their_registry_link_and_are_ordered_as_dna():
+    design = _opt_design(True)
+    report = design['toolkitOptimization']
+    assert report['enabled'] is True and {p['label'] for p in report['parts']} == {'TP-Tm', 'yegfp', 'E-Tm'}
+    assert report['sitesInInsert'] == []                                                    # RFC 10 and RFC 1000 clean
+    by_label = {(c['module'], c['type']): c for c in design['level0Constructs']}
+    for key in (('nc_site', 'Type 0.3'), ('cargo_site', 'Type 0.3'), ('cargo_site', 'Type 0.1')):
+        c = by_label[key]
+        assert c['reoptimized'] and c['registryUrl'] is None and c['isUser'] is False and c['plasmidStatus'] is None
+        assert c['primers']['possible'] is False and 'differs from the existing plasmid' in c['primers']['reason']
+        assert 'toolkit part, re-optimized' in c['what'] and c['codon']['status'] == 'optimized'
+    assert by_label[('cargo_site', 'Type 0.1')]['oligos'] is not None                      # TP-Tm is shorter than 150 bp: oligo pair
+    assert by_label[('nc_site', 'Type 0.3')]['oligos'] is None                              # the shell is ordered as DNA
+    unchanged = by_label[('nc_site', 'Type 0.1')]                                           # SpyCatcher was already fine: still the plasmid of the toolKIT
+    assert unchanged['reoptimized'] is False and unchanged['registryUrl']
+
+
+def test_a_reoptimized_toolkit_part_is_in_the_genbank_export_and_the_level2_insert_carries_its_new_sequence():
+    from Biologik.level0_design.design import build_genbank
+    off, on = _opt_design(False), _opt_design(True)
+    assert on['level2Construct']['sequence'] != off['level2Construct']['sequence']
+    assert len(on['level2Construct']['sequence']) == len(off['level2Construct']['sequence'])   # synonymous codons: the same length
+    records = build_genbank(on).count('LOCUS')
+    assert records > build_genbank(off).count('LOCUS')                                       # the optimized parts are exported as Level 0 records
+
+
+def test_the_promoter_and_the_ncs_spacers_are_not_changed_by_the_option():
+    off, on = _opt_design(False), _opt_design(True)
+    ncs = [c for c in on['level0Constructs'] if c['label'] == 'NCS']
+    assert ncs and not any(c['reoptimized'] for c in ncs)
+    promoter = lambda d: next(m for m in d['level1Constructs'] if m['site'] == 'promoter')['sequence']
+    assert promoter(off) == promoter(on)

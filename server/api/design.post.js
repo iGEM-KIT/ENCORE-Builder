@@ -14,6 +14,8 @@
  *   //                                | { kind: 'linker', id: string }
  *   //                                | { kind: 'marker', id: string }    // spycatcher | spytag
  *   //                                | { kind: 'custom', label?: string, seq: string } }
+
+ *   optimizeToolkit?: boolean, // also optimize the sequences of the toolKIT again (yeast codon usage, no RFC 10 / RFC 1000 sites)
  *   genbank?: boolean          // also return a GenBank export string (annotated; see design.py: build_genbank)
  * }
  *
@@ -41,6 +43,7 @@ export default defineEventHandler(async (event) => {
       cargoSlots: body.cargoSlots,
       promoter: body.promoter,
       ncSlots: body.ncSlots,
+      optimizeToolkit: Boolean(body.optimizeToolkit),
       genbank: Boolean(body.genbank),
     })
     return design

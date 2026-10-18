@@ -8,11 +8,12 @@ from __future__ import annotations
 from .assembly import assemble_level1_module, assemble_level1_promoter, assemble_level2, finish_level1
 from .constructs import build_level0_constructs, resolve_seq
 from .data import CARGO_L1_FLANK, NOMINAL_BP, TARGETING_PEPTIDES, find_nanocompartment, find_promoter
-from .parts_db import find_real_sequence, load_parts
+from .codon import FORBIDDEN_SITES
+from .parts_db import find_library_cargo, find_real_sequence, load_parts
 from .primers import make_primer_pair
 from .sequence import reverse_complement, validate_cargo
 from .slots import CUSTOM_NC_ID, build_custom_nanocompartment, build_modules, resolve_slots, slot_summary
-from .user_codons import optimize_user_sequences
+from .user_codons import optimize_toolkit_part, optimize_user_sequences
 
 
 def _first_backbone(kind: str):
@@ -69,6 +70,14 @@ def design_construct(decisions: dict = None):
         raise ValueError("The intein INT is the targeting peptide of the human vault; with this nanocompartment use your own sequence in that slot.")
 
     codon_report, cargo_codon = optimize_user_sequences(cargo, cargo_label, nc, cargo_slots, nc_slots)
+    # Option: the sequences of the toolKIT are optimized again as well (yeast codon usage, no RFC 10 / RFC 1000 sites). A part whose
+    # sequence changes is no longer the sequence of its plasmid in the toolKIT: it has no Registry link and is ordered as DNA.
+    optimize_toolkit = bool(decisions.get("optimizeToolkit"))
+    cargo_reoptimized = False
+    if optimize_toolkit and not cargo["isProtein"] and find_library_cargo(cargo["clean"]):
+        new_seq, summary = optimize_toolkit_part(cargo["clean"], "cargo", 3)
+        if new_seq != cargo["clean"]:
+            cargo["clean"], cargo_codon, cargo_reoptimized = new_seq, summary, True
     # The cargo sits in pESC (MCS1) on the antisense strand. So the reverse complement is formed right
     # here and only that is used from now on:
     # primers, order sequence and GenBank refer to the antisense strand.
@@ -83,8 +92,10 @@ def design_construct(decisions: dict = None):
     primers = make_primer_pair(cargo_antisense, CARGO_L1_FLANK[0], CARGO_L1_FLANK[1])
 
     fragments: list = []
-    level0_constructs = build_level0_constructs(nc, cargo_label, cargo_antisense, cargo_slots, nc_slots, fragments, cargo_codon)
+    level0_constructs = build_level0_constructs(nc, cargo_label, cargo_antisense, cargo_slots, nc_slots, fragments, cargo_codon,
+                                                optimize_toolkit_part if optimize_toolkit else None, cargo_reoptimized)
     level1_constructs, level2_construct = build_level1_and_2(fragments, promoter_entry, nc)
+    toolkit_optimization = _toolkit_optimization_report(optimize_toolkit, level0_constructs, level2_construct)
 
     return {
         "nanocompartment": {"id": nc["id"], "label": nc["label"], "T": nc["T"], "dia": nc["dia"], "shell": nc["shell"], "shellBp": nc["shellBp"],
@@ -99,10 +110,28 @@ def design_construct(decisions: dict = None):
         "ncSlots": slot_summary(nc_slots),
         "primers": primers,
         "codonOptimization": codon_report,
+        "toolkitOptimization": toolkit_optimization,
         "level0Constructs": level0_constructs,
         "level1Constructs": level1_constructs,
         "level2Construct": level2_construct,
     }
+
+
+def _forbidden_sites_in(sequence: str) -> list:
+    """The forbidden sites (codon.FORBIDDEN_SITES) in a sequence, on either strand, as "EcoRI (GAATTC)"."""
+    other = reverse_complement(sequence)
+    return [f"{enzyme} ({sites[0]})" for enzyme, sites in FORBIDDEN_SITES.items() if any(s in sequence or s in other for s in sites)]
+
+
+def _toolkit_optimization_report(enabled: bool, constructs: list, level2: dict | None) -> dict:
+    """What the option "optimize the toolKIT sequences again" did: the parts whose sequence changed (with the sites that were removed)
+    and the restriction sites that the finished Level 2 insert still contains (they sit in parts that are not optimized, for example
+    the promoter, or in your own sequences, which are optimized anyway)."""
+    parts = [{"label": c["label"], "type": c["type"], "module": c["module"], "changed": c["codon"]["changed"], "codons": c["codon"]["codons"],
+              "caiBefore": c["codon"]["caiBefore"], "caiAfter": c["codon"]["caiAfter"], "sitesRemoved": list(dict.fromkeys(c["codon"]["sitesRemoved"]))}
+             for c in constructs if c.get("reoptimized") and c.get("codon")]
+    return {"enabled": enabled, "parts": parts,
+            "sitesInInsert": _forbidden_sites_in(level2["sequence"]) if level2 and level2.get("sequence") else None}
 
 
 def build_genbank(design: dict) -> str:
@@ -112,7 +141,7 @@ def build_genbank(design: dict) -> str:
 
     # Level 0 constructs of the user inputs (cargo, own shell/parts): part sequence in the Type adapter with all annotations
     # (BbsI sites, overhangs, frame spacer, insert), plus the PCR product with the primers where there is one.
-    for c in (c for c in design.get("level0Constructs", []) if c["isUser"]):
+    for c in (c for c in design.get("level0Constructs", []) if c["isUser"] or c.get("reoptimized")):
         records.append(c["genbank"])
         if c["primers"]["possible"]:
             records.append(c["primers"]["genbank"])

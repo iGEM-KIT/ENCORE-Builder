@@ -50,3 +50,15 @@ test('an unknown command is a 400 as well', async () => {
     (error) => error.status === 400 && /Unknown command/.test(error.message),
   )
 })
+
+test('design: optimizeToolkit reaches the engine, re-optimizes the toolKIT shell and removes its XbaI site', async () => {
+  const off = await runBiologik('design', { nanocompartment: 'tmari', cargoSeq: CARGO, cargoLabel: 'X' })
+  const on = await runBiologik('design', { nanocompartment: 'tmari', cargoSeq: CARGO, cargoLabel: 'X', optimizeToolkit: true })
+  assert.equal(off.design.toolkitOptimization.enabled, false)
+  assert.deepEqual(off.design.toolkitOptimization.parts, [])
+  assert.equal(on.design.toolkitOptimization.enabled, true)
+  const shell = on.design.level0Constructs.find((c) => c.module === 'nc_site' && c.slot === 3)
+  assert.equal(shell.reoptimized, true)
+  assert.equal(shell.registryUrl, null)
+  assert.deepEqual(on.design.toolkitOptimization.sitesInInsert, [])
+})

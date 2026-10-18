@@ -379,7 +379,7 @@ def test_the_how_this_level_works_texts_live_in_the_info_button_next_to_golden_g
         assert part in guide, part
 
 
-INFO_TO_GUIDE = {"primers": "bg-primers", "levels": "bg-levels", "codonOpt": "bg-codon", "commec": "bg-commec", "stop": "bg-stop"}
+INFO_TO_GUIDE = {"primers": "bg-primers", "levels": "bg-levels", "codonOpt": "bg-codon", "commec": "bg-commec", "stop": "bg-stop", "optToolkit": "bg-optimize"}
 
 
 def test_the_long_info_windows_are_short_and_point_to_the_full_text_in_the_overview():
@@ -433,7 +433,7 @@ def test_the_info_windows_show_no_graphic_placeholder():
     start = text.index("const INFO = {")
     block = text[start:text.index("\n};", start)]
     assert "img:" not in block and "Diagram:" not in block                      # no caption of a graphic is kept in the data either
-    assert len(re.findall(r"\n  [A-Za-z0-9]+: \{ title:", block)) == 8
+    assert len(re.findall(r"\n  [A-Za-z0-9]+: \{ title:", block)) == 9
     assert 'id="popTitle"' in text and 'id="popText"' in text and 'id="popClose"' in text
 
 
@@ -478,7 +478,7 @@ def test_the_info_windows_exist_in_every_language_with_the_same_html_structure(c
     start = text.index("const INFO = {")
     block = text[start:text.index("\n};", start)]
     keys = re.findall(r"\n  ([A-Za-z0-9]+): \{ title", block)
-    assert len(keys) == 8
+    assert len(keys) == 9
     dictionary = _dictionary(code)
     english = {k: re.search(r"\n  %s: \{ title:'(.*?)',\n    body:`(.*?)` \}" % k, block, flags=re.S) for k in keys}
     for key in keys:
@@ -516,3 +516,33 @@ def test_the_nanocompartment_info_window_and_step_1_text_match_the_imported_shel
     assert "Toolkit shell presets provide a matching TP" in text
     assert "For a shell imported from the Database, targeting peptides are optional" in text
     assert "The variant you choose determines the matching" not in text
+
+
+def test_the_check_box_next_to_calculate_construct_has_an_info_button_and_is_sent_to_the_engine():
+    text = INDEX.read_text(encoding="utf8")
+    nav = text[text.index('<button class="btn btn-ghost" id="back2">'):text.index('id="next2"')]
+    assert 'id="optToolkit"' in nav and 'Also optimize the toolKIT sequences' in nav and 'data-info="optToolkit"' in nav
+    assert nav.index('id="back2"') < nav.index('id="optToolkit"') < nav.index('data-info="optToolkit"')           # Back, the box with its info button, then Calculate
+    assert "optimizeToolkit: !!s.optToolkit" in text                                                                # part of the request
+    assert "optToolkit:!!state.optToolkit" in text and "state.optToolkit=!!s.optToolkit" in text                   # kept in the session
+    assert "state.optToolkit=false; $('#optToolkit').checked=false;" in text                                      # and reset by "New construct"
+    assert "'#optToolkit').addEventListener('change'" in text.replace(" ", "")  or "$('#optToolkit').addEventListener('change'" in text
+    assert "optimizeToolkit: Boolean(body.optimizeToolkit)" in (ROOT / "server" / "api" / "design.post.js").read_text(encoding="utf8")
+
+
+def test_the_order_lists_show_no_registry_placeholder_and_mark_reoptimized_toolbox_parts():
+    text = INDEX.read_text(encoding="utf8")
+    assert "oi-badge reg soon" not in text and ".oi-badge.reg.soon" not in text and "will be added here" not in text
+    fn = text[text.index("function registryLinkHtml(c){"):text.index("function orderRow(")]
+    assert ": '';" in fn and "iGEM Registry" in fn                                                                  # no link: nothing at all
+    assert text.count("toolbox part, re-optimized") >= 2                                                           # in the oligo and in the DNA lines
+
+
+def test_step_4_tells_what_the_option_did_and_the_guide_explains_the_box():
+    text = INDEX.read_text(encoding="utf8")
+    assert 'id="optNote"' in text and "renderOptNote(res);" in text and "function renderOptNote(res)" in text
+    guide = re.sub(r"<[^>]*>", " ", GUIDE.read_text(encoding="utf8"))
+    for part in ("Also optimize the toolKIT sequences", "no longer the sequence of its plasmid", "shows no badge either", "The box is off by default",
+                 "NCS spacers and the promoter are not coding"):
+        assert part in guide, part
+    assert "dashed placeholder" not in guide and "are never changed" not in guide
