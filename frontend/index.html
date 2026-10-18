@@ -321,8 +321,9 @@
      sequence: see l0ModuleRow(). */
   /* Identical column template in the cargo row and the NC row (edge chip · 5 modules each separated by a junction
      chip · edge chip), so the two rows stand exactly on top of each other. */
-  .partsrow.sep.l0grid{display:grid;grid-template-columns:auto repeat(4,minmax(54px,104px) auto) minmax(54px,104px) auto;justify-content:center;min-width:0;align-items:stretch;gap:0 4px}   /* columns are content sized and the row is centered; the inline style of the row sets the part count */
+  .partsrow.sep.l0grid{display:grid;grid-template-columns:auto repeat(5,104px auto);justify-content:center;min-width:0;align-items:stretch;gap:0 4px}   /* columns are content sized and the row is centered; the inline style of the row sets the part count */
   .l0grid .part{min-width:0;align-items:center;text-align:center;padding:8px 7px;font-size:11.5px}
+  .l0grid .part,.l1grid .part{overflow-wrap:anywhere;hyphens:auto}   /* a long name (e.g. of a targeting peptide) wraps inside its box; all boxes of a row have the same width and height */
   .l0grid .part small{font-size:9px}
   .l0grid .part .ptype{font-size:8.5px}
   .l0frag{display:flex}
@@ -480,8 +481,8 @@
   .chip:disabled{opacity:.45;cursor:not-allowed}
   /* Level 1 module rows: the parts are ligated, so each junction is ONE chip (no stagger). Grey = Level 1 acceptor
      overhangs (NLvl1/CLvl1), orange = Level 2 overhangs (cut later with BbsI), dark = junction between two parts. */
-  .partsrow.sep.l1grid{display:grid;grid-template-columns:auto auto repeat(5,minmax(54px,112px)) auto auto;justify-content:center;min-width:0;align-items:stretch;gap:0 6px}
-  .partsrow.sep.l1grid.single{grid-template-columns:auto auto minmax(120px,240px) auto auto}
+  .partsrow.sep.l1grid{display:grid;grid-template-columns:auto auto repeat(5,112px) auto auto;justify-content:center;min-width:0;align-items:stretch;gap:0 6px}
+  .partsrow.sep.l1grid.single{grid-template-columns:auto auto 240px auto auto}
   .l1grid .part{min-width:0;align-items:center;text-align:center;padding:8px 7px;font-size:11.5px;box-shadow:inset 0 0 0 2px rgba(11,58,51,.75),0 2px 10px rgba(11,58,51,.18)}
   .l1grid .part small{font-size:9px}
   .l1grid .part .ptype{font-size:8.5px}
@@ -2192,7 +2193,7 @@ function l0ModuleRow(parts, antisense){
     cells.push(ohChip(JUNCTIONS[antisense ? lo-1 : hi], n===ordered.length-1 ? 'right' : null));
   });
   // one edge chip, then (part, junction) per part; a combined NCS makes a module four or three parts long
-  const cols = 'auto ' + parts.map(()=>'minmax(54px,104px) auto').join(' ');
+  const cols = 'auto ' + parts.map(()=>'104px auto').join(' ');
   return `<div class="strand-dir"><span>5′</span><span>3′</span></div><div class="partsrow sep l0grid" style="grid-template-columns:${cols}">${cells.join('')}</div>`;
 }
 function renderLevel0(elId, m){
@@ -2580,7 +2581,7 @@ function l1Row(kind, c, parts){
   const cells = [top(seq.slice(0,4),'', 'Level 1 acceptor overhang (BsaI)'), top(v.level2Overhangs.n,'l2','Level 2 overhang (BbsI)')];
   parts.forEach(p=>cells.push(l0Box(p)));
   cells.push(bot(v.level2Overhangs.c,'l2','Level 2 overhang (BbsI)'), bot(seq.slice(-4),'','Level 1 acceptor overhang (BsaI)'));
-  const cols = 'auto auto ' + parts.map(()=>parts.length===1 ? 'minmax(120px,240px)' : 'minmax(54px,112px)').join(' ') + ' auto auto';
+  const cols = 'auto auto ' + parts.map(()=>parts.length===1 ? '240px' : '112px').join(' ') + ' auto auto';
   return `<div class="strand-dir"><span>5′</span><span>3′</span></div>` +
          `<div class="partsrow sep l1grid${parts.length===1?' single':''} clickable" style="grid-template-columns:${cols}" data-l1="${kind}" role="button" tabindex="0" aria-label="${esc(c.label)}: show sequence and plasmid">${cells.join('')}</div>`;
 }
