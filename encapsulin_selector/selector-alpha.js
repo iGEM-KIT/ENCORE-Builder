@@ -871,3 +871,10 @@ function sequenceCard(s) {
   });
   sync();
 })();
+
+// The note about how the filters work sits behind an info button next to the tabs
+(function(){
+  const btn=document.getElementById('alphaInfoBtn'), panel=document.getElementById('alphaInfo');
+  if(!btn||!panel) return;
+  btn.addEventListener('click',()=>{ const open=panel.hidden; panel.hidden=!open; btn.setAttribute('aria-expanded',String(open)); });
+})();

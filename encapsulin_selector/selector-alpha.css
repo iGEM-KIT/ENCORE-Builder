@@ -441,3 +441,5 @@ code,pre,.tp-sequence,.change-before,.change-after{overflow-wrap:anywhere;white-
 .info-panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px 20px;margin:0 0 18px}
 .info-panel[hidden]{display:none}
 .info-panel p{margin:12px 0}
+.tabs-info{margin-left:auto;align-self:center;margin-bottom:6px}
+#alphaInfo #alphaNote{margin:12px 0;background:none;border:0;padding:0}

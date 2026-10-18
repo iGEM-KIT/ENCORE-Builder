@@ -41,12 +41,14 @@
       <div class="dataset-badge" id="datasetBadge"></div>
     </header>
 
-    <div class="alpha-note" id="alphaNote"></div>
-
     <nav class="mode-tabs" aria-label="Selector modes">
       <button class="mode-tab active" data-mode="search">Search</button>
       <button class="mode-tab" data-mode="finder">Find a capsule</button>
+      <button type="button" class="info-btn tabs-info" id="alphaInfoBtn" aria-expanded="false" aria-controls="alphaInfo" aria-label="About this data">i</button>
     </nav>
+    <div class="info-panel" id="alphaInfo" hidden>
+      <div id="alphaNote"></div>
+    </div>
 
     <section id="searchMode" class="mode-panel">
       <div class="search-box">
