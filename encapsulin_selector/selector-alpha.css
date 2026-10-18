@@ -401,3 +401,6 @@ input:focus, select:focus { outline:3px solid var(--focus); border-color:var(--a
 .tp-associated-assemblies { margin: 10px 16px 18px; padding-left: 20px;
   font-size: 13px; color: var(--body-ink); line-height: 1.7; overflow-wrap: anywhere; }
 a.hbtn{text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+/* The two tools get their own accent so the pages are told apart at a glance: green for choosing a shell, blue for exploring the data */
+body.explore{--accent:#3F66A8;--accent-soft:#E3EBF7}
+:root[data-theme="dark"] body.explore{--accent:#7FA6E0;--accent-soft:#1c2a40}
