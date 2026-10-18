@@ -141,7 +141,7 @@ test('disabled-state rules do not grey out imported TPs while shell validation i
 });
 
 
-test('removing the shell start and/or stop codon does not grey out its Databank TPs',()=>{
+test('removing the shell start and/or stop codon does not grey out its Database TPs',()=>{
   const gate=snippet('const importedShellVariants = raw =>','function applySelectorHandoff(){');
   const ref='ATGAAACCCGGGTAA';
   const state={customNc:{seqRaw:ref,valid:false}};

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Convert the curated Open Nanocompartments Databank Excel workbook to Selector JSON.
+"""Convert the curated Open Nanocompartments Database Excel workbook to Selector JSON.
 
 Python standard library only (no pip packages). The workbook is READ-ONLY.
 
