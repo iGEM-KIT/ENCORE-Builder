@@ -736,7 +736,6 @@
  "Position": "Position",
  "Targeting peptides · {0} associated ({1} Builder option)": "Peptides d'adressage · {0} associés ({1} option du Builder)",
  "Targeting peptides · {0} associated ({1} Builder options)": "Peptides d'adressage · {0} associés ({1} options du Builder)",
- "Associated with this shell system; exact loading performance is not assumed for engineered variants. No TP is inserted into the shell sequence.": "Associé à ce système de coque ; la performance exacte de chargement n'est pas supposée pour les variantes modifiées. Aucun TP n'est inséré dans la séquence de la coque.",
  "Builder transfer": "Transfert vers le Builder",
  "Optional cargo-site part": "Pièce facultative pour le site du cargo",
  "Pair evidence": "Preuves de l'association",

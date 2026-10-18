@@ -736,7 +736,6 @@
  "Position": "Position",
  "Targeting peptides · {0} associated ({1} Builder option)": "Targeting-Peptide · {0} zugeordnet ({1} Builder-Option)",
  "Targeting peptides · {0} associated ({1} Builder options)": "Targeting-Peptide · {0} zugeordnet ({1} Builder-Optionen)",
- "Associated with this shell system; exact loading performance is not assumed for engineered variants. No TP is inserted into the shell sequence.": "Diesem Hüllensystem zugeordnet; die genaue Beladungsleistung wird für gentechnisch veränderte Varianten nicht angenommen. In die Hüllensequenz wird kein TP eingefügt.",
  "Builder transfer": "Übertragung an den Builder",
  "Optional cargo-site part": "Optionaler Teil für die Cargo-Seite",
  "Pair evidence": "Belege für die Paarung",

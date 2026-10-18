@@ -345,7 +345,6 @@
  "Position": "الموضع",
  "Targeting peptides · {0} associated ({1} Builder option)": "ببتيدات التوجيه · {0} مرتبطة ({1} خيار في Builder)",
  "Targeting peptides · {0} associated ({1} Builder options)": "ببتيدات التوجيه · {0} مرتبطة ({1} خيارات في Builder)",
- "Associated with this shell system; exact loading performance is not assumed for engineered variants. No TP is inserted into the shell sequence.": "مرتبط بنظام الغلاف هذا؛ ولا يُفترض أداء التحميل بالضبط للمتغيرات المهندسة. لا يُدرج أي TP في تسلسل الغلاف.",
  "Builder transfer": "النقل إلى Builder",
  "Optional cargo-site part": "جزء اختياري لموقع الحمولة",
  "Pair evidence": "أدلة الاقتران",

@@ -345,7 +345,6 @@
  "Position": "Положение",
  "Targeting peptides · {0} associated ({1} Builder option)": "Направляющие пептиды · связано {0} ({1} вариант Builder)",
  "Targeting peptides · {0} associated ({1} Builder options)": "Направляющие пептиды · связано {0} ({1} вариантов Builder)",
- "Associated with this shell system; exact loading performance is not assumed for engineered variants. No TP is inserted into the shell sequence.": "Связано с этой системой оболочки; точная эффективность загрузки для модифицированных вариантов не предполагается. TP не вставляется в последовательность оболочки.",
  "Builder transfer": "Передача в Builder",
  "Optional cargo-site part": "Необязательная часть для сайта груза",
  "Pair evidence": "Доказательства сопоставления",

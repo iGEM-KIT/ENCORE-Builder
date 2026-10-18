@@ -736,7 +736,6 @@
  "Position": "位置",
  "Targeting peptides · {0} associated ({1} Builder option)": "靶向肽 · 已关联 {0} 个（{1} 个 Builder 选项）",
  "Targeting peptides · {0} associated ({1} Builder options)": "靶向肽 · 已关联 {0} 个（{1} 个 Builder 选项）",
- "Associated with this shell system; exact loading performance is not assumed for engineered variants. No TP is inserted into the shell sequence.": "与此外壳系统相关联；对于工程改造的变体，不假定确切的装载性能。不会向外壳序列中插入 TP。",
  "Builder transfer": "传输到 Builder",
  "Optional cargo-site part": "货物位点的可选部件",
  "Pair evidence": "配对证据",

@@ -38,7 +38,6 @@
     if (!options.length) return '';
     const usable = options.filter(transferable).length;
     return `<details class="details"><summary>Targeting peptides · ${options.length} associated (${usable} Builder option${usable === 1 ? '' : 's'})</summary>
-      <p class="modification-note">Associated with this shell system; exact loading performance is not assumed for engineered variants. No TP is inserted into the shell sequence.</p>
       ${options.map(tp => `<div class="property-grid">
         ${property('TP', tp.tp_id)}
         ${property('Amino acids', tp.tp_sequence_aa)}

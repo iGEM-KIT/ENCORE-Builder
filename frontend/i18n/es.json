@@ -736,7 +736,6 @@
  "Position": "Posición",
  "Targeting peptides · {0} associated ({1} Builder option)": "Péptidos de direccionamiento · {0} asociados ({1} opción del Builder)",
  "Targeting peptides · {0} associated ({1} Builder options)": "Péptidos de direccionamiento · {0} asociados ({1} opciones del Builder)",
- "Associated with this shell system; exact loading performance is not assumed for engineered variants. No TP is inserted into the shell sequence.": "Asociado a este sistema de cubierta; no se supone el rendimiento exacto de carga para las variantes modificadas. No se inserta ningún TP en la secuencia de la cubierta.",
  "Builder transfer": "Transferencia al Builder",
  "Optional cargo-site part": "Parte opcional para el sitio de la carga",
  "Pair evidence": "Evidencia del emparejamiento",
