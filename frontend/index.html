@@ -63,6 +63,17 @@
   .intro h1{font-size:clamp(30px,5vw,44px);line-height:1.09;margin:0 0 18px}
   .intro h1 em{font-style:normal;color:var(--teal-deep)}
   .intro p.lead{font-size:17px;color:var(--ink-soft);max-width:640px;margin:0 0 34px;line-height:1.6}
+  .intro{max-width:1040px}
+  .start-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:18px;margin:26px 0 22px}
+  .start-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 24px;display:flex;flex-direction:column;box-shadow:var(--shadow)}
+  .start-card.build{border-top:3px solid var(--orange)}.start-card.research{border-top:3px solid var(--teal)}
+  .start-card h2{margin:6px 0 10px;font-size:24px}
+  .start-card p{color:var(--ink-soft);line-height:1.55;margin:0 0 18px}
+  .start-card .flowrow{margin-bottom:22px}
+  .start-card .start-cta{margin-top:auto;align-self:flex-start}
+  .start-tag{font-size:11.5px;font-weight:800;letter-spacing:.06em;color:var(--muted)}
+  .start-cta.alt{background:var(--teal-soft);color:var(--teal-deep);text-decoration:none}
+  @media(max-width:760px){.start-grid{grid-template-columns:1fr}}
   .flowrow{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:38px}
   .flowstep{display:flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--line);
     border-radius:11px;padding:10px 15px;font-size:13px;font-weight:600;box-shadow:var(--shadow)}
@@ -543,23 +554,35 @@
 
 <!-- ============ INTRO ============ -->
 <div class="intro" id="intro">
-  <span class="kicker">ENCORE&nbsp;<b>Builder</b></span>
-  <h1>From coding sequence to an assembly-ready <em>nanocompartment-cargo</em> construct.</h1>
-  <p class="lead">
-    The ENCORE Builder turns your gene of interest into a complete encapsulin cargo construct:
-    configure the nanocompartment site, enter your cargo with the modules around it, and choose the promoter; the builder returns the
-    standardized Golden Gate modules, cargo primers, and the final Level&nbsp;2 plasmid.
-  </p>
-  <div class="flowrow">
-    <div class="flowstep"><span class="dot" style="background:var(--t1)"></span>Nanocompartment Site</div>
-    <span class="flowarrow">→</span>
-    <div class="flowstep"><span class="dot" style="background:var(--t3)"></span>Cargo Site</div>
-    <span class="flowarrow">→</span>
-    <div class="flowstep"><span class="dot" style="background:var(--promo)"></span>Promoter</div>
-    <span class="flowarrow">→</span>
-    <div class="flowstep"><span class="dot" style="background:var(--teal)"></span>Modules</div>
-    <span class="flowarrow">→</span>
-    <div class="flowstep"><span class="dot" style="background:var(--orange)"></span>Overview</div>
+  <span class="kicker">ENCORE&nbsp;<b>toolKIT</b></span>
+  <h1>Design your construct, or find the right shell first.</h1>
+  <div class="start-grid">
+    <article class="start-card build">
+      <span class="start-tag">01 · DESIGN</span>
+      <h2>ENCORE Builder</h2>
+      <p>Turn your gene of interest into a complete encapsulin cargo construct: standardized Golden Gate modules, cargo primers and the final Level&nbsp;2 plasmid.</p>
+      <div class="flowrow">
+        <div class="flowstep"><span class="dot" style="background:var(--t1)"></span>Nanocompartment Site</div>
+        <span class="flowarrow">→</span>
+        <div class="flowstep"><span class="dot" style="background:var(--t3)"></span>Cargo Site</div>
+        <span class="flowarrow">→</span>
+        <div class="flowstep"><span class="dot" style="background:var(--promo)"></span>Promoter</div>
+        <span class="flowarrow">→</span>
+        <div class="flowstep"><span class="dot" style="background:var(--teal)"></span>Modules</div>
+        <span class="flowarrow">→</span>
+        <div class="flowstep"><span class="dot" style="background:var(--orange)"></span>Overview</div>
+      </div>
+      <button class="start-cta" id="startBtn">
+        Start builder
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+      </button>
+    </article>
+    <article class="start-card research">
+      <span class="start-tag">02 · RESEARCH</span>
+      <h2>Open NC Database</h2>
+      <p>Find a suitable shell sequence or look up what experiments reveal about it.</p>
+      <a class="start-cta alt" href="/selector/overview.html">Open the database&nbsp;→</a>
+    </article>
   </div>
   <a class="prereq" href="/guide.html" aria-label="Before you start, open the guide with all rules and notes">
     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
@@ -569,18 +592,6 @@
     </div>
     <span class="prereq-go">Open the guide&nbsp;→</span>
   </a>
-  <a class="prereq" href="/selector/overview.html">
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-    <div>
-      <b>Open NC Database</b>
-      <span class="prereq-sub">Find a suitable shell sequence or look up what experiments reveal about it.</span>
-    </div>
-    <span class="prereq-go">Open the database&nbsp;→</span>
-  </a>
-  <button class="start-cta" id="startBtn">
-    Start builder
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-  </button>
 </div>
 
 <!-- ============ STEPPER (vertical side rail) ============ -->
