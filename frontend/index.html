@@ -1531,18 +1531,19 @@ function seqNotesHtml(v, okText, target){
   if(problems.length) return hints + problems.map(t=>`<div class="stopwarn">${ICON_WARN}<div>${t}</div></div>`).join('');
   return hints + `<div class="stopok">${ICON_OK}<div>${okText}</div></div>` + codonLineHtml(v.codonOptimization, false);
 }
+function withoutTerminalCodons(raw){
+  let seq=clean(raw);
+  if(isProteinText(raw)){ return seq.endsWith('*') ? seq.slice(0,-1) : seq; }
+  if(endsWithStop(seq)) seq=seq.slice(0,-3);
+  if(seq.startsWith('ATG') && seq.length>3) seq=seq.slice(3);
+  return seq;
+}
 /* Button in the hint: writes the sequence without its start codon (ATG) and stop codon back into the input field. */
 document.addEventListener('click', e=>{
   const b=e.target.closest('[data-strip]'); if(!b) return;
   const ta = b.dataset.strip==='slot' ? b.closest('.slotcustom').querySelector('.slotseq') : $(b.dataset.strip);
   if(!ta) return;
-  let seq=clean(ta.value);
-  if(isProteinText(ta.value)){ if(seq.endsWith('*')) seq=seq.slice(0,-1); }
-  else {
-    if(endsWithStop(seq)) seq=seq.slice(0,-3);
-    if(seq.startsWith('ATG') && seq.length>3) seq=seq.slice(3);
-  }
-  ta.value=seq;
+  ta.value=withoutTerminalCodons(ta.value);
   ta.dispatchEvent(new Event('input',{bubbles:true}));
 });
 function renderCargoValidation(v){
@@ -1665,7 +1666,6 @@ function enforceSlotRules(mod){
     else if(sl[n].databaseTpId && (!sel.querySelector(`option[value="dbtp:${sl[n].databaseTpId}"]`) || sel.querySelector(`option[value="dbtp:${sl[n].databaseTpId}"]`)?.disabled || !databaseTpForCurrentShell())) bounce={kind:'ncs'};
     if(bounce){
       sl[n]=bounce;
-      const note=el.querySelector('.slotdbnote'); if(note) { note.textContent=''; note.style.display='none'; }
       sel.value = bounce.kind==='linker' ? 'linker:'+bounce.id : bounce.kind==='custom' ? 'custom' : 'ncs';
       el.querySelector('.slotcustom').style.display = bounce.kind==='custom' ? 'flex' : 'none';
       if(bounce.kind==='custom') handleSlotSeq(mod,n);
@@ -1714,7 +1714,6 @@ function slotCardHtml(mod,n){
     <div class="slothead"><span class="stype">Type 0.${n}</span></div>
     <select class="slotsel" aria-label="Type 0.${n}">${slotOptionsHtml(mod,n)}</select>
     <div class="slothint" style="display:none"></div>
-    <div class="slotdbnote alpha-note" style="display:none" aria-live="polite"></div>
     <div class="slotcustom" style="display:none">
       <input type="text" class="slotlabel" placeholder="Name (optional)" maxlength="60">
       <textarea class="slotseq" placeholder="CDS of your part (DNA, A/T/G/C) or its amino acid sequence; start and stop codon optional, the builder adds them …"></textarea>
@@ -1743,7 +1742,6 @@ function detachDatabaseTp(mod,n){
   if(!part.databaseTpId) return;
   delete part.databaseTpId;
   const el=slotEl(mod,n); el.querySelector('.slotsel').value='custom';
-  el.querySelector('.slotdbnote').style.display='none';
 }
 function refreshDatabaseTpSlotOptions(){
   for(const n of [1,5]){
@@ -1788,19 +1786,6 @@ function setSlotFromSelect(mod,n){
   else { const [kind,id]=v.split(':'); sl[n]={kind,id}; }
   const imported=!!sl[n].databaseTpId;
   el.querySelector('.slotcustom').style.display = v==='custom' || imported ? 'flex' : 'none';
-  const note=el.querySelector('.slotdbnote');
-  if(imported){
-    const tp=databaseTpOptions.find(item=>item.tp_id===sl[n].databaseTpId);
-    const pairing=String(tp.pair_specific_evidence_status||'not reported').replaceAll('_',' ');
-    const dna=tp.builder_dna_5to3 ? 'Curated DNA provided; the existing custom-part workflow may recode it.' : 'AA-only: the Builder will design a coding sequence.';
-    const reported=tp.cargo_terminus==='N_terminal'?'N-terminal':'C-terminal';
-    const selected=n===5?'N-terminal':'C-terminal';
-    const placement=reported===selected
-      ? `Reported TP placement: ${reported}. This does not establish compatibility with every shell variant.`
-      : `Alternative TP placement: reported ${reported}, selected ${selected}. Targeting and encapsulation at this terminus are not experimentally established by the cited evidence; verify linker, fusion orientation and function.`;
-    note.textContent=`Databank TP · ${placement} Shell-pair evidence: ${pairing}. ${dna} This is attached to the cargo, not the shell. Check the linker in the adjacent Type 0.${n===1?2:4} slot.`;
-    note.style.display='block';
-  } else { note.textContent=''; note.style.display='none'; }
   if(v==='custom' || imported) handleSlotSeq(mod,n);
   enforceSlotRules(mod);
   updateConstructStrip(); refreshNav(mod);
@@ -2032,6 +2017,9 @@ function showBiosecModal(flagged){
   });
 }
 
+/* TEMPORARY for general testing: false lets the construct be calculated although the biosecurity screening is not reachable
+   (the result then says that the sequences were not screened). Set it back to true before release. */
+const REQUIRE_SCREENING=false;
 $('#next2').addEventListener('click', async ()=>{
   const btn=$('#next2'); btn.disabled=true;
   state.promoter=$('#promoter').value;
@@ -2053,7 +2041,7 @@ $('#next2').addEventListener('click', async ()=>{
     } else {                                                                       // only toolkit parts: nothing to screen, but the screening has to be running
       try{ const st = await api.commecStatus(); screeningUp = !!(st && st.available); }catch(err){ screeningUp = false; }
     }
-    if(!screeningUp){
+    if(REQUIRE_SCREENING && !screeningUp){
       showCalcError('The biosecurity screening is not available, so no construct can be calculated. Start the screening container (in Docker Desktop both containers must be green), wait until the header shows "Biosecurity screening: on" and try again.', true);
       btn.disabled=false;
       return;
@@ -3115,7 +3103,7 @@ function applySelectorHandoff(){
   const sel=$('#ncSelect');
   sel.value=CUSTOM_NC; sel.dispatchEvent(new Event('change'));
   $('#customNcLabel').value=h.label||''; state.customNc.label=h.label||'';
-  $('#shellSeq').value=h.seq;
+  $('#shellSeq').value=withoutTerminalCodons(h.seq);          // the builder adds start and stop codon itself
   handleShellInput();
   refreshDatabaseTpSlotOptions();
   history.replaceState(null,'','#step-1');

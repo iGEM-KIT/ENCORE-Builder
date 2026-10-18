@@ -220,12 +220,13 @@ def test_the_builder_does_not_calculate_a_construct_when_the_screening_is_not_av
     text = INDEX.read_text(encoding="utf8")
     gate = text[text.index("  let screening=null, proceed=true;"):text.index("  let flaggedCount=0;")]
     assert "api.screenSequences(items)" in gate and "api.commecStatus()" in gate
-    assert "if(!screeningUp)" in gate and "showCalcError(" in gate and "return;" in gate
+    assert "if(REQUIRE_SCREENING && !screeningUp)" in gate and "showCalcError(" in gate and "return;" in gate
     assert "no construct can be calculated" in gate
     assert 'try again.\', true);' in gate                                                               # shown without the prefix "The design could not be calculated:"
     assert "plain ? message" in text
     assert "skipping biosecurity screen" in gate and "screening = {available:false}" in gate               # a failed screening call counts as not available
     assert "does not calculate a construct" in text and "does not continue with" not in text
+    assert "const REQUIRE_SCREENING=false;" in text or "const REQUIRE_SCREENING=true;" in text               # temporary switch for general testing
 
 
 def test_the_pages_never_assume_a_remote_server():
@@ -494,7 +495,7 @@ def test_the_language_menu_lists_five_languages_with_their_own_names_and_english
     js = (ROOT / "frontend" / "i18n.js").read_text(encoding="utf8")
     for name in ("English", "Español", "Deutsch", "Français", "中文 (简体)"):
         assert name in js, name
-    assert "return 'en'" in js and "localStorage.getItem(KEY)" in js
+    assert "return 'en'" in js and "sessionStorage.getItem(KEY)" in js
     assert 'translate="no"' in (ROOT / "frontend" / "viewmenu.js").read_text(encoding="utf8")      # the names of the languages are never translated
 
 

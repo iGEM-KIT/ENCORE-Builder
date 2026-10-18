@@ -11,7 +11,7 @@ async function engine(code) {
   const store = {}
   const attrs = {}
   const ctx = {
-    localStorage: { getItem: k => store[k] ?? null, setItem: (k, v) => { store[k] = v } },
+    sessionStorage: { getItem: k => store[k] ?? null, setItem: (k, v) => { store[k] = v } },
     document: {
       readyState: 'complete', body: null, title: '',
       documentElement: { setAttribute: (k, v) => { attrs[k] = v }, getAttribute: k => attrs[k] },

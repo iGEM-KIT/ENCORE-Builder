@@ -4,7 +4,7 @@
    - a string with {0}, {1} ... stands for a text with values in it ("Sequence too short ({0} bp, need at least 30 bp).").
    Text that has no entry stays English. The engine walks the page (and everything added to it later) and translates text nodes and
    the attributes placeholder, title, aria-label and alt, so that no page has to be changed text by text. The choice is kept in the
-   browser (localStorage "encore.lang"). Elements with the attribute translate="no" are left alone. */
+   browser (sessionStorage "encore.lang": a new visit always starts in English). Elements with the attribute translate="no" are left alone. */
 (function(){
   var KEY='encore.lang';
   var LANGS=[
@@ -18,7 +18,7 @@
   var root=document.documentElement;
   var lang='en', dict=null, templates=[], missing=new Set(), listeners=[], observer=null;
 
-  function stored(){ try{ var v=localStorage.getItem(KEY); return LANGS.some(function(l){return l.code===v;}) ? v : 'en'; }catch(e){ return 'en'; } }
+  function stored(){ try{ var v=sessionStorage.getItem(KEY); return LANGS.some(function(l){return l.code===v;}) ? v : 'en'; }catch(e){ return 'en'; } }
   function norm(s){ return s.replace(/\s+/g,' ').trim(); }
   function esc(s){ return s.replace(/[.*+?^$()|[\]\\]/g,'\\$&'); }
 
@@ -121,7 +121,7 @@
     if(!LANGS.some(function(l){return l.code===code;})) code='en';
     return load(code).then(function(){
       lang=code; root.setAttribute('lang',code==='zh'?'zh-Hans':code);
-      if(remember!==false){ try{ localStorage.setItem(KEY,code); }catch(e){} }
+      if(remember!==false){ try{ sessionStorage.setItem(KEY,code); }catch(e){} }
       missing.clear();
       if(document.body) applyAll();
       listeners.forEach(function(f){ try{ f(code); }catch(e){} });

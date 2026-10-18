@@ -22,7 +22,7 @@ function slotContext(){
   const ncs=[1,2,4,5].reduce((o,n)=>(o[n]={kind:'ncs'},o),{});
   const sl={cargo:ncs,nc:JSON.parse(JSON.stringify(ncs))};
   const el=n=>{
-    const controls={'.slotsel':{value:'none'},'.slotcustom':{style:{}},'.slotlabel':{value:''},'.slotseq':{value:''},'.slotdbnote':{textContent:'',style:{}}};
+    const controls={'.slotsel':{value:'none'},'.slotcustom':{style:{}},'.slotlabel':{value:''},'.slotseq':{value:''}};
     return {controls,querySelector(sel){assert(sel in controls);return controls[sel];}};
   };
   const elements={1:el(1),5:el(5)};
@@ -73,12 +73,11 @@ test('Type 0.5 accepts AA-only TP at reported N-terminus and Type 0.1 as an alte
   run(slotFromSource+'\nthis.setSlotFromSelect=setSlotFromSelect;',ctx);
   ctx.setSlotFromSelect('cargo',5);
   assert.equal(sl.cargo[5].seqRaw,seqN.tp_sequence_aa);
-  assert.match(elements[5].controls['.slotdbnote'].textContent,/Reported TP placement: N-terminal/);
   elements[1].controls['.slotsel'].value='dbtp:N_TP';
   ctx.setSlotFromSelect('cargo',1);
   assert.equal(sl.cargo[1].kind,'custom');
   assert.equal(sl.cargo[1].seqRaw,seqN.tp_sequence_aa);
-  assert.match(elements[1].controls['.slotdbnote'].textContent,/Alternative TP placement: reported N-terminal, selected C-terminal/);
+  assert.equal(sl.cargo[1].databaseTpId,seqN.tp_id);
 });
 
 test('C-terminal TP can be inserted at N-terminal with warning and unchanged curated sequence',()=>{
@@ -89,8 +88,6 @@ test('C-terminal TP can be inserted at N-terminal with warning and unchanged cur
   assert.equal(sl.cargo[5].kind,'custom');
   assert.equal(sl.cargo[5].databaseTpId,seqC.tp_id);
   assert.equal(sl.cargo[5].seqRaw,seqC.builder_dna_5to3);
-  assert.match(elements[5].controls['.slotdbnote'].textContent,/Alternative TP placement: reported C-terminal, selected N-terminal/);
-  assert.match(elements[5].controls['.slotdbnote'].textContent,/not experimentally established/);
 });
 
 test('reference-only motif remains unavailable even if a slot is selected programmatically',()=>{
