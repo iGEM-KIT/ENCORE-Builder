@@ -523,7 +523,7 @@
   </div>
   <nav class="site-tabs" aria-label="Switch tool">
     <a href="/#step-1" id="tabBuilder">ENCORE Builder</a>
-    <a href="/selector/overview.html">Open Database</a>
+    <a href="/selector/overview.html">Open NC Databank</a>
   </nav>
   <div class="spacer"></div>
   <a class="hbtn" id="overviewLink" href="/guide.html" title="Open the guide with all rules and notes">
@@ -1787,7 +1787,7 @@ function slotOptionsHtml(mod, n){
   // A TP's documented cargo terminus is evidence, not a restriction on new designs.
   // Offer curated, Builder-eligible TPs at both positions; visibly flag alternative placement.
   const dbTps = mod==='cargo' && [1,5].includes(n) ? databaseTpOptions.filter(canAutoDesignTp) : [];
-  const dbChoices = dbTps.length ? `<optgroup label="Open Encapsulin Databank · targeting peptides">${dbTps.map(tp=>{
+  const dbChoices = dbTps.length ? `<optgroup label="Open Nanocompartments Databank · targeting peptides">${dbTps.map(tp=>{
     const documentedHere=tp.cargo_terminus===(n===5?'N_terminal':'C_terminal');
     const reported=tp.cargo_terminus==='N_terminal'?'N-terminal':'C-terminal';
     const positioning=documentedHere ? `reported ${reported}` : `reported ${reported}; alternative position (not validated)`;
