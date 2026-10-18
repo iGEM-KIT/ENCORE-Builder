@@ -412,3 +412,24 @@ a.hbtn{text-decoration:none;display:inline-flex;align-items:center;gap:6px}
 html[dir="rtl"] .prop .v,html[dir="rtl"] .stats strong,html[dir="rtl"] .dataset-badge{unicode-bidi:plaintext}
 html[dir="rtl"] code,html[dir="rtl"] pre,html[dir="rtl"] .seq,html[dir="rtl"] textarea.seq{direction:ltr;unicode-bidi:isolate;text-align:left}
 html[dir="rtl"] .prop .v{text-align:right}
+
+/* Calmer reading: more room between lines and blocks, and one text size for body text, one for small labels (headings keep their own sizes) */
+body{font-size:15px;line-height:1.65}
+p,li,.lede,.hint,.why,.source,.readable-panel,.modification-note,.ranking-note{line-height:1.65}
+.chip,.prop .k,.hint,.source,.candidate-sub,.change-label,.change-location,.chip.ref,small,.dataset-badge,.databank-nav a small{font-size:13px}
+.prop .v,.readable-points li,.readable-prose,.change-description,.change-note,.why,.modification-note,.assembly-display-name,.details summary,.check-row,.field-group label{font-size:15px}
+.chips{gap:8px;margin-top:10px}
+.property-grid{gap:14px 24px}
+.prop .k{margin-bottom:3px;display:block}
+.assembly-card,.candidate-card{padding:22px 24px;margin-bottom:18px}
+.assembly-card .details,.candidate-card .details{margin-top:14px}
+.details summary{padding:6px 0}
+.readable-points{padding-left:20px}.readable-points li{margin:6px 0}
+.field-group{margin-bottom:16px}
+.filter-panel h2,.builder-filter-panel h2{margin-bottom:16px}
+/* nothing overlaps: long words and sequences wrap inside their box, flex rows may wrap */
+.assembly-card,.candidate-card,.pore-card,.readable-panel,.prop{min-width:0;overflow-wrap:anywhere}
+.assembly-top,.candidate-head,.design-card-top,.change-head,.change-residues,.pore-card header{flex-wrap:wrap;gap:10px 16px}
+.chip{max-width:100%;white-space:normal}
+.prop .v,.candidate-title,.assembly-display-name{overflow-wrap:anywhere}
+code,pre,.tp-sequence,.change-before,.change-after{overflow-wrap:anywhere;white-space:pre-wrap;max-width:100%}

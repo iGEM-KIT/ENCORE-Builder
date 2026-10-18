@@ -42,7 +42,7 @@ test('Letter11 remains discoverable by T=3 or T=4 without duplicate CDS',()=>{
 test('tetrahedral 3×His documented without invented T-number or diameter',()=>{
  const {get,trigger}=setup();get('designSearch').value='3×His';trigger('designSearch');
  get('designT').value='NA';trigger('designT');assert.match(get('designSummary').textContent,/1 of 24/)
- assert.match(get('designResults').innerHTML,/T=N\/A · Tetrahedral/)
+ assert.match(get('designResults').innerHTML,/3×His-MxEnc/)
 })
 test('numeric filters do not treat missing diameter as zero; min > max blocked',()=>{
  const {get,trigger}=setup();get('designMin').value='100';trigger('designMin');assert.match(get('designSummary').textContent,/0 of 24/)

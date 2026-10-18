@@ -133,38 +133,21 @@
           <p class="source"><i>${escape(d.organism)}</i> · ${escape(d.candidate_id)}</p>
           <div class="chips">
             <span class="chip ${engineered ? 'eng' : 'wt'}">${label}</span>
-            <span class="chip shell-only" title="Builder transfers only the shell CDS, with no cargo or TP">Shell-only CDS</span>
-            ${cargoFreeReported(a) ? '<span class="chip cargo-free">Cargo-free assembly</span>' : '<span class="chip cargo-unverified">Experimental cargo state not specified</span>'}
             <span class="chip ref">${escape(tName(a))}</span>
             <span class="chip">${escape(d.protein_length_aa)} aa</span>
-            ${family ? `<span class="chip">${escape(family.replace('type_','Type '))}</span>` : ''}
-            ${other.length ? `<span class="chip">+${other.length} other observed architecture${other.length === 1 ? '' : 's'}</span>` : ''}
+            ${cargoFreeReported(a) ? '<span class="chip cargo-free">Cargo-free assembly</span>' : ''}
           </div>
         </div>
         <button class="use-nc" type="button" data-design-id="${escape(d.sequence_id)}">Select for Builder →</button>
       </div>
       <div class="property-grid">
-        ${property('Primary architecture', tName(a))}
         ${property('Shell diameter', diameter(a))}
-        ${property('Inner diameter', a.inner_diameter_nm == null ? null : a.inner_diameter_nm + ' nm')}
         ${property('Subunits', a.shell_subunit_count)}
         ${property('CDS length', d.cds_length_nt + ' nt')}
-        ${property('Pore observations', countPores || 'Not recorded')}
       </div>
-      ${other.length ? `<div class="variants"><strong>Other observed assembly of the same shell:</strong> ${other.map(x => escape(tName(x)) + ' · ' + escape(diameter(x))).join('  |  ')}</div>` : ''}
       ${engineered && a.shell_sequence_change ? `<p class="modification-note"><strong>Modification:</strong> ${escape(a.shell_sequence_change)}</p>` : ''}
-      ${sourceBlock(a)}
       ${tpDetails(d)}
       ${sequencePreview(d)}
-      <details class="details"><summary>Structure details</summary>
-        <div class="property-grid">
-          ${property('Source assembly', a.assembly_id)}
-          ${property('Assembly symmetry', a.assembly_symmetry ? a.assembly_symmetry.replaceAll('_',' ') : null)}
-          ${property('PDB / structure', a.structure_id)}
-          ${property('Sequence ID', d.sequence_id)}
-          ${property('Translation QC', d.translation_qc)}
-        </div>
-      </details>
     </article>`;
   }
   function fitsDiameter(a, min, max) {

@@ -19,26 +19,19 @@ function setup(){
   for (const path of ['encapsulin_selector/selector-data.js','encapsulin_selector/builder-catalog.js','encapsulin_selector/builder-filter.js']) vm.runInContext(read(path),ctx)
   return {ctx,get,docEvents,copied};
 }
-test('24 eligible designs have actual assembly sources with DOI/PDB where available, exact collapsed CDS previews and explicit cargo context',()=>{
+test('24 eligible designs have exact collapsed CDS previews and the cargo-free label where reported',()=>{
   const {ctx,get}=setup();const html=get('designResults').innerHTML;
   const designs=ctx.window.ENCORE_BUILDER_CATALOG;const full=ctx.window.ENCAPSULIN_SELECTOR_DATA;
   assert.equal(designs.length,24)
-  assert.equal((html.match(/class="design-sources"/g)||[]).length,24)
   assert.equal((html.match(/class="details builder-cds-preview"/g)||[]).length,24)
-  assert.equal((html.match(/class="chip shell-only"/g)||[]).length,24)
   assert.equal((html.match(/class="chip cargo-free"/g)||[]).length,21)
-  assert.equal((html.match(/class="chip cargo-unverified"/g)||[]).length,3)
   for(const d of designs){
     const a=full.assemblies.find(x=>x.assembly_id===d.assembly_id)
     assert(a, `Missing assembly ${d.assembly_id}`)
     assert(html.includes(`data-copy-seq="${d.sequence_id}"`), `Missing copy action ${d.sequence_id}`)
     assert(html.includes(d.cds.slice(0,60)), `The preview does not contain exact CDS for ${d.sequence_id}`)
-    for(const l of full.citation_links.filter(x=>x.table==='assemblies'&&x.record_id===a.assembly_id)){
-      if(l.doi?.startsWith('10.')) assert(html.includes(`https://doi.org/${l.doi}`), `Missing actual DOI ${l.doi}`)
-    }
   }
-  assert(!html.includes('https://doi.org/undefined'))
-  assert.match(html,/I3E3I1/);assert.match(html,/McIver 2024/)
+  assert.match(html,/I3E3I1/)
   assert.match(html,/View transferred DNA sequence \(CDS · 5′→3′/)
   assert.match(read('encapsulin_selector/builder-filter.html'),/optional choices at the cargo site/)
 })
