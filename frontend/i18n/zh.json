@@ -939,5 +939,6 @@
  "Choose a shell": "选择外壳",
  "Explore the data": "浏览数据",
  "{0}: bidirectional": "{0}: 双向",
- "{0}: {1} aa": "{0}: {1} aa"
+ "{0}: {1} aa": "{0}: {1} aa",
+ "About these shells": "关于这些外壳"
 }

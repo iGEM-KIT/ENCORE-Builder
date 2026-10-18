@@ -433,3 +433,11 @@ p,li,.lede,.hint,.why,.source,.readable-panel,.modification-note,.ranking-note{l
 .chip{max-width:100%;white-space:normal}
 .prop .v,.candidate-title,.assembly-display-name{overflow-wrap:anywhere}
 code,pre,.tp-sequence,.change-before,.change-after{overflow-wrap:anywhere;white-space:pre-wrap;max-width:100%}
+
+.summary-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
+.summary-row .summary-line{margin:0}
+.info-btn{flex:none;width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--accent);font:inherit;font-weight:800;font-style:italic;cursor:pointer;line-height:1}
+.info-btn[aria-expanded="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}
+.info-panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px 20px;margin:0 0 18px}
+.info-panel[hidden]{display:none}
+.info-panel p{margin:12px 0}
