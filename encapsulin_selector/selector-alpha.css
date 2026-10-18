@@ -400,6 +400,4 @@ input:focus, select:focus { outline:3px solid var(--focus); border-color:var(--a
 .tp-missing-dna { padding: 0 16px; }
 .tp-associated-assemblies { margin: 10px 16px 18px; padding-left: 20px;
   font-size: 13px; color: var(--body-ink); line-height: 1.7; overflow-wrap: anywhere; }
-.databank-nav a:first-child{flex:0 0 auto;padding:10px 16px;background:transparent;font-weight:700;font-size:.9rem}
-.databank-nav a:first-child small{font-size:11px}
-@media(max-width:570px){.databank-nav a:first-child{flex:1 1 100%}}
+a.hbtn{text-decoration:none;display:inline-flex;align-items:center;gap:6px}
