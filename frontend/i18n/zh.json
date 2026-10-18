@@ -374,5 +374,5 @@
  "info.commec.title": "生物安保筛查 (COMMEC)",
  "info.commec.body": "<p><b>COMMEC</b>(来自 IBBIS)检查 DNA 是否与已知毒素、毒力因子和受管制病原体相似,类似于 DNA 合成服务商在发货前进行的检查。</p>\n          <p>只会筛查你自己键入或粘贴的序列;toolkit 元件不筛查,因为它们的序列已知且无害。命中结果绝不会悄悄阻止你:你需要先查看并确认,才能继续。如果筛查没有运行,Builder 不会计算任何构建体。这只是辅助检查,不能代替你所在机构的生物安全审查。</p>\n          <p class=\"infomore\"><a href=\"/guide.html#bg-commec\" target=\"_blank\" rel=\"noopener\">完整说明见概览</a></p>",
  "info.optToolkit.title": "优化 toolKIT 序列",
- "info.optToolkit.body": "<p>通常 toolKIT 的元件保持原样。勾选此框后,toolKIT 中编码蛋白的序列(外壳、货物、连接肽、标记和靶向肽)会按 <i>S. cerevisiae</i> 重新优化,所用方法与你自己的序列相同,并去除 RFC 10 和 RFC 1000 的位点。</p>\n          <p>序列发生变化的元件不再是其质粒的序列:它在订购列表中没有注册库链接,并作为 DNA 订购(短于 150 bp 时作为寡核苷酸)。原本就没有问题的元件保持不变。</p>\n          <p class=\"infomore\"><a href=\"/guide.html#bg-optimize\" target=\"_blank\" rel=\"noopener\">完整说明见概览</a></p>"
+ "info.optToolkit.body": "<p>通常 toolKIT 的元件保持原样。勾选此框后,toolKIT 中编码蛋白的序列(外壳、货物、连接肽、标记和靶向肽)会按 <i>S. cerevisiae</i> 重新优化,所用方法与你自己的序列相同,并去除 RFC 10 和 RFC 1000 的位点。NCS 间隔序列不会被优化:只有当其中含有酶切位点时,才会以尽可能少的改动去除该位点。</p>\n          <p>序列发生变化的元件不再是其质粒的序列:它在订购列表中没有注册库链接,并作为 DNA 订购(短于 150 bp 时作为寡核苷酸)。原本就没有问题的元件保持不变。</p>\n          <p class=\"infomore\"><a href=\"/guide.html#bg-optimize\" target=\"_blank\" rel=\"noopener\">完整说明见概览</a></p>"
 }

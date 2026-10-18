@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from .adapters import adapter_contexts, adapter_id_for
-from .codon import optimize_cds
+from .codon import optimize_cds, remove_forbidden_sites
 from .parts_db import find_library_cargo
 
 
@@ -21,6 +21,14 @@ def optimize_toolkit_part(sequence: str, module: str, slot: int) -> tuple:
     return result["sequence"], codon_summary(result)
 
 
+def fix_toolkit_sites(sequence: str, module: str, slot: int) -> tuple:
+    """For toolKIT parts that are not coding for a protein of their own (the NCS spacers): only a forbidden site is removed, with as few
+    synonymous codon changes as possible; without a site the sequence stays as it is. Returns (sequence, summary)."""
+    lefts, rights = adapter_contexts(adapter_id_for(module, slot), module == "cargo", slot)
+    result = remove_forbidden_sites(sequence, lefts, rights)
+    return result["sequence"], codon_summary(result)
+
+
 def codon_summary(result: dict) -> dict:
     """What the design response and the GenBank notes need from an optimization (without the sequences)."""
     return {"status": result["status"], "fromProtein": result["fromProtein"], "optimized": result["optimized"],
@@ -28,7 +36,7 @@ def codon_summary(result: dict) -> dict:
             "caiBefore": result["caiBefore"], "caiAfter": result["caiAfter"],
             "gcBefore": result["gcBefore"], "gcAfter": result["gcAfter"],
             "sitesRemoved": [f"{h['enzyme']} ({h['site']})" for h in result["forbiddenBefore"]],
-            "sitesLeft": [f"{h['enzyme']} ({h['site']})" for h in result["forbiddenAfter"]]}
+            "sitesLeft": [f"{h['enzyme']} ({h['site']})" for h in result["forbiddenAfter"]], "siteFix": bool(result.get("siteFix"))}
 
 
 def codon_note(summary: dict | None) -> str:
@@ -36,6 +44,9 @@ def codon_note(summary: dict | None) -> str:
         return ""
     if summary["status"] != "optimized":
         return f"Codon optimization: {summary['reason']}"
+    if summary.get("siteFix"):
+        return (f"Restriction site(s) removed with {summary['changed']} synonymous codon change(s), the rest is as in the toolKIT: "
+                f"{', '.join(dict.fromkeys(summary['sitesRemoved']))}")
     if summary.get("fromProtein"):
         return (f"Back-translated from the amino acid sequence with S. cerevisiae codon usage: {summary['codons']} codons, "
                 f"CAI {summary['caiAfter']}, GC {summary['gcAfter']}%; no restriction sites to avoid")

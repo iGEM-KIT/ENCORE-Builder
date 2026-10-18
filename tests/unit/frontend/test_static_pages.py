@@ -543,6 +543,6 @@ def test_step_4_tells_what_the_option_did_and_the_guide_explains_the_box():
     assert 'id="optNote"' in text and "renderOptNote(res);" in text and "function renderOptNote(res)" in text
     guide = re.sub(r"<[^>]*>", " ", GUIDE.read_text(encoding="utf8"))
     for part in ("Also optimize the toolKIT sequences", "no longer the sequence of its plasmid", "shows no badge either", "The box is off by default",
-                 "NCS spacers and the promoter are not coding"):
+                 "NCS spacers are not optimized"):
         assert part in guide, part
     assert "dashed placeholder" not in guide and "are never changed" not in guide

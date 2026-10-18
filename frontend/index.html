@@ -1180,7 +1180,7 @@ const INFO = {
     body:`<p><b>GAL1-10</b> is a bidirectional yeast promoter: it drives <b>two genes at once</b> in opposite directions. Both transcripts <b>start (5′) at the promoter</b> and run outward.</p>
           <p>The nanocompartment module is read off the <b>sense (plus) strand</b> (to the right), the cargo module off the <b>antisense (minus) strand</b> (to the left); that is why they point away from each other. Inducible via galactose.</p>` },
   optToolkit: { title:'Optimize the toolKIT sequences',
-    body:`<p>Normally the parts of the toolKIT stay as they are. If you tick this box, the sequences of the toolKIT that code for protein (shells, cargos, linkers, markers and targeting peptides) are optimized again for <i>S. cerevisiae</i>, with the same method as your own sequences, and the sites of RFC 10 and RFC 1000 are removed.</p>
+    body:`<p>Normally the parts of the toolKIT stay as they are. If you tick this box, the sequences of the toolKIT that code for protein (shells, cargos, linkers, markers and targeting peptides) are optimized again for <i>S. cerevisiae</i>, with the same method as your own sequences, and the sites of RFC 10 and RFC 1000 are removed. NCS spacers are not optimized: only if one contains a cut site, that site is removed with as few changes as possible.</p>
           <p>A part whose sequence changes is no longer the sequence of its plasmid: it has no Registry link in the order lists and is ordered as DNA (as oligos if it is shorter than 150 bp). Parts that were already fine stay unchanged.</p>
           <p class="infomore"><a href="/guide.html#bg-optimize" target="_blank" rel="noopener">Full details in the Overview</a></p>` },
   levels: { title:'Level 0 → 1 → 2',

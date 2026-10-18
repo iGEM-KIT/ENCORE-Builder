@@ -1510,3 +1510,49 @@ def test_the_promoter_and_the_ncs_spacers_are_not_changed_by_the_option():
     assert ncs and not any(c['reoptimized'] for c in ncs)
     promoter = lambda d: next(m for m in d['level1Constructs'] if m['site'] == 'promoter')['sequence']
     assert promoter(off) == promoter(on)
+
+
+# NCS spacers with the option "optimize the toolKIT sequences": only a restriction site is removed, nothing else is changed
+
+NCS_WITH_SITE = 'CCGTCAGGG' + 'GAATTC' + 'AGCGGGTGTTGGCGGGTGTCGGGG'[:24]    # the NCS sequence of the toolKIT with two codons changed into an EcoRI site (GAATTC), 39 bp
+
+
+def test_remove_forbidden_sites_changes_only_what_is_needed_and_keeps_the_protein():
+    from Biologik.level0_design.codon import FORBIDDEN_SITES, remove_forbidden_sites, translate
+    seq = NCS_WITH_SITE
+    assert len(seq) == 39 and 'GAATTC' in seq
+    result = remove_forbidden_sites(seq)
+    assert result['status'] == 'optimized' and result['sequence'] != seq
+    assert translate(result['sequence']) == translate(seq) and len(result['sequence']) == len(seq)
+    assert 'GAATTC' not in result['sequence']
+    assert 1 <= result['changed'] <= 2                                                      # one or two synonymous codons, not the whole sequence
+    assert sum(a != b for a, b in zip(seq, result['sequence'])) <= 3                      # and only a few bases
+    assert remove_forbidden_sites('CCGTCAGGGCGCGTCAGCGGGTGTTGGCGGGTGTCGGGG')['status'] == 'kept'     # the NCS of the toolKIT has no site: unchanged
+
+
+def _design_with_ncs(monkeypatch, ncs_sequence, optimize):
+    from Biologik.level0_design import constructs
+    from Biologik.level0_design.design import design_construct
+    real = constructs.resolve_insert
+
+    def patched(category, *args, **kwargs):
+        seq, is_real, entry = real(category, *args, **kwargs)
+        return (ncs_sequence, is_real, entry) if category == 'ncs' else (seq, is_real, entry)
+    monkeypatch.setattr(constructs, 'resolve_insert', patched)
+    return design_construct({'nanocompartment': 'tmari', 'cargoSeq': 'ATGGCTAAAGGTGAAGAACTGTTCACCGGTGTTGTTCCAATCTTGGTTGAATTGGATGGTGATGTT',
+                             'cargoLabel': 'X', 'optimizeToolkit': optimize})
+
+
+def test_with_the_option_an_ncs_with_a_cut_site_is_fixed_and_one_without_is_left_alone(monkeypatch):
+    real_ncs = 'CCGTCAGGGCGCGTCAGCGGGTGTTGGCGGGTGTCGGGG'
+    clean = _design_with_ncs(monkeypatch, real_ncs, True)
+    assert not any(c['reoptimized'] for c in clean['level0Constructs'] if c['label'] == 'NCS')       # no site: NCS stays as it is
+    fixed = _design_with_ncs(monkeypatch, NCS_WITH_SITE, True)
+    ncs = [c for c in fixed['level0Constructs'] if c['label'] == 'NCS']
+    assert ncs and all(c['reoptimized'] and c['registryUrl'] is None for c in ncs)
+    assert all('GAATTC' not in c['insert']['sequence'] for c in ncs)
+    assert 'Restriction site(s) removed' in ncs[0]['genbank']                                       # the GenBank note says what happened
+    assert fixed['toolkitOptimization']['sitesInInsert'] == []
+    untouched = _design_with_ncs(monkeypatch, NCS_WITH_SITE, False)                           # without the option nothing is changed
+    assert not any(c['reoptimized'] for c in untouched['level0Constructs'])
+    assert 'EcoRI (GAATTC)' in untouched['toolkitOptimization']['sitesInInsert']

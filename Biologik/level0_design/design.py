@@ -13,7 +13,7 @@ from .parts_db import find_library_cargo, find_real_sequence, load_parts
 from .primers import make_primer_pair
 from .sequence import reverse_complement, validate_cargo
 from .slots import CUSTOM_NC_ID, build_custom_nanocompartment, build_modules, resolve_slots, slot_summary
-from .user_codons import optimize_toolkit_part, optimize_user_sequences
+from .user_codons import fix_toolkit_sites, optimize_toolkit_part, optimize_user_sequences
 
 
 def _first_backbone(kind: str):
@@ -93,7 +93,8 @@ def design_construct(decisions: dict = None):
 
     fragments: list = []
     level0_constructs = build_level0_constructs(nc, cargo_label, cargo_antisense, cargo_slots, nc_slots, fragments, cargo_codon,
-                                                optimize_toolkit_part if optimize_toolkit else None, cargo_reoptimized)
+                                                optimize_toolkit_part if optimize_toolkit else None, cargo_reoptimized,
+                                                fix_toolkit_sites if optimize_toolkit else None)
     level1_constructs, level2_construct = build_level1_and_2(fragments, promoter_entry, nc)
     toolkit_optimization = _toolkit_optimization_report(optimize_toolkit, level0_constructs, level2_construct)
 

@@ -264,3 +264,27 @@ def optimize_cds(dna: str, left="", right="", protein: bool = False) -> dict:
     return {**result, "sequence": out, "status": "optimized", "optimized": True, "changed": changed,
             "caiAfter": round(cai(out), 3), "gcAfter": round(gc_percent(out), 1),
             "forbiddenAfter": _sites_in_context(out, lefts, rights)}
+
+
+def remove_forbidden_sites(dna: str, left="", right="") -> dict:
+    """Removes only the forbidden sites (FORBIDDEN_SITES) from a CDS, with as few synonymous codon changes as possible: the target of
+    every codon is the codon it already has, so that nothing else changes (for parts that are not meant to be optimized, such as the
+    NCS spacers of the toolKIT). A sequence without such a site is returned unchanged. Same result format as `optimize_cds`;
+    `siteFix` is True."""
+    dna = (dna or "").upper()
+    lefts, rights = _as_list(left), _as_list(right)
+    before = _sites_in_context(dna, lefts, rights) if dna else []
+    result = {"status": "kept", "fromProtein": False, "sequence": dna, "optimized": False, "changed": 0, "codons": len(dna) // 3,
+              "caiBefore": round(cai(dna), 3) if len(dna) >= 3 else 1.0, "caiAfter": round(cai(dna), 3) if len(dna) >= 3 else 1.0,
+              "gcBefore": round(gc_percent(dna), 1), "gcAfter": round(gc_percent(dna), 1), "forbiddenBefore": before, "forbiddenAfter": before,
+              "siteFix": True, "reason": "No restriction site to avoid; kept as it is."}
+    if len(dna) < 3 or len(dna) % 3:
+        return {**result, "status": "skipped", "reason": "Length is not a multiple of 3; the sequence was kept as it is."}
+    if not before:
+        return result
+    out, reason = _search(dna, [dna[i:i + 3] for i in range(0, len(dna), 3)], lefts, rights)
+    if out is None:
+        return {**result, "status": "skipped", "reason": reason}
+    changed = sum(1 for i in range(0, len(dna), 3) if out[i:i + 3] != dna[i:i + 3])
+    return {**result, "sequence": out, "status": "optimized", "optimized": True, "changed": changed,
+            "caiAfter": round(cai(out), 3), "gcAfter": round(gc_percent(out), 1), "forbiddenAfter": _sites_in_context(out, lefts, rights)}

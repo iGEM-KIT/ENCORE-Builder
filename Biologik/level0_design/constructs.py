@@ -247,7 +247,7 @@ def _build_construct(part: Part, module: str, n: int, codon: dict | None, backbo
 
 def build_level0_constructs(nc: dict, cargo_label: str, cargo_antisense: str, cargo_slots: dict, nc_slots: dict,
                             fragments: list | None = None, cargo_codon: dict | None = None, reoptimize=None,
-                            cargo_reoptimized: bool = False) -> list:
+                            cargo_reoptimized: bool = False, fix_sites=None) -> list:
     """The Level 0 construct of each of the ten modules (cargo site + NC site, Type 0.1-0.5): the part sequence in the
     overhang adapter of its Type slot (attach_adapter) and, if the Level 0 backbone is in the database,
     the plasmid cloned from it by BbsI (clone_into_level0_backbone), each with a finished GenBank text.
@@ -280,6 +280,12 @@ def build_level0_constructs(nc: dict, cargo_label: str, cargo_antisense: str, ca
                 part, codon, again = _toolkit_part(cfg, nc, site, covers[0]), cfg.get("codon"), False
                 if reoptimize and cfg["kind"] in CODING_TOOLKIT_KINDS and part.is_real and part.seq:
                     new_seq, summary = reoptimize(part.seq, module, covers[0])
+                    if new_seq != part.seq:
+                        codon, again = summary, True
+                        part = part._replace(seq=new_seq, source=None, what=part.what.replace("(toolkit part)", "(toolkit part, re-optimized)"))
+                elif fix_sites and cfg["kind"] not in CODING_TOOLKIT_KINDS and part.is_real and part.seq:
+                    # NCS spacers are not optimized, only a restriction site in them is removed (as few changes as possible)
+                    new_seq, summary = fix_sites(part.seq, module, n)
                     if new_seq != part.seq:
                         codon, again = summary, True
                         part = part._replace(seq=new_seq, source=None, what=part.what.replace("(toolkit part)", "(toolkit part, re-optimized)"))
