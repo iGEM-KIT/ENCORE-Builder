@@ -73,6 +73,13 @@
   .start-card .prereq svg{display:none}
   .start-card .prereq:hover{box-shadow:none}
   .start-card .start-cta{margin-top:auto;align-self:flex-start}
+  .start-stats{display:flex;gap:22px;margin:0 0 20px}
+  .start-stats strong{display:block;font-size:24px;color:var(--teal-deep)}
+  .start-stats span{font-size:12px;color:var(--muted)}
+  .start-links{display:flex;flex-direction:column;margin:0 0 20px;border-top:1px solid var(--line)}
+  .start-links a{padding:11px 0;border-bottom:1px solid var(--line);color:var(--ink);text-decoration:none;font-weight:700;font-size:14px}
+  .start-links a:hover{color:var(--teal-deep)}
+  .start-links small{display:block;margin-top:2px;font-weight:400;font-size:12px;color:var(--muted)}
   .start-cta.alt{background:var(--teal-soft);color:var(--teal-deep);text-decoration:none}
   @media(max-width:760px){.start-grid{grid-template-columns:1fr}}
   .flowrow{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:38px}
@@ -588,6 +595,11 @@
     <article class="start-card research">
       <h2>Open NC Database</h2>
       <p>Find a suitable shell sequence or look up what experiments reveal about it.</p>
+      <div class="start-stats"><div><strong>74</strong><span>Encapsulin candidates</span></div><div><strong>51</strong><span>Assembly records</span></div><div><strong>24</strong><span>Builder-ready sequences</span></div></div>
+      <div class="start-links">
+        <a href="/selector/builder-filter.html">Choose a shell <small>24 approved shell sequences</small></a>
+        <a href="/selector/selector-alpha.html">Explore the data <small>All scientific records</small></a>
+      </div>
       <a class="start-cta alt" href="/selector/overview.html">Open the database&nbsp;→</a>
     </article>
   </div>
