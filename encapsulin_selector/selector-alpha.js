@@ -541,7 +541,7 @@ function sequenceCard(s) {
           ${property('Source', tp.source)}
         </div>
         <p class="hint">A Builder association does not establish that TP loading was tested with that specific engineered shell.</p>
-        ${links.length ? `<ul class="tp-associated-assemblies">${links.map(link => `<li><strong>${esc(link.assembly_id)}</strong> — ${esc(humanValue(link.builder_transfer_status))}; ${esc(humanValue(link.pair_specific_evidence_status))}</li>`).join('')}</ul>` : '<p class="hint">No Builder assembly relation curated.</p>'}
+        ${links.length ? `<ul class="tp-associated-assemblies">${links.map(link => `<li><strong>${esc(link.assembly_id)}</strong>: ${esc(humanValue(link.builder_transfer_status))}; ${esc(humanValue(link.pair_specific_evidence_status))}</li>`).join('')}</ul>` : '<p class="hint">No Builder assembly relation curated.</p>'}
         ${tp.notes ? `<div class="readable-panel">${readableText(tp.notes)}</div>` : ''}
       </details>
       ${citationBlock('targeting_peptides', tp.tp_id)}

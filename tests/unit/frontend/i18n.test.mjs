@@ -82,3 +82,13 @@ test('an unknown language falls back to English', async () => {
   const { api } = await engine('xx')
   assert.equal(api.lang, 'en')
 })
+
+test('a text of several sentences is translated sentence by sentence and the most specific template wins', async () => {
+  const { api } = await engine('es')
+  const long = 'Databank TP · Reported TP placement: C-terminal. This does not establish compatibility with every shell variant. This is attached to the cargo, not the shell.'
+  const out = api.translate(long)
+  assert.match(out, /^TP de la base de datos · Posición del TP indicada: extremo C\. Esto no establece/)
+  assert.match(out, /Esto se une a la carga, no a la cubierta\.$/)
+  assert.equal(api.translate('X (12 aa, curated DNA; reported C-terminal)'), 'X (12 aa, ADN curado; indicado en el extremo C)')
+  assert.equal(api.translate('X (12 aa, curated DNA; reported N-terminal; alternative position (not validated))'), 'X (12 aa, ADN curado; indicado en el extremo N; posición alternativa (no validada))')
+})

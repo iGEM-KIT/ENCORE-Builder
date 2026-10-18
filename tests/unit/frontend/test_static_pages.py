@@ -417,7 +417,7 @@ def test_the_type_cards_of_both_sites_show_only_the_type_without_n_or_c_terminal
     card = text[text.index("function slotCardHtml"):]
     card = card[:card.index("</div>")]
     assert 'class="stype">Type 0.${n}</span>' in card
-    assert "sterm" not in text and "N-terminal'" not in text and "'C-terminal'" not in text
+    assert "sterm" not in text and "N-terminal'" not in card and "'C-terminal'" not in card      # the type cards: only the type, the notes about the terminus live in the info windows
 
 
 def test_the_readme_says_that_nothing_is_calculated_without_the_screening():
@@ -502,3 +502,17 @@ def test_the_language_menu_lists_five_languages_with_their_own_names_and_english
 def test_the_guide_warns_that_the_translations_are_not_always_correct_and_that_english_is_the_reference():
     guide = re.sub(r"<[^>]*>", " ", GUIDE.read_text(encoding="utf8"))
     assert "Translations" in guide and "not always correct" in guide and "English text is the reference" in guide
+
+
+def test_the_guide_describes_the_targeting_peptides_of_the_database_for_imported_shells():
+    guide = re.sub(r"<[^>]*>", " ", GUIDE.read_text(encoding="utf8"))
+    assert "Select for Builder" in guide and "Use this nanocompartment" not in guide      # the button of the filter is called Select for Builder
+    assert "Database peptides of that encapsulin are offered" in guide and "alternative and not validated" in guide
+    assert "Toolkit shell presets provide a matching TP" in guide                           # the info window and its full text in the guide say the same
+
+
+def test_the_nanocompartment_info_window_and_step_1_text_match_the_imported_shell_peptides():
+    text = INDEX.read_text(encoding="utf8")
+    assert "Toolkit shell presets provide a matching TP" in text
+    assert "For a shell imported from the Database, targeting peptides are optional" in text
+    assert "The variant you choose determines the matching" not in text

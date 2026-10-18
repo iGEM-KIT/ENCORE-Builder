@@ -14,7 +14,7 @@
     {code:'fr', name:'Français', flag:'fr'},
     {code:'zh', name:'中文 (简体)', flag:'cn'}
   ];
-  var ATTRS=['placeholder','title','aria-label','alt'];
+  var ATTRS=['placeholder','title','aria-label','alt','label'];
   var root=document.documentElement;
   var lang='en', dict=null, templates=[], missing=new Set(), listeners=[], observer=null;
 
@@ -27,9 +27,10 @@
     Object.keys(d||{}).forEach(function(k){
       if(/\{\d+\}/.test(k)){
         var parts=k.split(/\{\d+\}/).map(esc);
-        templates.push({re:new RegExp('^'+parts.join('([\\s\\S]+?)')+'$'), out:d[k]});
+        templates.push({re:new RegExp('^'+parts.join('((?:(?!\\.\\s+[A-Z])[\\s\\S])+?)')+'$'), out:d[k]});     // a value never reaches over the end of a sentence
       } else dict[k]=d[k];
     });
+    templates.sort(function(x,y){ return y.re.source.length-x.re.source.length; });   // the most specific template first
   }
   function translate(en){
     var core=norm(en);
@@ -38,6 +39,15 @@
     for(var i=0;i<templates.length;i++){
       var m=core.match(templates[i].re);
       if(m) return templates[i].out.replace(/\{(\d+)\}/g,function(_,n){ var v=m[+n+1]; var t=translate(v); return t===null?v:t; });
+    }
+    /* a text of several sentences: translate every sentence on its own */
+    if(/\.\s+[A-Z]/.test(core)){
+      var sentences=core.split(/\.\s+(?=[A-Z])/), changedS=false;
+      var outS=sentences.map(function(sent,i){
+        var withDot = i<sentences.length-1 ? sent+'.' : sent;
+        var t=translate(withDot); if(t!==null){ changedS=true; return t; } return withDot;
+      });
+      if(changedS) return outS.join(' ');
     }
     /* a line made of pieces ("Type 0.3 · cargo site · toolbox part"): translate every piece on its own */
     if(core.indexOf(' · ')>0){
