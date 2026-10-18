@@ -238,7 +238,7 @@ above): the folder with `docker-compose.pull.yml` for Way A and the project fold
 
 Still stuck? Open an
 [issue on GitHub](https://github.com/iGEM-KIT/ENCORE-Builder/issues) and copy the last lines
-from the terminal into it.
+from the terminal into it or send a mail to [Fese1000](https://github.com/Fese1000).
 
 ---
 
