@@ -936,7 +936,9 @@
  "Find a suitable shell sequence or look up what experiments reveal about it.": "查找合适的外壳序列,或查看实验对它的研究结果。",
  "Open the database →": "打开数据库 →",
  "Design your construct or find the right shell first.": "设计你的构建体或先找到合适的外壳。",
- "Turn your gene of interest into a complete encapsulin cargo construct: standardized Golden Gate modules, cargo primers and the final Level&nbsp;2 plasmid.": "将你的目的基因变成完整的封装蛋白货物构建体:标准化的 Golden Gate 模块、货物引物和最终的 2 级质粒。",
+ "Turn your gene of interest into a complete encapsulin cargo construct: standardized Golden Gate modules, cargo primers and the final Level 2 plasmid.": "将你的目的基因变成完整的封装蛋白货物构建体:标准化的 Golden Gate 模块、货物引物和最终的 2 级质粒。",
  "Choose a shell": "选择外壳",
- "Explore the data": "浏览数据"
+ "Explore the data": "浏览数据",
+ "{0}: bidirectional": "{0}: 双向",
+ "{0}: {1} aa": "{0}: {1} aa"
 }

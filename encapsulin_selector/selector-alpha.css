@@ -408,3 +408,7 @@ a.hbtn{text-decoration:none;display:inline-flex;align-items:center;gap:6px}
   body.explore .filter-panel > h2,body.explore .filter-panel > hr,body.explore .filter-panel > .ranking-note,body.explore .filter-panel > .secondary-btn,body.explore .filter-panel > .check-row,body.explore .filter-panel > p,body.explore .filter-panel > h3,body.explore .filter-panel > .hint{grid-column:1/-1}
   body.explore .filter-panel .secondary-btn{position:static;box-shadow:none;justify-self:start}
 }
+/* Right-to-left (Arabic): numbers with units and sequences keep their left-to-right order inside the right-to-left text */
+html[dir="rtl"] .prop .v,html[dir="rtl"] .stats strong,html[dir="rtl"] .dataset-badge{unicode-bidi:plaintext}
+html[dir="rtl"] code,html[dir="rtl"] pre,html[dir="rtl"] .seq,html[dir="rtl"] textarea.seq{direction:ltr;unicode-bidi:isolate;text-align:left}
+html[dir="rtl"] .prop .v{text-align:right}

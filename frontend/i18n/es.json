@@ -936,7 +936,9 @@
  "Find a suitable shell sequence or look up what experiments reveal about it.": "Encuentra una secuencia de cubierta adecuada o consulta lo que revelan los experimentos sobre ella.",
  "Open the database →": "Abrir la base de datos →",
  "Design your construct or find the right shell first.": "Diseña tu construcción o encuentra primero la cubierta adecuada.",
- "Turn your gene of interest into a complete encapsulin cargo construct: standardized Golden Gate modules, cargo primers and the final Level&nbsp;2 plasmid.": "Convierte tu gen de interés en una construcción completa de encapsulina con carga: módulos Golden Gate estandarizados, cebadores de la carga y el plásmido final de nivel 2.",
+ "Turn your gene of interest into a complete encapsulin cargo construct: standardized Golden Gate modules, cargo primers and the final Level 2 plasmid.": "Convierte tu gen de interés en una construcción completa de encapsulina con carga: módulos Golden Gate estandarizados, cebadores de la carga y el plásmido final de nivel 2.",
  "Choose a shell": "Elegir una cubierta",
- "Explore the data": "Explorar los datos"
+ "Explore the data": "Explorar los datos",
+ "{0}: bidirectional": "{0}: bidireccional",
+ "{0}: {1} aa": "{0}: {1} aa"
 }
