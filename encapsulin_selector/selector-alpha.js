@@ -121,8 +121,6 @@ sequences.forEach(s => {
     return errors.length === 0;
   }
 
-  $("datasetBadge").textContent =
-    `${candidates.length} candidates • ${assemblies.length} assemblies • ${pores.length} pore observations • ${targetingPeptides.length} TP records`;
   $("alphaNote").textContent =
     "Pore filters use recorded observations for a specific assembly, not an assumed property of every variant. " +
     "Missing pore measurements are kept as potential matches. " +
