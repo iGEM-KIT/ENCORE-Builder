@@ -404,3 +404,10 @@ a.hbtn{text-decoration:none;display:inline-flex;align-items:center;gap:6px}
 /* The two tools get their own accent so the pages are told apart at a glance: green for choosing a shell, blue for exploring the data */
 body.explore{--accent:#3F66A8;--accent-soft:#E3EBF7}
 :root[data-theme="dark"] body.explore{--accent:#7FA6E0;--accent-soft:#1c2a40}
+/* Explore the data: the filters sit in a wide bar above the results, Choose a shell keeps its filter column on the left */
+@media (min-width:901px){
+  body.explore .finder-grid{grid-template-columns:1fr}
+  body.explore .filter-panel{position:static;max-height:none;overflow:visible;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:4px 18px;align-items:start}
+  body.explore .filter-panel > h2,body.explore .filter-panel > hr,body.explore .filter-panel > .ranking-note,body.explore .filter-panel > .secondary-btn,body.explore .filter-panel > .check-row,body.explore .filter-panel > p,body.explore .filter-panel > h3,body.explore .filter-panel > .hint{grid-column:1/-1}
+  body.explore .filter-panel .secondary-btn{position:static;box-shadow:none;justify-self:start}
+}
