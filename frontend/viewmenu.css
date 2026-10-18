@@ -27,7 +27,10 @@ html.enc-dyslexic p,html.enc-dyslexic li{text-align:left}
 .vm-langs{position:absolute;top:calc(100% + 8px);right:0;margin:0;padding:6px;list-style:none;min-width:170px;background:var(--card,#fff);
   border:1px solid var(--line,#DDE9E5);border-radius:12px;box-shadow:0 1px 2px rgba(15,79,70,.06),0 12px 32px -18px rgba(15,79,70,.35)}
 .vm-langs button{display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border:0;border-radius:8px;background:transparent;color:var(--ink,#17211F);
-  font:inherit;font-size:13px;cursor:pointer;text-align:left}
+  font:inherit;font-size:13px;cursor:pointer;text-align:start}
 .vm-langs button:hover{background:var(--teal-soft,var(--accent-soft,#DDF1EC))}
 .vm-langs button[aria-selected="true"]{font-weight:700;background:var(--teal-soft,var(--accent-soft,#DDF1EC))}
 html[lang="zh-Hans"] body{font-family:"Segoe UI","PingFang SC","Microsoft YaHei","Noto Sans CJK SC",Helvetica,Arial,sans-serif}
+
+/* Right-to-left languages (Arabic): the menu sits at the left edge of the header, so the panels open towards the right */
+html[dir="rtl"] .vm-panel,html[dir="rtl"] .vm-langs{right:auto;left:0}

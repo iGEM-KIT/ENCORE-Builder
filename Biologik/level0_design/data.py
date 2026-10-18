@@ -111,8 +111,9 @@ LINKERS = [
     if _length("linker", pid)
 ]
 
-# Library for promoters
-PROMOTERS = [{"id": "GAL110", "label": "GAL1-10", "desc": "bidirectional, inducible"}]
+# Library for promoters: every promoter file of parts/promoters/ with a real sequence (`label`, `desc`, `order` of the dropdown)
+PROMOTERS = [{"id": e["id"], "label": e["label"], "desc": e.get("desc") or "bidirectional", "bp": len(e["sequence"])}
+             for e in sorted(load_parts()["promoters"], key=lambda e: (e.get("order", 99), e["id"])) if e.get("sequence")]
 
 # Surface markers. They can be put into one of the slots next to the shell
 # (Type 1, 2, 4, 5) and therefore sit on the OUTSIDE of the encapsulin, in contrast

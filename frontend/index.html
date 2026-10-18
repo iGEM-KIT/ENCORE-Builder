@@ -719,6 +719,20 @@
               <option value="" disabled selected>Please select</option>
             </select>
           </label>
+          <div id="customPromoter" style="display:none">
+            <label class="field">
+              <span class="lab">Name <span class="hint">optional</span></span>
+              <input type="text" id="customPromoterLabel" placeholder="e.g. My bidirectional promoter" maxlength="60">
+            </label>
+            <label class="field">
+              <span class="lab">Promoter sequence
+                <button class="info" data-info="promoter">i</button>
+                <span class="hint" id="promoterLen">0 bp</span></span>
+              <textarea id="promoterSeq" placeholder="Paste the DNA sequence of your bidirectional promoter (A/T/G/C), written in the direction of the nanocompartment module: the 5′ end on the side of the cargo module …"></textarea>
+              <div class="seqmeta" id="promoterMeta"></div>
+            </label>
+            <div id="promoterNotes"></div>
+          </div>
           <div class="stopwarn" id="calcError" style="display:none" role="alert"></div>
           <div class="nav">
             <button class="btn btn-ghost" id="back2">Back</button>
@@ -1180,7 +1194,8 @@ const INFO = {
           <p class="infomore"><a href="/guide.html#bg-commec" target="_blank" rel="noopener">Full details in the Overview</a></p>` },
   promoter: { title:'Bidirectional promoter',
     body:`<p><b>GAL1-10</b> is a bidirectional yeast promoter: it drives <b>two genes at once</b> in opposite directions. Both transcripts <b>start (5′) at the promoter</b> and run outward.</p>
-          <p>The nanocompartment module is read off the <b>sense (plus) strand</b> (to the right), the cargo module off the <b>antisense (minus) strand</b> (to the left); that is why they point away from each other. Inducible via galactose.</p>` },
+          <p>The nanocompartment module is read off the <b>sense (plus) strand</b> (to the right), the cargo module off the <b>antisense (minus) strand</b> (to the left); that is why they point away from each other. Inducible via galactose.</p>
+          <p><b>The other promoters</b> (BDP306, BDP565, BDP670) are bidirectional as well. With <b>Use your own sequence</b> you can enter another bidirectional promoter as DNA: write it in the direction of the nanocompartment module, so that its 5′ end lies on the side of the cargo module. It needs at least 150 bp, must not contain a BsaI or BbsI site, and is screened for biosecurity like every sequence you enter. The builder then designs the PCR primers with the BsaI site and the overhangs of the Level 1 promoter module.</p>` },
   optToolkit: { title:'Optimize the toolKIT sequences',
     body:`<p>Normally the parts of the toolKIT stay as they are. If you tick this box, the sequences of the toolKIT that code for protein (shells, cargos, linkers, markers and targeting peptides) are optimized again for <i>S. cerevisiae</i>, with the same method as your own sequences, and the sites of RFC 10 and RFC 1000 are removed. NCS spacers are not optimized: only if one contains a cut site, that site is removed with as few changes as possible.</p>
           <p>A part whose sequence changes is no longer the sequence of its plasmid: it has no Registry link in the order lists and is ordered as DNA (as oligos if it is shorter than 150 bp). Parts that were already fine stay unchanged.</p>
@@ -1205,7 +1220,7 @@ const cink = k => `var(${KIND_INK[k]})`;
 const state = {
   nc:null, customNc:{label:'', seqRaw:'', valid:false},
   cargoSeq:'', cargoLabel:'Custom cargo', cargoFromPreset:null, cargoValid:false,
-  promoter:'',
+  promoter:'', customPromoter:{label:'', seqRaw:'', valid:false},
   optToolkit:false,
   ncSlots:{ 1:{kind:'none'}, 2:{kind:'none'}, 4:{kind:'none'}, 5:{kind:'none'} },
   cargoSlots:{ 1:{kind:'none'}, 2:{kind:'none'}, 4:{kind:'none'}, 5:{kind:'none'} },
@@ -1592,12 +1607,88 @@ function initPromoterDropdown(){
     if(p.id===state.promoter) o.selected=true;
     sel.appendChild(o);
   });
-  sel.addEventListener('change', ()=>{ state.promoter=sel.value; updateConstructStrip(); refreshNext2(); });
+  const co=document.createElement('option');
+  co.value=CUSTOM_PROMOTER; co.textContent='Use your own sequence …'; co.selected = state.promoter===CUSTOM_PROMOTER;
+  sel.appendChild(co);
+  sel.addEventListener('change', ()=>{
+    state.promoter=sel.value;
+    $('#customPromoter').style.display = sel.value===CUSTOM_PROMOTER ? 'block' : 'none';
+    if(sel.value===CUSTOM_PROMOTER) handlePromoterInput();
+    updateConstructStrip(); refreshNext2();
+  });
+  $('#promoterSeq').addEventListener('input', handlePromoterInput);
+  $('#customPromoterLabel').addEventListener('input', ()=>{ state.customPromoter.label=$('#customPromoterLabel').value; updateConstructStrip(); saveSession(); });
   $('#optToolkit').addEventListener('change', ()=>{ state.optToolkit=$('#optToolkit').checked; saveSession(); });
   refreshNext2();
 }
-// The promoter has to be chosen on purpose: the bar keeps a grey "Promoter" until then.
-function refreshNext2(){ $('#next2').disabled = !state.promoter; }
+// The promoter has to be chosen on purpose: the bar keeps a grey "Promoter" until then. An own sequence has to be valid.
+function refreshNext2(){ $('#next2').disabled = !state.promoter || (state.promoter===CUSTOM_PROMOTER && !state.customPromoter.valid); }
+
+/* Own promoter: a plain DNA part (no reading frame, no codon optimization). Same rules and the same answer shape as
+   validate_promoter() in Biologik/level0_design/sequence.py; the server answer overwrites the local one as soon as it arrives. */
+const CUSTOM_PROMOTER='custom', MIN_PROMOTER_BP=150, MAX_PROMOTER_BP=3000;
+const cleanDna = s => (s||'').toUpperCase().replace(/U/g,'T').replace(/[^ATGC]/g,'');
+const PROMOTER_SITES = { BsaI:['GGTCTC','GAGACC'], BbsI:['GAAGAC','GTCTTC'], SapI:['GCTCTTC','GAAGAGC'], EcoRI:['GAATTC'], XbaI:['TCTAGA'], SpeI:['ACTAGT'], PstI:['CTGCAG'], NotI:['GCGGCCGC'] };
+function validatePromoterLocal(raw){
+  const text=(raw||'').toUpperCase().replace(/U/g,'T'), seq=cleanDna(text), length=seq.length;
+  const invalidChars=text.replace(/[ATGC\s]/g,'').length;
+  const errors=[], warnings=[], sites=[];
+  const protein = isProteinText(raw||'');
+  if(protein) errors.push('A promoter is a DNA sequence: amino acids cannot be used here.');
+  else if(!length) errors.push('No valid A/T/G/C sequence provided.');
+  else{
+    if(length<MIN_PROMOTER_BP) errors.push(`Sequence too short (${length} bp, need at least ${MIN_PROMOTER_BP} bp).`);
+    if(length>MAX_PROMOTER_BP) errors.push(`Sequence too long (${length} bp, at most ${MAX_PROMOTER_BP} bp).`);
+    if(invalidChars>0) warnings.push(`${invalidChars} invalid character(s) were ignored.`);
+  }
+  if(length && !protein) Object.entries(PROMOTER_SITES).forEach(([enzyme,list])=>{
+    const pos=[]; list.forEach(site=>{ let i=seq.indexOf(site); while(i!==-1){ pos.push(i+1); sites.push({enzyme,pos:i+1,site}); i=seq.indexOf(site,i+1); } });
+    if(!pos.length) return;
+    pos.sort((a,b)=>a-b);
+    const where=pos.slice(0,4).join(', ')+(pos.length>4?' ...':'');
+    const site=sites.find(x=>x.enzyme===enzyme).site;
+    if(enzyme==='BsaI'||enzyme==='BbsI') errors.push(`${enzyme} site (${site}) at position ${where}: the assembly would cut the promoter. Remove it with a point mutation.`);
+    else warnings.push(`${enzyme} site (${site}) at position ${where}: allowed for the assembly, but the iGEM standards forbid it in a part.`);
+  });
+  return { clean:seq, length, gc:gc(seq), invalidChars, sites, ok:!errors.length, errors, warnings, isProtein:false, isPromoter:true };
+}
+function promoterMetaHtml(v){
+  return v.length ? `Length <b>${v.length} bp</b> · GC <b>${v.gc}%</b>` + (v.invalidChars ? ` · <span class="err">${v.invalidChars} invalid characters ignored</span>` : '') : '';
+}
+function promoterNotesHtml(v){
+  if(!v.length) return '';
+  const hints = v.warnings.map(t=>`<div class="stophint">${ICON_INFO}<div>${t}</div></div>`).join('');
+  if(v.errors.length) return hints + v.errors.map(t=>`<div class="stopwarn">${ICON_WARN}<div>${t}</div></div>`).join('');
+  return hints + `<div class="stopok">${ICON_OK}<div>No BsaI or BbsI site found: the promoter is ready.</div></div>`;
+}
+function renderPromoterValidation(v){
+  $('#promoterMeta').innerHTML = promoterMetaHtml(v);
+  $('#promoterNotes').innerHTML = promoterNotesHtml(v);
+  state.customPromoter.valid = v.ok;
+  refreshNext2(); updateConstructStrip(); saveSession();
+}
+let promoterCheckTimer=null, promoterCheckToken=0;
+function handlePromoterInput(){
+  const raw=$('#promoterSeq').value;
+  state.customPromoter.seqRaw=raw;
+  const seq=cleanDna(raw);
+  $('#promoterLen').textContent=`${seq.length} bp`;
+  renderPromoterValidation(validatePromoterLocal(raw));
+  const api=window.ENCORE_API;
+  if(!api || !api.available || !seq) return;
+  clearTimeout(promoterCheckTimer);
+  const token=++promoterCheckToken;
+  const hit=valCacheGet('promoter',seq); if(hit){ renderPromoterValidation(hit); return; }
+  promoterCheckTimer=setTimeout(async ()=>{
+    try{
+      const v=await validateCached(api,seq,'promoter');
+      if(token!==promoterCheckToken || seq!==cleanDna($('#promoterSeq').value)) return;
+      renderPromoterValidation(v);
+    }catch(err){
+      console.warn('[ENCORE] /api/cargo/validate (promoter) failed: keeping the local check', err);
+    }
+  }, 400);
+}
 /* ===================== Module slots: Type 0.1, 0.2, 0.4, 0.5 around the nanocompartment and around the cargo ===================== */
 const SLOT_NUMBERS=[1,2,4,5];
 /* nc:    ORF runs Type 0.1 -> 0.5 (sense), the stop sits behind the shell: Type 0.4, then 0.5.
@@ -1879,7 +1970,7 @@ function updateConstructStrip(){
   const left  = byPos(leftArr).map(p=>seg(p,'left')).join('');
   const right = byPos(rightArr).map(p=>seg(p,'right')).join('');
   const hub = promoFilled
-    ? `<div class="gs-hub" style="background:${cvar('promo')};color:${cink('promo')}"><span class="gs-ar">${TRI_L}</span>${(LIB.promoters.find(x=>x.id===state.promoter)||{}).label||'Promoter'}<span class="gs-ar">${TRI_R}</span></div>`
+    ? `<div class="gs-hub" style="background:${cvar('promo')};color:${cink('promo')}"><span class="gs-ar">${TRI_L}</span>${esc(state.promoter===CUSTOM_PROMOTER ? ((state.customPromoter.label||'').trim()||'Custom promoter') : (LIB.promoters.find(x=>x.id===state.promoter)||{}).label||'Promoter')}<span class="gs-ar">${TRI_R}</span></div>`
     : `<div class="gs-hub empty" title="Promoter"><span class="gs-ar">${TRI_L}</span>Promoter<span class="gs-ar">${TRI_R}</span></div>`;
   const fused = !!state.unlocked[3];
   host.className = 'gs-map' + (fused ? ' fused' : '');
@@ -1915,6 +2006,10 @@ function collectUserSequences(){
       if(seq) items.push({label: `${(c.label||'').trim() || ('Custom part '+n)} (${MODS[mod].part} Type 0.${n})`, sequence: seq});
     });
   });
+  if(state.promoter===CUSTOM_PROMOTER){
+    const seq=cleanDna(state.customPromoter.seqRaw||'');
+    if(seq) items.push({label: `${(state.customPromoter.label||'').trim() || 'Custom promoter'} (promoter)`, sequence: seq});
+  }
   return items;
 }
 
@@ -2081,7 +2176,8 @@ function resetBuilder(){
   state.nc=null; state.customNc={label:'', seqRaw:'', valid:false};
   state.cargoSeq=''; state.cargoLabel='Custom cargo';
   state.cargoFromPreset=null; state.cargoValid=false;
-  state.promoter=''; state.optToolkit=false; $('#optToolkit').checked=false;
+  state.promoter=''; state.customPromoter={label:'', seqRaw:'', valid:false}; state.optToolkit=false; $('#optToolkit').checked=false;
+  $('#customPromoter').style.display='none'; $('#customPromoterLabel').value=''; $('#promoterSeq').value=''; $('#promoterLen').textContent='0 bp'; $('#promoterMeta').innerHTML=''; $('#promoterNotes').innerHTML='';
   state.ncSlots=defaultSlots(); state.cargoSlots=defaultSlots();
   state.unlocked=[true,false,false,false,false];
   lastResult=null;
@@ -2693,7 +2789,7 @@ function openLevel1Modal(c){
     ring: ringBase && { segs: ringBase.segs, legend: ringLegendHtml(ringBase) },
     plasmid: pl, plasmidHeading: 'Cloned into the Level 1 backbone', ringSub: 'KanR · Level 1 acceptor',
     explain: isPromo
-      ? `The promoter is a toolkit part, not assembled from Level 0 pieces: it is flanked by the Level 1 acceptor overhangs (ACAT … TTGT) and carries the two Level 2 overhangs ${c.level2Overhangs.n} / ${c.level2Overhangs.c} that join it to the cargo module and the NC module. BsaI replaces the lacZα stuffer of ${bb ? bb.id.split('-')[0] : 'the backbone'} with it; both BsaI sites are cut away with the stuffer, the two BbsI sites of the backbone stay for Level 2. Plasmid sequence = top strand 5′→3′.`
+      ? `The promoter is ${c.isUser ? 'your own sequence, made by PCR (the primers are in the overview)' : 'a toolkit part'}, not assembled from Level 0 pieces: it is flanked by the Level 1 acceptor overhangs (ACAT … TTGT) and carries the two Level 2 overhangs ${c.level2Overhangs.n} / ${c.level2Overhangs.c} that join it to the cargo module and the NC module. BsaI replaces the lacZα stuffer of ${bb ? bb.id.split('-')[0] : 'the backbone'} with it; both BsaI sites are cut away with the stuffer, the two BbsI sites of the backbone stay for Level 2. Plasmid sequence = top strand 5′→3′.`
       : `BsaI releases each Level 0 part together with its two 4-nt Level 1 overhangs. The five fragments ligate through the shared overhangs (${junctions.join(' · ')}) and fit between NLvl1 and CLvl1 of ${bb ? bb.id.split('-')[0] : 'the backbone'}: the lacZα stuffer and both BsaI sites are cut away, so this plasmid can no longer be cut by BsaI. The two BbsI sites of the backbone stay; BbsI later releases the module at its Level 2 overhangs (${c.level2Overhangs.n} … ${c.level2Overhangs.c}). Plasmid sequence = top strand 5′→3′${isCargo ? '; the cargo module sits on it as the reverse complement (antisense strand); the module above is shown rotated by 180°, the plasmid stays in backbone orientation' : ''}.`,
   });
   scrollAsmSeqTop();
@@ -2784,14 +2880,20 @@ function renderOrder(res){
 
   // 2: primer pairs for your own sequences
   const primer = list.filter(c=>c.isUser && c.primers && c.primers.possible);
-  $('#ordPrimerMeta').textContent = primer.length ? `${primer.length} pair${primer.length>1?'s':''} · ${primer.length*2} primers` : '';
-  if(primer.length){
+  const promo = ((res.api && res.api.level1Constructs) || []).find(c=>c.site==='promoter' && c.isUser && c.primers && c.primers.possible);   // your own promoter (Level 1)
+  const pairs = primer.length + (promo ? 1 : 0);
+  $('#ordPrimerMeta').textContent = pairs ? `${pairs} pair${pairs>1?'s':''} · ${pairs*2} primers` : '';
+  if(pairs){
     $('#ordPrimerList').innerHTML = primer.map(c=>{ const p=c.primers;
       return orderRow(orderName(c), `${orderWhere(c)} · your own sequence · PCR product ${p.productLength} bp${p.q5AnnealingTemp ? ` · Q5 annealing ≈ ${p.q5AnnealingTemp} °C` : ''}`, 'primer',
-        seqLine(p.forward.name, p.forward.sequence)+seqLine(p.reverse.name, p.reverse.sequence)); }).join('');
-    const rows = primer.flatMap(c=>[c.primers.forward, c.primers.reverse]);
+        seqLine(p.forward.name, p.forward.sequence)+seqLine(p.reverse.name, p.reverse.sequence)); }).join('')
+      + (promo ? orderRow(promo.label, `Level 1 · promoter module · your own sequence · BsaI site with the overhangs ${promo.primers.overhangs.left} / ${promo.primers.overhangs.right} · PCR product ${promo.primers.productLength} bp${promo.primers.q5AnnealingTemp ? ` · Q5 annealing ≈ ${promo.primers.q5AnnealingTemp} °C` : ''}`, 'primer',
+          seqLine(promo.primers.forward.name, promo.primers.forward.sequence)+seqLine(promo.primers.reverse.name, promo.primers.reverse.sequence))
+        + '<p class="l0m-note" style="margin:6px 0 0">Your own promoter goes into the Level 1 backbone: PCR it with its primers and clone the product with BsaI, not with BbsI.</p>' : '');
+    const rows = primer.flatMap(c=>[c.primers.forward, c.primers.reverse]).concat(promo ? [promo.primers.forward, promo.primers.reverse] : []);
     listActions($('#ordPrimerActions'), rows.map(o=>`${o.name}\t${o.sequence}`).join('\n'),
-      'name,sequence,length\n'+rows.map(o=>`${o.name},${o.sequence},${o.length}`).join('\n')+'\n', 'level0_primers.csv');
+      'name,sequence,length\n'+rows.map(o=>`${o.name},${o.sequence},${o.length}`).join('\n')+'\n', 'level0_primers.csv',
+      promo ? { file:'level1_promoter_pcr.gb', text: promo.primers.genbank } : undefined);
   } else empty('#ordPrimerList','No primers needed: your own sequences are shorter than 150 bp (see the oligos above) or none is part of this design.');
 
   // 3: DNA: every part with a real sequence
@@ -2961,7 +3063,7 @@ function saveSession(){
       nc:state.nc?state.nc.id:($('#ncSelect').value===CUSTOM_NC?CUSTOM_NC:null),
       customNc:{ label:state.customNc.label, seqRaw:$('#shellSeq').value },
       cargoRaw:$('#cargoSeq').value, cargoFromPreset:state.cargoFromPreset, cargoLabel:state.cargoLabel,
-      promoter:$('#promoter').value, optToolkit:!!state.optToolkit,
+      promoter:$('#promoter').value, customPromoter:{ label:state.customPromoter.label, seqRaw:$('#promoterSeq').value }, optToolkit:!!state.optToolkit,
       ncSlots:packSlots('nc'), cargoSlots:packSlots('cargo'),
       databaseTpOptions, importedShellSeq,
       unlocked:state.unlocked, scrollY:window.scrollY,
@@ -3001,8 +3103,13 @@ async function restoreSession(){
     if(state.cargoFromPreset) state.cargoLabel=s.cargoLabel;
   }
 
+  if(s.customPromoter){
+    $('#customPromoterLabel').value=s.customPromoter.label||''; state.customPromoter.label=s.customPromoter.label||'';
+    $('#promoterSeq').value=s.customPromoter.seqRaw||'';
+  }
   if(s.promoter) $('#promoter').value=s.promoter;
   state.promoter=$('#promoter').value;
+  if(state.promoter===CUSTOM_PROMOTER){ $('#customPromoter').style.display='block'; handlePromoterInput(); }
   MOD_NAMES.forEach(mod=>{
     const saved=s[MODS[mod].key]; if(!saved) return;
     SLOT_NUMBERS.forEach(n=>{
@@ -3191,6 +3298,7 @@ window.ENCORE_API = (function(){
     customNanocompartment: s.nc && s.nc.custom ? { label:s.nc.shell, seq:s.nc.seq } : undefined,
     cargoSeq: s.cargoSeq, cargoLabel: s.cargoLabel,
     promoter: s.promoter,
+    customPromoter: s.promoter==='custom' ? { label:(s.customPromoter.label||'').trim(), seq:cleanDna(s.customPromoter.seqRaw||'') } : undefined,
     ncSlots: slotsPayload('nc'), cargoSlots: slotsPayload('cargo'),
     optimizeToolkit: !!s.optToolkit,
   });

@@ -184,3 +184,50 @@ def _validate_protein(raw: str, min_bp: int, kind: str) -> dict:
         "notMultipleOfThree": False, "trailingStop": trailing_stop, "internalStops": internal_stops,
         "ok": not errors, "errors": errors, "warnings": warnings, "isProtein": True,
     }
+
+
+# An own promoter is a DNA part of the Level 1 promoter module: it is made by PCR (primers with the BsaI overhangs, see
+# primers.design_promoter_primers), so it needs the length of a PCR product, and it must not contain a site of the two enzymes of the assembly.
+MIN_PROMOTER_BP = 150
+MAX_PROMOTER_BP = 3000
+
+
+def validate_promoter(raw: str) -> dict:
+    """Check an own promoter sequence (DNA only). Same answer shape as validate_cargo(), plus `sites`.
+
+        Errors (the construct cannot be built): not DNA, too short/long, a BsaI or BbsI site (the Level 1 and Level 2 assembly would cut the
+        promoter). Warnings: sites of the iGEM standards (SapI, EcoRI, XbaI, SpeI, PstI, NotI): a promoter cannot be recoded like a CDS, so
+        they stay; invalid characters that were ignored."""
+    from .codon import find_forbidden
+    text = raw or ""
+    clean = clean_seq(text.upper().replace("U", "T"))
+    length = len(clean)
+    invalid_chars = len(re.sub(r"[ATGC\s]", "", text.upper().replace("U", "T")))
+    errors, warnings = [], []
+    protein = is_protein(text)
+    if protein:
+        errors.append("A promoter is a DNA sequence: amino acids cannot be used here.")
+    elif length == 0:
+        errors.append("No valid A/T/G/C sequence provided.")
+    else:
+        if length < MIN_PROMOTER_BP:
+            errors.append(f"Sequence too short ({length} bp, need at least {MIN_PROMOTER_BP} bp).")
+        if length > MAX_PROMOTER_BP:
+            errors.append(f"Sequence too long ({length} bp, at most {MAX_PROMOTER_BP} bp).")
+        if invalid_chars > 0:
+            warnings.append(f"{invalid_chars} invalid character(s) were ignored.")
+    hits = find_forbidden(clean) if clean and not protein else []
+    for enzyme in dict.fromkeys(h["enzyme"] for h in hits):
+        found = [h for h in hits if h["enzyme"] == enzyme]
+        where = ", ".join(str(h["pos"] + 1) for h in found[:4]) + (" ..." if len(found) > 4 else "")
+        if enzyme in ("BsaI", "BbsI"):
+            errors.append(f"{enzyme} site ({found[0]['site']}) at position {where}: the assembly would cut the promoter. "
+                          f"Remove it with a point mutation.")
+        else:
+            warnings.append(f"{enzyme} site ({found[0]['site']}) at position {where}: allowed for the assembly, but the iGEM standards forbid it in a part.")
+    return {
+        "clean": clean, "length": length, "aa": length // 3, "gc": gc_content(clean), "invalidChars": invalid_chars,
+        "notMultipleOfThree": False, "trailingStop": None, "internalStops": [],
+        "sites": [{"enzyme": h["enzyme"], "pos": h["pos"] + 1, "site": h["site"]} for h in hits],
+        "ok": not errors, "errors": errors, "warnings": warnings, "isProtein": False, "isPromoter": True,
+    }

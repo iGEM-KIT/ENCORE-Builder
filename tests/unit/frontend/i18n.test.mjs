@@ -35,9 +35,9 @@ test('English is the default and nothing is translated', async () => {
   assert.equal(attrs.lang, 'en')
 })
 
-test('the five languages are offered, English first', async () => {
+test('the eight languages are offered, English first', async () => {
   const { api } = await engine('en')
-  assert.equal(JSON.stringify(api.languages.map(l => l.code)), JSON.stringify(['en', 'es', 'de', 'fr', 'zh']))
+  assert.equal(JSON.stringify(api.languages.map(l => l.code)), JSON.stringify(['en', 'es', 'de', 'fr', 'zh', 'ru', 'pt', 'ar']))
   assert.equal(api.languages.find(l => l.code === 'zh').name, '中文 (简体)')
 })
 
@@ -64,6 +64,15 @@ test('a value that is itself a text is translated inside the template', async ()
 test('a line made of pieces separated by a middle dot is translated piece by piece', async () => {
   const { api } = await engine('fr')
   assert.equal(api.translate('Type 0.3 · cargo site · toolbox part'), 'Type 0.3 · site du cargo · pièce du toolbox')
+})
+
+test('Arabic is written from right to left, the others from left to right', async () => {
+  const ar = await engine('ar')
+  assert.equal(ar.attrs.dir, 'rtl')
+  assert.equal(ar.api.translate('Start builder'), 'ابدأ Builder')
+  const ru = await engine('ru')
+  assert.equal(ru.attrs.dir, 'ltr')
+  assert.equal(ru.api.translate('Back'), 'Назад')
 })
 
 test('Mandarin is Simplified Chinese and the page language is set accordingly', async () => {

@@ -393,7 +393,7 @@ def test_design_response_only_carries_what_the_ui_and_export_use():
     assert sorted(design) == ['cargo', 'cargoSlots', 'codonOptimization', 'level0', 'level0Constructs', 'level1Constructs', 'level2',
                               'level2Construct', 'nanocompartment', 'ncSlots', 'primers', 'targetingPeptide', 'toolkitOptimization']
     assert sorted(design['cargo']) == ['bp', 'label', 'sequence', 'sequenceAntisense']
-    assert sorted(design['level2']['promoter']) == ['bp', 'id', 'label']
+    assert sorted(design['level2']['promoter']) == ['bp', 'id', 'isUser', 'label']
 
 
 def _long_cargo():
@@ -1556,3 +1556,86 @@ def test_with_the_option_an_ncs_with_a_cut_site_is_fixed_and_one_without_is_left
     untouched = _design_with_ncs(monkeypatch, NCS_WITH_SITE, False)                           # without the option nothing is changed
     assert not any(c['reoptimized'] for c in untouched['level0Constructs'])
     assert 'EcoRI (GAATTC)' in untouched['toolkitOptimization']['sitesInInsert']
+
+
+# ---------------------------------------------------------------------------------------------------------
+# Promoters from the database and your own promoter (Level 1 module 1.2): validation, primers with the BsaI site and the overhangs
+
+def _promoter_seq(pid):
+    return next(p for p in load_parts()['promoters'] if p['id'] == pid)['sequence']
+
+
+def test_the_three_bdp_promoters_are_in_the_database_and_offered():
+    from Biologik.level0_design.data import get_libraries
+    promoters = get_libraries()['promoters']
+    assert [p['id'] for p in promoters] == ['GAL110', 'BDP306', 'BDP565', 'BDP670']
+    assert {p['id']: p['bp'] for p in promoters} == {'GAL110': 665, 'BDP306': 754, 'BDP565': 356, 'BDP670': 318}
+    from Biologik.level0_design.sequence import validate_promoter
+    for p in promoters:
+        v = validate_promoter(_promoter_seq(p['id']))
+        assert v['ok'], (p['id'], v['errors'])                           # no BsaI/BbsI site in any toolkit promoter
+    design = _design(cargoSeq=_long_cargo(), promoter='BDP670')
+    assert design['level2']['promoter'] == {'id': 'BDP670', 'label': 'BDP670', 'isUser': False, 'bp': 318}
+    promo = next(c for c in design['level1Constructs'] if c['site'] == 'promoter')
+    assert _promoter_seq('BDP670') in promo['sequence'] and 'primers' not in promo
+
+
+def test_validate_promoter_rules():
+    from Biologik.level0_design.sequence import validate_promoter
+    ok = validate_promoter(_promoter_seq('BDP565'))
+    assert ok['ok'] and ok['errors'] == [] and ok['length'] == 356 and ok['isPromoter'] is True
+    assert not validate_promoter('')['ok'] and 'too short' in validate_promoter('ACGT' * 20)['errors'][0]
+    assert 'too long' in validate_promoter('ACGT' * 800)['errors'][0]
+    assert 'DNA' in validate_promoter('MKVLLAGHEEDLGSGSMKVLLAGHEEDLGSGS')['errors'][0]               # amino acids are no promoter
+    bsai = validate_promoter('ACGT' * 40 + 'GGTCTC' + 'ACGT' * 10)
+    assert not bsai['ok'] and 'BsaI site (GGTCTC) at position 161' in bsai['errors'][0] and 'point mutation' in bsai['errors'][0]
+    rev = validate_promoter('ACGT' * 40 + 'GTCTTC' + 'ACGT' * 10)                                     # BbsI on the other strand
+    assert not rev['ok'] and 'BbsI' in rev['errors'][0]
+    # sites of the iGEM standards are only a warning: a promoter cannot be recoded
+    warn = validate_promoter(_promoter_seq('BDP306'))
+    assert warn['ok'] and any('PstI' in w for w in warn['warnings']) and [s['enzyme'] for s in warn['sites']] == ['PstI']
+    assert validate_promoter('acgu' * 50)['clean'] == 'ACGT' * 50                                      # lower case and U are accepted
+
+
+def test_json_cli_validates_a_promoter():
+    result = _run_cli('validate', {'cargoSeq': _promoter_seq('BDP670'), 'kind': 'promoter'})
+    response = json.loads(result.stdout)
+    assert result.returncode == 0 and response['validation']['ok'] is True and response['validation']['isPromoter'] is True
+    assert 'mrnaStructure' not in response['validation'] and 'codonOptimization' not in response['validation']
+
+
+def test_an_own_promoter_gets_primers_with_the_bsai_site_and_the_level1_overhangs():
+    from Biologik.level0_design.sequence import reverse_complement as rc
+    seq = _promoter_seq('BDP565')
+    design = _design(cargoSeq=_long_cargo(), promoter='custom', customPromoter={'label': 'My BDP', 'seq': seq.lower()})
+    assert design['level2']['promoter'] == {'id': 'custom', 'label': 'My BDP', 'isUser': True, 'bp': 356}
+    promo = next(c for c in design['level1Constructs'] if c['site'] == 'promoter')
+    assert promo['isUser'] is True and promo['parts'][0]['isUser'] is True and seq in promo['sequence']
+    p = promo['primers']
+    assert p['possible'] and p['forward']['name'] == 'Level1_Promoter_My-BDP_F' and p['reverse']['name'] == 'Level1_Promoter_My-BDP_R'
+    # forward: clamp + BsaI site + spacer + NLvl1 (ACAT) + Level 2 overhang (CGTT) + the 5' end of the promoter
+    assert p['forward']['sequence'] == 'TTTTGGTCTCAACATCGTT' + p['forward']['anneal'] and seq.startswith(p['forward']['anneal'])
+    # reverse: clamp + BsaI site + spacer + reverse complement of (Level 2 overhang TGAT + CLvl1 TTGT) + the reverse complement of the 3' end
+    assert p['reverse']['sequence'] == 'TTTTGGTCTCA' + rc('TGATTTGT') + p['reverse']['anneal'] and seq.endswith(rc(p['reverse']['anneal']))
+    # the PCR product is exactly the two primers around the promoter, and BsaI cuts out the Level 1 insert (NLvl1 ... CLvl1)
+    product = p['productSequence']
+    assert product.startswith(p['forward']['sequence']) and product.endswith(rc(p['reverse']['sequence']))
+    assert product.count('GGTCTC') == 1 and product.count('GAGACC') == 1 and p['productLength'] == len(product)
+    cut_left = product.index('GGTCTC') + 6 + 1                       # BsaI cuts behind the first base after its site
+    cut_right = product.index('GAGACC') - 1                          # and, on the other side, in front of the spacer base
+    assert product[cut_left:cut_right] == promo['sequence']
+    assert promo['sequence'][:4] == 'ACAT' and promo['sequence'][-4:] == 'TTGT'
+    genbank = build_genbank(design)
+    assert 'Level1_Primers_Promoter_My-BDP' in genbank and genbank.count('primer_bind') >= 2 and genbank.count('//') == genbank.count('LOCUS')
+
+
+def test_a_promoter_from_the_database_has_no_primers_and_a_bad_own_promoter_is_rejected():
+    from Biologik.level0_design.sequence import MIN_PROMOTER_BP
+    design = _design(cargoSeq=_long_cargo(), promoter='GAL110')
+    assert all('primers' not in c for c in design['level1Constructs']) and 'Level1_Primers_Promoter' not in build_genbank(design)
+    with pytest.raises(ValueError, match='Custom promoter is not usable'):
+        _design(cargoSeq=_long_cargo(), promoter='custom', customPromoter={'seq': 'ACGT' * 10})
+    with pytest.raises(ValueError, match='BsaI site'):
+        _design(cargoSeq=_long_cargo(), promoter='custom', customPromoter={'seq': 'GGTCTC' + 'A' * MIN_PROMOTER_BP})
+    unnamed = _design(cargoSeq=_long_cargo(), promoter='custom', customPromoter={'seq': _promoter_seq('BDP670')})
+    assert unnamed['level2']['promoter']['label'] == 'Custom promoter'

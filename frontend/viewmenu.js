@@ -17,6 +17,9 @@
     es:'<rect width="60" height="36" fill="#AA151B"/><rect y="9" width="60" height="18" fill="#F1BF00"/>',
     de:'<rect width="60" height="12" fill="#000"/><rect y="12" width="60" height="12" fill="#DD0000"/><rect y="24" width="60" height="12" fill="#FFCE00"/>',
     fr:'<rect width="20" height="36" fill="#0055A4"/><rect x="20" width="20" height="36" fill="#fff"/><rect x="40" width="20" height="36" fill="#EF4135"/>',
+    ru:'<rect width="60" height="12" fill="#fff"/><rect y="12" width="60" height="12" fill="#0039A6"/><rect y="24" width="60" height="12" fill="#D52B1E"/>',
+    pt:'<rect width="24" height="36" fill="#006600"/><rect x="24" width="36" height="36" fill="#FF0000"/><circle cx="24" cy="18" r="7" fill="#FFCC00"/><circle cx="24" cy="18" r="3.6" fill="#fff"/>',
+    ar:'<rect width="60" height="36" fill="#1B6E3C"/><text x="30" y="22" text-anchor="middle" font-size="18" fill="#fff" font-family="Arial, sans-serif">&#1593;</text>',
     cn:'<rect width="60" height="36" fill="#DE2910"/><g fill="#FFDE00"><polygon points="10,4 12.4,10.6 19.4,10.8 13.9,15 15.8,21.7 10,17.8 4.2,21.7 6.1,15 0.6,10.8 7.6,10.6"/><polygon points="22,3 22.9,5.5 25.5,5.5 23.4,7 24.2,9.5 22,8 19.8,9.5 20.6,7 18.5,5.5 21.1,5.5"/><polygon points="26,9 26.9,11.5 29.5,11.5 27.4,13 28.2,15.5 26,14 23.8,15.5 24.6,13 22.5,11.5 25.1,11.5"/><polygon points="26,17 26.9,19.5 29.5,19.5 27.4,21 28.2,23.5 26,22 23.8,23.5 24.6,21 22.5,19.5 25.1,19.5"/><polygon points="22,23 22.9,25.5 25.5,25.5 23.4,27 24.2,29.5 22,28 19.8,29.5 20.6,27 18.5,25.5 21.1,25.5"/></g>'
   };
   function flag(code,cls){ return '<svg class="'+(cls||'vm-flag')+'" viewBox="0 0 60 36" aria-hidden="true" focusable="false"><clipPath id="vmc-'+code+'-'+(cls||'f')+'"><rect width="60" height="36" rx="5"/></clipPath><g clip-path="url(#vmc-'+code+'-'+(cls||'f')+')">'+FLAGS[code]+'</g></svg>'; }

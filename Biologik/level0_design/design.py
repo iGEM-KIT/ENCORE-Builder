@@ -10,10 +10,13 @@ from .constructs import build_level0_constructs, resolve_seq
 from .data import CARGO_L1_FLANK, NOMINAL_BP, TARGETING_PEPTIDES, find_nanocompartment, find_promoter
 from .codon import FORBIDDEN_SITES
 from .parts_db import find_library_cargo, find_real_sequence, load_parts
-from .primers import make_primer_pair
-from .sequence import reverse_complement, validate_cargo
+from .primers import design_promoter_primers, make_primer_pair, promoter_pcr_genbank
+from .sequence import reverse_complement, validate_cargo, validate_promoter
 from .slots import CUSTOM_NC_ID, build_custom_nanocompartment, build_modules, resolve_slots, slot_summary
 from .user_codons import fix_toolkit_sites, optimize_toolkit_part, optimize_user_sequences
+
+
+CUSTOM_PROMOTER_ID = "custom"
 
 
 def _first_backbone(kind: str):
@@ -31,10 +34,33 @@ def build_level1_and_2(fragments: list, promoter_entry: dict, nc: dict):
     by_module = {m: [f for f in fragments if f["module"] == m] for m in ("cargo", "nc")}
     cargo = finish_level1(assemble_level1_module(by_module["cargo"], "Cargo module", "cargo_site", True, "Level1_Cargo"), backbone1)
     ncm = finish_level1(assemble_level1_module(by_module["nc"], "Nanocompartment module", "nc_site", False, "Level1_NC"), backbone1)
-    promo_seq, promo_real = resolve_seq("promoters", promoter_entry["id"], "PROMO" + promoter_entry["id"], NOMINAL_BP["PROMO"])
-    promo = finish_level1(assemble_level1_promoter(promoter_entry["label"], promo_seq, promo_real, "Level1_Promoter", backbone1), backbone1)
+    custom = bool(promoter_entry.get("custom"))
+    if custom:
+        promo_seq, promo_real = promoter_entry["seq"], True
+    else:
+        promo_seq, promo_real = resolve_seq("promoters", promoter_entry["id"], "PROMO" + promoter_entry["id"], NOMINAL_BP["PROMO"])
+    promo = finish_level1(assemble_level1_promoter(promoter_entry["label"], promo_seq, promo_real, "Level1_Promoter", backbone1, is_user=custom), backbone1)
+    promo["isUser"] = custom
+    if custom:
+        # An own promoter is made by PCR: primers with the BsaI site and the Level 1 / Level 2 overhangs, and the PCR product as GenBank.
+        promo["primers"] = design_promoter_primers(promo_seq, promoter_entry["label"], promo)
+        if promo["primers"]["possible"]:
+            promo["primers"]["genbank"] = promoter_pcr_genbank(promo["primers"], promo, promoter_entry["label"])
     level2 = assemble_level2([cargo, promo, ncm], f"ENCORE-{nc['id']}", backbone2)
     return [cargo, promo, ncm], level2
+
+
+def _resolve_promoter(decisions: dict) -> dict:
+    """The promoter of the design: a toolkit promoter of the database, or your own sequence (`promoter` = "custom" and `customPromoter`
+    = {label, seq}), which goes through validate_promoter() like every own sequence."""
+    if decisions.get("promoter") == CUSTOM_PROMOTER_ID:
+        custom = decisions.get("customPromoter") if isinstance(decisions.get("customPromoter"), dict) else {}
+        validation = validate_promoter(custom.get("seq", ""))
+        if not validation["ok"]:
+            raise ValueError("Custom promoter is not usable: " + " ".join(validation["errors"]))
+        label = (custom.get("label") or "").strip() or "Custom promoter"
+        return {"id": CUSTOM_PROMOTER_ID, "label": label, "desc": "your own sequence", "custom": True, "seq": validation["clean"]}
+    return find_promoter(decisions.get("promoter")) or find_promoter("GAL110")
 
 
 def design_construct(decisions: dict = None):
@@ -47,7 +73,7 @@ def design_construct(decisions: dict = None):
     if not nc:
         raise ValueError(f"Unknown nanocompartment \"{decisions.get('nanocompartment')}\".")
 
-    promoter_entry = find_promoter(decisions.get("promoter")) or find_promoter("GAL110")
+    promoter_entry = _resolve_promoter(decisions)
 
     cargo = validate_cargo(decisions.get("cargoSeq", ""))
     if not cargo["ok"]:
@@ -105,8 +131,8 @@ def design_construct(decisions: dict = None):
         "targetingPeptide": nc["tp"],
         "cargo": {"label": cargo_label, "sequence": cargo["clean"], "sequenceAntisense": cargo_antisense, "bp": cargo_bp},
         "level0": {"cargoModule": cargo_module, "ncModule": nc_module},
-        "level2": {"promoter": {"id": promoter_entry["id"], "label": promoter_entry["label"],
-                                "bp": len(find_real_sequence("promoters", promoter_entry["id"]) or "") or NOMINAL_BP["PROMO"]}},
+        "level2": {"promoter": {"id": promoter_entry["id"], "label": promoter_entry["label"], "isUser": bool(promoter_entry.get("custom")),
+                                "bp": len(promoter_entry.get("seq") or find_real_sequence("promoters", promoter_entry["id"]) or "") or NOMINAL_BP["PROMO"]}},
         "cargoSlots": slot_summary(cargo_slots),
         "ncSlots": slot_summary(nc_slots),
         "primers": primers,
@@ -146,6 +172,11 @@ def build_genbank(design: dict) -> str:
         records.append(c["genbank"])
         if c["primers"]["possible"]:
             records.append(c["primers"]["genbank"])
+
+    # An own promoter: its PCR product with the two primers (BsaI site + Level 1 overhangs).
+    for module in design.get("level1Constructs", []):
+        if module.get("isUser") and module.get("primers", {}).get("possible"):
+            records.append(module["primers"]["genbank"])
 
     # Level 1 (BsaI) and Level 2 (BbsI): the actual assemblies including overhangs (see assembly.py).
     for module in design.get("level1Constructs", []):

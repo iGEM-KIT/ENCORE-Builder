@@ -449,7 +449,7 @@ def test_the_filter_hint_is_a_button_on_the_right_in_the_row_of_the_shell_facts(
 
 
 I18N_DIR = ROOT / "frontend" / "i18n"
-I18N_LANGS = ("es", "de", "fr", "zh")
+I18N_LANGS = ("es", "de", "fr", "zh", "ru", "pt", "ar")
 
 
 def _dictionary(code):
@@ -457,9 +457,9 @@ def _dictionary(code):
     return json.loads((I18N_DIR / f"{code}.json").read_text(encoding="utf8"))
 
 
-def test_the_four_dictionaries_have_exactly_the_same_entries():
+def test_the_seven_dictionaries_have_exactly_the_same_entries():
     keys = {code: set(_dictionary(code)) for code in I18N_LANGS}
-    assert keys["es"] == keys["de"] == keys["fr"] == keys["zh"]
+    assert all(keys[code] == keys["de"] for code in I18N_LANGS)
     assert len(keys["es"]) > 250
 
 
@@ -491,9 +491,9 @@ def test_the_info_windows_exist_in_every_language_with_the_same_html_structure(c
         assert title.count("<i>") == en_title.count("<i>"), (code, key)
 
 
-def test_the_language_menu_lists_five_languages_with_their_own_names_and_english_is_the_default():
+def test_the_language_menu_lists_eight_languages_with_their_own_names_and_english_is_the_default():
     js = (ROOT / "frontend" / "i18n.js").read_text(encoding="utf8")
-    for name in ("English", "Español", "Deutsch", "Français", "中文 (简体)"):
+    for name in ("English", "Español", "Deutsch", "Français", "中文 (简体)", "Русский", "Português", "العربية"):
         assert name in js, name
     assert "return 'en'" in js and "sessionStorage.getItem(KEY)" in js
     assert 'translate="no"' in (ROOT / "frontend" / "viewmenu.js").read_text(encoding="utf8")      # the names of the languages are never translated

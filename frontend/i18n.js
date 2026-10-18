@@ -12,9 +12,17 @@
     {code:'es', name:'Español',  flag:'es'},
     {code:'de', name:'Deutsch',  flag:'de'},
     {code:'fr', name:'Français', flag:'fr'},
-    {code:'zh', name:'中文 (简体)', flag:'cn'}
+    {code:'zh', name:'中文 (简体)', flag:'cn'},
+    {code:'ru', name:'Русский', flag:'ru'},
+    {code:'pt', name:'Português', flag:'pt'},
+    {code:'ar', name:'العربية', flag:'ar'}
   ];
   var ATTRS=['placeholder','title','aria-label','alt','label'];
+  var RTL={ar:true};                                                   // languages written from right to left
+  /* A block is a text element that holds inline markup (<b>, <a>, <code> ...): it is translated as ONE piece of HTML, so that the word
+     order of a whole sentence can follow the language. The key of a block is its inner HTML with the white space collapsed. */
+  var BLOCK_TAGS={P:1,LI:1,TD:1,TH:1,DD:1,DT:1,H1:1,H2:1,H3:1,H4:1,SUMMARY:1,LABEL:1,FIGCAPTION:1,SPAN:1,DIV:1,A:1};
+  var INLINE_TAGS={A:1,B:1,I:1,EM:1,STRONG:1,CODE:1,SPAN:1,SUB:1,SUP:1,BR:1,MARK:1,KBD:1,SMALL:1,ABBR:1,U:1};
   var root=document.documentElement;
   var lang='en', dict=null, templates=[], missing=new Set(), listeners=[], observer=null;
 
@@ -49,11 +57,11 @@
       });
       if(changedS) return outS.join(' ');
     }
-    /* a line made of pieces ("Type 0.3 · cargo site · toolbox part"): translate every piece on its own */
-    if(core.indexOf(' · ')>0){
+    /* a line made of pieces ("Type 0.3 · cargo site · toolbox part", "24 nm shell • T=1 • WT"): translate every piece on its own */
+    if(/ [\u00B7\u2022] /.test(core)){
       var changed=false;
-      var out=core.split(' · ').map(function(piece){ var t=translate(piece); if(t!==null){ changed=true; return t; } return piece; });
-      if(changed) return out.join(' · ');
+      var out=core.split(/( [\u00B7\u2022] )/).map(function(piece,i){ if(i%2) return piece; var t=translate(piece); if(t!==null){ changed=true; return t; } return piece; });
+      if(changed) return out.join('');
     }
     return null;
   }
@@ -65,6 +73,38 @@
   }
 
   function skip(el){ return !el || (el.closest && el.closest('script,style,textarea,[translate="no"]')); }
+
+  /* a block: a text element whose children are only inline elements (and text), with at least one inline element */
+  function isBlock(el){
+    if(!BLOCK_TAGS[el.tagName] || !el.firstElementChild || !isInlineOnly(el)) return false;
+    return el.innerHTML.length<=8000 && /[A-Za-z]{3,}/.test(el.textContent);
+  }
+  function isInlineOnly(el){ for(var c=el.firstElementChild;c;c=c.nextElementSibling){ if(!INLINE_TAGS[c.tagName] || !isInlineOnly(c)) return false; } return true; }
+  function blockKey(el){ return norm(el.innerHTML); }
+  /* the translation of a block: the whole inner HTML as an exact key, or as a template with {0}, {1} ... for the numbers in it */
+  function blockTr(key){
+    if(!dict) return null;
+    if(Object.prototype.hasOwnProperty.call(dict,key)) return dict[key];
+    for(var i=0;i<templates.length;i++){
+      var m=key.match(templates[i].re);
+      if(m) return templates[i].out.replace(/\{(\d+)\}/g,function(_,n){ return m[+n+1]; });
+    }
+    return null;
+  }
+  /* true if the block was handled as a whole (translated, or put back to English); false if its pieces have to be walked */
+  function doBlock(el){
+    var rec=el.__blk, cur=el.innerHTML;
+    var base = (rec && rec.tr!==undefined && cur===rec.tr) ? rec.en : cur;
+    var tr = lang==='en' ? null : blockTr(norm(base));
+    if(tr===null){
+      if(rec && rec.tr!==undefined && cur===rec.tr){ el.innerHTML=base; }
+      el.__blk={en:base,tr:undefined};
+      return false;
+    }
+    if(cur!==tr) el.innerHTML=tr;
+    el.__blk={en:base,tr:el.innerHTML};
+    return true;
+  }
 
   function doText(n){
     if(skip(n.parentNode)) return;
@@ -89,7 +129,7 @@
   function walk(node){
     if(node.nodeType===3){ doText(node); return; }
     if(node.nodeType!==1 && node.nodeType!==11) return;
-    if(node.nodeType===1){ if(skip(node)) return; doAttrs(node); }
+    if(node.nodeType===1){ if(skip(node)) return; doAttrs(node); if(isBlock(node) || (node.__blk && node.__blk.tr!==undefined)){ if(doBlock(node)) return; } }
     for(var c=node.firstChild;c;c=c.nextSibling) walk(c);
   }
   function applyAll(){
@@ -120,7 +160,7 @@
   function setLang(code, remember){
     if(!LANGS.some(function(l){return l.code===code;})) code='en';
     return load(code).then(function(){
-      lang=code; root.setAttribute('lang',code==='zh'?'zh-Hans':code);
+      lang=code; root.setAttribute('lang',code==='zh'?'zh-Hans':code); root.setAttribute('dir', RTL[code] ? 'rtl' : 'ltr');
       if(remember!==false){ try{ sessionStorage.setItem(KEY,code); }catch(e){} }
       missing.clear();
       if(document.body) applyAll();
@@ -136,11 +176,13 @@
   window.ENCORE_I18N={
     languages:LANGS, get lang(){ return lang; }, setLang:setLang, html:html, translate:translate,
     onChange:function(f){ listeners.push(f); },
-    get missing(){ return Array.from(missing); }
+    get missing(){ return Array.from(missing); },
+    /* the blocks of the page (for building a dictionary): [{tag, key}] */
+    blocks:function(){ var out=[]; (function w(n){ if(n.nodeType!==1 || skip(n)) return; if(isBlock(n)){ out.push({tag:n.tagName, key:blockKey(n)}); return; } for(var c=n.firstChild;c;c=c.nextSibling) w(c); })(document.documentElement); return out; }
   };
 
   var initial=stored();
-  root.setAttribute('lang',initial==='zh'?'zh-Hans':initial);
+  root.setAttribute('lang',initial==='zh'?'zh-Hans':initial); root.setAttribute('dir', RTL[initial] ? 'rtl' : 'ltr');
   function start(){ setLang(initial,false); }
   if(initial==='en'){ lang='en'; prepare({}); }
   else if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else start();

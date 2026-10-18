@@ -6,7 +6,8 @@
  *                              // shell CDS + targeting peptide when nanocompartment is 'custom'
  *   cargoSeq: string,          // decision 2 (raw CDS (DNA) or amino acid sequence, no trailing stop codon)
  *   cargoLabel?: string,
- *   promoter?: string,         // promoter id (default: GAL1-10)
+ *   promoter?: string,         // promoter id (default: GAL1-10), or 'custom' with customPromoter
+ *   customPromoter?: { label?: string, seq: string },   // own promoter (DNA, BsaI/BbsI-free); gets PCR primers with the Level 1 overhangs
  *   cargoSlots?: Slots,        // what sits around the cargo (Type 0.1/0.2 behind it, 0.4/0.5 in front)
  *   ncSlots?: Slots,           // what sits around the shell (default: NCS spacer everywhere)
  *   // Slots = { "1" | "2" | "4" | "5": { kind: 'ncs' }
@@ -38,6 +39,7 @@ export default defineEventHandler(async (event) => {
     const { design } = await runBiologik('design', {
       nanocompartment: body.nanocompartment,
       customNanocompartment: body.customNanocompartment,
+      customPromoter: body.customPromoter,
       cargoSeq: body.cargoSeq,
       cargoLabel: body.cargoLabel,
       cargoSlots: body.cargoSlots,

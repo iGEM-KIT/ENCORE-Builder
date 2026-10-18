@@ -7,7 +7,7 @@ Every entry is a JSON file of its own, grouped by kind in a subfolder, exactly l
 | Folder              | Content |
 |---------------------|---------|
 | `level0_inserts/`   | the bare part sequence of each Level 0 plasmid: shells, cargos, linkers, markers, intein, targeting peptides, NCS (see below) |
-| `promoters/`        | promoters (GAL1-10 is stored as a real sequence, 665 bp; a promoter without a sequence gets a placeholder) |
+| `promoters/`        | bidirectional promoters, all with a real sequence: GAL1-10 (665 bp), BDP306 (754 bp), BDP565 (356 bp), BDP670 (318 bp). A file is a dropdown entry: `label`, `desc`, `order`, `sequence` (sense direction of the nanocompartment module, free of BsaI/BbsI sites). A promoter without a sequence is not offered. The Builder also takes an own promoter (`promoter: "custom"`, `customPromoter`), see `sequence.validate_promoter` and `primers.design_promoter_primers` |
 | `terminators/`      | terminators, purely informational |
 | `level0_backbones/`, `level1_backbones/`, `level2_backbones/` | the destination backbones pAGM9121, pAGM1311, pESC-HIS |
 | `type_overhangs/`   | the seven overhang adapters (source of the overhangs and the frame spacer) |

@@ -133,7 +133,7 @@ def level2_overhang(adapter_id: str, role: str) -> str:
     raise ValueError(f"Adapter {adapter_id} hat keinen {role}-Overhang.")
 
 
-def assemble_level1_promoter(label: str, promoter_seq: str, is_real: bool, name: str, backbone: dict) -> dict:
+def assemble_level1_promoter(label: str, promoter_seq: str, is_real: bool, name: str, backbone: dict, is_user: bool = False) -> dict:
     """Promoter insert for Level 1: NLvl1 + Level 2 N overhang (= C overhang of the cargo module) + promoter +
     Level 2 C overhang (= N overhang of the NC module) + CLvl1."""
     n1 = backbone["sequence"][location_span(backbone["receiver_overhangs"]["5_prime"]["location"])[0] - 1:
@@ -150,8 +150,8 @@ def assemble_level1_promoter(label: str, promoter_seq: str, is_real: bool, name:
         {"start": end - 3, "end": end, "label": "CLvl1", "role": "level1_C"},
     ]
     parts = [{"label": label, "type": "Promoter", "start": 9, "end": end - 8, "strand": "sense", "kind": "promoter",
-              "isReal": is_real, "isUser": False, "what": "bidirectional promoter",
-              "note": "bidirectional promoter · toolkit part" + ("" if is_real else " · PLACEHOLDER sequence")}]
+              "isReal": is_real, "isUser": is_user, "what": "bidirectional promoter",
+              "note": "bidirectional promoter · " + ("your own sequence" if is_user else "toolkit part") + ("" if is_real else " · PLACEHOLDER sequence")}]
     notes = [] if is_real else [f"PLACEHOLDER sequence (not in the parts database yet): {label}"]
     out = _pack(label, "Level 1 promoter", "promoter", "bidirectional", seq, parts, overhangs, notes, [], name)
     return out

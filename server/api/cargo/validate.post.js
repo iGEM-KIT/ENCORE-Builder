@@ -1,6 +1,7 @@
 /**
  * POST /api/cargo/validate
- * Body: { cargoSeq: string, kind?: 'cargo' | 'shell' | 'part' }
+ * Body: { cargoSeq: string, kind?: 'cargo' | 'shell' | 'part' | 'promoter' }
+ *   kind 'promoter' checks an own promoter (DNA, length, BsaI/BbsI sites) instead of a CDS.
  *   kind 'shell' / 'part' check a user-supplied nanocompartment shell CDS or a
  *   custom part in a slot next to the shell with the same rules; only the
  *   wording of the stop-codon message differs.
@@ -19,7 +20,7 @@ import { runBiologik } from '../../utils/biologik.js'
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const cargoSeq = typeof body?.cargoSeq === 'string' ? body.cargoSeq : ''
-  const kind = ['shell', 'part'].includes(body?.kind) ? body.kind : 'cargo'
+  const kind = ['shell', 'part', 'promoter'].includes(body?.kind) ? body.kind : 'cargo'
 
   try {
     const { validation } = await runBiologik('validate', { cargoSeq, kind })

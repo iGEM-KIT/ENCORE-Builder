@@ -22,7 +22,7 @@ import sys
 from .codon import back_translate
 from .data import get_libraries
 from .design import build_genbank, design_construct
-from .sequence import clean_protein, clean_seq, is_protein, validate_cargo
+from .sequence import clean_protein, clean_seq, is_protein, validate_cargo, validate_promoter
 from .user_codons import codon_optimize_part, codon_summary
 
 
@@ -61,6 +61,9 @@ def cmd_validate(payload: dict) -> dict:
     Only if the sequence is fusion ready (``ok: True``) the preview of the codon optimization
     (``codonOptimization``) is added; a sequence that is not fusion ready still changes anyway.
     """
+    if payload.get("kind") == "promoter":
+        # An own promoter is a plain DNA part: no codon optimization, no ORF checks (see sequence.validate_promoter).
+        return {"validation": validate_promoter(payload.get("cargoSeq", ""))}
     kind = payload.get("kind") if payload.get("kind") in ("shell", "part") else "cargo"
     validation = validate_cargo(payload.get("cargoSeq", ""), kind=kind)
     if validation["ok"]:

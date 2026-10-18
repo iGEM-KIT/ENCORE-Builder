@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import re
+
 from .codon import FORBIDDEN_SITES
 from .data import BSAI_PRIMER_PREFIX
 from .genbank_writer import (format_genbank_record, level0_record_name, location_span, make_feature as _feat,
@@ -231,3 +233,92 @@ def pcr_product_genbank(shown: dict, primers: dict, label: str, slot: int, modul
     definition = (f"PCR product of {label} (Type 0.{slot}, adapter {adapter_id}) with its two PCR primers: "
                   f"{len(clamp)}-nt clamp + BbsI site/overhangs + insert. Clone with BbsI into the Level 0 backbone.")
     return format_genbank_record(level0_record_name(label, slot, module, "Primers"), sequence, out, False, definition)
+
+
+# BsaI recognition site and the spacer base between it and the overhang: BsaI cuts after the first base behind GGTCTC (top strand) and after
+# the fifth (bottom strand), so the next four bases are the overhang. The spacer base is arbitrary; "A" as in the Level 1 reaction of the toolkit.
+BSAI_SITE = "GGTCTC"
+BSAI_SPACER = "A"
+LEVEL1_N, LEVEL1_C = "ACAT", "TTGT"   # NLvl1 / CLvl1 of the Level 1 backbone (pAGM1311), checked against the backbone entry in assemble_level1_promoter
+
+
+def promoter_record_name(label: str, kind: str = "") -> str:
+    """Record / primer name of an own promoter: Level1_Promoter_<label> (with kind="Primers": Level1_Primers_Promoter_<label>)."""
+    clean = re.sub(r"[^A-Za-z0-9.-]+", "-", label.replace("×", "x")).strip("-") or "promoter"
+    return "_".join(filter(None, ("Level1", kind, "Promoter", clean)))
+
+
+def design_promoter_primers(promoter_seq: str, label: str, level1: dict) -> dict:
+    """PCR primers that make an own promoter Level 1 compatible. `level1` is the assembled Level 1 promoter insert (assembly.assemble_level1_promoter):
+        NLvl1 + Level 2 overhang (cargo module | promoter) + promoter + Level 2 overhang (promoter | NC module) + CLvl1.
+
+        5' extension of each primer = clamp + BsaI site + spacer base + the overhang bases, so that BsaI cuts the PCR product exactly to
+        the Level 1 insert (NLvl1 ... CLvl1) and it ligates into the Level 1 backbone. The 3' part anneals to the promoter (primer3, otherwise Wallace).
+        The PCR product is the two primers around the promoter: clamp + BsaI site + spacer + Level 1 insert + spacer + BsaI site + clamp. Returns `{"possible": False, "reason": ...}` for a
+        sequence that is too short for PCR."""
+    if len(promoter_seq) < MIN_PCR_INSERT_BP:
+        return {"possible": False, "reason": f"Promoter is only {len(promoter_seq)} bp: below {MIN_PCR_INSERT_BP} bp no PCR primers are designed."}
+    insert = level1["sequence"]                                    # NLvl1 ... CLvl1, top strand of the Level 1 plasmid
+    lead = insert[:insert.index(promoter_seq)]                      # NLvl1 + Level 2 overhang
+    tail = insert[insert.index(promoter_seq) + len(promoter_seq):]  # Level 2 overhang + CLvl1
+    ext_f = PCR_CLAMP + BSAI_SITE + BSAI_SPACER + lead
+    ext_r = PCR_CLAMP + BSAI_SITE + BSAI_SPACER + reverse_complement(tail)
+
+    result = None
+    try:
+        from ..primer_design import design_primers
+        result = design_primers(sequence=promoter_seq, ext_fw=ext_f, ext_rv=ext_r)
+    except (ImportError, ValueError):
+        pass  # primer3 missing or no pair -> Wallace
+    if result:
+        anneal_f, anneal_r = result["annealFw"], result["annealRv"]
+        tm_f, tm_r, method = round(result["tmFw"], 1), round(result["tmRv"], 1), "primer3-nn"
+        q5 = round(result["q5AnnealingTemp"], 1)
+        issues = list(result["issues"])
+        structure = _structure_checks(result["evaluation"])
+    else:
+        anneal_f, anneal_r, balanced = _wallace_anneal(promoter_seq)
+        tm_f, tm_r, method, q5 = wallace_tm(anneal_f), wallace_tm(anneal_r), "wallace", None
+        issues = [] if balanced else [_WALLACE_HINT]
+        structure = None
+
+    def primer(name: str, ext: str, anneal: str, tm) -> dict:
+        return {"name": name, "sequence": ext + anneal, "extension": ext, "anneal": anneal,
+                "length": len(ext) + len(anneal), "annealLength": len(anneal), "tm": tm}
+
+    base = promoter_record_name(label)
+    product = ext_f + promoter_seq + reverse_complement(ext_r)    # the two primers around the promoter (top strand)
+    return {
+        "possible": True,
+        "forward": primer(f"{base}_F", ext_f, anneal_f, tm_f),
+        "reverse": primer(f"{base}_R", ext_r, anneal_r, tm_r),
+        "clamp": PCR_CLAMP, "productLength": len(product), "productSequence": product,
+        "overhangs": {"left": lead, "right": tail},
+        "tmMethod": method, "q5AnnealingTemp": q5,
+        "valid": not issues, "issues": issues, "structure": structure,
+    }
+
+
+def promoter_pcr_genbank(primers: dict, level1: dict, label: str) -> str:
+    """GenBank record of the PCR product of an own promoter: both BsaI sites, the overhangs, the promoter and the two primers (`primer_bind`)."""
+    product = primers["productSequence"]
+    lead = len(PCR_CLAMP) + len(BSAI_SITE) + len(BSAI_SPACER)         # bases in front of the Level 1 insert
+    feats = []
+    sites = [m.start() for m in re.finditer(BSAI_SITE, product)] + [m.start() for m in re.finditer(reverse_complement(BSAI_SITE), product)]
+    for pos in sorted(sites)[:2]:
+        loc = f"{pos + 1}..{pos + len(BSAI_SITE)}" if product[pos:pos + len(BSAI_SITE)] == BSAI_SITE else f"complement({pos + 1}..{pos + len(BSAI_SITE)})"
+        feats.append(_feat("misc_feature", loc, "BsaI rec site"))
+    for o in level1["overhangs"]:
+        feats.append(_feat("overhang", f"{lead + o['start']}..{lead + o['end']}", o["label"], f"{o['role']} · top strand {o['sequence']}"))
+    for p in level1["parts"]:
+        feats.append(_feat("promoter", f"{lead + p['start']}..{lead + p['end']}", p["label"], p["note"]))
+    total = len(product)
+    f, r = primers["forward"], primers["reverse"]
+    for primer, loc in ((f, f"1..{f['length']}"), (r, f"complement({total - r['length'] + 1}..{total})")):
+        feats.append(_feat("primer_bind", loc, primer["name"],
+                           f"{primer['name']} 5'-{primer['sequence']}-3' · {len(PCR_CLAMP)}-nt clamp + BsaI site + overhangs + "
+                           f"{primer['annealLength']}-nt annealing part · Tm {primer['tm']} °C ({primers['tmMethod']})"))
+    feats.sort(key=lambda x: location_span(x["location"])[0])
+    definition = (f"PCR product of the promoter {label} with its two PCR primers: {len(PCR_CLAMP)}-nt clamp + BsaI site + overhang bases + promoter. "
+                  f"Cut with BsaI it gives the Level 1 insert (NLvl1 ACAT ... CLvl1 TTGT) for the Level 1 backbone.")
+    return format_genbank_record(promoter_record_name(label, "Primers"), product, feats, False, definition)

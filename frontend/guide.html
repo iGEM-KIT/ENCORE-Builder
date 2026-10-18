@@ -211,8 +211,10 @@
     <h2>Promoter</h2>
     <ul class="plain">
       <li>The central promoter drives both modules: the nanocompartment module to the right (sense), the cargo module to the left (antisense). Both transcripts start at the promoter and run outward.</li>
-      <li>GAL1-10 is a bidirectional, galactose-inducible yeast promoter.</li>
+      <li>GAL1-10 is a bidirectional, galactose-inducible yeast promoter. BDP306, BDP565 and BDP670 are bidirectional promoters as well (754, 356 and 318 bp).</li>
       <li>The promoter is part of the Level 2 construct only. It has its own Level 1 plasmid and is not ordered in step 5. The GAL1-10 sequence (665 bp) is the one from the toolkit, with a link to its entry in the iGEM Registry.</li>
+      <li><b>Use your own sequence.</b> You can enter another bidirectional promoter as DNA (A/T/G/C, <b>T not U</b>). Write it in the direction of the nanocompartment module: its 5′ end lies on the side of the cargo module. It needs at least 150 bp (at most 3000 bp) and must not contain a <b>BsaI</b> or <b>BbsI</b> site, because the assembly would cut it; remove such a site with a point mutation. Sites of the iGEM standards (SapI, EcoRI, XbaI, SpeI, PstI, NotI) only give a note: a promoter cannot be recoded like a protein sequence. Your promoter is screened for biosecurity like every sequence you enter.</li>
+      <li><b>Primers.</b> For your own promoter the builder designs PCR primers (step 5, primers): 5′ clamp, BsaI site, one spacer base and the overhangs of the Level 1 promoter module (ACAT and the Level 2 overhang on the left, the Level 2 overhang and TTGT on the right), then the part that anneals to your promoter. BsaI cuts the PCR product to the Level 1 insert, which ligates into the Level 1 backbone. The PCR product is part of the GenBank download.</li>
     </ul>
   </section>
 
@@ -262,6 +264,7 @@
     <h3 id="bg-promoter">Bidirectional promoter</h3>
       <p><b>GAL1-10</b> is a bidirectional yeast promoter: it drives <b>two genes at once</b> in opposite directions. Both transcripts <b>start (5′) at the promoter</b> and run outward.</p>
       <p>The nanocompartment module is read off the <b>sense (plus) strand</b> (to the right), the cargo module off the <b>antisense (minus) strand</b> (to the left); that is why they point away from each other. Inducible via galactose.</p>
+      <p><b>The other promoters</b> (BDP306, BDP565, BDP670) are bidirectional as well. With <b>Use your own sequence</b> you can enter another bidirectional promoter as DNA: write it in the direction of the nanocompartment module, so that its 5′ end lies on the side of the cargo module. It needs at least 150 bp, must not contain a BsaI or BbsI site, and is screened for biosecurity like every sequence you enter. The builder then designs the PCR primers with the BsaI site and the overhangs of the Level 1 promoter module.</p>
     <h3 id="bg-stop">Start and stop codon</h3>
       <p>The cargo is fused with the linker and targeting peptide into <b>one continuous protein</b>.</p>
       <p>You do not have to add a start or stop codon: the builder puts an <b>ATG</b> in front of the first coding part of each ORF and a <b>stop codon</b> behind the last one, in whichever slot it sits: the stop always follows the last coding part of the ORF (for example behind a linker or marker at Type 0.4 or 0.5 of the NC module, or directly behind the shell if only NCS spacers follow it). The part that carries the stop is marked with a <b>*</b>. A stop codon you enter at the end is removed; an ATG you enter is kept (not doubled).</p>
@@ -305,8 +308,8 @@
     <ul class="plain">
       <li><b>Your inputs stay in this browser tab.</b> A refresh keeps your steps and sequences; <b>New construct</b> in step 5 clears them.</li>
       <li><b>Your sequences are processed on your own computer</b>, by the Builder and the screening container in Docker. They are not sent to a third-party service.</li>
-      <li><b>Reading options.</b> The eye button in the header of every page opens a small menu with three buttons: the <b>language</b> (English, Spanish, German, French or Mandarin), the <b>dyslexia-friendly font</b> (OpenDyslexic) and <b>dark mode</b>. Your choices are kept in this browser and hold on every page.</li>
-      <li><b>Translations.</b> The translations into Spanish, German, French and Mandarin were made with care, but they can contain mistakes and are not always correct. The English text is the reference: if something is unclear or looks wrong, please check the English version. Parts of the site, such as this guide, are not translated yet.</li>
+      <li><b>Reading options.</b> The eye button in the header of every page opens a small menu with three buttons: the <b>language</b> (English, Spanish, German, French, Mandarin, Russian, Portuguese or Arabic), the <b>dyslexia-friendly font</b> (OpenDyslexic) and <b>dark mode</b>. Your choices are kept in this browser and hold on every page.</li>
+      <li><b>Translations.</b> The translations into Spanish, German, French, Mandarin, Russian, Portuguese and Arabic were made with care, but they can contain mistakes and are not always correct. The English text is the reference: if something is unclear or looks wrong, please check the English version. The scientific records of the database (notes, references, measurements) are not translated and stay in English.</li>
       <li><b>Draft status.</b> The builder is a prototype of the iGEM KIT team. Check every sequence you order against your own plan before you send it.</li>
     </ul>
   </section>
