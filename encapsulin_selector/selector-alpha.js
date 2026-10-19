@@ -163,6 +163,9 @@ sequences.forEach(s => {
       o.textContent = poreLabelsForSelect(v);
       $("poreType").appendChild(o);
     });
+  [...new Set(candidates.map(c => c.encapsulin_family).filter(Boolean))].sort().forEach(v => {
+    const o = document.createElement("option"); o.value=v; o.textContent=String(v).replace("type_","Type "); $("familyFilter").appendChild(o);
+  });
   function poreLabelsForSelect(value) {
     return ({"2fold":"2-fold", "3fold":"3-fold", "5fold":"5-fold",
       "2fold_adjacent":"2-fold adjacent", "5fold_adjacent":"5-fold adjacent",
@@ -656,10 +659,12 @@ function sequenceCard(s) {
     const poreType = $("poreType").value;
     const poreState = $("poreState").value;
     const poreCharge = $("poreCharge").value;
+    const poreChargeIn = $("poreChargeIn").value;
+    const poreDynamic = $("poreDynamic").value;
     const min = readLocaleNumber($("poreDiameterMin").value);
     const max = readLocaleNumber($("poreDiameterMax").value);
     const needsDiameter = !min.empty || !max.empty;
-    if (!poreType && !poreState && !poreCharge && !needsDiameter) return "match";
+    if (!poreType && !poreState && !poreCharge && !poreChargeIn && !poreDynamic && !needsDiameter) return "match";
     const rows = poresByAssembly.get(a.assembly_id) || [];
     if (!rows.length) return "potential";
     const relevant = rows.filter(p => (!poreType || p.pore_type === poreType) &&
@@ -676,6 +681,14 @@ function sequenceCard(s) {
       if (poreCharge) {
         if (!p.charge_exterior || p.charge_exterior === "not_reported") missing = true;
         else if (p.charge_exterior !== poreCharge) continue;
+      }
+      if (poreChargeIn) {
+        if (!p.charge_interior || p.charge_interior === "not_reported") missing = true;
+        else if (p.charge_interior !== poreChargeIn) continue;
+      }
+      if (poreDynamic) {
+        if (!p.dynamic_status) missing = true;
+        else if (p.dynamic_status !== poreDynamic) continue;
       }
       if (!missing) return "match";
       hasUnknown = true;
@@ -717,6 +730,35 @@ function sequenceCard(s) {
     }
 
     if ($("structureRequired").checked && !a.structure_id) return "no";
+
+    const cand = candidateMap.get(a.candidate_id) || {};
+    const org = $("organismText").value.trim().toLowerCase();
+    if (org && ![cand.organism, cand.genus, cand.strain, cand.gene].some(x => String(x || "").toLowerCase().includes(org))) return "no";
+    const fam = $("familyFilter").value;
+    if (fam && cand.encapsulin_family !== fam) return "no";
+    const up = $("uniprotStatus").value;
+    if (up && cand.uniprot_reviewed_status !== up) return "no";
+    const seqStatus = $("shellSeq").value;
+    if (seqStatus) {
+      if (!a.shell_sequence_status) unknown = true;
+      else if (a.shell_sequence_status !== seqStatus) return "no";
+    }
+    const basis = $("tBasis").value;
+    if (basis) {
+      const b = a.T_number_basis;
+      if (!b || b === "not_applicable") unknown = true;
+      else if ((basis === "direct") !== (b === "directly_reported")) return "no";
+    }
+    const cargo = $("cargoState").value;
+    if (cargo) {
+      const text = `${a.condition || ""} ${a.construct || ""}`;
+      const free = /cargo[-\s]?free|\bempty\b|\bapo\b|non-?loaded|unloaded|without cargo/i.test(text);
+      const loaded = !free && /loaded|co-?expressed with|containing|native .*cargo/i.test(text);
+      if (!free && !loaded) unknown = true;
+      else if ((cargo === "free") !== free) return "no";
+    }
+    const meth = $("methodFilter").value;
+    if (meth && !String(a.method || "").toLowerCase().includes(meth)) return "no";
 
     const poreState = classifyPores(a);
     if (poreState === "no") return "no";
@@ -793,14 +835,14 @@ function sequenceCard(s) {
   [
     "diameterMin","diameterMax","tNumber","variantStatus","symmetry",
     "subunitCount","structureRequired","includeUnknown","targetDiameter","preferStructure",
-    "poreType","poreState","poreCharge","poreDiameterMin","poreDiameterMax"
+    "poreType","poreState","poreCharge","poreDiameterMin","poreDiameterMax","organismText","familyFilter","shellSeq","tBasis","cargoState","methodFilter","uniprotStatus","poreChargeIn","poreDynamic"
   ].forEach(id => $(id).addEventListener("input", runFinder));
 
   $("searchCapsules").addEventListener("click", runFinder);
 
   $("clearFilters").addEventListener("click", () => {
     ["diameterMin","diameterMax","tNumber","variantStatus","symmetry","subunitCount","targetDiameter",
-      "poreType","poreState","poreCharge","poreDiameterMin","poreDiameterMax"]
+      "poreType","poreState","poreCharge","poreDiameterMin","poreDiameterMax","organismText","familyFilter","shellSeq","tBasis","cargoState","methodFilter","uniprotStatus","poreChargeIn","poreDynamic"]
       .forEach(id => $(id).value = "");
     $("structureRequired").checked = false;
     $("preferStructure").checked = false;
@@ -813,7 +855,7 @@ function sequenceCard(s) {
   // Keep tab, filters, search text and scroll position across a page refresh.
   const SESSION_KEY = "encapsulin.selector.v1";
   const TEXT_IDS = ["globalSearch","diameterMin","diameterMax","tNumber","variantStatus","symmetry","subunitCount","targetDiameter",
-    "poreType","poreState","poreCharge","poreDiameterMin","poreDiameterMax"];
+    "poreType","poreState","poreCharge","poreDiameterMin","poreDiameterMax","organismText","familyFilter","shellSeq","tBasis","cargoState","methodFilter","uniprotStatus","poreChargeIn","poreDynamic"];
   const CHECK_IDS = ["structureRequired","includeUnknown","preferStructure"];
   const activeMode = () => document.querySelector(".mode-tab.active").dataset.mode;
 

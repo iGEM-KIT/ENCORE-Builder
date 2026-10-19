@@ -106,6 +106,61 @@
           </div>
 
           <hr>
+          <h2>Shell and source</h2>
+          <div class="field-group">
+            <label for="organismText">Organism or genus</label>
+            <input id="organismText" type="text" placeholder="e.g. Thermotoga" autocomplete="off">
+          </div>
+          <div class="field-group">
+            <label for="familyFilter">Family</label>
+            <select id="familyFilter"><option value="">Any</option></select>
+          </div>
+          <div class="field-group">
+            <label for="shellSeq">Shell sequence</label>
+            <select id="shellSeq">
+              <option value="">Any</option>
+              <option value="unmodified">Unmodified only</option>
+              <option value="modified">Modified only</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label for="tBasis">T-number basis</label>
+            <select id="tBasis">
+              <option value="">Any</option>
+              <option value="direct">Directly reported</option>
+              <option value="inferred">Inferred</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label for="cargoState">Reported cargo state</label>
+            <select id="cargoState">
+              <option value="">Any</option>
+              <option value="free">Cargo-free</option>
+              <option value="loaded">Cargo-loaded</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label for="methodFilter">Method</label>
+            <select id="methodFilter">
+              <option value="">Any</option>
+              <option value="cryo-em">Cryo-EM</option>
+              <option value="x-ray">X-ray crystallography</option>
+              <option value="tem">Negative-stain TEM</option>
+              <option value="mass spectrometry">Mass spectrometry</option>
+              <option value="dls">DLS</option>
+              <option value="afm">AFM</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label for="uniprotStatus">UniProt entry</label>
+            <select id="uniprotStatus">
+              <option value="">Any</option>
+              <option value="reviewed">Reviewed</option>
+              <option value="unreviewed">Unreviewed</option>
+            </select>
+          </div>
+
+          <hr>
           <h2>Observed pore properties</h2>
           <p class="hint pore-filter-note">Pore criteria must be met by the same recorded pore on the same assembly. Missing observations remain potential matches.</p>
           <div class="field-group">
@@ -135,6 +190,24 @@
               <option value="negative">Negative</option>
               <option value="neutral">Neutral</option>
               <option value="mixed">Mixed</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label for="poreChargeIn">Interior pore charge</label>
+            <select id="poreChargeIn">
+              <option value="">Any</option>
+              <option value="positive">Positive</option>
+              <option value="negative">Negative</option>
+              <option value="neutral">Neutral</option>
+              <option value="mixed">Mixed</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label for="poreDynamic">Pore dynamics</label>
+            <select id="poreDynamic">
+              <option value="">Any</option>
+              <option value="single_state_observed">Single state observed</option>
+              <option value="demonstrated">Dynamic states demonstrated</option>
             </select>
           </div>
           <hr>
