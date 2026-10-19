@@ -121,10 +121,10 @@ sequences.forEach(s => {
     return errors.length === 0;
   }
 
-  $("alphaNote").textContent =
-    "Pore filters use the observations recorded for a specific assembly, not a property assumed for every variant. " +
-    "Missing pore measurements stay in the results as possible matches. " +
-    "Sources link to the original publications.";
+  $("alphaNote").innerHTML =
+    "<ul><li>Pore filters use the observations recorded for a specific assembly, not a property assumed for every variant.</li>" +
+    "<li>Missing pore measurements stay in the results as possible matches.</li>" +
+    "<li>Sources link to the original publications.</li></ul>";
 
   // Mode switching
   // Each tab gets its own history entry (#search / #finder) so the browser

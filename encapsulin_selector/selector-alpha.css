@@ -436,3 +436,6 @@ code,pre,.tp-sequence,.change-before,.change-after{overflow-wrap:anywhere;white-
 html[dir="rtl"] .popover .pop-close{right:auto;left:8px}
 .popover .pop-body{padding:16px 36px 14px 16px}
 html[dir="rtl"] .popover .pop-body{padding:16px 16px 14px 36px}
+.popover ul{margin:0 0 8px;padding-left:18px;font-size:13px;color:var(--muted);line-height:1.6}
+.popover li{margin:0 0 4px}
+html[dir="rtl"] .popover ul{padding-left:0;padding-right:18px}
