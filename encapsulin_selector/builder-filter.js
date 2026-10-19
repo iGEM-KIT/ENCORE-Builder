@@ -234,10 +234,3 @@
   });
   sync();
 })();
-
-// The notes about cargo-free designs and reported assemblies sit behind an info button above the results
-(function(){
-  const btn=document.getElementById('designInfoBtn'), panel=document.getElementById('designInfo');
-  if(!btn||!panel) return;
-  btn.addEventListener('click',()=>{ const open=panel.hidden; panel.hidden=!open; btn.setAttribute('aria-expanded',String(open)); });
-})();

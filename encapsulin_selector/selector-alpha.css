@@ -436,10 +436,19 @@ code,pre,.tp-sequence,.change-before,.change-after{overflow-wrap:anywhere;white-
 
 .summary-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
 .summary-row .summary-line{margin:0}
-.info-btn{flex:none;width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:var(--card);color:var(--accent);font:inherit;font-weight:800;font-style:italic;cursor:pointer;line-height:1}
-.info-btn[aria-expanded="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}
-.info-panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:6px 20px;margin:0 0 18px}
-.info-panel[hidden]{display:none}
-.info-panel p{margin:12px 0}
 .tabs-info{margin-left:auto;align-self:center;margin-bottom:6px}
-#alphaInfo #alphaNote{margin:12px 0;background:none;border:0;padding:0}
+
+/* Info buttons and their floating box look like the ones in the Builder */
+.info-btn{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;background:var(--accent-soft);color:var(--accent);border:0;cursor:pointer;font-family:"Segoe UI",Helvetica,Arial,sans-serif;font-weight:700;font-size:11px;padding:0;flex:none;transition:.15s;font-style:normal}
+.info-btn:hover,.info-btn[aria-expanded="true"]{background:var(--accent);color:#fff}
+.info-panel{display:none}
+.popover{position:fixed;z-index:95;max-height:calc(100vh - 24px);overflow-y:auto;max-width:360px;background:var(--card);border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.18);display:none}
+.popover.show{display:block}
+.popover .pop-body{padding:14px 16px}
+.popover p,.popover div{margin:0 0 8px;font-size:13px;color:var(--muted);line-height:1.6}
+.popover p:last-child,.popover div:last-child{margin-bottom:0}
+.popover strong{color:var(--ink)}
+.popover .pop-close{position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;background:var(--accent-soft);color:var(--muted);border:0;cursor:pointer;font-size:11px;display:grid;place-items:center}
+html[dir="rtl"] .popover .pop-close{right:auto;left:8px}
+.popover .pop-body{padding:16px 36px 14px 16px}
+html[dir="rtl"] .popover .pop-body{padding:16px 16px 14px 36px}
