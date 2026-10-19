@@ -1036,7 +1036,7 @@ PROTEIN = 'MSKGEELFTGVVPILVELDGDVNGHKFSVSGEGEGDATYGKLTLKFICTTGKLPVPWPTLVTTFGYGVQ
 
 
 def test_dna_and_protein_input_are_told_apart():
-    assert not is_protein('ATGAAATTTGGTCTCGAAGAC') and not is_protein('atg aaa ttt\n ggt ctc') and not is_protein('AUGAAAUUUGGUCUC')
+    assert not is_protein('ATGAAATTTGGTCTCGAAGAC') and not is_protein('atg aaa ttt\n ggt ctc')
     assert is_protein(PROTEIN) and is_protein('>sp|P42212 GFP\nMSKGEELFTGVV') and is_protein('MKV*')
     assert not is_protein('') and not is_protein('>header only')
 

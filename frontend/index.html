@@ -745,7 +745,6 @@
               <option value="" disabled selected>Please select</option>
             </select>
           </label>
-          <div id="promoterRegistry" class="hint" style="display:none;margin:-4px 0 12px"></div>
           <div id="customPromoter" style="display:none">
             <label class="field">
               <span class="lab">Name <span class="hint">optional</span></span>
@@ -1135,7 +1134,7 @@ try{
 /* ---------- Sequence helpers ---------- */
 /* A sequence field takes DNA (CDS) or an amino acid sequence; same rule as is_protein() in Biologik/level0_design/sequence.py:
    DNA if >= 90 % of the letters are A/C/G/T/U/N, else protein. A protein is back-translated by the builder (S. cerevisiae codon usage). */
-const isProteinText = s => { const l=(s||'').toUpperCase().replace(/^>.*$/gm,'').replace(/[^A-Z*]/g,''); return l.length>0 && l.replace(/[^ACGTUN]/g,'').length/l.length<0.9; };
+const isProteinText = s => { const l=(s||'').toUpperCase().replace(/^>.*$/gm,'').replace(/[^A-Z*]/g,''); return l.length>0 && l.replace(/[^ACGT]/g,'').length/l.length<0.9; };
 const cleanProtein = s => (s||'').toUpperCase().replace(/^>.*$/gm,'').replace(/[^ACDEFGHIKLMNPQRSTVWY*]/g,'');
 const clean = s => isProteinText(s) ? cleanProtein(s) : (s||'').toUpperCase().replace(/^>.*$/gm,'').replace(/[^ATGC]/g,'');
 const seqBp = s => isProteinText(s) ? 3*s.replace(/\*/g,'').length : s.length;           // DNA length (a protein: after back-translation)
@@ -1637,14 +1636,7 @@ function initPromoterDropdown(){
   const co=document.createElement('option');
   co.value=CUSTOM_PROMOTER; co.textContent='Use your own sequence …'; co.selected = state.promoter===CUSTOM_PROMOTER;
   sel.appendChild(co);
-  const showPromoterRegistry=()=>{
-    const p=LIB.promoters.find(x=>x.id===sel.value), box=$('#promoterRegistry');
-    box.style.display=p&&p.registryUrl ? 'block' : 'none';
-    box.innerHTML=p&&p.registryUrl ? `<a class="oi-badge reg" href="${esc(p.registryUrl)}" target="_blank" rel="noopener">iGEM Registry ↗</a>` : '';
-  };
-  window.showPromoterRegistry=showPromoterRegistry; showPromoterRegistry();
   sel.addEventListener('change', ()=>{
-    showPromoterRegistry();
     state.promoter=sel.value;
     $('#customPromoter').style.display = sel.value===CUSTOM_PROMOTER ? 'block' : 'none';
     if(sel.value===CUSTOM_PROMOTER) handlePromoterInput();
@@ -2223,7 +2215,7 @@ function resetBuilder(){
   $('#shellLen').textContent='0 bp';
   $('#cargoSeq').value=''; $('#cargoSeq').style.display='none'; $('#cargoSelect').selectedIndex=0; $('#cargoSeqField').style.display='none';
   $('#cargoName').value=''; $('#cargoNameField').style.display='none';
-  $('#promoter').value=state.promoter; if(window.showPromoterRegistry) window.showPromoterRegistry();
+  $('#promoter').value=state.promoter;
   refreshNext2();
   MOD_NAMES.forEach(mod=>{
     SLOT_NUMBERS.forEach(n=>{ const el=slotEl(mod,n);
@@ -3143,7 +3135,7 @@ async function restoreSession(){
   }
   if(s.promoter) $('#promoter').value=s.promoter;
   state.promoter=$('#promoter').value;
-  if(window.showPromoterRegistry) window.showPromoterRegistry();
+ 
   if(state.promoter===CUSTOM_PROMOTER){ $('#customPromoter').style.display='block'; handlePromoterInput(); }
   MOD_NAMES.forEach(mod=>{
     const saved=s[MODS[mod].key]; if(!saved) return;

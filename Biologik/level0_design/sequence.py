@@ -38,12 +38,12 @@ def _without_fasta_header(raw: str) -> str:
 
 
 def is_protein(raw: str) -> bool:
-    """Amino acid instead of DNA? A DNA consists (apart from spaces/digits) almost only of A/T/G/C (also U/N); a protein has
-        only about a quarter of such letters. From 90 % A/C/G/T/U/N on the input counts as DNA. FASTA header lines (">...") do not count."""
+    """Amino acid instead of DNA? A DNA consists (apart from spaces/digits) almost only of A/T/G/C ; a protein has
+        only about a quarter of such letters. From 90 % A/C/G/T on the input counts as DNA. FASTA header lines (">...") do not count."""
     letters = re.sub(r"[^A-Z*]", "", _without_fasta_header(raw))
     if not letters:
         return False
-    return sum(1 for c in letters if c in "ACGTUN") / len(letters) < 0.9
+    return sum(1 for c in letters if c in "ACGT") / len(letters) < 0.9
 
 
 def clean_protein(raw: str) -> str:
