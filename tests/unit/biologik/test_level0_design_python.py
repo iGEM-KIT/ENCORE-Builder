@@ -765,11 +765,12 @@ def test_toolkit_constructs_carry_the_registry_link_of_their_part_and_own_sequen
     by_slot = {(c['module'], c['slot']): c for c in design['level0Constructs']}
     assert all('registryUrl' in c and 'onStock' not in c and 'plasmid_source' not in c for c in by_slot.values())
     assert by_slot[('nc_site', 3)]['registryUrl'] == 'https://registry.igem.org/parts/bba-261v56af'        # E-Tm shell
-    assert by_slot[('nc_site', 1)]['registryUrl'] == 'https://registry.igem.org/parts/bba-26m21ryz'        # NCS
+    assert by_slot[('nc_site', 1)]['registryUrl'] == 'https://registry.igem.org/parts/bba-26io4z3a'        # NCS Type 0.1
     assert by_slot[('nc_site', 4)]['registryUrl'] is None and by_slot[('cargo_site', 3)]['registryUrl'] is None   # own sequences: never
     # a toolkit part that has no Registry entry yet keeps the placeholder (no URL)
-    gsss2 = _design(nc_slots={'4': {'kind': 'linker', 'id': 'GSSS2'}})['level0Constructs']
-    assert next(c for c in gsss2 if c['module'] == 'nc_site' and c['slot'] == 4)['registryUrl'] is None
+    tps = _design(cargo_slots={'5': {'kind': 'tp'}, '4': {'kind': 'linker', 'id': 'GSSS2'}})['level0Constructs']
+    assert next(c for c in tps if c['module'] == 'cargo_site' and c['slot'] == 5)['registryUrl'] is None          # the targeting peptides are not in the Registry (yet)
+    assert next(c for c in tps if c['module'] == 'cargo_site' and c['slot'] == 4)['registryUrl'] == 'https://registry.igem.org/parts/bba-26xxd7h4'
 
 
 def test_every_level0_insert_in_the_database_has_a_registry_url_field():
@@ -804,10 +805,14 @@ def test_insert_database_is_consistent():
     coding = [e for e in entries if e['category'] in ('shell', 'cargo', 'linker', 'tp', 'marker', 'intein')]
     assert all(bare_cds(e['sequence']) == e['sequence'] for e in coding if e['category'] != 'linker')
     assert [e['id'] for e in coding if len(e['sequence']) % 3] == []
-    # one file per part: all plasmids of a part share its sequence; there is exactly one NCS sequence for every NCS plasmid
+    # one file per part: all plasmids of a part share its sequence, except the NCS plasmids: each Type has its own NCS sequence
     for part in load_parts()['level0_inserts']:
         assert part['plasmids'] and 'sequence' in part
-    assert {e['sequence'] for e in entries if e['category'] == 'ncs'} == {'CCGTCAGGGCGCGTCAGCGGGTGTTGGCGGGTGTCGGGG'}
+    ncs = [e for e in entries if e['category'] == 'ncs']
+    assert {e['sequence'] for e in ncs} == set(NCS_BY_TYPE.values())
+    assert all(e['sequence'] == NCS_BY_TYPE[e['type_slot']] for e in ncs if e['type_slot'])
+    assert all('ATG' not in e['sequence'] and 'ATG' not in reverse_complement(e['sequence']) for e in ncs)       # no start codon in any NCS, on either strand
+    assert {e['sequence'] for e in ncs if e.get('covers_slots') == [1, 2]} == {NCS_BY_TYPE[1]} and {e['sequence'] for e in ncs if e.get('covers_slots') == [4, 5]} == {NCS_BY_TYPE[4]}
 
 
 def test_libraries_offer_each_part_only_where_a_level0_plasmid_exists():
@@ -847,7 +852,7 @@ def test_toolkit_parts_use_the_inserts_of_their_own_site_and_slot():
     assert by[('cargo_site', 4)]['insert']['sequence'] == gsss3                       # shown rotated -> sense again
     assert by[('nc_site', 1)]['insert']['sequence'] == 'ATG' + find_inserts('marker', 'spycatcher')[0]['sequence']   # first part of the ORF: start added
     assert by[('nc_site', 4)]['insert']['sequence'] == find_inserts('ncs', 'ncs', 'nc_site', 4)[0]['sequence']
-    assert by[('nc_site', 4)]['insert']['sequence'] == 'CCGTCAGGGCGCGTCAGCGGGTGTTGGCGGGTGTCGGGG'     # the one NCS sequence, no stop codon
+    assert by[('nc_site', 4)]['insert']['sequence'] == NCS_BY_TYPE[4]                    # the NCS sequence of Type 0.4, no stop codon
     assert by[('cargo_site', 5)]['insert']['sequence'] == 'ATG' + find_inserts('tp', 'TP-Tm', 'cargo_site', 5)[0]['sequence']
 
 
@@ -1130,8 +1135,9 @@ def test_the_central_part_gets_start_and_stop_when_only_ncs_spacers_follow():
     with_linker = _design(cargo_slots={'1': {'kind': 'ncs'}}, nc_slots={'4': {'kind': 'linker', 'id': 'GSSS2'}})
     assert _insert_of(with_linker, 'nc_site', 3) == 'ATG' + shell
     assert _insert_of(with_linker, 'nc_site', 4) == linker + 'TAA'
-    # NCS spacers never get start or stop codons: they are the one NCS sequence
-    assert {c['insert']['sequence'] for c in design['level0Constructs'] if c['label'] == 'NCS'} == {'CCGTCAGGGCGCGTCAGCGGGTGTTGGCGGGTGTCGGGG'}
+    # NCS spacers never get start or stop codons: each one is the plain NCS sequence of its Type
+    assert {(c['slot'], c['insert']['sequence']) for c in design['level0Constructs'] if c['label'] == 'NCS' and c['module'] == 'nc_site'} == {(n, NCS_BY_TYPE[n]) for n in (1, 2, 4, 5)}
+    assert all(c['insert']['sequence'] in NCS_BY_TYPE.values() for c in design['level0Constructs'] if c['label'] == 'NCS')
 
 
 def test_a_library_cargo_with_its_own_atg_and_stop_is_not_doubled():
@@ -1195,6 +1201,10 @@ def test_level0_primers_carry_the_structure_check_of_the_finished_primers():
 NCS_BASE = {'nanocompartment': 'tmari', 'cargoSeq': 'ATGGCTAAAGGTGAAGAACTGTTCACCGGTGTTGTTCCAATCTTGGTTGAATTGGATGGTGATGTTAACGGTCACAAATTCTCT', 'cargoLabel': 'X'}
 
 
+NCS_BY_TYPE = {1: 'GGGGAGAGGCGGTTTGCGTATTGGGCGCTCTCCGCTTCC', 2: 'CGCAACTGTTGGGAAGGGCGATCGGTGCGGGCCTCTTCG',
+               4: 'CCCCGACACCCGCCAACACCCGCTGACGCGCCCTGACGG', 5: 'CCGTCAGGGCGCGTCAGCGGGTGTTGGCGGGTGTCGGGG'}     # one NCS sequence per Type (iGEM Registry [0.1] [0.2] [0.4] [0.5]); the combined spacers use Type 0.1 (0.12) and Type 0.4 (0.45)
+
+
 def _levels_with_ncs(nc_slots=None, cargo_slots=None):
     from Biologik.level0_design.design import design_construct
     return design_construct({**NCS_BASE, 'ncSlots': nc_slots or {}, 'cargoSlots': cargo_slots or {}})
@@ -1237,7 +1247,7 @@ def test_a_combined_ncs_builds_one_level0_part_and_a_shorter_module():
     assert {c['adapter'] for c in combined['level0Constructs'] if c['slot'] in (12, 45)} == {'0.12', '0.12rc', '0.45', '0.45rc'}
     for slot in (12, 45):
         ncs = keys[('nc_site', slot)]
-        assert ncs['insert']['sequence'] == 'CCGTCAGGGCGCGTCAGCGGGTGTTGGCGGGTGTCGGGG' and ncs['label'] == 'NCS'
+        assert ncs['insert']['sequence'] == NCS_BY_TYPE[{12: 1, 45: 4}[slot]] and ncs['label'] == 'NCS'      # 0.12 takes the NCS of Type 0.1, 0.45 that of Type 0.4
         assert ncs['genbank'].startswith('LOCUS       ' + f'Level0.{slot}_NCS_NC') and ncs['type'] == f'Type 0.{slot}'
     # one NCS (39 bp) + its 4 nt overhang + 2 nt frame spacer less per pair
     sep_len = {m['site']: m['length'] for m in separate['level1Constructs']}
@@ -1260,7 +1270,7 @@ def test_registry_links_point_to_registry_igem_org_and_the_linked_parts_exist_th
     linked = {(e['category'], e['part']) for e in inserts() if e['registry_url']}
     # every plasmid of a linked part carries the link, and parts that are not in the Registry yet carry none
     assert all(e['registry_url'] for e in inserts() if (e['category'], e['part']) in linked)
-    assert not any(e['registry_url'] for e in inserts() if (e['category'], e['part']) in {('linker', 'GSSS2'), ('linker', 'GSSS4'), ('tp', 'TP-Tm')})
+    assert not any(e['registry_url'] for e in inserts() if (e['category'], e['part']) in {('tp', 'TP-Mx'), ('tp', 'TP-Qt'), ('tp', 'TP-Tm')})
 
 
 # What the guide tells about the Level 2 insert: the overhangs, no BbsI or BsaI site, no terminators or vector parts

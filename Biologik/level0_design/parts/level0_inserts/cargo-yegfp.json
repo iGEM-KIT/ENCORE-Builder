@@ -30,8 +30,8 @@
         "side": "right end of the top strand (5' side of the sense strand)"
       },
       "on_stock": true,
-      "registry_url": null,
-      "notes": null
+      "registry_url": "https://registry.igem.org/parts/bba-26t805ky",
+      "notes": "Registry BBa_26T805KY is ATG + this sequence (717 bp)."
     }
   ]
 }

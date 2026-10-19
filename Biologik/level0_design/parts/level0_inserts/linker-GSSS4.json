@@ -29,8 +29,8 @@
         "side": "5' side of the sense strand"
       },
       "on_stock": true,
-      "registry_url": null,
-      "notes": null
+      "registry_url": "https://registry.igem.org/parts/bba-26uactg6",
+      "notes": "Linked to Registry BBa_26UACTG6: the same protein sequence (GSSS)4, but different codons than the sequence stored here (the database sequence was not replaced)."
     },
     {
       "id": null,
@@ -42,8 +42,8 @@
       "stored_orientation": "sense",
       "frame_spacer_in_plasmid": null,
       "on_stock": false,
-      "registry_url": null,
-      "notes": "No internal id: this plasmid is not built and not in the lab system. Listed in \"Level 0 constructs.xlsx\" for completeness only."
+      "registry_url": "https://registry.igem.org/parts/bba-26uactg6",
+      "notes": "No internal id: this plasmid is not built and not in the lab system. Listed in \"Level 0 constructs.xlsx\" for completeness only. | Linked to Registry BBa_26UACTG6: the same protein sequence (GSSS)4, but different codons than the sequence stored here (the database sequence was not replaced)."
     },
     {
       "id": null,
@@ -55,8 +55,8 @@
       "stored_orientation": "antisense",
       "frame_spacer_in_plasmid": null,
       "on_stock": false,
-      "registry_url": null,
-      "notes": "No internal id: this plasmid is not built and not in the lab system. Added so that every part exists at both sites and both slots of its pair (0.2/0.4, 0.1/0.5)."
+      "registry_url": "https://registry.igem.org/parts/bba-26uactg6",
+      "notes": "No internal id: this plasmid is not built and not in the lab system. Added so that every part exists at both sites and both slots of its pair (0.2/0.4, 0.1/0.5). | Linked to Registry BBa_26UACTG6: the same protein sequence (GSSS)4, but different codons than the sequence stored here (the database sequence was not replaced)."
     },
     {
       "id": null,
@@ -68,8 +68,8 @@
       "stored_orientation": "antisense",
       "frame_spacer_in_plasmid": null,
       "on_stock": false,
-      "registry_url": null,
-      "notes": "No internal id: this plasmid is not built and not in the lab system. Added so that every part exists at both sites and both slots of its pair (0.2/0.4, 0.1/0.5)."
+      "registry_url": "https://registry.igem.org/parts/bba-26uactg6",
+      "notes": "No internal id: this plasmid is not built and not in the lab system. Added so that every part exists at both sites and both slots of its pair (0.2/0.4, 0.1/0.5). | Linked to Registry BBa_26UACTG6: the same protein sequence (GSSS)4, but different codons than the sequence stored here (the database sequence was not replaced)."
     }
   ]
 }

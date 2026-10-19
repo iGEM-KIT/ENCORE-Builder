@@ -6,8 +6,8 @@
   "part_label": "NCS",
   "sequence_status": "real",
   "organism": null,
-  "source": "One NCS sequence for every NCS plasmid (user decision 2026-10-15). It is the insert of Level 0 plasmid '0.5NCS' (Lvl0.5_a_026 region) without the 2 base frame spacer 'TA'; the type overhangs and the frame spacer are added by the software. Stock: glycerol stock column of 'Level 0 constructs.xlsx'.",
-  "notes": "All NCS spacers (every Type slot, both sites) share this one non-coding sequence. The earlier NCS with stop codon no longer exists: the software puts the stop codon (TAA) behind the last coding part of each ORF. The plasmid names (for example '0.2NCSrc*') are the original toolkit names and are kept for traceability.",
+  "source": "One NCS sequence per Type from the iGEM Registry (Dummy Part for Golden Gate Assembly [0.1], [0.2], [0.4], [0.5]; described in Yuan & Fan, ACS Omega, doi.org/10.1021/acsomega.1c00339), without the 2 base frame spacer; the type overhangs and the frame spacer are added by the software. The part-level 'sequence' is only the fallback (Type 0.5); every plasmid carries the sequence of its own Type.",
+  "notes": "Every NCS plasmid has the sequence of its own Type (field 'sequence' of the plasmid entry). The combined spacers 0.12 and 0.45 take the sequence of NCS 0.1 and NCS 0.4. None of the sequences contains an ATG (checked on both strands). The earlier NCS with stop codon no longer exists: the software puts the stop codon (TAA) behind the last coding part of each ORF. The plasmid names (for example '0.2NCSrc*') are the original toolkit names and are kept for traceability.",
   "used_by": [],
   "plasmids": [
     {
@@ -23,8 +23,9 @@
         "side": "5' side of the sense strand"
       },
       "on_stock": true,
-      "registry_url": "https://registry.igem.org/parts/bba-26m21ryz",
-      "notes": null
+      "registry_url": "https://registry.igem.org/parts/bba-26io4z3a",
+      "notes": "Registry BBa_26IO4Z3A [0.1]: 'TA' + this sequence (41 bp).",
+      "sequence": "GGGGAGAGGCGGTTTGCGTATTGGGCGCTCTCCGCTTCC"
     },
     {
       "id": "Lvl0.1rc_a_029",
@@ -39,8 +40,9 @@
         "side": "right end of the top strand (5' side of the sense strand)"
       },
       "on_stock": true,
-      "registry_url": "https://registry.igem.org/parts/bba-26m21ryz",
-      "notes": "remark in the xlsx: 'pipi'"
+      "registry_url": "https://registry.igem.org/parts/bba-26io4z3a",
+      "notes": "remark in the xlsx: 'pipi' | Registry BBa_26IO4Z3A [0.1]: 'TA' + this sequence (41 bp).",
+      "sequence": "GGGGAGAGGCGGTTTGCGTATTGGGCGCTCTCCGCTTCC"
     },
     {
       "id": "Lvl0.2_a_011",
@@ -55,8 +57,9 @@
         "side": "5' side of the sense strand"
       },
       "on_stock": true,
-      "registry_url": "https://registry.igem.org/parts/bba-26m21ryz",
-      "notes": null
+      "registry_url": "https://registry.igem.org/parts/bba-26skapfb",
+      "notes": "Registry BBa_26SKAPFB [0.2]: 'TA' + this sequence (41 bp).",
+      "sequence": "CGCAACTGTTGGGAAGGGCGATCGGTGCGGGCCTCTTCG"
     },
     {
       "id": "Lvl0.2rc_a_012",
@@ -71,8 +74,9 @@
         "side": "right end of the top strand (5' side of the sense strand)"
       },
       "on_stock": true,
-      "registry_url": "https://registry.igem.org/parts/bba-26m21ryz",
-      "notes": null
+      "registry_url": "https://registry.igem.org/parts/bba-26skapfb",
+      "notes": "Registry BBa_26SKAPFB [0.2]: 'TA' + this sequence (41 bp).",
+      "sequence": "CGCAACTGTTGGGAAGGGCGATCGGTGCGGGCCTCTTCG"
     },
     {
       "id": "Lvl0.4_a_021",
@@ -87,8 +91,9 @@
         "side": "5' side of the sense strand"
       },
       "on_stock": true,
-      "registry_url": "https://registry.igem.org/parts/bba-26m21ryz",
-      "notes": null
+      "registry_url": "https://registry.igem.org/parts/bba-26dzz57i",
+      "notes": "Registry BBa_26DZZ57I [0.4]: top strand is the reverse complement of this sense sequence followed by the frame spacer 'TT' (41 bp; the Registry part lies in the plasmid the way an antisense-stored part does).",
+      "sequence": "CCCCGACACCCGCCAACACCCGCTGACGCGCCCTGACGG"
     },
     {
       "id": "Lvl0.4_a_022",
@@ -103,8 +108,9 @@
         "side": "right end of the top strand (5' side of the sense strand)"
       },
       "on_stock": true,
-      "registry_url": "https://registry.igem.org/parts/bba-26m21ryz",
-      "notes": null
+      "registry_url": "https://registry.igem.org/parts/bba-26dzz57i",
+      "notes": "Registry BBa_26DZZ57I [0.4]: top strand is the reverse complement of this sense sequence followed by the frame spacer 'TT' (41 bp; the Registry part lies in the plasmid the way an antisense-stored part does).",
+      "sequence": "CCCCGACACCCGCCAACACCCGCTGACGCGCCCTGACGG"
     },
     {
       "id": "Lvl0.5_a_030",
@@ -120,7 +126,8 @@
       },
       "on_stock": true,
       "registry_url": "https://registry.igem.org/parts/bba-26m21ryz",
-      "notes": null
+      "notes": "Registry BBa_26M21RYZ [0.5]: 'TA' + this sequence (41 bp).",
+      "sequence": "CCGTCAGGGCGCGTCAGCGGGTGTTGGCGGGTGTCGGGG"
     },
     {
       "id": "Lvl0.5rc_a_023",
@@ -136,7 +143,8 @@
       },
       "on_stock": true,
       "registry_url": "https://registry.igem.org/parts/bba-26m21ryz",
-      "notes": null
+      "notes": "Registry BBa_26M21RYZ [0.5]: 'TA' + this sequence (41 bp).",
+      "sequence": "CCGTCAGGGCGCGTCAGCGGGTGTTGGCGGGTGTCGGGG"
     },
     {
       "id": "Lvl0.15_a_068",
@@ -148,12 +156,13 @@
       "stored_orientation": "sense",
       "frame_spacer_in_plasmid": null,
       "on_stock": false,
-      "registry_url": "https://registry.igem.org/parts/bba-26m21ryz",
-      "notes": "Listed in \"Level 0 constructs.xlsx\", not yet imported from GenBank",
+      "registry_url": "https://registry.igem.org/parts/bba-26io4z3a",
+      "notes": "Listed in \"Level 0 constructs.xlsx\", not yet imported from GenBank | Registry BBa_26IO4Z3A [0.1]: 'TA' + this sequence (41 bp). The combined spacer Type 0.12 has no Registry part of its own; it uses the sequence of NCS 0.1 (user decision: either of the two is fine).",
       "covers_slots": [
         1,
         2
-      ]
+      ],
+      "sequence": "GGGGAGAGGCGGTTTGCGTATTGGGCGCTCTCCGCTTCC"
     },
     {
       "id": "Lvl0.45_a_069",
@@ -165,12 +174,13 @@
       "stored_orientation": "sense",
       "frame_spacer_in_plasmid": null,
       "on_stock": false,
-      "registry_url": "https://registry.igem.org/parts/bba-26m21ryz",
-      "notes": "Listed in \"Level 0 constructs.xlsx\", not yet imported from GenBank",
+      "registry_url": "https://registry.igem.org/parts/bba-26dzz57i",
+      "notes": "Listed in \"Level 0 constructs.xlsx\", not yet imported from GenBank | Registry BBa_26DZZ57I [0.4]: top strand is the reverse complement of this sense sequence followed by the frame spacer 'TT' (41 bp; the Registry part lies in the plasmid the way an antisense-stored part does). The combined spacer Type 0.45 has no Registry part of its own; it uses the sequence of NCS 0.4 (user decision: either of the two is fine).",
       "covers_slots": [
         4,
         5
-      ]
+      ],
+      "sequence": "CCCCGACACCCGCCAACACCCGCTGACGCGCCCTGACGG"
     },
     {
       "id": null,
@@ -182,12 +192,13 @@
       "stored_orientation": "antisense",
       "frame_spacer_in_plasmid": null,
       "on_stock": false,
-      "registry_url": "https://registry.igem.org/parts/bba-26m21ryz",
-      "notes": "No internal id: this plasmid is not built and not in the lab system. Listed in \"Level 0 constructs.xlsx\" for completeness only.",
+      "registry_url": "https://registry.igem.org/parts/bba-26io4z3a",
+      "notes": "No internal id: this plasmid is not built and not in the lab system. Listed in \"Level 0 constructs.xlsx\" for completeness only. | Registry BBa_26IO4Z3A [0.1]: 'TA' + this sequence (41 bp). The combined spacer Type 0.12 has no Registry part of its own; it uses the sequence of NCS 0.1 (user decision: either of the two is fine).",
       "covers_slots": [
         1,
         2
-      ]
+      ],
+      "sequence": "GGGGAGAGGCGGTTTGCGTATTGGGCGCTCTCCGCTTCC"
     },
     {
       "id": null,
@@ -199,12 +210,13 @@
       "stored_orientation": "antisense",
       "frame_spacer_in_plasmid": null,
       "on_stock": false,
-      "registry_url": "https://registry.igem.org/parts/bba-26m21ryz",
-      "notes": "No internal id: this plasmid is not built and not in the lab system. Listed in \"Level 0 constructs.xlsx\" for completeness only.",
+      "registry_url": "https://registry.igem.org/parts/bba-26dzz57i",
+      "notes": "No internal id: this plasmid is not built and not in the lab system. Listed in \"Level 0 constructs.xlsx\" for completeness only. | Registry BBa_26DZZ57I [0.4]: top strand is the reverse complement of this sense sequence followed by the frame spacer 'TT' (41 bp; the Registry part lies in the plasmid the way an antisense-stored part does). The combined spacer Type 0.45 has no Registry part of its own; it uses the sequence of NCS 0.4 (user decision: either of the two is fine).",
       "covers_slots": [
         4,
         5
-      ]
+      ],
+      "sequence": "CCCCGACACCCGCCAACACCCGCTGACGCGCCCTGACGG"
     }
   ],
   "sequence": "CCGTCAGGGCGCGTCAGCGGGTGTTGGCGGGTGTCGGGG",

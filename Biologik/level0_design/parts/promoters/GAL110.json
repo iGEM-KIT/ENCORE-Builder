@@ -8,7 +8,7 @@
   "length_bp": 665,
   "organism": "S. cerevisiae",
   "source": "Sequence supplied by the user (GAL1-10 bidirectional promoter, sense direction as used in the NC module).",
-  "notes": "Bidirectional, inducible yeast promoter. Checked: only A/C/G/T, no BsaI/BbsI site.",
+  "notes": "Bidirectional, inducible yeast promoter. Checked: only A/C/G/T, no BsaI/BbsI site. | Registry BBa_26G6HP9Z (bidirectional GAL1/10 promoter, 665 bp) has exactly this sequence.",
   "used_by": [
     "PROMOTERS[GAL110]"
   ],

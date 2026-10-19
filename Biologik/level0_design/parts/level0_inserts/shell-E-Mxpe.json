@@ -27,8 +27,8 @@
       "stored_orientation": "sense",
       "frame_spacer_in_plasmid": null,
       "on_stock": false,
-      "registry_url": null,
-      "notes": "No internal id: this plasmid is not built and not in the lab system. Listed in \"Level 0 constructs.xlsx\" for completeness only."
+      "registry_url": "https://registry.igem.org/parts/bba-26dx58tt",
+      "notes": "No internal id: this plasmid is not built and not in the lab system. Listed in \"Level 0 constructs.xlsx\" for completeness only. | Linked to Registry BBa_26DX58TT (Myxococcus xanthus pore engineered encapsulin shell protein): the same protein sequence, but different codons than the sequence stored here (the database sequence was not replaced); the Registry part is ATG + coding sequence without stop codon."
     }
   ]
 }

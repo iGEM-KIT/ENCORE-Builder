@@ -148,7 +148,7 @@ TARGETING_PEPTIDES = [_tp_entry(nc) for nc in NANOCOMPARTMENTS if nc["tp"]]
 
 
 def _ncs_slots() -> dict:
-    """Where an NCS spacer exists per site and slot: {"nc": {"1": ["plain"], ...}, "cargo": {...}}. There is one NCS sequence
+    """Where an NCS spacer exists per site and slot: {"nc": {"1": ["plain"], ...}, "cargo": {...}}. Every Type has its own NCS sequence
     (no NCS with stop codon: the stop codon is added behind the last coding part), so the only variant is "plain"."""
     out = {"nc": {}, "cargo": {}}
     for entry in find_inserts("ncs"):

@@ -29,7 +29,7 @@ the first coding part of an ORF gets ATG, the last one a stop codon (TAA), where
 is read Type 0.1 -> 0.5, the cargo module Type 0.5 -> 0.1; the central part (0.3) is coding too, so it gets the stop codon when every
 part behind it is an NCS spacer. So one sequence serves every slot (a targeting peptide at Type 0.5 gets ATG, at Type 0.1 a stop codon). Overhangs and the frame spacer come from `type_overhangs/`.
 Own sequences of the user are treated the same way, but an ATG or stop codon they already carry is not doubled.
-Linkers and NCS spacers are stored as they are (no start/stop logic for NCS; linkers carry none). There is exactly one NCS sequence, shared by every NCS plasmid; there is no NCS with stop codon.
+Linkers and NCS spacers are stored as they are (no start/stop logic for NCS; linkers carry none). Every Type has its own NCS sequence (iGEM Registry Dummy Parts [0.1], [0.2], [0.4], [0.5]; stored per plasmid in `ncs.json`); the combined spacers 0.12 and 0.45 use the sequence of Type 0.1 and Type 0.4. There is no NCS with stop codon.
 
 Part fields: `id`, `category` (`shell`, `cargo`, `linker`, `marker`, `intein`, `tp`, `ncs`), `part` / `part_label` (part id and label
 in the dropdowns, e.g. linker `GSSS3`), `sequence`,
