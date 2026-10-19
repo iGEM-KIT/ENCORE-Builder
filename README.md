@@ -49,9 +49,13 @@ install that before Docker Desktop. Skip this block on Mac and Linux.
    ```bash
    wsl --install
    ```
-3. Wait until it is finished, then **restart the computer**. After the restart a window may open and finish the setup of
-   Linux (Ubuntu). If it asks for a user name and a password, choose any and remember them, you will rarely need them.
-4. If the command fails or says that virtualization is off, switch on virtualization in the BIOS (it is called
+3. Wait until it is finished, then **restart the computer**.
+4. After the restart a window opens and finishes the download of Linux (Ubuntu). Wait for it, then **create a user
+   account**: type a user name and press Enter, then choose a password (nothing is shown while you type it) and
+   repeat it. This account exists only on your computer for Linux, it is not an online account. Remember the password,
+   but you will rarely need it. When the window shows a prompt like `name@computer:~$`, the setup is done and you can
+   close it.
+5. If the command fails or says that virtualization is off, switch on virtualization in the BIOS (it is called
    "Intel VT-x", "AMD-V" or "SVM Mode", depending on the computer) and run the command again. WSL 2 needs Windows 10
    (version 2004 or newer) or Windows 11.
 
