@@ -303,10 +303,12 @@ input:focus, select:focus { outline:3px solid var(--focus); border-color:var(--a
 .pore-card .extra-source { margin: 12px 0 2px; }
 
 /* Simple Databank split: preserves original GitLab filter colors and card design. */
-.databank-nav{display:flex;gap:10px;max-width:1220px;margin:18px auto 0;padding:0 22px}
-.databank-nav a{flex:1;min-width:0;background:var(--card);border:1px solid var(--line);border-radius:12px;color:var(--ink);text-decoration:none;padding:13px 18px;font-weight:800}
-.databank-nav a small{display:block;margin-top:4px;color:var(--muted);font-size:11.5px;font-weight:500}
-.databank-nav a.on{border-color:var(--accent);box-shadow:inset 0 3px 0 var(--accent);color:var(--accent)}
+/* Switch between Choose a shell and Explore the data: a segmented control with a track and a raised active segment */
+.databank-nav{display:flex;gap:4px;width:max-content;max-width:calc(100% - 44px);margin:20px auto 0;padding:4px;background:var(--accent-soft);border:1px solid var(--line);border-radius:999px;position:relative}
+.databank-nav a{min-width:0;display:flex;flex-direction:column;align-items:center;text-align:center;border-radius:999px;color:var(--ink);text-decoration:none;padding:9px 26px;font-weight:700;font-size:14px;line-height:1.25;transition:background .15s,color .15s,box-shadow .15s}
+.databank-nav a small{display:block;margin-top:2px;color:inherit;opacity:.72;font-size:11.5px;font-weight:500}
+.databank-nav a:not(.on){opacity:.78}.databank-nav a:not(.on):hover{opacity:1;background:rgba(127,127,127,.12)}
+.databank-nav a.on{background:var(--card);color:var(--accent);box-shadow:0 1px 4px rgba(0,0,0,.14)}
 .modification-note{background:var(--engineered-soft);color:var(--engineered);border-radius:8px;padding:9px 12px;margin:6px 0 12px;font-size:13px;line-height:1.5}
 .builder-results{margin-top:14px;display:grid;gap:13px}
 .design-card{padding:19px 20px}
@@ -318,7 +320,7 @@ input:focus, select:focus { outline:3px solid var(--focus); border-color:var(--a
 .design-card .variants strong{color:var(--ink)}
 .design-card .use-nc{margin:0}
 @media(max-width:850px){.design-card .property-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:570px){.databank-nav{padding:0 14px}.databank-nav a{padding:10px}.design-card .property-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.design-card-top{display:block}.design-card .use-nc{margin-top:13px;width:100%}}
+@media(max-width:570px){.databank-nav{width:auto;max-width:none;margin:16px 14px 0}.databank-nav a{flex:1;padding:8px 6px;font-size:13px}.design-card .property-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.design-card-top{display:block}.design-card .use-nc{margin-top:13px;width:100%}}
 
 /* Builder Filter: the same left-hand finder panel as Explore Encapsulins. */
 .builder-finder-grid {margin-top:24px;grid-template-columns:300px minmax(0,1fr);}
