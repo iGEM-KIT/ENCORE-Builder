@@ -26,8 +26,8 @@ COMPLEMENT = {"A": "T", "T": "A", "G": "C", "C": "G"}
 def clean_seq(sequence: str) -> str:
     # re.sub() replaces all characters that are not A, T, G or C by nothing.
     # If additional characters were copied along when copying the code.
-    return re.sub(r"[^ATGC]", "", (sequence or "").upper())
-         
+    return re.sub(r"[^ATGC]", "", _without_fasta_header(sequence))
+
 
 AMINO_ACIDS = "ACDEFGHIKLMNPQRSTVWY"
 
@@ -105,7 +105,7 @@ def validate_cargo(raw: str, min_bp: int = 30, kind: str = "cargo") -> dict:
         return _validate_protein(raw, min_bp, kind)
     # clean_seq() makes the input usable for further analysis.
     clean = clean_seq(raw)
-    invalid_chars = len(re.sub(r"[ATGC\s]", "", (raw or "").upper()))
+    invalid_chars = len(re.sub(r"[ATGC\s\d]", "", _without_fasta_header(raw)))   # digits, spaces and FASTA headers are ignored silently
     # A stop codon at the end is taken off: the builder adds the stop codon itself where the ORF ends (constructs.py).
     trailing_stop = ends_with_stop(clean)
     if trailing_stop:
@@ -160,7 +160,7 @@ def _validate_protein(raw: str, min_bp: int, kind: str) -> dict:
     """Like validate_cargo, for an amino acid sequence: ``clean`` is the amino acid sequence, ``length`` the length of the DNA after
         back-translation. A trailing asterisk is a stop codon (taken off with a warning, as for DNA), an asterisk in the middle is a warning."""
     clean = clean_protein(raw)
-    invalid_chars = len(re.sub(rf"[{AMINO_ACIDS}*\s]", "", _without_fasta_header(raw)))
+    invalid_chars = len(re.sub(rf"[{AMINO_ACIDS}*\s\d]", "", _without_fasta_header(raw)))
     trailing_stop = "*" if clean.endswith("*") else None
     residues = clean[:-1] if trailing_stop else clean
     clean = residues

@@ -1137,7 +1137,7 @@ try{
    DNA if >= 90 % of the letters are A/C/G/T/U/N, else protein. A protein is back-translated by the builder (S. cerevisiae codon usage). */
 const isProteinText = s => { const l=(s||'').toUpperCase().replace(/^>.*$/gm,'').replace(/[^A-Z*]/g,''); return l.length>0 && l.replace(/[^ACGTUN]/g,'').length/l.length<0.9; };
 const cleanProtein = s => (s||'').toUpperCase().replace(/^>.*$/gm,'').replace(/[^ACDEFGHIKLMNPQRSTVWY*]/g,'');
-const clean = s => isProteinText(s) ? cleanProtein(s) : (s||'').toUpperCase().replace(/[^ATGC]/g,'');
+const clean = s => isProteinText(s) ? cleanProtein(s) : (s||'').toUpperCase().replace(/^>.*$/gm,'').replace(/[^ATGC]/g,'');
 const seqBp = s => isProteinText(s) ? 3*s.replace(/\*/g,'').length : s.length;           // DNA length (a protein: after back-translation)
 const seqLenLabel = s => isProteinText(s) ? `${s.replace(/\*/g,'').length} aa → ${seqBp(s)} bp` : `${s.length} bp`;
 const gc = s => s.length ? Math.round((s.replace(/[^GC]/g,'').length/s.length)*100) : 0;
@@ -1499,7 +1499,7 @@ const stopMessage = (stop, hasStart=false) => {
 function validateCargoLocal(raw, kind='cargo'){
   if(isProteinText(raw)) return validateProteinLocal(raw, kind);
   let seq=clean(raw);
-  const invalidChars=(raw||'').toUpperCase().replace(/[ATGC\s]/g,'').length;
+  const invalidChars=(raw||'').toUpperCase().replace(/^>.*$/gm,'').replace(/[ATGC\s\d]/g,'').length;
   const trailingStop = endsWithStop(seq);
   if(trailingStop) seq=seq.slice(0,-3);          // the builder adds the stop codon itself
   const length=seq.length;
@@ -1520,7 +1520,7 @@ function validateCargoLocal(raw, kind='cargo'){
 
 function validateProteinLocal(raw, kind){
   const full=cleanProtein(raw), trailing=full.endsWith('*'), res=trailing?full.slice(0,-1):full, seq=res, length=3*res.length;
-  const invalidChars=(raw||'').toUpperCase().replace(/^>.*$/gm,'').replace(/[ACDEFGHIKLMNPQRSTVWY*\s]/g,'').length;
+  const invalidChars=(raw||'').toUpperCase().replace(/^>.*$/gm,'').replace(/[ACDEFGHIKLMNPQRSTVWY*\s\d]/g,'').length;
   const internalStops=[]; res.split('').forEach((c,i)=>{ if(c==='*') internalStops.push({pos:i,codon:'*'}); });
   const errors=[], warnings=[];
   if(!res.length) errors.push('No valid amino acid sequence provided.');
@@ -1661,7 +1661,7 @@ function refreshNext2(){ $('#next2').disabled = !state.promoter || (state.promot
 /* Own promoter: a plain DNA part (no reading frame, no codon optimization). Same rules and the same answer shape as
    validate_promoter() in Biologik/level0_design/sequence.py; the server answer overwrites the local one as soon as it arrives. */
 const CUSTOM_PROMOTER='custom', MIN_PROMOTER_BP=150, MAX_PROMOTER_BP=3000;
-const cleanDna = s => (s||'').toUpperCase().replace(/U/g,'T').replace(/[^ATGC]/g,'');
+const cleanDna = s => (s||'').toUpperCase().replace(/^>.*$/gm,'').replace(/U/g,'T').replace(/[^ATGC]/g,'');
 const PROMOTER_SITES = { BsaI:['GGTCTC','GAGACC'], BbsI:['GAAGAC','GTCTTC'], SapI:['GCTCTTC','GAAGAGC'], EcoRI:['GAATTC'], XbaI:['TCTAGA'], SpeI:['ACTAGT'], PstI:['CTGCAG'], NotI:['GCGGCCGC'] };
 function validatePromoterLocal(raw){
   const text=(raw||'').toUpperCase().replace(/U/g,'T'), seq=cleanDna(text), length=seq.length;

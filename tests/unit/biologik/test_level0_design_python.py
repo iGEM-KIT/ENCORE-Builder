@@ -1649,3 +1649,14 @@ def test_a_promoter_from_the_database_has_no_primers_and_a_bad_own_promoter_is_r
         _design(cargoSeq=_long_cargo(), promoter='custom', customPromoter={'seq': 'GGTCTC' + 'A' * MIN_PROMOTER_BP})
     unnamed = _design(cargoSeq=_long_cargo(), promoter='custom', customPromoter={'seq': _promoter_seq('BDP670')})
     assert unnamed['level2']['promoter']['label'] == 'Custom promoter'
+
+
+def test_fasta_header_lines_and_digits_are_ignored_without_a_warning():
+    from Biologik.level0_design.sequence import validate_cargo
+    plain = 'ATGGCTAAAGGTGAAGAACTGTTCACCGGTGTTGTTCCAATC'
+    got = validate_cargo('>gfp cds test, 12 aa\n' + plain[:21] + ' 21\n' + plain[21:] + '\n')      # the header contains the letters G, C, T, A: they must not become bases
+    assert got['clean'] == plain and got['invalidChars'] == 0
+    assert not any('invalid' in w for w in got['warnings'])
+    protein = validate_cargo('>name\nMAKGEELFTGVVPILVELDGD 21\n')
+    assert protein['isProtein'] and protein['clean'] == 'MAKGEELFTGVVPILVELDGD' and protein['invalidChars'] == 0
+    assert validate_cargo(plain + ' ?!')['invalidChars'] == 2                                    # other characters still give the warning
