@@ -2140,9 +2140,9 @@ function showBiosecModal(flagged){
   });
 }
 
-/* TEMPORARY for general testing: false lets the construct be calculated although the biosecurity screening is not reachable
-   (the result then says that the sequences were not screened). Set it back to true before release. */
-const REQUIRE_SCREENING=false;
+/* true: no construct is calculated while the biosecurity screening is not reachable. false (for testing only) lets the
+   construct be calculated anyway; the result then says that the sequences were not screened. */
+const REQUIRE_SCREENING=true;
 $('#next2').addEventListener('click', async ()=>{
   const btn=$('#next2'); btn.disabled=true;
   state.promoter=$('#promoter').value;

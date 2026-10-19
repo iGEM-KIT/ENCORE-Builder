@@ -226,7 +226,7 @@ def test_the_builder_does_not_calculate_a_construct_when_the_screening_is_not_av
     assert "plain ? message" in text
     assert "skipping biosecurity screen" in gate and "screening = {available:false}" in gate               # a failed screening call counts as not available
     assert "does not calculate a construct" in text and "does not continue with" not in text
-    assert "const REQUIRE_SCREENING=false;" in text or "const REQUIRE_SCREENING=true;" in text               # temporary switch for general testing
+    assert "const REQUIRE_SCREENING=true;" in text                                                       # the gate is on (false only for testing)
 
 
 def test_the_pages_never_assume_a_remote_server():
