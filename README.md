@@ -121,7 +121,8 @@ into the terminal window (this fills in its path) and press Enter.
 You download a single small file. Docker then fetches the ready-made program and the biosecurity
 screening for you.
 
-1. Create a new empty folder, for example `ENCORE` on your Desktop.
+1. Create a new empty folder, for example `ENCORE` on your Desktop. On Windows this is a normal Windows folder, not a folder inside
+   Linux (WSL/Ubuntu). Docker Desktop finds it from there.
 2. Get the file `docker-compose.pull.yml` into that folder. It has to end in exactly `.yml`.
    Some browsers save a plain link as `.txt`, so use one of these two ways:
    * **With the browser:** open
