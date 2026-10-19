@@ -47,7 +47,6 @@ py scripts/export-excel-to-json.py --write
 node scripts/build-selector-data.mjs
 py scripts/export-excel-to-json.py --check
 node scripts/test-encore-simplified-ui.cjs
-py scripts/test-encore-overview.py
 ```
 
 The first `--check` can **fail** after a valid spreadsheet edit because JSON files are not yet synchronized; inspect what changed, then use `--write` and rerun `--check`. The exporter intentionally refuses to silently delete records. Commit the modified workbook alongside generated JSON and JS.
