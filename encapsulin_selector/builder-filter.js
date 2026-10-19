@@ -121,8 +121,6 @@
     const a = assemblies.get(d.assembly_id);
     if (!a) return '';
     const other = related(d).filter(x => x.assembly_id !== d.assembly_id);
-    const family = candidates.get(d.candidate_id)?.encapsulin_family;
-    const countPores = poreCounts.get(a.assembly_id)||0;
     const engineered = a.shell_sequence_status === 'modified';
     const label = engineered ? 'Engineered' : 'Wild Type';
     return `<article class="assembly-card design-card">
@@ -158,8 +156,6 @@
   function filtered() {
     const query = $('designSearch').value.trim().toLowerCase();
     const typ = $('designType').value;
-    const family = $('designFamily').value;
-    const poreChoice = $('designPores').value;
     const t = $('designT').value;
     const min = $('designMin').value, max = $('designMax').value;
     if ((min !== '' && +min < 0) || (max !== '' && +max < 0) || (min !== '' && max !== '' && +min > +max)) {
@@ -173,8 +169,6 @@
       if (query && ![d.name,d.organism,d.candidate_id,d.assembly_id,d.sequence_id]
         .some(x => String(x || '').toLowerCase().includes(query))) return false;
       if (typ && (a.shell_sequence_status === 'modified' ? 'engineered' : 'wild_type') !== typ) return false;
-      if (family && candidates.get(d.candidate_id)?.encapsulin_family !== family) return false;
-      if (poreChoice && !(poreChoice === 'yes' ? related(d).some(r => poreCounts.has(r.assembly_id)) : !related(d).some(r => poreCounts.has(r.assembly_id)))) return false;
       return related(d).some(r => {
         if (t && !(t === 'NA' ? r.assembly_symmetry === 'tetrahedral' : String(r.T_number) === t)) return false;
         return fitsDiameter(r,min,max);
@@ -184,11 +178,11 @@
     $('designResults').innerHTML = subset.length ? subset.map(card).join('') :
       '<div class="empty-state">No approved shell sequence matches these requirements.</div>';
   }
-  ['designSearch','designType','designFamily','designPores','designT','designMin','designMax']
+  ['designSearch','designType','designT','designMin','designMax']
     .forEach(id => $(id).addEventListener('input', filtered));
   $('resetBuilderFilters').addEventListener('click', () => {
     ['designSearch', 'designMin', 'designMax'].forEach(id => { $(id).value = ''; });
-    ['designType', 'designFamily', 'designT', 'designPores'].forEach(id => { $(id).value = ''; });
+    ['designType', 'designT'].forEach(id => { $(id).value = ''; });
     filtered();
   });
   document.addEventListener('click', ev => {
