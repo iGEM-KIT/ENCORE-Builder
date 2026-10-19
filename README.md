@@ -41,6 +41,22 @@ Both ways need Docker (Step 0). If you are unsure, take **Way A**.
 Docker is a free program that runs other programs in a protected box (a "container"), so that
 you do not have to install anything else. You only need to do this once.
 
+**Windows only: install WSL 2 first.** Docker Desktop on Windows runs on the Windows Subsystem for Linux (WSL 2), so
+install that before Docker Desktop. Skip this block on Mac and Linux.
+
+1. Open the Start menu, type `PowerShell`, right-click **Windows PowerShell** and choose **Run as administrator**.
+2. Type this and press Enter:
+   ```bash
+   wsl --install
+   ```
+3. Wait until it is finished, then **restart the computer**. After the restart a window may open and finish the setup of
+   Linux (Ubuntu). If it asks for a user name and a password, choose any and remember them, you will rarely need them.
+4. If the command fails or says that virtualization is off, switch on virtualization in the BIOS (it is called
+   "Intel VT-x", "AMD-V" or "SVM Mode", depending on the computer) and run the command again. WSL 2 needs Windows 10
+   (version 2004 or newer) or Windows 11.
+
+Now continue with Docker Desktop:
+
 1. Go to [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/)
    and download **Docker Desktop** for your system (Windows, Mac with Apple chip or Intel chip,
    or Linux). Not sure about your Mac? Click the Apple menu, then "About This Mac": if it says
@@ -234,7 +250,7 @@ above): the folder with `docker-compose.pull.yml` for Way A and the project fold
 | The first start seems stuck | Watch the terminal: as long as lines keep appearing, it is downloading. A slow internet connection makes it take longer. |
 | "no space left on device" | Free up disk space, or in Docker Desktop use Settings, Resources to give it more disk. |
 | It is very slow or crashes on the first start | Give Docker Desktop more memory (Settings, Resources, at least 4 GB). |
-| Windows asks about WSL 2 or virtualization | Follow the Docker Desktop installer hints. Virtualization may have to be enabled in the BIOS; the Docker documentation explains how. |
+| Windows asks about WSL 2 or virtualization, or Docker Desktop says "WSL needs updating" | Install WSL 2 as described in Step 0 (`wsl --install` in an administrator PowerShell, then restart). If Docker Desktop still complains, run `wsl --update` once and restart Docker Desktop. Virtualization may have to be enabled in the BIOS; the Docker documentation explains how. |
 
 Still stuck? Open an
 [issue on GitHub](https://github.com/iGEM-KIT/ENCORE-Builder/issues) and copy the last lines
