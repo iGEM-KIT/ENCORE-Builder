@@ -102,7 +102,7 @@
   <section id="checklist" class="card">
     <h2>Checklist</h2>
     <ul class="checks">
-      <li><b>Pick the nanocompartment.</b> Not sure which one fits your use case? Use the separate <a href="/selector/builder-filter.html">nanocompartment filter</a> first; its <b>Select for Builder</b> button hands the shell over to the builder as your own sequence. Nanocompartments beyond the list of the builder are only available this way. The targeting peptides of the Database that belong to this encapsulin are then offered in the cargo module (see <a href="#modules">The modules</a>).</li>
+      <li><b>Pick the nanocompartment.</b> Not sure which one fits your use case? Use <a href="/selector/builder-filter.html">Choose a shell</a> in the Open NC Database first; its <b>Select for Builder</b> button hands the shell over to the builder as your own sequence. Nanocompartments beyond the list of the builder are only available this way. The targeting peptides of the Open NC Database that belong to this encapsulin are then offered in the cargo module (see <a href="#modules">The modules</a>).</li>
       <li><b>Have your sequences ready</b>: DNA (CDS) or amino acids, <b>with or without start and stop codon</b> (the builder adds them where needed), and <b>without overhangs or restriction sites</b> added by you. The builder adds the overhangs itself.</li>
       <li><b>Know your fusion.</b> Decide what sits in the four modules (Type 0.1, 0.2, 0.4, 0.5) around the shell and around the cargo; see <a href="#modules">The modules</a>.</li>
       <li><b>Plan a biosafety review.</b> The built-in screening is a helper check, not a replacement for your institution's review.</li>
@@ -175,9 +175,9 @@
     </div>
     <h3>What you can put into a module</h3>
     <ul class="plain">
-      <li><b>NCS (spacer)</b>: a neutral spacer; the default filler.</li>
-      <li><b>NCS 0.12 / NCS 0.45 (combined spacer)</b>: one spacer part that fills two neighbouring slots at once (Type 0.1 and 0.2, or Type 0.4 and 0.5). Only one Level 0 plasmid is needed instead of two.</li>
-      <li><b>Targeting peptide (TP)</b>: only in the cargo module; the matching TP for your nanocompartment is chosen automatically. For the human vault (major vault protein, MVP) this is the intein <b>INT</b>. For a shell you imported from the Database with <b>Select for Builder</b>, the Database offers its targeting peptides as choices in Type 0.1 and 0.5 of the cargo module. They are optional.</li>
+      <li><b>NCS (spacer)</b>: a neutral spacer; the default filler. Each Type has its own NCS sequence (from the iGEM Registry).</li>
+      <li><b>NCS 0.12 / NCS 0.45 (combined spacer)</b>: one spacer part that fills two neighbouring slots at once (Type 0.1 and 0.2, or Type 0.4 and 0.5). Only one Level 0 plasmid is needed instead of two. NCS 0.12 uses the sequence of Type 0.1, NCS 0.45 that of Type 0.4.</li>
+      <li><b>Targeting peptide (TP)</b>: only in the cargo module; the matching TP for your nanocompartment is chosen automatically. For the human vault (major vault protein, MVP) this is the intein <b>INT</b>. For a shell you imported from the Open NC Database with <b>Select for Builder</b>, the Open NC Database offers its targeting peptides as choices in Type 0.1 and 0.5 of the cargo module. They are optional.</li>
       <li><b>Linker</b>, e.g. GGS or GSSS repeats.</li>
       <li><b>Surface display marker</b>, e.g. SpyCatcher or SpyTag, displayed on the outside of the cage.</li>
       <li><b>Your own sequence.</b> Toolkit parts you pick from the lists are used as they are, unless you tick <b>Also optimize the toolKIT sequences</b> in step 3. To optimize only one part, search it in the <a href="https://registry.igem.org" target="_blank" rel="noopener">iGEM Registry</a> and enter its sequence under <b>Use your own sequence</b>. The builder then optimizes it.</li>
@@ -196,7 +196,7 @@
       <tr><td><span class="tag req">Required</span> <b>Targeting peptide: only once, only at the ends</b></td>
           <td>Only in the cargo module, only in Type 0.1 or Type 0.5, at most once. In Type 0.1 it is fused behind the cargo, in Type 0.5 in front of it.</td></tr>
       <tr><td><span class="tag req">Required</span> <b>Own shell → no targeting peptide of the toolkit</b></td>
-          <td>If you paste your own shell, the builder does not know a matching peptide. Put your own sequence into the cargo module instead. A shell imported with <b>Select for Builder</b> is different: as long as its sequence stays the same (removing the start and stop codon with the builder button is allowed), the Database peptides of that encapsulin are offered in Type 0.1 and 0.5 of the cargo module. A peptide is marked when its reported position is the other end of the cargo: this position is an alternative and not validated. For the human vault (major vault protein, MVP) the matching targeting peptide is the intein INT, which is chosen like the other targeting peptides.</td></tr>
+          <td>If you paste your own shell, the builder does not know a matching peptide. Put your own sequence into the cargo module instead. A shell imported with <b>Select for Builder</b> is different: as long as its sequence stays the same (removing the start and stop codon with the builder button is allowed), the peptides of the Open NC Database for that encapsulin are offered in Type 0.1 and 0.5 of the cargo module. A peptide is marked when its reported position is the other end of the cargo: this position is an alternative and not validated. For the human vault (major vault protein, MVP) the matching targeting peptide is the intein INT, which is chosen like the other targeting peptides.</td></tr>
       <tr><td><span class="tag req">Required</span> <b>Combined NCS: both slots at once</b></td>
           <td>If you choose <b>NCS 0.12</b> in Type 0.1 or 0.2 (or <b>NCS 0.45</b> in Type 0.4 or 0.5), the neighbouring slot becomes the same combined NCS automatically and is locked. To release it, change the slot where you made the choice to something else. A combined NCS cannot be chosen next to a slot that holds a linker, marker or your own sequence. In the results the pair appears as one part (Type 0.12 or Type 0.45) with one plasmid, one Level 0 construct and one entry in the order list.</td></tr>
       <tr><td><span class="tag info">Tip</span> <b>Prefer the combined NCS for two neighbouring spacers</b></td>
@@ -253,8 +253,8 @@
     <p>The information windows of the builder (the <b>i</b> buttons) show the short version. Here is the full text behind each of them.</p>
     <h3 id="bg-nc">What is a nanocompartment?</h3>
       <p>Encapsulins are hollow protein cages that self-assemble and encapsulate cargo proteins inside.</p>
-      <p>Toolkit shell presets provide a matching TP. Shells imported from the Database offer optional associated TPs at the Cargo Site. Loading is not experimentally established for every shell variant.</p>
-      <p><b>Targeting peptides (TP) from the Database.</b> A TP is attached to the cargo, not to the shell. The reported placement (N-terminal or C-terminal) of a TP does not establish that it works with every shell variant. If you place it at the other terminus than the reported one, targeting and encapsulation there are not experimentally established by the cited evidence, so check the linker in the neighbouring slot (Type 0.2 for Type 0.1, Type 0.4 for Type 0.5), the fusion orientation and the function. The evidence for the pairing of this TP with the shell (for example wild-type shell system, loading supported) is listed in the Database. Where the Database has a curated DNA sequence, the builder uses it and may recode it like any own sequence. For a TP with an amino acid sequence only, the builder designs a coding sequence.</p>
+      <p>Toolkit shell presets provide a matching TP. Shells imported from the Open NC Database offer optional associated TPs at the Cargo Site. Loading is not experimentally established for every shell variant.</p>
+      <p><b>Targeting peptides (TP) from the Open NC Database.</b> A TP is attached to the cargo, not to the shell. The reported placement (N-terminal or C-terminal) of a TP does not establish that it works with every shell variant. If you place it at the other terminus than the reported one, targeting and encapsulation there are not experimentally established by the cited evidence, so check the linker in the neighbouring slot (Type 0.2 for Type 0.1, Type 0.4 for Type 0.5), the fusion orientation and the function. The evidence for the pairing of this TP with the shell (for example wild-type shell system, loading supported) is listed in the Open NC Database. Where the Open NC Database has a curated DNA sequence, the builder uses it and may recode it like any own sequence. For a TP with an amino acid sequence only, the builder designs a coding sequence.</p>
       <p>The four modules around the shell (Type 0.1, 0.2, 0.4 and 0.5) are freely configurable: keep them as <b>NCS</b> spacers, or place a <b>linker</b>, a display marker such as <b>SpyCatcher</b> / <b>SpyTag</b>, or <b>your own sequence</b> there. A marker is presented on the <i>outside</i> of the cage; handy for attaching binders, tags or a second protein.</p>
       <p><b>Where the modules sit:</b> Type 0.1 and 0.2 form the <b>N-terminus of the shell</b> and are fused in front of the shell. Type 0.4 and 0.5 form the <b>C-terminus of the shell</b> and are fused behind the shell.</p>
     <h3 id="bg-cargo">Cargo / gene of interest</h3>
@@ -309,7 +309,7 @@
       <li><b>Your inputs stay in this browser tab.</b> A refresh keeps your steps and sequences; <b>New construct</b> in step 5 clears them.</li>
       <li><b>Your sequences are processed on your own computer</b>, by the Builder and the screening container in Docker. They are not sent to a third-party service.</li>
       <li><b>Reading options.</b> The eye button in the header of every page opens a small menu with three buttons: the <b>language</b> (English, Spanish, German, French, Mandarin, Russian, Portuguese or Arabic), the <b>dyslexia-friendly font</b> (OpenDyslexic) and <b>dark mode</b>. Your choices are kept in this browser and hold on every page.</li>
-      <li><b>Translations.</b> The translations into Spanish, German, French, Mandarin, Russian, Portuguese and Arabic were made with care, but they can contain mistakes and are not always correct. The English text is the reference: if something is unclear or looks wrong, please check the English version. The scientific records of the database (notes, references, measurements) are not translated and stay in English.</li>
+      <li><b>Translations.</b> The translations into Spanish, German, French, Mandarin, Russian, Portuguese and Arabic were made with care, but they can contain mistakes and are not always correct. The English text is the reference: if something is unclear or looks wrong, please check the English version. The scientific records of the Open NC Database (notes, references, measurements) are not translated and stay in English.</li>
       <li><b>Draft status.</b> The builder is a prototype of the iGEM KIT team. Check every sequence you order against your own plan before you send it.</li>
     </ul>
   </section>
@@ -318,7 +318,7 @@
     <a class="start-cta" href="/#step-1">Start builder
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
     </a>
-    <a class="ghost" href="/selector/builder-filter.html">Open the nanocompartment filter</a>
+    <a class="ghost" href="/selector/builder-filter.html">Open Choose a shell</a>
   </div>
 </main>
 

@@ -508,14 +508,14 @@ def test_the_guide_warns_that_the_translations_are_not_always_correct_and_that_e
 def test_the_guide_describes_the_targeting_peptides_of_the_database_for_imported_shells():
     guide = re.sub(r"<[^>]*>", " ", GUIDE.read_text(encoding="utf8"))
     assert "Select for Builder" in guide and "Use this nanocompartment" not in guide      # the button of the filter is called Select for Builder
-    assert "Database peptides of that encapsulin are offered" in guide and "alternative and not validated" in guide
+    assert "peptides of the Open NC Database for that encapsulin are offered" in guide and "alternative and not validated" in guide
     assert "Toolkit shell presets provide a matching TP" in guide                           # the info window and its full text in the guide say the same
 
 
 def test_the_nanocompartment_info_window_and_step_1_text_match_the_imported_shell_peptides():
     text = INDEX.read_text(encoding="utf8")
     assert "Toolkit shell presets provide a matching TP" in text
-    assert "For a shell imported from the Database, targeting peptides are optional" in text
+    assert "For a shell imported from the Open NC Database, targeting peptides are optional" in text
     assert "The variant you choose determines the matching" not in text
 
 
