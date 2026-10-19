@@ -189,7 +189,20 @@
     location.href = '/#step-1';
   });
   $('countBadge').textContent = `${designs.length} approved shell sequences`;
-  filtered();
+  // Keep the filters and the scroll position while switching between the Builder and the database (this browser tab only).
+  const FILTER_KEY = 'encore.builderFilter.v1', FILTER_IDS = ['designSearch', 'designType', 'designT', 'designMin', 'designMax'];
+  try {
+    const saved = JSON.parse(sessionStorage.getItem(FILTER_KEY));
+    if (saved) FILTER_IDS.forEach(id => { if (saved.v && saved.v[id] !== undefined) $(id).value = saved.v[id]; });
+    filtered();
+    if (saved && saved.y) { history.scrollRestoration = 'manual'; window.scrollTo({ top: saved.y, behavior: 'instant' }); }
+  } catch (e) { filtered(); }
+  const saveFilters = () => { try {
+    const v = {}; FILTER_IDS.forEach(id => { v[id] = $(id).value; });
+    sessionStorage.setItem(FILTER_KEY, JSON.stringify({ v, y: window.scrollY }));
+  } catch (e) {} };
+  if (window.addEventListener) window.addEventListener('pagehide', saveFilters);
+  if (document.addEventListener) document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') saveFilters(); });
 })();
 
 // Keep original site-wide light/dark theme behavior.

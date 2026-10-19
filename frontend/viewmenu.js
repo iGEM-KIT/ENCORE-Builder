@@ -81,3 +81,22 @@
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', build); else build();
 })();
+
+/* Open NC Database tab: the first visit shows the overview. Once Choose a shell or Explore the data has been opened, the tab of the
+   Builder pages leads back to that page (with its hash), so switching between the Builder and the database keeps your place. The
+   filters of both pages are kept in the browser tab by the pages themselves. */
+(function(){
+  var KEY='encore.db.last', path=location.pathname;
+  var onDb=/\/selector\/(builder-filter|selector-alpha)\.html$/.test(path);
+  function get(){ try{ return sessionStorage.getItem(KEY); }catch(e){ return null; } }
+  function set(v){ try{ sessionStorage.setItem(KEY,v); }catch(e){} }
+  if(onDb){
+    var save=function(){ set(path+location.hash); };
+    save(); window.addEventListener('hashchange',save); window.addEventListener('pagehide',save);
+    return;
+  }
+  var last=get();
+  if(!last||!/^\/selector\/(builder-filter|selector-alpha)\.html(#[a-z]*)?$/.test(last)) return;
+  function point(){ document.querySelectorAll('.site-tabs a[href="/selector/overview.html"]').forEach(function(a){ a.setAttribute('href',last); }); }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',point); else point();
+})();
