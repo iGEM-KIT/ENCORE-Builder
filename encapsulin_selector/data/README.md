@@ -1,4 +1,4 @@
-# Encapsulin database for the selector
+# Open NC Database: data for the selector
 
 Every encapsulin is a JSON file of its own. To add a new candidate,
 NO knowledge of the rest of the codebase is needed,

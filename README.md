@@ -3,7 +3,7 @@
 The ENCORE Builder is a design tool for planning an encapsulin cargo construct with our
 Golden Gate toolKIT. You put together a nanocompartment and a cargo, and the Builder gives you
 all parts, primers or oligos to order and a finished Level 2 plasmid map. A second tool, the
-Encapsulin Filter, helps you to find the matching encapsulin first.
+Open NC Database, helps you to find the matching shell first.
 
 It runs on your own computer, inside a program called Docker. Nothing you type leaves your
 computer. This page explains every way to start it, step by step. You do not need programming
@@ -24,7 +24,7 @@ skills.
 
 ## Which way is right for me?
 
-Both ways always start **two containers together**: the Builder (with the Encapsulin Filter) and
+Both ways always start **two containers together**: the Builder (with the Open NC Database) and
 the biosecurity screening. There is no way to run the Builder without the screening.
 
 | | Way A | Way B |
@@ -292,7 +292,7 @@ What is covered:
 * `tests/unit/biologik/`: the design engine (cargo validation, codon optimization, slots, combined NCS, Level 0 to 2
   assembly, primers, oligos, GenBank) and the primer design (Tm balancing, dimers, extensions).
 * `tests/unit/commec_service/`: the HTTP wrapper of the screening container, with COMMEC itself replaced.
-* `tests/unit/data/`: integrity of the encapsulin database (references between candidates, assemblies, pores and
+* `tests/unit/data/`: integrity of the nanocompartment database (references between candidates, assemblies, pores and
   citations), that `selector-data.js` is up to date, and the file rules of the parts database.
 * `tests/unit/frontend/`: the pages are well formed, internal links and looked-up ids exist, and the house rules for visible
   text hold (no dashes as punctuation).
@@ -352,11 +352,11 @@ against a really built and running container, including
 a positive test with a real conotoxin sequence obtained from UniProt,
 which was correctly detected as "Flag" and triggered the warning modal.
 
-### Extending the encapsulin database
+### Extending the Open NC Database
 
-The encapsulin filter (`/selector/`) reads its data from individual
+The Open NC Database (`/selector/`) reads its data from individual
 JSON files under [encapsulin_selector/data/](encapsulin_selector/data/):
-adding a new encapsulin means: copy the template, fill in the fields,
+adding a new nanocompartment means: copy the template, fill in the fields,
 start `pnpm dev`. See
 [encapsulin_selector/data/README.md](encapsulin_selector/data/README.md).
 

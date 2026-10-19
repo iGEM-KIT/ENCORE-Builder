@@ -10,14 +10,14 @@ This release has **74 candidates, 51 assemblies, 56 pore records, 74 genomic seq
 
 | Tab | Responsibility | Used in site |
 | --- | --- | --- |
-| databank | Candidate identity, UniProt, taxonomy, reference assembly | Explore |
-| assemblies | Symmetry, T-number, diameter, shell change, positions and source | Explore; assembly comparison in Builder Filter |
-| pores | Observations of individual pores; states, charge, method, structure | Explore; pore-data availability |
-| sequence_links | Genomic reference sequence (distinct from the Builder CDS) | Explore |
-| evidence | Experimental value, support method and source | Explore |
-| citation_links, doi_index | Source mapping, paper and PDB links | Explore |
+| databank | Candidate identity, UniProt, taxonomy, reference assembly | Explore the data |
+| assemblies | Symmetry, T-number, diameter, shell change, positions and source | Explore the data; assembly comparison in Choose a shell |
+| pores | Observations of individual pores; states, charge, method, structure | Explore the data (pore filters) |
+| sequence_links | Genomic reference sequence (distinct from the Builder CDS) | Explore the data |
+| evidence | Experimental value, support method and source | Explore the data |
+| citation_links, doi_index | Source mapping, paper and PDB links | Explore the data |
 | vocabularies | Scientific categories and filter values | Both filtering modes |
-| builder_catalog | **24 vetted CDS designs**, unique sequence IDs, translation check | Builder Filter → Builder |
+| builder_catalog | **24 vetted CDS designs**, unique sequence IDs, translation check | Choose a shell → Builder |
 
 ### Editorial/audit tabs (not exported as JSON)
 
@@ -35,7 +35,7 @@ Modify `assemblies` columns **U:AA** after comparing the shell *protein* to the 
 
 ### Builder eligibility protocol
 
-The Builder Filter contains only approved `builder_catalog` rows. Do **not** infer a CDS from a protein sequence or approve a sequence without an appropriate translation check. A reported T-number/diameter is context for shell selection; it is not guaranteed by transfer of a CDS.
+The Choose a shell contains only approved `builder_catalog` rows. Do **not** infer a CDS from a protein sequence or approve a sequence without an appropriate translation check. A reported T-number/diameter is context for shell selection; it is not guaranteed by transfer of a CDS.
 
 ### Update the site after curating the Excel
 
@@ -61,4 +61,4 @@ Four `pores.charge_exterior` cells (Excel rows 9–12) contain editorial placeho
 py scripts/preview_ui.py
 ```
 
-Open `http://127.0.0.1:8080/selector/overview.html` for the static preview. This preview does **not** start the Builder's computation services. `pnpm dev` and the full backend dependencies are needed to validate calculations; the Overview, Builder Filter and Explore interfaces can be reviewed without them.
+Open `http://127.0.0.1:8080/selector/overview.html` for the static preview. This preview does **not** start the Builder's computation services. `pnpm dev` and the full backend dependencies are needed to validate calculations; the Overview, Choose a shell and Explore interfaces can be reviewed without them.
