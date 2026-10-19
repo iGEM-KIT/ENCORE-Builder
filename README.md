@@ -283,7 +283,7 @@ Registry on every push to `main`, on version tags (`v1.2.3`) and by hand from th
 pip install pytest -r Biologik/requirements.txt   # once (primer3-py is needed for the primer tests)
 pnpm test                                          # Node tests, then Python tests
 # or separately:
-pnpm test:node                                     # server utilities (tests/unit/server)
+pnpm test:node                                     # Node tests: server bridges, selector filters, translations
 pnpm test:py                                       # python3 -m pytest (tests/unit)
 ```
 
@@ -296,6 +296,9 @@ What is covered:
   citations), that `selector-data.js` is up to date, and the file rules of the parts database.
 * `tests/unit/frontend/`: the pages are well formed, internal links and looked-up ids exist, and the house rules for visible
   text hold (no dashes as punctuation).
+* `tests/unit/selector/`: the filters and the hand-off from the Open NC Database to the Builder.
+* `tests/unit/frontend/i18n.test.mjs`: the translation engine (exact texts, texts with values, right-to-left for Arabic,
+  fallback to English).
 * `tests/unit/server/`: the bridge to the Python engine and the bridge to the screening container (it must never turn
   a missing screening into an error).
 
@@ -318,8 +321,11 @@ separate sidecar container instead of a built-in check. Deliberately no longer
 plain opt-in: a safety check that had to be switched on manually
 would too easily be forgotten or skipped in everyday use. If `commec` is
 once not reachable (e.g. while starting up, or with `COMMEC_URL`
-set to empty manually), the builder keeps running normally, only without
-this screening (with a visible note in step 4). Real
+set to empty manually), the builder does not calculate a construct: the
+header badge says "Biosecurity screening: off" and "Calculate construct"
+shows a message instead. The switch `REQUIRE_SCREENING` in
+`frontend/index.html` (default `true`) can be set to `false` for testing
+only; the result then says that the sequences were not screened. Real
 unavoidability cannot be guaranteed by self-hosted, open source software anyway,
 so this is the honest default here, not a tamper protection.
 
