@@ -91,7 +91,7 @@ header .spacer{flex:1}
 .site-tabs a{font-family:inherit;font-size:11.5px;font-weight:600;color:#B9C7D6;text-decoration:none;padding:6px 11px;border-radius:7px;white-space:nowrap}
 .site-tabs a:hover{color:#E9F2EE}
 /* Highlighted only once the builder itself is showing; on the intro card you're on neither tab,
-   so neither link carries .on; showBuilder()/showIntro() toggle it on the "ENCORE Builder" link.
+   so neither link carries .on; showBuilder()/showIntro() toggle it on the "ENCORE-Builder" link.
    Fixed colour (not var(--teal), which differs from the selector page in light mode) so the
    highlight matches the Encapsulin Filter tab's own colour in both themes. */
 .site-tabs a.on{background:#2BBFA6;color:#04231d}

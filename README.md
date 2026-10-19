@@ -1,6 +1,6 @@
-# ENCORE Builder
+# ENCORE-Builder
 
-The ENCORE Builder is a design tool for planning an encapsulin cargo construct with our
+The ENCORE-Builder is a design tool for planning an encapsulin cargo construct with our
 Golden Gate toolKIT. You put together a nanocompartment and a cargo, and the Builder gives you
 all parts, primers or oligos to order and a finished Level 2 plasmid map. A second tool, the
 Open NC Database, helps you to find the matching shell first.
@@ -70,7 +70,7 @@ Now continue with Docker Desktop:
 3. **Start Docker Desktop** and wait until it says "Engine running" (a green dot at the bottom
    left). You can skip creating an account; there is a "Skip" or "Continue without signing in"
    option.
-4. Docker Desktop has to be running whenever you use the ENCORE Builder.
+4. Docker Desktop has to be running whenever you use the ENCORE-Builder.
 
 Good to know before you start:
 

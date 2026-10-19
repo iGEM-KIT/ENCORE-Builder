@@ -1,4 +1,4 @@
-# Download only this one file to run the ENCORE Builder without the rest of the repository.
+# Download only this one file to run the ENCORE-Builder without the rest of the repository.
 # It pulls the ready-made images from the GitHub Container Registry; nothing is built.
 #   docker compose -f docker-compose.pull.yml up
 # (name the file docker-compose.yml and plain `docker compose up` works as well)

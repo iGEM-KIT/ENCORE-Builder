@@ -666,7 +666,7 @@
  "Try T-number, CDS, pore, UniProt…": "试试 T 数、CDS、孔、UniProt …",
  "Builder Filter | ENCORE": "Builder Filter | ENCORE",
  "Explore Nanocompartments | ENCORE": "Explore Nanocompartments | ENCORE",
- "Not sure which nanocompartment to use? Compare the documented shell properties, then pick an approved sequence for the ENCORE Builder.": "不确定用哪个纳米区室?比较已记录的外壳性质,然后为 ENCORE Builder 选一条已批准的序列。",
+ "Not sure which nanocompartment to use? Compare the documented shell properties, then pick an approved sequence for the ENCORE-Builder.": "不确定用哪个纳米区室?比较已记录的外壳性质,然后为 ENCORE-Builder 选一条已批准的序列。",
  "{0} approved shell sequences": "{0} 个已批准的外壳序列",
  "{0} of {1} approved shell sequences": "{0} / {1} 个已批准的外壳序列",
  "<strong>Keep in mind:</strong> T-number and diameter describe <em>assemblies that were reported in experiments</em>. Using the same CDS does not guarantee you get exactly the same shell in your own experiment.": "<strong>请注意:</strong>T 数和直径描述的是<em>实验中报道过的组装体</em>。用同一条 CDS 并不能保证你在自己的实验中得到完全相同的外壳。",

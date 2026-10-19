@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Thin HTTP wrapper around the commec CLI (Common Mechanism, IBBIS) for the
-ENCORE Builder. commec itself has no REST API, only a FASTA-in/JSON-out
+ENCORE-Builder. commec itself has no REST API, only a FASTA-in/JSON-out
 CLI (see https://github.com/ibbis-bio/common-mechanism/wiki); this
 wrapper takes a sequence over HTTP, writes it to a temporary
 FASTA file, calls `commec screen` and returns the parsed result.

@@ -1,4 +1,4 @@
-# Builds the two Docker images of the ENCORE Builder for linux/amd64 and linux/arm64
+# Builds the two Docker images of the ENCORE-Builder for linux/amd64 and linux/arm64
 # and publishes them to the GitHub Container Registry (ghcr.io):
 #   ghcr.io/igem-kit/encore-builder          the builder (Nuxt server + Python engine)
 #   ghcr.io/igem-kit/encore-builder-commec   the biosecurity screening container

@@ -1,4 +1,4 @@
-<!-- ENCORE Builder v6: English UI, toolKIT branding, dark mode, dropdown NC, well-plate pick plan, info bubbles -->
+<!-- ENCORE-Builder v6: English UI, toolKIT branding, dark mode, dropdown NC, well-plate pick plan, info bubbles -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ENCORE toolKIT</title>
@@ -51,7 +51,7 @@
     background:var(--line-soft);color:var(--ink-soft);border:0;cursor:pointer;display:grid;place-items:center;z-index:2}
 
   /* ============ INTRO ============ */
-  /* Entering directly via a "#step-N" link (e.g. the header's "ENCORE Builder" tab): hide the intro
+  /* Entering directly via a "#step-N" link (e.g. the header's "ENCORE-Builder" tab): hide the intro
      card from the very first paint, via an attribute an inline <script> sets before body parsing
      even starts (see the two <script> tags at the top of the document). Without this, the intro
      would flash visible for a moment before showBuilder() runs and hides it via JS. */
@@ -537,7 +537,7 @@
   <a class="brand-sub" href="https://2026.igem.wiki/kit/index.html" target="_blank" rel="noopener" title="Open the toolKIT wiki">Golden Gate tool<b>KIT</b></a>
   </div>
   <nav class="site-tabs" aria-label="Switch tool">
-    <a href="/#step-1" id="tabBuilder">ENCORE Builder</a>
+    <a href="/#step-1" id="tabBuilder">ENCORE-Builder</a>
     <a href="/selector/overview.html">Open NC Database</a>
   </nav>
   <a class="hbtn" id="overviewLink" href="/guide.html" title="Open the guide with all rules and notes">
@@ -562,7 +562,7 @@
   <h1>Design your construct or find the right shell first.</h1>
   <div class="start-grid">
     <article class="start-card build">
-      <h2>ENCORE Builder</h2>
+      <h2>ENCORE-Builder</h2>
       <p>Turn your gene of interest into a complete encapsulin cargo construct: standardized Golden Gate modules, cargo primers and the final Level 2 plasmid.</p>
       <div class="flowrow">
         <div class="flowstep"><span class="dot" style="background:var(--t1)"></span>Nanocompartment Site</div>
@@ -1113,7 +1113,7 @@
 </div>
 
 <script>
-/* ===================== ENCORE Builder v5: logic ===================== */
+/* ===================== ENCORE-Builder v5: logic ===================== */
 const $ = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
 const esc = v => String(v??'').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
@@ -3275,7 +3275,7 @@ async function refreshCommecStatus(){
   }
 }
 async function boot(){
-  // Any "#step-N" link (e.g. the header's "ENCORE Builder" tab) should land straight in the
+  // Any "#step-N" link (e.g. the header's "ENCORE-Builder" tab) should land straight in the
   // builder, whether or not a saved session exists; never show the intro card in that case.
   // Done before the loadLibraries() network round-trip so the switch happens as early as possible
   // (the matching CSS rule on data-entry="builder" already hid #intro before first paint).

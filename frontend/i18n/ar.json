@@ -279,7 +279,7 @@
  "Try T-number, CDS, pore, UniProt…": "جرّب الرقم T أو CDS أو المسام أو UniProt …",
  "Builder Filter | ENCORE": "Builder Filter | ENCORE",
  "Explore Nanocompartments | ENCORE": "Explore Nanocompartments | ENCORE",
- "Not sure which nanocompartment to use? Compare the documented shell properties, then pick an approved sequence for the ENCORE Builder.": "لا تعرف أي نانوحجرة تستخدم؟ قارن خصائص الغلاف الموثّقة ثم اختر تسلسلًا معتمدًا لـ ENCORE Builder.",
+ "Not sure which nanocompartment to use? Compare the documented shell properties, then pick an approved sequence for the ENCORE-Builder.": "لا تعرف أي نانوحجرة تستخدم؟ قارن خصائص الغلاف الموثّقة ثم اختر تسلسلًا معتمدًا لـ ENCORE-Builder.",
  "{0} approved shell sequences": "{0} تسلسلات غلاف معتمدة",
  "{0} of {1} approved shell sequences": "{0} من {1} تسلسلات غلاف معتمدة",
  "<strong>Keep in mind:</strong> T-number and diameter describe <em>assemblies that were reported in experiments</em>. Using the same CDS does not guarantee you get exactly the same shell in your own experiment.": "<strong>تذكّر:</strong> رقم T والقطر يصفان <em>تجميعات أُبلغ عنها في تجارب</em>. استخدام CDS نفسه لا يضمن أن تحصل على الغلاف نفسه تمامًا في تجربتك.",

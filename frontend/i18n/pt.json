@@ -279,7 +279,7 @@
  "Try T-number, CDS, pore, UniProt…": "Experimente número T, CDS, poro, UniProt …",
  "Builder Filter | ENCORE": "Builder Filter | ENCORE",
  "Explore Nanocompartments | ENCORE": "Explore Nanocompartments | ENCORE",
- "Not sure which nanocompartment to use? Compare the documented shell properties, then pick an approved sequence for the ENCORE Builder.": "Não sabe qual nanocompartimento usar? Compare as propriedades documentadas da casca e escolha uma sequência aprovada para o ENCORE Builder.",
+ "Not sure which nanocompartment to use? Compare the documented shell properties, then pick an approved sequence for the ENCORE-Builder.": "Não sabe qual nanocompartimento usar? Compare as propriedades documentadas da casca e escolha uma sequência aprovada para o ENCORE-Builder.",
  "{0} approved shell sequences": "{0} sequências de casca aprovadas",
  "{0} of {1} approved shell sequences": "{0} de {1} sequências de casca aprovadas",
  "<strong>Keep in mind:</strong> T-number and diameter describe <em>assemblies that were reported in experiments</em>. Using the same CDS does not guarantee you get exactly the same shell in your own experiment.": "<strong>Tenha em mente:</strong> o número T e o diâmetro descrevem <em>montagens relatadas em experimentos</em>. Usar a mesma CDS não garante que você obtenha exatamente a mesma casca no seu experimento.",

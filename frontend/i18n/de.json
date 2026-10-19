@@ -666,7 +666,7 @@
  "Try T-number, CDS, pore, UniProt…": "Probiere T-Zahl, CDS, Pore, UniProt …",
  "Builder Filter | ENCORE": "Builder Filter | ENCORE",
  "Explore Nanocompartments | ENCORE": "Explore Nanocompartments | ENCORE",
- "Not sure which nanocompartment to use? Compare the documented shell properties, then pick an approved sequence for the ENCORE Builder.": "Du weißt nicht, welches Nanokompartiment du nehmen sollst? Vergleiche die dokumentierten Hülleneigenschaften und wähle dann eine freigegebene Sequenz für den ENCORE Builder.",
+ "Not sure which nanocompartment to use? Compare the documented shell properties, then pick an approved sequence for the ENCORE-Builder.": "Du weißt nicht, welches Nanokompartiment du nehmen sollst? Vergleiche die dokumentierten Hülleneigenschaften und wähle dann eine freigegebene Sequenz für den ENCORE-Builder.",
  "{0} approved shell sequences": "{0} freigegebene Hüllensequenzen",
  "{0} of {1} approved shell sequences": "{0} von {1} freigegebenen Hüllensequenzen",
  "<strong>Keep in mind:</strong> T-number and diameter describe <em>assemblies that were reported in experiments</em>. Using the same CDS does not guarantee you get exactly the same shell in your own experiment.": "<strong>Gut zu wissen:</strong> T-Zahl und Durchmesser beschreiben <em>Assemblies, die in Experimenten berichtet wurden</em>. Mit derselben CDS bekommst du in deinem eigenen Experiment nicht automatisch genau dieselbe Hülle.",

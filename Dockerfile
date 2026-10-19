@@ -1,4 +1,4 @@
-# ENCORE Builder: Nuxt frontend/API + the Biologik Python engine it shells out to.
+# ENCORE-Builder: Nuxt frontend/API + the Biologik Python engine it shells out to.
 # Node version matches package.json "engines"; Python is required at runtime by
 # server/utils/biologik.js (it spawns `python3 -m Biologik.level0_design.cli`).
 FROM node:22-slim AS build
