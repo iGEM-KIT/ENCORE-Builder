@@ -29,7 +29,7 @@
       "location": "2055..2646"
     }
   },
-  "source": "Level 0 Destination.gb (provided by the user), pAGM9121 from Weber E, Engler C, Gruetzner R, Werner S, Marillonnet S. \"A modular cloning system for standardized assembly of multigene constructs.\" PLoS One. 2011 Feb 18;6(2):e16765. PMID 21364738. Imported 2026-09-30.",
+  "source": "Level 0 Destination.gb (provided by the user), pAGM9121 is the universal Level 0 acceptor of the MoClo Toolkit (Addgene kit 1000000044). The MoClo system is described in Weber E et al. PLoS One 2011, 6:e16765 (PMID 21364738) and the toolkit in Werner S et al. Bioengineered Bugs 2012, 3:38 (PMID 22126803). Weber et al. 2011 does not name pAGM9121 itself (its Level 0 acceptors are called pL0-P, pL0-U and so on). Imported 2026-09-30.",
   "notes": "The overhang labels \"NLvl0\"/\"CLvl0\" had a trailing space in the original (\"NLvl0 \"/\"CLvl0 \"); cleaned here.",
   "features": [
     {

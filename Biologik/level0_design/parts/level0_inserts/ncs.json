@@ -6,7 +6,7 @@
   "part_label": "NCS",
   "sequence_status": "real",
   "organism": null,
-  "source": "One NCS sequence per Type from the iGEM Registry (Dummy Part for Golden Gate Assembly [0.1], [0.2], [0.4], [0.5]; described in Yuan & Fan, ACS Omega, doi.org/10.1021/acsomega.1c00339), without the 2 base frame spacer; the type overhangs and the frame spacer are added by the software. The part-level 'sequence' is only the fallback (Type 0.5); every plasmid carries the sequence of its own Type.",
+  "source": "One NCS sequence per Type from the iGEM Registry (Dummy Part for Golden Gate Assembly [0.1], [0.2], [0.4], [0.5]; the Registry entries name Yuan, Mo & Fan (ACS Omega 2021, doi 10.1021/acsomega.1c00339) as source, but that paper describes the pESC-HIS yeast vectors and not these dummy parts, so no publication is known for them), without the 2 base frame spacer; the type overhangs and the frame spacer are added by the software. The part-level 'sequence' is only the fallback (Type 0.5); every plasmid carries the sequence of its own Type.",
   "notes": "Every NCS plasmid has the sequence of its own Type (field 'sequence' of the plasmid entry). The combined spacers 0.12 and 0.45 take the sequence of NCS 0.1 and NCS 0.4. None of the sequences contains an ATG (checked on both strands). The earlier NCS with stop codon no longer exists: the software puts the stop codon (TAA) behind the last coding part of each ORF. The plasmid names (for example '0.2NCSrc*') are the original toolkit names and are kept for traceability.",
   "used_by": [],
   "plasmids": [

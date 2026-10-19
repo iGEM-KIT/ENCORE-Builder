@@ -29,7 +29,7 @@
       "location": "200..256"
     }
   },
-  "source": "Level 1 Destination.gb (provided by the user), pAGM1311 from Weber E, Engler C, Gruetzner R, Werner S, Marillonnet S. \"A modular cloning system for standardized assembly of multigene constructs.\" PLoS One. 2011 Feb 18;6(2):e16765. PMID 21364738. Imported 2026-09-30.",
+  "source": "Level 1 Destination.gb (provided by the user), pAGM1311 belongs to the MoClo plasmid family (MoClo system: Weber E et al. PLoS One 2011, 6:e16765, PMID 21364738, which does not name this plasmid. The plasmid is listed by Addgene as a backbone with a reference to Engler C et al. ACS Synth Biol 2014, 3:839, PMID 24933124). The overhangs of this copy (ACAT and TTGT) are those of the ENCORE toolKIT. Imported 2026-09-30.",
   "notes": "Four BsaI/BbsI recognition sites in the original GenBank file were missing the feature type keyword (only the location line was present); reconstructed on import as standalone misc_feature entries, since position and label (BsaI/BbsI rec site) were unambiguous.",
   "features": [
     {
