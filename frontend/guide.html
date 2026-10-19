@@ -143,7 +143,7 @@
       <tr><td><span class="tag auto">Automatic</span> <b>Restriction sites</b></td>
           <td>You do not have to remove them yourself: the codon optimization removes, without changing the protein, every site of the two enzymes of this toolkit, <b>BsaI</b> (GGTCTC / GAGACC) and <b>BbsI</b> (GAAGAC / GTCTTC), and the sites that the iGEM standards forbid inside a part: <b>SapI</b> (GCTCTTC / GAAGAGC) for the iGEM Type IIS standard RFC 1000, and <b>EcoRI</b> (GAATTC), <b>XbaI</b> (TCTAGA), <b>SpeI</b> (ACTAGT) and <b>PstI</b> (CTGCAG) for the BioBrick standard RFC 10, plus <b>NotI</b> (GCGGCCGC), which RFC 10 asks to avoid. See below.</td></tr>
       <tr><td><span class="tag auto">Automatic</span> <b>Biosecurity screening</b></td>
-          <td>Every sequence you enter yourself is screened with COMMEC before the design is calculated. A hit never blocks you silently: you review it and confirm before continuing. Toolbox parts are not screened. If the screening service is not reachable, the builder tells you and goes on.</td></tr>
+          <td>Every sequence you enter yourself is screened with COMMEC before the design is calculated. A hit blocks the calculation: no construct, no parts and no order list are generated until you change or remove the flagged sequence. Toolbox parts are not screened. If the screening service is not running, the builder does not calculate a construct.</td></tr>
       <tr><td><span class="tag info">Info</span> <b>Primer structure</b></td>
           <td>For every primer pair of a Level 0 part the popup shows hairpin, self-dimer and primer-primer dimer (ΔG in kcal/mol, primer3). This is an estimate for your information; it does not block anything.</td></tr>
     </table>
@@ -303,7 +303,7 @@
       <p><b>What is screened:</b> only sequences you typed or pasted yourself (cargo, your own shell, your own module parts). Toolkit parts are not screened, because their sequences are known and harmless. If the screening is not running, the builder does not calculate a construct.</p>
       <p><b>Against which database:</b> this installation uses COMMEC's curated <b>Biorisk + Low-concern</b> database (about 1.2&nbsp;GB): known toxins, virulence factors and regulated pathogens, plus a list of harmless related sequences so common genes are not over-flagged.</p>
       <p><b>Not included:</b> the full protein (NR, ~530&nbsp;GB) and nucleotide (NT, ~580&nbsp;GB) taxonomy databases. So there is no best-match against arbitrary organisms; only direct hits against the curated list count, and only a real biorisk hit raises a warning here.</p>
-      <p>A hit never blocks you silently: you review it and confirm before continuing. The screening runs locally in its own container and is a helper check, not a replacement for your institution's biosafety review.</p>
+      <p>A hit blocks the calculation: no construct, no parts and no order list are generated until you change or remove the flagged sequence. The screening runs locally in its own container and is a helper check, not a replacement for your institution's biosafety review.</p>
       <p><b>Basis of the check.</b> Your sequence is compared by sequence similarity (profile HMM searches with HMMER and BLAST-type alignments) against the curated COMMEC databases; the result (Pass, Warning, Flag) is taken over unchanged from COMMEC (version 1.0.4, IBBIS). The builder calculates nothing itself here: it only decides, from COMMEC's biorisk field, whether to show a warning.</p>
   </section>
 

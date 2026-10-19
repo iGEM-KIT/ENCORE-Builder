@@ -198,8 +198,8 @@ the very first start.
 Every gene sequence you enter yourself is automatically checked for known toxins, virulence
 factors and regulated pathogens
 ([COMMEC](https://github.com/ibbis-bio/common-mechanism) by IBBIS). If a sequence matches, a
-warning with a reason appears and you have to confirm it before you can continue. It is a
-helper check and does not replace the biosafety review of your institution.
+warning with a reason appears and the Builder does not build a construct, parts or an order list
+until you change or remove the flagged sequence. It is a helper check and does not replace the biosafety review of your institution.
 
 ## Using the software
 
@@ -331,9 +331,10 @@ pull request. The interactive parts of the pages (clicking through the steps) ar
 Before the builder computes the final design in step 4, every sequence
 entered by the user (cargo, own shell, own module parts) is checked
 by COMMEC for hits against a curated list of known toxins,
-virulence factors and regulated pathogens. A hit does not block the
-design automatically, but shows a warning with a rationale that the
-user has to confirm explicitly before they can continue.
+virulence factors and regulated pathogens. A hit blocks the
+design: a warning with a rationale is shown, and no construct, no parts and no
+order list are generated until the flagged sequence is changed or removed. There is no
+confirm-and-continue button.
 
 **Runs as a second container by default**, because COMMEC needs Conda and
 BLAST/HMMER. That does not fit into the slim main image and is not
@@ -374,10 +375,10 @@ COMMEC_URL=http://localhost:8787 pnpm dev
 `docker compose up commec`).
 
 **Verified:** The complete flow (container build, real
-`commec screen` call, frontend gate including warning modal) was tested end to end
+`commec screen` call, frontend gate including the blocking warning) was tested end to end
 against a really built and running container, including
 a positive test with a real conotoxin sequence obtained from UniProt,
-which was correctly detected as "Flag" and triggered the warning modal.
+which was correctly detected as "Flag" and triggered the blocking warning.
 
 ### Extending the Open NC Database
 

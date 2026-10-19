@@ -82,4 +82,4 @@ This wrapper was tested end to end against a real, locally built container
   (Q9BPJ4, listed in the biorisk database as "Must flag") correctly returns
   `screen_status: "Flag"`, `biorisk: "Flag"`,
   `rationale: "Matches sequence with pathogenic or toxin function."`, and
-  reliably triggers the blocking warning modal in the frontend.
+  reliably triggers the blocking warning in the frontend (no construct is built).
