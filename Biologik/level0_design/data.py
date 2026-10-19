@@ -112,7 +112,8 @@ LINKERS = [
 ]
 
 # Library for promoters: every promoter file of parts/promoters/ with a real sequence (`label`, `desc`, `order` of the dropdown)
-PROMOTERS = [{"id": e["id"], "label": e["label"], "desc": e.get("desc") or "bidirectional", "bp": len(e["sequence"])}
+PROMOTERS = [{"id": e["id"], "label": e["label"], "desc": e.get("desc") or "bidirectional", "bp": len(e["sequence"]),
+              "registryUrl": e.get("registry_url")}
              for e in sorted(load_parts()["promoters"], key=lambda e: (e.get("order", 99), e["id"])) if e.get("sequence")]
 
 # Surface markers. They can be put into one of the slots next to the shell
