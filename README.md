@@ -281,7 +281,7 @@ fails (e.g. missing C compiler), Biologik keeps running anyway, only with
 a less accurate Wallace Tm estimate instead of primer3. A specific
 interpreter can be forced with `BIOLOGIK_PYTHON=/path/to/python`.
 
-The builder image alone (`docker build -t encore-builder .`) starts without the screening container,
+The main image alone (`docker build -t encore-builder .`, ENCORE-Builder and Open NC Database) starts without the screening container,
 but then it does not calculate any construct. Users should always start the Compose files so that the
 screening is included.
 
@@ -291,7 +291,7 @@ The workflow [.github/workflows/publish-images.yml](.github/workflows/publish-im
 builds both images for `linux/amd64` and `linux/arm64` and pushes them to the GitHub Container
 Registry on every push to `main`, on version tags (`v1.2.3`) and by hand from the Actions tab:
 
-* `ghcr.io/igem-kit/encore-builder` (builder)
+* `ghcr.io/igem-kit/encore-builder` (ENCORE-Builder and Open NC Database)
 * `ghcr.io/igem-kit/encore-builder-commec` (biosecurity screening)
 
 `docker-compose.yml` has both `image:` and `build:` for every service, so
