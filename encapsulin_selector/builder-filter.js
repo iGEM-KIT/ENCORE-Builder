@@ -54,8 +54,6 @@
     if (!assemblyCitations.has(link.record_id)) assemblyCitations.set(link.record_id, []);
     assemblyCitations.get(link.record_id).push(link);
   });
-  const poreCounts = new Map();
-  full.pores.forEach(p => { if(p.assembly_id) poreCounts.set(p.assembly_id,(poreCounts.get(p.assembly_id)||0)+1); });
   const extraArchitectures = {
     Q1D6H4_T3: ['Q1D6H4_T1'],
     Q1D6H4_3xHis_T1: ['Q1D6H4_3xHis_Tet'],
@@ -82,27 +80,6 @@
   function property(name, value) {
     return `<div class="prop"><span class="k">${escape(name)}</span><span class="v">${show(value)}</span></div>`;
   }
-  function sourceBlock(a) {
-    const links = assemblyCitations.get(a.assembly_id) || [];
-    const seen = new Set();
-    const reported = links.filter(link => {
-      const key = String(link.doi || '').toLowerCase().trim();
-      if (!/^10\.\d{4,9}\/[^\s<>'"]+$/i.test(key) || seen.has(key)) return false;
-      seen.add(key); return true;
-    }).map(link => `<a class="ext-link" href="https://doi.org/${encodeURI(link.doi)}" target="_blank" rel="noopener noreferrer" title="DOI: ${escape(link.doi)}">${escape(link.citation_label || link.doi)}</a>`);
-    // Legacy records without indexed citation links: keep the curated source label.
-    const rawDois = String(a.source_doi || '').split(';').map(x => x.trim()).filter(Boolean);
-    rawDois.forEach(doi => {
-      if (seen.has(doi.toLowerCase()) || !/^10\.\d{4,9}\/[^\s<>'"]+$/i.test(doi)) return;
-      seen.add(doi.toLowerCase());
-      reported.push(`<a class="ext-link" href="https://doi.org/${encodeURI(doi)}" target="_blank" rel="noopener noreferrer">${escape(doi)}</a>`);
-    });
-    let citations = reported.join(' <span aria-hidden="true">·</span> ');
-    if (!citations) citations = escape(a.source || 'Not reported');
-    const pdbIds = String(a.structure_id || '').split(';').map(id => id.trim()).filter(id => /^[0-9][a-z0-9]{3}$/i.test(id));
-    const pdb = pdbIds.length ? ` <span class="design-pdb">PDB: ${pdbIds.map(id => `<a class="ext-link" href="https://www.rcsb.org/structure/${encodeURIComponent(id)}" target="_blank" rel="noopener noreferrer">${escape(id)}</a>`).join(', ')}</span>` : '';
-    return `<div class="design-sources"><strong>Source:</strong> ${citations}${pdb}</div>`;
-  }
   function cargoFreeReported(a) {
     // A shell-only Builder CDS is not in itself evidence that the published
     // experimental preparation lacked cargo protein.
@@ -120,7 +97,6 @@
   function card(d) {
     const a = assemblies.get(d.assembly_id);
     if (!a) return '';
-    const other = related(d).filter(x => x.assembly_id !== d.assembly_id);
     const engineered = a.shell_sequence_status === 'modified';
     const label = engineered ? 'Engineered' : 'Wild Type';
     return `<article class="assembly-card design-card">
