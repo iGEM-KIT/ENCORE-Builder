@@ -13,8 +13,9 @@ class Preview(SimpleHTTPRequestHandler):
             return str(ROOT/'frontend'/'index.html')
         if path.startswith('/selector/'):
             return str(ROOT/'encapsulin_selector'/path[len('/selector/'):].lstrip('/'))
-        if path in ('/site.css', '/guide.html'):
-            return str(ROOT/'frontend'/path.lstrip('/'))
+        candidate=(ROOT/'frontend'/path.lstrip('/')).resolve()
+        if candidate.is_file() and ROOT/'frontend' in candidate.parents:       # scripts, styles, language files and fonts of the pages
+            return str(candidate)
         return str(ROOT/'frontend'/'__not_found__')
     def do_GET(self):
         if self.path.startswith('/api/'):
