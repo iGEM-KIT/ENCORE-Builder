@@ -31,15 +31,18 @@ Database is meant for everyone who wants to compare encapsulin shells before cho
 
 ## Where the project lives
 
-The project is published on two websites with the same files and this same README. Use the one you like, every step below works with both:
+The project is published on two websites with the same files and this same README:
 
 | | Website | Address |
 |---|---|---|
 | GitHub | the team repository | [github.com/iGEM-KIT/ENCORE-Builder](https://github.com/iGEM-KIT/ENCORE-Builder) |
 | GitLab | the repository of the iGEM competition | [gitlab.igem.org/2026/software/kit/encore-software](https://gitlab.igem.org/2026/software/kit/encore-software) |
 
-The ready-made Docker images are stored on the GitHub Container Registry (`ghcr.io`). The file `docker-compose.pull.yml`
-points there, so it starts the same program whether you downloaded it from GitHub or from GitLab.
+* **Way A (ready-made images) works through GitHub only.** The file and the ready-made images both come from GitHub
+  (the images from the GitHub Container Registry, `ghcr.io`). The GitLab of iGEM has no container registry for this project, so it cannot
+  provide the images.
+* **Way B (build it yourself) works with both websites.** You download the project files from GitHub or from GitLab and Docker builds
+  everything on your computer.
 
 ## Which way is right for me?
 
@@ -50,7 +53,7 @@ the biosecurity screening. There is no way to run the Builder without the screen
 |---|---|---|
 | For whom | Everybody. Start here. | People who want to read or change the code |
 | You download | one small file | the whole project |
-| Where the program comes from | ready-made images from the GitHub Container Registry | built on your computer |
+| Where the program comes from | ready-made images from the GitHub Container Registry (GitHub only) | built on your computer from the project files (GitHub or GitLab) |
 | First start | a few minutes | 10 to 30 minutes |
 
 Both ways need Docker (Step 0). If you are unsure, take **Way A**.
@@ -138,39 +141,29 @@ into the terminal window (this fills in its path) and press Enter.
 ## Way A: easiest, download one file
 
 You download a single small file. Docker then fetches the ready-made program and the biosecurity
-screening for you.
+screening for you. **This way works through GitHub only**: the file and the ready-made images come from GitHub. If you
+are on GitLab, either open the file on GitHub with the links below or use [Way B](#way-b-download-the-whole-project-and-build-it-yourself), which works with both websites.
 
 1. Create a new empty folder, for example `ENCORE` on your Desktop. On Windows this is a normal Windows folder, not a folder inside
    Linux (WSL/Ubuntu). Docker Desktop finds it from there.
 2. Get the file `docker-compose.pull.yml` into that folder. It has to end in exactly `.yml`.
    Some browsers save a plain link as `.txt`, so use one of these two ways:
-   * **With the browser:** open the file on
-     [GitHub](https://github.com/iGEM-KIT/ENCORE-Builder/blob/main/docker-compose.pull.yml) or on
-     [GitLab](https://gitlab.igem.org/2026/software/kit/encore-software/-/blob/main/docker-compose.pull.yml)
-     and click the download button (the download arrow at the top right of the file view, called
-     **Download raw file** on GitHub and **Download** on GitLab). Move the file into your folder.
+   * **With the browser:** open
+     [the file on GitHub](https://github.com/iGEM-KIT/ENCORE-Builder/blob/main/docker-compose.pull.yml)
+     and click the **Download raw file** button (the download arrow at the top right of the file
+     view). Move the file into your folder.
    * **With the terminal:** open a terminal in your folder first (see above: right-click the
      folder), then run the command for your system. The file lands directly in that folder with
      the right name.
 
-     Mac and Linux, from GitHub:
+     Mac and Linux:
      ```bash
      curl -L -o docker-compose.pull.yml https://raw.githubusercontent.com/iGEM-KIT/ENCORE-Builder/main/docker-compose.pull.yml
      ```
 
-     Mac and Linux, from GitLab:
-     ```bash
-     curl -L -o docker-compose.pull.yml https://gitlab.igem.org/2026/software/kit/encore-software/-/raw/main/docker-compose.pull.yml
-     ```
-
-     Windows (PowerShell), from GitHub:
+     Windows (PowerShell):
      ```bash
      curl.exe -L -o docker-compose.pull.yml https://raw.githubusercontent.com/iGEM-KIT/ENCORE-Builder/main/docker-compose.pull.yml
-     ```
-
-     Windows (PowerShell), from GitLab:
-     ```bash
-     curl.exe -L -o docker-compose.pull.yml https://gitlab.igem.org/2026/software/kit/encore-software/-/raw/main/docker-compose.pull.yml
      ```
 
    Check the name: if the file is called `docker-compose.pull.yml.txt` (or `docker-compose.pull.txt`),
@@ -196,6 +189,7 @@ To stop the program, see [Stopping, updating and cleaning up](#stopping-updating
 
 Choose this if you want to read or change the code, or if you prefer to build the program
 yourself instead of trusting a ready-made image. Docker builds everything from the project files.
+**This way works with both websites**: you can take the project files from GitHub or from GitLab.
 
 1. Download the project. Without any extra software: open
    [GitHub](https://github.com/iGEM-KIT/ENCORE-Builder), click the green **Code** button, then
@@ -219,7 +213,7 @@ yourself instead of trusting a ready-made image. Docker builds everything from t
 5. Open **[http://localhost:3000](http://localhost:3000)**.
 
 The same folder also works without building: `docker compose up` (without `--build`) uses the
-ready-made images like Way A.
+ready-made images like Way A, so that variant needs GitHub for the images.
 
 ## Using the Docker Desktop window
 
