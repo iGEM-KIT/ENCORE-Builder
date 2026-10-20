@@ -373,6 +373,8 @@ for primer in design["primers"]:
 `GET /api/libraries` lists the ids that you can use (shells, cargos, linkers, markers, promoters).
 A request that cannot be calculated gets the status 400 and a message that says why. Add
 `"genbank": true` to the request to get a GenBank file in the field `genbank` of the answer.
+The Builder pages offer every download as GenBank or as SBOL 3 (Turtle, `.ttl`). The SBOL 3 file is made in the
+browser from the same GenBank text by [frontend/sbol.js](frontend/sbol.js), so the API and the command line return GenBank only.
 The same calculation runs without the web server:
 `python3 -m Biologik.level0_design.cli design < request.json`.
 

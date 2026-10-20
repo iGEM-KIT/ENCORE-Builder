@@ -361,7 +361,10 @@ def test_the_download_boxes_of_the_three_levels_carry_no_explaining_note():
         assert gone not in text
     for box in ("Level 0 downloads", "Level 1 downloads", "Level 2 downloads"):
         assert box in text                                                           # the boxes and their buttons stay
-    assert "Download GenBank (.gb)" in text and "Module sequences (.gb)" in text and "Level 2 plasmid (.gb)" in text
+    # one "Download" button per record, the format (GenBank or SBOL 3) is chosen in a small menu
+    assert 'id="plat0Dl"' in text and ">Download</button>" in text and ">Module sequences</button>" in text and ">Level 2 plasmid</button>" in text
+    assert "Download GenBank (.gb)" not in text and "Module sequences (.gb)" not in text
+    assert text.count("dl-menu chip") >= 20 and "dlMenuPop" in text and 'src="/sbol.js"' in text
 
 
 def test_the_how_this_level_works_texts_live_in_the_info_button_next_to_golden_gate_assembly():

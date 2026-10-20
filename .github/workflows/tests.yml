@@ -27,7 +27,8 @@ jobs:
           node-version: "22"
       # the OpenDyslexic font files are not committed: they come from the pinned npm package
       - run: corepack enable && pnpm install --frozen-lockfile --ignore-scripts && node scripts/copy-fonts.mjs
-      - run: pip install pytest -r Biologik/requirements.txt
+      # sbol3 (pySBOL3) is only used by the test that reads the SBOL 3 export back
+      - run: pip install pytest sbol3==1.2.0.post0 -r Biologik/requirements.txt
       - run: python -m pytest -q
 
   node:
@@ -41,4 +42,4 @@ jobs:
         with:
           python-version: "3.12"
       # the files are named one by one: `node --test <directory>` does not work on every Node version
-      - run: node --test tests/unit/server/biologik.test.mjs tests/unit/server/commec.test.mjs tests/unit/selector/builder-visibility.test.mjs tests/unit/selector/simple-filter.test.mjs tests/unit/selector/tp-slot-integration.test.mjs tests/unit/frontend/i18n.test.mjs
+      - run: node --test tests/unit/server/biologik.test.mjs tests/unit/server/commec.test.mjs tests/unit/selector/builder-visibility.test.mjs tests/unit/selector/simple-filter.test.mjs tests/unit/selector/tp-slot-integration.test.mjs tests/unit/frontend/i18n.test.mjs tests/unit/frontend/sbol.test.mjs

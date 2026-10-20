@@ -30,7 +30,7 @@ flowchart LR
 
 | Part | Folder | What it does |
 |---|---|---|
-| Builder and guide | `frontend/` | The five steps, the guide, the info windows and the 8 translations (`frontend/i18n/`). Plain HTML, CSS and JavaScript. |
+| Builder and guide | `frontend/` | The five steps, the guide, the info windows and the 8 translations (`frontend/i18n/`). Plain HTML, CSS and JavaScript. Downloads are GenBank (from the engine) or SBOL 3, which `frontend/sbol.js` converts from the GenBank text in the browser. |
 | Open NC Database | `encapsulin_selector/` | Explore the data and Choose a shell. Reads JSON files from `encapsulin_selector/data/`, which are exported from the Excel workbook by `scripts/export-excel-to-json.py`. |
 | Server | `server/` | Five endpoints (see [openapi.yaml](openapi.yaml)). It starts the Python engine for every design call and talks to the screening container. |
 | Engine | `Biologik/level0_design/` | Builds the Level 0, 1 and 2 constructs. Codon optimization (`user_codons.py`, `codon.py`), PCR primers (`primers.py`, `Biologik/primer_design/`), GenBank export (`genbank_writer.py`), input checks (`sequence.py`). |

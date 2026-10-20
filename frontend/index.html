@@ -4,7 +4,7 @@
 <title>ENCORE toolKIT</title>
 <script>try{if(localStorage.getItem('encore.theme')==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}</script>
 <script>try{if(/^#step-[1-5]$/.test(location.hash))document.documentElement.setAttribute('data-entry','builder')}catch(e){}</script>
-<link rel="stylesheet" href="/site.css"><link rel="stylesheet" href="/viewmenu.css"><script src="/i18n.js"></script><script src="/viewmenu.js"></script>
+<link rel="stylesheet" href="/site.css"><link rel="stylesheet" href="/viewmenu.css"><script src="/i18n.js"></script><script src="/viewmenu.js"></script><script src="/sbol.js"></script>
 <style>
   /* Primer structure check (hairpin / self-dimer / primer-primer dimer) in the Level 0 popup */
   .pstruct{margin-top:8px;font-size:12px}
@@ -523,6 +523,12 @@
   .chip:hover{background:var(--line-soft)}
   .chip.primary-chip{background:var(--forest);color:#fff;border-color:var(--forest)}
   [data-theme="dark"] .chip.primary-chip{background:var(--teal);color:#062019;border-color:var(--teal)}
+  /* Download buttons: one button, the format is chosen in a small menu (see "Download menu" in the script) */
+  .dl-menu::after{content:"";display:inline-block;margin-left:8px;vertical-align:middle;border:4px solid transparent;border-top-color:currentColor;border-bottom:0}
+  #dlMenuPop{position:fixed;z-index:120;display:none;min-width:150px;padding:5px;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(10,30,24,.18)}
+  #dlMenuPop.open{display:block}
+  #dlMenuPop button{display:block;width:100%;text-align:left;background:none;border:0;border-radius:7px;padding:8px 12px;font:inherit;font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer}
+  #dlMenuPop button:hover,#dlMenuPop button:focus-visible{background:var(--line-soft);outline:none}
 
 </style>
 
@@ -828,22 +834,22 @@
                   </div>
                   <div class="l0m-actions" id="plat0actions" style="display:none">
                     <button class="chip" type="button" id="plat0Copy">Copy sequence</button>
-                    <button class="chip primary-chip" type="button" id="plat0Dl">Download GenBank (.gb)</button>
+                    <button class="dl-menu chip primary-chip" type="button" id="plat0Dl" aria-haspopup="menu" aria-expanded="false">Download</button>
                   </div>
                   <div class="l0m-sec" id="l0bulk" style="display:none">
                     <div class="l0m-h">Level 0 downloads <span class="l0m-meta" id="l0bulkMeta"></span></div>
                     <div class="l0bulkrow"><span>All sites</span>
-                      <button class="chip primary-chip" type="button" data-bulk="seq" data-site="all">Module sequences (.gb)</button>
-                      <button class="chip primary-chip" type="button" data-bulk="prim" data-site="all">Primers (.gb)</button>
-                      <button class="chip primary-chip" type="button" data-bulk="pl" data-site="all">Plasmids (.gb)</button></div>
+                      <button class="dl-menu chip primary-chip" type="button" data-bulk="seq" data-site="all" aria-haspopup="menu" aria-expanded="false">Module sequences</button>
+                      <button class="dl-menu chip primary-chip" type="button" data-bulk="prim" data-site="all" aria-haspopup="menu" aria-expanded="false">Primers</button>
+                      <button class="dl-menu chip primary-chip" type="button" data-bulk="pl" data-site="all" aria-haspopup="menu" aria-expanded="false">Plasmids</button></div>
                     <div class="l0bulkrow"><span>Cargo site</span>
-                      <button class="chip" type="button" data-bulk="seq" data-site="cargo_site">Module sequences (.gb)</button>
-                      <button class="chip" type="button" data-bulk="prim" data-site="cargo_site">Primers (.gb)</button>
-                      <button class="chip" type="button" data-bulk="pl" data-site="cargo_site">Plasmids (.gb)</button></div>
+                      <button class="dl-menu chip" type="button" data-bulk="seq" data-site="cargo_site" aria-haspopup="menu" aria-expanded="false">Module sequences</button>
+                      <button class="dl-menu chip" type="button" data-bulk="prim" data-site="cargo_site" aria-haspopup="menu" aria-expanded="false">Primers</button>
+                      <button class="dl-menu chip" type="button" data-bulk="pl" data-site="cargo_site" aria-haspopup="menu" aria-expanded="false">Plasmids</button></div>
                     <div class="l0bulkrow"><span>NC site</span>
-                      <button class="chip" type="button" data-bulk="seq" data-site="nc_site">Module sequences (.gb)</button>
-                      <button class="chip" type="button" data-bulk="prim" data-site="nc_site">Primers (.gb)</button>
-                      <button class="chip" type="button" data-bulk="pl" data-site="nc_site">Plasmids (.gb)</button></div>
+                      <button class="dl-menu chip" type="button" data-bulk="seq" data-site="nc_site" aria-haspopup="menu" aria-expanded="false">Module sequences</button>
+                      <button class="dl-menu chip" type="button" data-bulk="prim" data-site="nc_site" aria-haspopup="menu" aria-expanded="false">Primers</button>
+                      <button class="dl-menu chip" type="button" data-bulk="pl" data-site="nc_site" aria-haspopup="menu" aria-expanded="false">Plasmids</button></div>
                   </div>
                 </div>
               </div>
@@ -878,13 +884,13 @@
                   </div>
                   <div class="l0m-actions" id="plat1actions" style="display:none">
                     <button class="chip" type="button" id="plat1Copy">Copy sequence</button>
-                    <button class="chip primary-chip" type="button" id="plat1Dl">Download GenBank (.gb)</button>
+                    <button class="dl-menu chip primary-chip" type="button" id="plat1Dl" aria-haspopup="menu" aria-expanded="false">Download</button>
                   </div>
                   <div class="l0m-sec" id="l1bulk" style="display:none">
                     <div class="l0m-h">Level 1 downloads <span class="l0m-meta" id="l1bulkMeta"></span></div>
                     <div class="l0bulkrow"><span>All modules</span>
-                      <button class="chip primary-chip" type="button" id="l1bulkIns">Module inserts (.gb)</button>
-                      <button class="chip primary-chip" type="button" id="l1bulkPl">Level 1 plasmids (.gb)</button></div>
+                      <button class="dl-menu chip primary-chip" type="button" id="l1bulkIns" aria-haspopup="menu" aria-expanded="false">Module inserts</button>
+                      <button class="dl-menu chip primary-chip" type="button" id="l1bulkPl" aria-haspopup="menu" aria-expanded="false">Level 1 plasmids</button></div>
                   </div>
                 </div>
               </div>
@@ -908,13 +914,13 @@
                   </div>
                   <div class="l0m-actions" id="plat2bactions" style="display:none">
                     <button class="chip" type="button" id="plat2bCopy">Copy sequence</button>
-                    <button class="chip primary-chip" type="button" id="plat2bDl">Download GenBank (.gb)</button>
+                    <button class="dl-menu chip primary-chip" type="button" id="plat2bDl" aria-haspopup="menu" aria-expanded="false">Download</button>
                   </div>
                   <div class="l0m-sec" id="l2bulk" style="display:none">
                     <div class="l0m-h">Level 2 downloads</div>
                     <div class="l0bulkrow"><span>Complete construct</span>
-                      <button class="chip primary-chip" type="button" id="plat2DlIns">Insert (.gb)</button>
-                      <button class="chip primary-chip" type="button" id="plat2Dl">Level 2 plasmid (.gb)</button></div>
+                      <button class="dl-menu chip primary-chip" type="button" id="plat2DlIns" aria-haspopup="menu" aria-expanded="false">Insert</button>
+                      <button class="dl-menu chip primary-chip" type="button" id="plat2Dl" aria-haspopup="menu" aria-expanded="false">Level 2 plasmid</button></div>
                   </div>
                 </div>
               </div>
@@ -922,7 +928,7 @@
           </div>
 
           <div class="copybar" style="justify-content:flex-start">
-            <button class="chip primary-chip" id="dlGenbank" style="display:none">Download complete GenBank (all levels, .gb)</button>
+            <button class="dl-menu chip primary-chip" id="dlGenbank" style="display:none" aria-haspopup="menu" aria-expanded="false">Download complete construct (all levels)</button>
           </div>
 
           <div class="nav">
@@ -1030,7 +1036,7 @@
       <div class="l0m-legend" id="asmLegend"></div>
       <div class="l0m-actions">
         <button class="chip" type="button" id="asmCopySeq">Copy sequence</button>
-        <button class="chip primary-chip" type="button" id="asmDlSeq">Download GenBank (.gb)</button>
+        <button class="dl-menu chip primary-chip" type="button" id="asmDlSeq" aria-haspopup="menu" aria-expanded="false">Download</button>
       </div>
     </div>
 
@@ -1050,7 +1056,7 @@
       </div>
       <div class="l0m-actions">
         <button class="chip" type="button" id="asmCopyPl">Copy plasmid sequence</button>
-        <button class="chip primary-chip" type="button" id="asmDlPl">Download GenBank (.gb)</button>
+        <button class="dl-menu chip primary-chip" type="button" id="asmDlPl" aria-haspopup="menu" aria-expanded="false">Download</button>
       </div>
     </div>
 
@@ -1077,7 +1083,7 @@
       <div class="l0m-legend"><span class="ins">insert</span> · <span class="oh">overhangs</span> · rest = BbsI sites / spacer bases<span id="l0mStopLegend" style="display:none"> · <span class="stp" style="padding:0 3px;font-weight:700">stop codon</span></span></div>
       <div class="l0m-actions">
         <button class="chip" type="button" id="l0mCopySeq">Copy sequence</button>
-        <button class="chip primary-chip" type="button" id="l0mDlSeq">Download GenBank (.gb)</button>
+        <button class="dl-menu chip primary-chip" type="button" id="l0mDlSeq" aria-haspopup="menu" aria-expanded="false">Download</button>
       </div>
     </div>
 
@@ -1097,7 +1103,7 @@
       </div>
       <div class="l0m-actions">
         <button class="chip" type="button" id="l0mCopyPl">Copy plasmid sequence</button>
-        <button class="chip primary-chip" type="button" id="l0mDlPl">Download GenBank (.gb)</button>
+        <button class="dl-menu chip primary-chip" type="button" id="l0mDlPl" aria-haspopup="menu" aria-expanded="false">Download</button>
       </div>
     </div>
 
@@ -2423,10 +2429,63 @@ $('#plat0Copy').addEventListener('click', e=>{ const bb=(LIB.level0Backbones||[]
 $('#plat0Dl').addEventListener('click', ()=>{ const bb=(LIB.level0Backbones||[])[0]; if(bb && bb.genbank) downloadText(`${fileSlug(bb.id.split('-')[0])}.gb`, bb.genbank); });
 
 /* ---------- Level 0 module detail window ---------- */
+let dlFormat = 'gb';          // the format chosen in the download menu: 'gb' (GenBank) or 'sbol' (SBOL 3, Turtle)
 function downloadText(filename, text){
-  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([text],{type:'text/plain'})); a.download=filename; a.click();
+  let type='text/plain';
+  if(dlFormat==='sbol' && /\.gb$/.test(filename)){        // every GenBank download is converted from the same text (frontend/sbol.js)
+    text=window.ENCORE_SBOL.fromGenbank(text); filename=filename.replace(/\.gb$/, '.ttl'); type='text/turtle';
+  }
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([text],{type})); a.download=filename; a.click();
   setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
 }
+
+/* ---------- Download menu ----------
+   Every button with the class "dl-menu" downloads GenBank or SBOL 3. A click (or hover with a mouse) opens one small menu below the
+   button. A choice runs the button's own handler again with the chosen format, so no download code has to be written twice. */
+(function(){
+  const pop=document.createElement('div'); pop.id='dlMenuPop'; pop.setAttribute('role','menu');
+  pop.innerHTML='<button type="button" role="menuitem" data-fmt="gb">GenBank (.gb)</button><button type="button" role="menuitem" data-fmt="sbol">SBOL 3 (.ttl)</button>';
+  document.body.appendChild(pop);
+  let owner=null, bypass=false, closeTimer=0;
+  const hoverable=()=>window.matchMedia && matchMedia('(hover:hover)').matches;
+  function close(){ clearTimeout(closeTimer); pop.classList.remove('open'); if(owner){ owner.setAttribute('aria-expanded','false'); owner=null; } }
+  function open(btn, focusFirst){
+    clearTimeout(closeTimer);
+    if(owner && owner!==btn) owner.setAttribute('aria-expanded','false');
+    owner=btn; btn.setAttribute('aria-expanded','true'); pop.classList.add('open');
+    const r=btn.getBoundingClientRect(), w=pop.offsetWidth, h=pop.offsetHeight;
+    const left=Math.max(8, Math.min(r.left, innerWidth-w-8));
+    const top=(r.bottom+h+8<=innerHeight) ? r.bottom+4 : Math.max(8, r.top-h-4);
+    pop.style.left=left+'px'; pop.style.top=top+'px';
+    if(focusFirst) pop.querySelector('button').focus();
+  }
+  const later=()=>{ clearTimeout(closeTimer); closeTimer=setTimeout(close, 250); };
+  document.addEventListener('click', e=>{
+    if(bypass) return;
+    const b=e.target.closest && e.target.closest('.dl-menu');
+    if(b){ e.preventDefault(); e.stopPropagation(); if(b.disabled) return;
+      if(owner===b && pop.classList.contains('open')){ if(!hoverable()) close(); } else open(b, e.detail===0); return; }   // with a mouse the menu is already open from hovering, so a click keeps it open. detail 0: opened with the keyboard
+    if(!e.target.closest('#dlMenuPop')) close();
+  }, true);
+  document.addEventListener('mouseover', e=>{ if(!hoverable()) return; const b=e.target.closest && e.target.closest('.dl-menu'); if(b && !b.disabled) open(b, false); });
+  document.addEventListener('mouseout', e=>{ if(!hoverable()) return; if(e.target.closest && (e.target.closest('.dl-menu') || e.target.closest('#dlMenuPop'))) later(); });
+  pop.addEventListener('mouseover', ()=>clearTimeout(closeTimer));
+  pop.addEventListener('click', e=>{
+    const f=e.target.closest('button[data-fmt]'); if(!f || !owner) return;
+    const btn=owner, prev=dlFormat; close();
+    bypass=true; dlFormat=f.dataset.fmt;
+    try{ btn.click(); } finally { bypass=false; dlFormat=prev; }
+    btn.focus();
+  });
+  document.addEventListener('keydown', e=>{
+    if(!pop.classList.contains('open')) return;
+    const items=[...pop.querySelectorAll('button')], i=items.indexOf(document.activeElement);
+    if(e.key==='Escape'){ const b=owner; close(); if(b) b.focus(); }
+    else if(e.key==='ArrowDown'){ e.preventDefault(); items[(i+1)%items.length].focus(); }
+    else if(e.key==='ArrowUp'){ e.preventDefault(); items[(i<=0?items.length:i)-1].focus(); }
+  });
+  addEventListener('scroll', close, true); addEventListener('resize', close);
+})();
 const fileSlug = v => String(v).replace(/[^A-Za-z0-9._-]+/g,'-').replace(/^-+|-+$/g,'');
 function flashButton(btn, text){ const t=btn.dataset.t||(btn.dataset.t=btn.textContent); btn.textContent=text; setTimeout(()=>btn.textContent=t,1200); }
 function copyText(btn, text){
@@ -2490,7 +2549,7 @@ function renderL0Primers(c){
     `<div class="l0m-legend"><span style="color:var(--muted)">${pr.clamp}</span> clamp · <span class="oh">BbsI site + overhangs (adapter ${esc(c.adapter)})</span> · <span class="ins">annealing part</span></div>`+
     primerStructureHtml(pr.structure)+
     `<p class="l0m-note">${notes.join(' · ')}</p>`+warn+
-    `<div class="l0m-actions"><button class="chip" type="button" id="l0mCopyPrim">Copy primers</button><button class="chip primary-chip" type="button" id="l0mDlPrim">Download primers + PCR product (.gb)</button></div>`;
+    `<div class="l0m-actions"><button class="chip" type="button" id="l0mCopyPrim">Copy primers</button><button class="dl-menu chip primary-chip" type="button" id="l0mDlPrim" aria-haspopup="menu" aria-expanded="false">Download primers + PCR product</button></div>`;
   $('#l0mDlPrim').onclick = ()=>downloadText(`${fileSlug(c.label)}_${fileSlug(c.type)}_primers.gb`, pr.genbank);
   $('#l0mCopyPrim').onclick = e=>copyText(e.currentTarget, `${f.name}\t${f.sequence}\n${r.name}\t${r.sequence}`);
 }
@@ -2673,8 +2732,7 @@ function renderLevel2Backbone(){
 }
 function downloadGenbank(){
   if(!lastResult || !lastResult.api || !lastResult.api.genbank) return;
-  const blob=new Blob([lastResult.api.genbank],{type:'text/plain'});
-  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='encore-construct.gb'; a.click();
+  downloadText('encore-construct.gb', lastResult.api.genbank);
 }
 $('#dlGenbank').addEventListener('click', downloadGenbank);
 
@@ -2870,7 +2928,7 @@ const seqLine = (n, seq, stop) => {
 };
 function listActions(el, text, csv, file, gb){
   el.innerHTML = `<button class="chip" type="button" data-act="copy">Copy list</button><button class="chip primary-chip" type="button" data-act="csv">Download list (.csv)</button>` +
-    (gb ? `<button class="chip primary-chip" type="button" data-act="gb">Download GenBank (.gb)</button>` : '');
+    (gb ? `<button class="dl-menu chip primary-chip" type="button" data-act="gb" aria-haspopup="menu" aria-expanded="false">Download</button>` : '');
   el.onclick = e=>{ const b=e.target.closest('button[data-act]'); if(!b) return;
     if(b.dataset.act==='copy') copyText(b, text); else if(b.dataset.act==='gb') downloadText(gb.file, gb.text); else downloadText(file, csv); };
 }
@@ -2920,7 +2978,7 @@ function renderOrder(res){
   if(ds.length){
     $('#ordDsList').innerHTML = ds.map(c=>orderRow(orderName(c), `${orderWhere(c)} · ${c.length} bp fragment (part ${c.insert.sequence.length} bp)${c.isUser ? ' · your own sequence' : c.reoptimized ? ' · toolbox part, re-optimized' : ' · toolbox part'}`, 'dsdna', '', c)).join('');
     const names = ds.map(recName);
-    $('#ordDsActions').innerHTML = `<button class="chip" type="button" data-act="copy">Copy list</button><button class="chip primary-chip" type="button" data-act="csv">Download list (.csv)</button><button class="chip primary-chip" type="button" data-act="gb">Download GenBank (.gb)</button>`;
+    $('#ordDsActions').innerHTML = `<button class="chip" type="button" data-act="copy">Copy list</button><button class="chip primary-chip" type="button" data-act="csv">Download list (.csv)</button><button class="dl-menu chip primary-chip" type="button" data-act="gb" aria-haspopup="menu" aria-expanded="false">Download</button>`;
     $('#ordDsActions').onclick = e=>{ const b=e.target.closest('button[data-act]'); if(!b) return;
       if(b.dataset.act==='copy') copyText(b, ds.map((c,i)=>`${names[i]}\t${c.sequence}`).join('\n'));
       else if(b.dataset.act==='csv') downloadText('level0_dna.csv', 'name,type,site,length,sequence\n'+ds.map((c,i)=>[names[i],c.type,orderSite(c),c.length,c.sequence].join(',')).join('\n')+'\n');
