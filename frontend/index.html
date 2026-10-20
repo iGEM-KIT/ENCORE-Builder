@@ -2447,20 +2447,18 @@ function downloadText(filename, text){
   const pop=document.createElement('div'); pop.id='dlMenuPop'; pop.setAttribute('role','menu');
   pop.innerHTML='<button type="button" role="menuitem" data-fmt="gb">GenBank (.gb)</button><button type="button" role="menuitem" data-fmt="sbol">SBOL 3 (.ttl)</button>';
   document.body.appendChild(pop);
-  let owner=null, bypass=false, closeTimer=0;
+  let owner=null, bypass=false;
   const hoverable=()=>window.matchMedia && matchMedia('(hover:hover)').matches;
-  function close(){ clearTimeout(closeTimer); pop.classList.remove('open'); if(owner){ owner.setAttribute('aria-expanded','false'); owner=null; } }
+  function close(){ pop.classList.remove('open'); if(owner){ owner.setAttribute('aria-expanded','false'); owner=null; } }
   function open(btn, focusFirst){
-    clearTimeout(closeTimer);
     if(owner && owner!==btn) owner.setAttribute('aria-expanded','false');
     owner=btn; btn.setAttribute('aria-expanded','true'); pop.classList.add('open');
     const r=btn.getBoundingClientRect(), w=pop.offsetWidth, h=pop.offsetHeight;
     const left=Math.max(8, Math.min(r.left, innerWidth-w-8));
-    const top=(r.bottom+h+8<=innerHeight) ? r.bottom+4 : Math.max(8, r.top-h-4);
+    const top=(r.bottom+h+8<=innerHeight) ? r.bottom-1 : Math.max(8, r.top-h+1);       // the menu touches the button, so the mouse can move onto it without leaving the hover
     pop.style.left=left+'px'; pop.style.top=top+'px';
     if(focusFirst) pop.querySelector('button').focus();
   }
-  const later=()=>{ clearTimeout(closeTimer); closeTimer=setTimeout(close, 250); };
   document.addEventListener('click', e=>{
     if(bypass) return;
     const b=e.target.closest && e.target.closest('.dl-menu');
@@ -2469,8 +2467,14 @@ function downloadText(filename, text){
     if(!e.target.closest('#dlMenuPop')) close();
   }, true);
   document.addEventListener('mouseover', e=>{ if(!hoverable()) return; const b=e.target.closest && e.target.closest('.dl-menu'); if(b && !b.disabled) open(b, false); });
-  document.addEventListener('mouseout', e=>{ if(!hoverable()) return; if(e.target.closest && (e.target.closest('.dl-menu') || e.target.closest('#dlMenuPop'))) later(); });
-  pop.addEventListener('mouseover', ()=>clearTimeout(closeTimer));
+  // With a mouse the menu stays only while the pointer is over its button or over the menu itself, and closes the moment it leaves both.
+  document.addEventListener('mouseout', e=>{
+    if(!hoverable() || !e.target.closest) return;
+    if(!(e.target.closest('.dl-menu') || e.target.closest('#dlMenuPop'))) return;
+    const to=e.relatedTarget;
+    if(to && to.closest && ((owner && to.closest('.dl-menu')===owner) || to.closest('#dlMenuPop'))) return;
+    close();
+  });
   pop.addEventListener('click', e=>{
     const f=e.target.closest('button[data-fmt]'); if(!f || !owner) return;
     const btn=owner, prev=dlFormat; close();
