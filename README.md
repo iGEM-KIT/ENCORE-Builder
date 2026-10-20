@@ -533,7 +533,7 @@ start `pnpm dev`. See
 
 ## License
 
-The code of this repository is released under the [MIT License](LICENSE).
+The code of this repository is released under the [Apache License 2.0](LICENSE), copyright 2026 iGEM-KIT (see [NOTICE](NOTICE)).
 Third-party components (for example primer3-py, COMMEC, the Nuxt packages) keep
 their own licenses. The data of the Open NC Database come from UniProt, the
 PDB and the cited publications and stay under the terms of those sources.
