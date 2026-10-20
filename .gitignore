@@ -26,3 +26,6 @@ frontend/fonts/opendyslexic/*.woff2
 
 # The curation workbook is kept on Zenodo, not in this repository (see encapsulin_selector/data/README.md)
 encapsulin_selector/data/*.xlsx
+
+# Local preview configuration of the desktop app (contains paths of one computer)
+.claude/launch.json
