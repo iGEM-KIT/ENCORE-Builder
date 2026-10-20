@@ -199,7 +199,7 @@
  "OPEN DATA · EXCEL WORKBOOK": "بيانات مفتوحة · مصنّف EXCEL",
  "Explore and download the underlying data": "استكشف البيانات الأساسية ونزّلها",
  "Release: {0} · {1} candidates · {2} assemblies · {3} Builder-ready CDS options. Some annotations are still under review, so check individual claims against the cited papers.": "الإصدار: {0} · {1} مرشحًا · {2} تجميعًا · {3} خيارات CDS جاهزة لـ Builder. بعض التعليقات التوضيحية ما زالت قيد المراجعة، فتحقق من كل ادعاء في الأوراق المذكورة.",
- "↓ Download scientific data (.xlsx)": "↓ تنزيل البيانات العلمية (.xlsx)",
+ "↓ Download scientific data from Zenodo": "↓ تنزيل البيانات العلمية من Zenodo",
  "OPEN DATA · COMMUNITY CONTRIBUTIONS": "بيانات مفتوحة · مساهمات المجتمع",
  "Help the Open NC Database grow": "ساعد Open NC Database على النمو",
  "FROM GENETIC INFORMATION TO SHELL ARCHITECTURE": "من المعلومات الوراثية إلى بنية الغلاف",

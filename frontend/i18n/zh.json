@@ -572,7 +572,7 @@
  "OPEN DATA · EXCEL WORKBOOK": "开放数据 · EXCEL 工作簿",
  "Explore and download the underlying data": "探索并下载底层数据",
  "Release: {0} · {1} candidates · {2} assemblies · {3} Builder-ready CDS options. Some annotations are still under review, so check individual claims against the cited papers.": "版本:{0} · {1} 个候选 · {2} 个组装体 · {3} 个可用于 Builder 的 CDS 选项。有些注释仍在审核中,所以请对照所引论文核实具体说法。",
- "↓ Download scientific data (.xlsx)": "↓ 下载科学数据 (.xlsx)",
+ "↓ Download scientific data from Zenodo": "↓ 从 Zenodo 下载科学数据",
  "OPEN DATA · COMMUNITY CONTRIBUTIONS": "开放数据 · 社区贡献",
  "Help the Open NC Database grow": "帮助 Open NC Database 成长",
  "FROM GENETIC INFORMATION TO SHELL ARCHITECTURE": "从遗传信息到外壳结构",

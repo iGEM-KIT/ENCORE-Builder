@@ -572,7 +572,7 @@
  "OPEN DATA · EXCEL WORKBOOK": "DONNÉES OUVERTES · CLASSEUR EXCEL",
  "Explore and download the underlying data": "Explorez et téléchargez les données sous-jacentes",
  "Release: {0} · {1} candidates · {2} assemblies · {3} Builder-ready CDS options. Some annotations are still under review, so check individual claims against the cited papers.": "Version : {0} · {1} candidats · {2} assemblages · {3} options de CDS prêtes pour le Builder. Certaines annotations sont encore en cours de relecture, vérifiez donc chaque affirmation dans les articles cités.",
- "↓ Download scientific data (.xlsx)": "↓ Télécharger les données scientifiques (.xlsx)",
+ "↓ Download scientific data from Zenodo": "↓ Télécharger les données scientifiques depuis Zenodo",
  "OPEN DATA · COMMUNITY CONTRIBUTIONS": "DONNÉES OUVERTES · CONTRIBUTIONS DE LA COMMUNAUTÉ",
  "Help the Open NC Database grow": "Aidez l'Open NC Database à grandir",
  "FROM GENETIC INFORMATION TO SHELL ARCHITECTURE": "DE L'INFORMATION GÉNÉTIQUE À L'ARCHITECTURE DE LA COQUE",

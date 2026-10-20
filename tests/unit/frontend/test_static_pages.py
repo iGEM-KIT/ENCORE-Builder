@@ -550,3 +550,24 @@ def test_step_4_tells_what_the_option_did_and_the_guide_explains_the_box():
                  "NCS spacers are not optimized"):
         assert part in guide, part
     assert "dashed placeholder" not in guide and "are never changed" not in guide
+
+
+def test_no_page_links_to_a_file_that_is_missing_from_the_repository():
+    """Files that are not committed (the OpenDyslexic fonts come from npm, the workbook is on Zenodo) must not be linked as local files."""
+    skip = re.compile(r"^(https?:|mailto:|data:|javascript:|tel:|blob:|\$\{)")
+    missing = []
+    pages = sorted((ROOT / "frontend").glob("*.html")) + sorted((ROOT / "encapsulin_selector").glob("*.html"))
+    for page in pages:
+        for url in re.findall(r"""(?:href|src)=["']([^"']+)["']""", page.read_text(encoding="utf8")):
+            url = url.split("#")[0].split("?")[0]
+            if not url or skip.match(url) or url.startswith(("/api", "/_nuxt")) or url.endswith("/"):
+                continue
+            if url.startswith("/selector/"):
+                path = ROOT / "encapsulin_selector" / url[len("/selector/"):]
+            elif url.startswith("/"):
+                path = ROOT / "frontend" / url[1:]
+            else:
+                path = page.parent / url
+            if not (path.exists() or path.with_name(path.name + ".html").exists() or "fonts/opendyslexic/" in url):
+                missing.append(f"{page.name}: {url}")
+    assert missing == []

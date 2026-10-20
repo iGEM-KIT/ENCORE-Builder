@@ -199,7 +199,7 @@
  "OPEN DATA · EXCEL WORKBOOK": "ОТКРЫТЫЕ ДАННЫЕ · КНИГА EXCEL",
  "Explore and download the underlying data": "Изучайте и скачивайте исходные данные",
  "Release: {0} · {1} candidates · {2} assemblies · {3} Builder-ready CDS options. Some annotations are still under review, so check individual claims against the cited papers.": "Релиз: {0} · {1} кандидатов · {2} сборок · {3} вариантов CDS для Builder. Некоторые аннотации ещё проверяются, поэтому сверяйте отдельные утверждения с цитируемыми статьями.",
- "↓ Download scientific data (.xlsx)": "↓ Скачать научные данные (.xlsx)",
+ "↓ Download scientific data from Zenodo": "↓ Скачать научные данные с Zenodo",
  "OPEN DATA · COMMUNITY CONTRIBUTIONS": "ОТКРЫТЫЕ ДАННЫЕ · ВКЛАД СООБЩЕСТВА",
  "Help the Open NC Database grow": "Помогите Open NC Database расти",
  "FROM GENETIC INFORMATION TO SHELL ARCHITECTURE": "ОТ ГЕНЕТИЧЕСКОЙ ИНФОРМАЦИИ К АРХИТЕКТУРЕ ОБОЛОЧКИ",
