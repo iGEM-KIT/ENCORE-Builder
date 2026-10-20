@@ -930,5 +930,6 @@
  "source DOIs": "来源 DOI",
  "documented review issues": "已记录的审核问题",
  "A <b>PUBLIC_GUIDE</b> sheet explains how to read it. We use the same workbook for curation and for the site data exports.": "<b>PUBLIC_GUIDE</b> 工作表说明了如何阅读。我们将同一个工作簿用于整理和网站数据导出。",
- "Biosecurity screening flagged a sequence. No construct was calculated. Change or remove the flagged sequence and try again.": "生物安全筛查标记了一条序列。没有计算构建体。请修改或删除被标记的序列后重试。"
+ "Biosecurity screening flagged a sequence. No construct was calculated. Change or remove the flagged sequence and try again.": "生物安全筛查标记了一条序列。没有计算构建体。请修改或删除被标记的序列后重试。",
+ "<b>Why the frame spacer is GC and not AT or TA.</b> The plasmids in the lab carry AT or TA as the two frame spacer bases, the builder always uses GC. We decided on purpose not to copy the lab bases. In the reading frame the spacer forms the codon AGC, CGC, GGC or TGC (serine, arginine, glycine or cysteine), so no start or stop codon can arise at a junction between two parts. The price is that the amino acid at such a junction can differ from the one in the lab plasmid. This was the only difference (four bases) in our comparison with the cloned reference construct, and the reading frame is the same.": "<b>为什么读框间隔序列是 GC 而不是 AT 或 TA。</b>实验室的质粒使用 AT 或 TA 作为两个读框间隔碱基，而 builder 始终使用 GC。我们有意不照搬实验室的碱基。在读框中，间隔序列形成密码子 AGC、CGC、GGC 或 TGC（丝氨酸、精氨酸、甘氨酸或半胱氨酸），因此两个部件的连接处不会出现起始密码子或终止密码子。代价是此类连接处的氨基酸可能与实验室质粒中的不同。在与已克隆参考构建体的比较中，这是唯一的差异（四个碱基），读框是相同的。"
 }
