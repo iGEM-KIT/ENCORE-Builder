@@ -526,9 +526,9 @@
   /* Download buttons: one button, the format is chosen in a small menu (see "Download menu" in the script) */
   .dl-menu{display:inline-flex;align-items:center;justify-content:center;gap:8px;line-height:1.25}
   .dl-menu::after{content:"";flex:none;width:0;height:0;border:4px solid transparent;border-top-color:currentColor;border-bottom:0;margin-top:1px}
-  #dlMenuPop{position:fixed;z-index:120;display:none;min-width:150px;padding:5px;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(10,30,24,.18)}
+  #dlMenuPop{position:fixed;z-index:120;display:none;box-sizing:border-box;padding:3px;background:var(--card);border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(10,30,24,.18)}
   #dlMenuPop.open{display:block}
-  #dlMenuPop button{display:block;width:100%;text-align:left;background:none;border:0;border-radius:7px;padding:8px 12px;font:inherit;font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer}
+  #dlMenuPop button{display:block;width:100%;text-align:left;background:none;border:0;border-radius:7px;padding:8px;font:inherit;font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   #dlMenuPop button:hover,#dlMenuPop button:focus-visible{background:var(--line-soft);outline:none}
 
 </style>
@@ -2445,7 +2445,7 @@ function downloadText(filename, text){
    button. A choice runs the button's own handler again with the chosen format, so no download code has to be written twice. */
 (function(){
   const pop=document.createElement('div'); pop.id='dlMenuPop'; pop.setAttribute('role','menu');
-  pop.innerHTML='<button type="button" role="menuitem" data-fmt="gb">GenBank (.gb)</button><button type="button" role="menuitem" data-fmt="sbol">SBOL 3 (.ttl)</button>';
+  pop.innerHTML='<button type="button" role="menuitem" data-fmt="gb" title="GenBank (.gb)">GenBank</button><button type="button" role="menuitem" data-fmt="sbol" title="SBOL 3 (Turtle, .ttl)">SBOL 3</button>';
   document.body.appendChild(pop);
   let owner=null, bypass=false;
   const hoverable=()=>window.matchMedia && matchMedia('(hover:hover)').matches;
@@ -2453,7 +2453,9 @@ function downloadText(filename, text){
   function open(btn, focusFirst){
     if(owner && owner!==btn) owner.setAttribute('aria-expanded','false');
     owner=btn; btn.setAttribute('aria-expanded','true'); pop.classList.add('open');
-    const r=btn.getBoundingClientRect(), w=pop.offsetWidth, h=pop.offsetHeight;
+    const r=btn.getBoundingClientRect();
+    pop.style.width=r.width+'px';                                                      // the menu is as wide as its button
+    const w=pop.offsetWidth, h=pop.offsetHeight;
     const left=Math.max(8, Math.min(r.left, innerWidth-w-8));
     const top=(r.bottom+h+8<=innerHeight) ? r.bottom-1 : Math.max(8, r.top-h+1);       // the menu touches the button, so the mouse can move onto it without leaving the hover
     pop.style.left=left+'px'; pop.style.top=top+'px';
