@@ -451,7 +451,7 @@ def test_level0_primers_flag_internal_restriction_sites(monkeypatch):
     cds = _long_cargo()
     cds = cds[:60] + 'GAAGAC' + cds[66:]  # BbsI site in the middle of the insert
     monkeypatch.setattr(user_codons_module, 'codon_optimize_part',
-                        lambda sequence, module, slot, protein=False: optimize_cds(sequence) | {'sequence': sequence, 'optimized': False})
+                        lambda sequence, module, slot, protein=False, start=False, stop=False: optimize_cds(sequence) | {'sequence': sequence, 'optimized': False})
     design = _design(cargoSeq=cds)  # without optimization the site stays, and the primers warn about it
     pr = next(c for c in design['level0Constructs'] if c['module'] == 'cargo_site' and c['slot'] == 3)['primers']
     assert any('BbsI' in s for s in pr['internalSites'])
@@ -591,7 +591,7 @@ def test_internal_restriction_sites_are_reported_on_level1(monkeypatch):
     cds = _long_cargo()
     cds = cds[:60] + 'GGTCTC' + cds[66:]
     monkeypatch.setattr(user_codons_module, 'codon_optimize_part',
-                        lambda sequence, module, slot, protein=False: optimize_cds(sequence) | {'sequence': sequence, 'optimized': False})
+                        lambda sequence, module, slot, protein=False, start=False, stop=False: optimize_cds(sequence) | {'sequence': sequence, 'optimized': False})
     cargo = _design(cargoSeq=cds)['level1Constructs'][0]  # without optimization the site stays
     assert any('BsaI' in s and 'GFP' in s for s in cargo['internalSites'])
 
@@ -1660,3 +1660,17 @@ def test_fasta_header_lines_and_digits_are_ignored_without_a_warning():
     protein = validate_cargo('>name\nMAKGEELFTGVVPILVELDGD 21\n')
     assert protein['isProtein'] and protein['clean'] == 'MAKGEELFTGVVPILVELDGD' and protein['invalidChars'] == 0
     assert validate_cargo(plain + ' ?!')['invalidChars'] == 2                                    # other characters still give the warning
+
+
+def test_a_site_across_the_added_start_codon_is_removed_too():
+    """The start codon ATG is added in front of the first coding part. A sequence that begins with AATTC makes the EcoRI site GAATTC
+    together with the G of this ATG; the optimization has to see it, so that no site is left in the finished insert."""
+    cds = ("AATTCATTTAGCCCGAGGCTACGGGGACACATGATGGCACACAGAGGTTTGATTGGAGTCGGAGTAGGAAAACTGGGATCGGCTCGAAGTGAATTTCACCCCCGTCGAAGTTTAAATCAT")
+    assert "GAATTC" not in cds and "GAATTC" in "ATG" + cds
+    ncs = {str(i): {"kind": "ncs"} for i in (1, 2, 4, 5)}
+    design = _design(cargoSeq=cds, cargoSlots=ncs, ncSlots=ncs)
+    cargo = next(c for c in design["level0Constructs"] if c["module"] == "cargo_site" and c["slot"] == 3)
+    insert = cargo["insert"]["sequence"]
+    assert insert.startswith("ATG") and "GAATTC" not in insert and "GAATTC" not in reverse_complement(insert)
+    report = next(r for r in design["codonOptimization"] if r["role"] == "cargo")
+    assert "EcoRI (GAATTC)" in report["sitesRemoved"] and report["sitesLeft"] == []

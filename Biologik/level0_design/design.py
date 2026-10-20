@@ -13,7 +13,7 @@ from .parts_db import find_library_cargo, find_real_sequence, load_parts
 from .primers import design_promoter_primers, make_primer_pair, promoter_pcr_genbank
 from .sequence import reverse_complement, validate_cargo, validate_promoter
 from .slots import CUSTOM_NC_ID, build_custom_nanocompartment, build_modules, resolve_slots, slot_summary
-from .user_codons import fix_toolkit_sites, optimize_toolkit_part, optimize_user_sequences
+from .user_codons import fix_toolkit_sites, optimize_toolkit_part, optimize_user_sequences, orf_flags
 
 
 CUSTOM_PROMOTER_ID = "custom"
@@ -101,7 +101,7 @@ def design_construct(decisions: dict = None):
     optimize_toolkit = bool(decisions.get("optimizeToolkit"))
     cargo_reoptimized = False
     if optimize_toolkit and not cargo["isProtein"] and find_library_cargo(cargo["clean"]):
-        new_seq, summary = optimize_toolkit_part(cargo["clean"], "cargo", 3)
+        new_seq, summary = optimize_toolkit_part(cargo["clean"], "cargo", 3, *orf_flags(cargo_slots, "cargo").get(3, (False, False)))
         if new_seq != cargo["clean"]:
             cargo["clean"], cargo_codon, cargo_reoptimized = new_seq, summary, True
     # The cargo sits in pESC (MCS1) on the antisense strand. So the reverse complement is formed right

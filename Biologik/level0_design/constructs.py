@@ -258,7 +258,7 @@ def build_level0_constructs(nc: dict, cargo_label: str, cargo_antisense: str, ca
     shell, cargo = _middle_parts(nc, cargo_label, cargo_antisense, cargo_reoptimized)
     shell_summary = None
     if reoptimize and not shell.is_user and shell.is_real and shell.seq:           # option "optimize the toolKIT sequences again"
-        new_seq, summary = reoptimize(shell.seq, "nc", 3)
+        new_seq, summary = reoptimize(shell.seq, "nc", 3, *_orf_flags(nc_slots, "nc").get(3, (False, False)))
         if new_seq != shell.seq:                                  # a sequence that was already fine stays the sequence of the plasmid
             shell_summary = summary
             shell = shell._replace(seq=new_seq, source=None, what=shell.what.replace("(toolkit part)", "(toolkit part, re-optimized)"))
@@ -279,7 +279,7 @@ def build_level0_constructs(nc: dict, cargo_label: str, cargo_antisense: str, ca
                 cfg = slots[covers[0]]
                 part, codon, again = _toolkit_part(cfg, nc, site, covers[0]), cfg.get("codon"), False
                 if reoptimize and cfg["kind"] in CODING_TOOLKIT_KINDS and part.is_real and part.seq:
-                    new_seq, summary = reoptimize(part.seq, module, covers[0])
+                    new_seq, summary = reoptimize(part.seq, module, covers[0], *flags.get(covers[0], (False, False)))
                     if new_seq != part.seq:
                         codon, again = summary, True
                         part = part._replace(seq=new_seq, source=None, what=part.what.replace("(toolkit part)", "(toolkit part, re-optimized)"))
