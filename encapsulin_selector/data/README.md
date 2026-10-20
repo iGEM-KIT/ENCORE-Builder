@@ -4,8 +4,8 @@
 
 The curated workbook `Open_Encapsulin_Databank.xlsx` is the source of these JSON files, but it is
 not stored in this repository, because iGEM keeps datasets and documents out of the code
-repository. It is archived on Zenodo (the DOI is added here as soon as the record is published).
-To run `scripts/export-excel-to-json.py`, download the workbook from there and put it into this
+repository. It is archived on Zenodo: [10.5281/zenodo.23509873](https://doi.org/10.5281/zenodo.23509873).
+To run `scripts/export-excel-to-json.py`, download the workbook from that record and put it into this
 folder. The JSON files in this folder are the data that the software reads, so everything else
 works without the workbook.
 
