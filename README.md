@@ -313,6 +313,12 @@ from the terminal into it or send a mail to [Fese1000](https://github.com/Fese10
 
 ## For developers
 
+### How it is built
+
+A picture of the parts and the data flow is in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+The HTTP interface is described in [docs/openapi.yaml](docs/openapi.yaml) (OpenAPI 3), so that
+other tools can call the Builder.
+
 ### Local development (without Docker)
 
 Requirements: Node.js ≥20.19 and [pnpm](https://pnpm.io/).
@@ -442,6 +448,3 @@ The code of this repository is released under the [MIT License](LICENSE).
 Third-party components (for example primer3-py, COMMEC, the Nuxt packages) keep
 their own licenses. The data of the Open NC Database come from UniProt, the
 PDB and the cited publications and stay under the terms of those sources.
-
-# Permission
-Some might encounter troubles while pushing it to the max. How weird.

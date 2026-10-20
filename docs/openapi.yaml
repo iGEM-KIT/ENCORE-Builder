@@ -1,0 +1,245 @@
+openapi: 3.0.3
+info:
+  title: ENCORE-Builder API
+  version: 1.0.0
+  description: |
+    HTTP interface of the ENCORE-Builder (Nuxt server, port 3000). The web pages use these
+    endpoints, and so can scripts and other tools. Every call runs on your own computer.
+    The design itself is calculated by the Python package `Biologik/level0_design`, which
+    the server starts per request and which can also be called directly from the command line:
+    `python3 -m Biologik.level0_design.cli design < request.json`.
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: http://localhost:3000
+paths:
+  /api/libraries:
+    get:
+      summary: Selection lists of the Builder
+      description: |
+        Nanocompartments, cargo presets, linkers, promoters, surface markers, inteins,
+        targeting peptides, NCS spacers and backbones. The same data the design uses.
+      responses:
+        "200":
+          description: The libraries.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  nanocompartments: { type: array, items: { type: object } }
+                  cargoPresets: { type: array, items: { type: object } }
+                  linkers: { type: array, items: { type: object } }
+                  promoters: { type: array, items: { type: object } }
+                  surfaceMarkers: { type: array, items: { type: object } }
+                  inteins: { type: array, items: { type: object } }
+                  targetingPeptides: { type: array, items: { type: object } }
+                  ncs: { type: array, items: { type: object } }
+                  level0Backbones: { type: array, items: { type: object } }
+                  level1Backbones: { type: array, items: { type: object } }
+                  level2Backbones: { type: array, items: { type: object } }
+        "500": { $ref: "#/components/responses/Error" }
+  /api/design:
+    post:
+      summary: Calculate a complete Golden Gate design
+      description: |
+        Returns the Level 0 parts, the Level 1 and Level 2 constructs, the PCR primers, the
+        codon optimization report and, if requested, a GenBank export. Invalid input gives a 400
+        with a message that explains what is wrong. A request and the expected result are in
+        `docs/examples/oxygen-free-space-request.json`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/DesignRequest" }
+      responses:
+        "200":
+          description: The design.
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Design" }
+        "400": { $ref: "#/components/responses/Error" }
+        "500": { $ref: "#/components/responses/Error" }
+  /api/cargo/validate:
+    post:
+      summary: Check one sequence you entered
+      description: |
+        Checks length, GC content, reading frame and stop codons with the same code that the
+        design uses. A sequence that is not usable is a valid answer with `ok: false`, not an
+        HTTP error. For a usable coding sequence the answer also contains a preview of the
+        codon optimization.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [cargoSeq]
+              properties:
+                cargoSeq: { type: string, description: DNA or amino acid sequence. }
+                kind:
+                  type: string
+                  enum: [cargo, shell, part, promoter]
+                  default: cargo
+      responses:
+        "200":
+          description: The validation result.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  validation:
+                    type: object
+                    properties:
+                      ok: { type: boolean }
+                      clean: { type: string }
+                      length: { type: integer }
+                      gc: { type: number }
+                      isProtein: { type: boolean }
+                      errors: { type: array, items: { type: string } }
+                      warnings: { type: array, items: { type: string } }
+                      codonOptimization: { type: object }
+        "500": { $ref: "#/components/responses/Error" }
+  /api/cargo/screen:
+    post:
+      summary: Biosecurity screening of your sequences
+      description: |
+        Sends the sequences you entered (proteins are back-translated first) to the COMMEC
+        screening container. If the container is not reachable, the answer is
+        `available: false` with a reason. The Builder web page then does not calculate a
+        construct.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sequences]
+              properties:
+                sequences:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      label: { type: string }
+                      sequence: { type: string }
+      responses:
+        "200":
+          description: The screening result.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  available: { type: boolean }
+                  reason: { type: string }
+                  results:
+                    type: array
+                    items: { type: object, description: One entry per screened sequence, with its screen_status and rationale. }
+  /api/cargo/commec-status:
+    get:
+      summary: Is the screening container ready?
+      responses:
+        "200":
+          description: Status of the screening container.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  available: { type: boolean }
+                  reason: { type: string }
+components:
+  responses:
+    Error:
+      description: Error with a message.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              statusCode: { type: integer }
+              statusMessage: { type: string }
+  schemas:
+    Slot:
+      description: What sits in one of the slots Type 0.1, 0.2, 0.4 or 0.5.
+      oneOf:
+        - type: object
+          required: [kind]
+          properties: { kind: { type: string, enum: [ncs, tp] } }
+        - type: object
+          required: [kind, id]
+          properties:
+            kind: { type: string, enum: [linker, marker] }
+            id: { type: string, description: "Id from /api/libraries, for example GSSS3 or spytag." }
+        - type: object
+          required: [kind, seq]
+          properties:
+            kind: { type: string, enum: [custom] }
+            label: { type: string }
+            seq: { type: string }
+    Slots:
+      type: object
+      description: Keys are "1", "2", "4" and "5". Missing slots stay NCS.
+      additionalProperties: { $ref: "#/components/schemas/Slot" }
+    DesignRequest:
+      type: object
+      required: [nanocompartment, cargoSeq]
+      properties:
+        nanocompartment: { type: string, description: "Id from /api/libraries, or custom." }
+        customNanocompartment:
+          type: object
+          properties: { label: { type: string }, tp: { type: string }, seq: { type: string } }
+        cargoSeq: { type: string, description: Coding sequence (DNA) or amino acid sequence without stop codon. }
+        cargoLabel: { type: string }
+        promoter: { type: string, description: "Promoter id (default GAL110), or custom." }
+        customPromoter:
+          type: object
+          properties: { label: { type: string }, seq: { type: string } }
+        cargoSlots: { $ref: "#/components/schemas/Slots" }
+        ncSlots: { $ref: "#/components/schemas/Slots" }
+        optimizeToolkit: { type: boolean, default: false }
+        genbank: { type: boolean, default: false, description: "Also return a GenBank export in the field genbank." }
+    Design:
+      type: object
+      properties:
+        nanocompartment: { type: object }
+        targetingPeptide: { type: string, nullable: true }
+        cargo: { type: object }
+        level0: { type: object }
+        level2: { type: object }
+        cargoSlots: { type: object }
+        ncSlots: { type: object }
+        primers:
+          type: array
+          items:
+            type: object
+            properties:
+              name: { type: string }
+              role: { type: string, enum: [forward, reverse] }
+              overhang: { type: string }
+              anneal: { type: string }
+              full: { type: string }
+              length: { type: integer }
+              tm: { type: number }
+              tmMethod: { type: string, enum: [primer3-nn, wallace] }
+              q5AnnealingTemp: { type: number }
+              valid: { type: boolean }
+              issues: { type: array, items: { type: string } }
+        codonOptimization: { type: object }
+        toolkitOptimization: { type: object }
+        level0Constructs: { type: array, items: { type: object } }
+        level1Constructs: { type: array, items: { type: object } }
+        level2Construct:
+          type: object
+          properties:
+            name: { type: string }
+            sequence: { type: string }
+            length: { type: integer }
+            parts: { type: array, items: { type: object } }
+            overhangs: { type: array, items: { type: object } }
+            junctions: { type: object }
+            plasmid: { type: object }
+        genbank: { type: string, description: Only if requested. }
