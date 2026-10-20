@@ -668,7 +668,6 @@
  "About the codon optimization": "حول تحسين الكودونات",
  "About the biosecurity screening": "حول فحص السلامة الحيوية",
  "How the primers are calculated": "كيف تُحسب البادئات",
- "Make an existing sequence Level 0-compatible: PCR it with these primers, then clone the product into the Level 0 backbone with BbsI.": "اجعل تسلسلًا موجودًا متوافقًا مع المستوى 0: ضاعفه بـ PCR بهذه البادئات ثم استنسخ الناتج في هيكل المستوى 0 بـ BbsI.",
  "Copy primers": "نسخ البادئات",
  "Download primers + PCR product (.gb)": "تنزيل البادئات + ناتج PCR (.gb)",
  "Structure check": "فحص البنية",

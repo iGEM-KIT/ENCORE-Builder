@@ -668,7 +668,6 @@
  "About the codon optimization": "О кодон-оптимизации",
  "About the biosecurity screening": "О проверке биобезопасности",
  "How the primers are calculated": "Как рассчитываются праймеры",
- "Make an existing sequence Level 0-compatible: PCR it with these primers, then clone the product into the Level 0 backbone with BbsI.": "Сделайте существующую последовательность совместимой с уровнем 0: амплифицируйте её ПЦР с этими праймерами, затем клонируйте продукт в вектор уровня 0 с помощью BbsI.",
  "Copy primers": "Копировать праймеры",
  "Download primers + PCR product (.gb)": "Скачать праймеры + продукт ПЦР (.gb)",
  "Structure check": "Проверка структуры",

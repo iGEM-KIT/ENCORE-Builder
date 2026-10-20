@@ -186,7 +186,6 @@
  "About the codon optimization": "Über die Codon-Optimierung",
  "About the biosecurity screening": "Über das Biosicherheits-Screening",
  "How the primers are calculated": "Wie die Primer berechnet werden",
- "Make an existing sequence Level 0-compatible: PCR it with these primers, then clone the product into the Level 0 backbone with BbsI.": "Mache eine vorhandene Sequenz Level-0-kompatibel: Amplifiziere sie per PCR mit diesen Primern und klone das Produkt mit BbsI in das Level-0-Backbone.",
  "Copy primers": "Primer kopieren",
  "Download primers + PCR product (.gb)": "Primer + PCR-Produkt herunterladen (.gb)",
  "Structure check": "Strukturprüfung",

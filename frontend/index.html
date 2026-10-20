@@ -1083,7 +1083,6 @@
 
     <div class="l0m-sec" id="l0mPrimSec">
       <div class="l0m-h">PCR primers <button class="info" type="button" data-info="primers" aria-label="How the primers are calculated">i</button> <span class="l0m-meta" id="l0mPrimMeta"></span></div>
-      <p class="l0m-note" id="l0mPrimIntro" style="margin:0 0 8px">Make an existing sequence Level 0-compatible: PCR it with these primers, then clone the product into the Level 0 backbone with BbsI.</p>
       <div id="l0mPrimBody"></div>
     </div>
 
@@ -2478,7 +2477,6 @@ function renderL0Primers(c){
   const pr=c.primers, sec=$('#l0mPrimSec'), body=$('#l0mPrimBody');
   // Primers only exist for your own sequences that are long enough for PCR; otherwise the section just says so.
   sec.style.display = pr ? '' : 'none';
-  $('#l0mPrimIntro').style.display = pr && pr.possible ? '' : 'none';
   if(!pr || !pr.possible){ $('#l0mPrimMeta').textContent=''; body.innerHTML = pr ? '<p class="l0m-note" style="margin:0">No primers available.</p>' : ''; return; }
   const f=pr.forward, r=pr.reverse;
   $('#l0mPrimMeta').textContent = `PCR product ${pr.productLength} bp`;

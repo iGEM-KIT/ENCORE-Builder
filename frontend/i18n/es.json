@@ -186,7 +186,6 @@
  "About the codon optimization": "Sobre la optimización de codones",
  "About the biosecurity screening": "Sobre el cribado de bioseguridad",
  "How the primers are calculated": "Cómo se calculan los cebadores",
- "Make an existing sequence Level 0-compatible: PCR it with these primers, then clone the product into the Level 0 backbone with BbsI.": "Haz una secuencia existente compatible con el nivel 0: amplifícala por PCR con estos cebadores y clona el producto en el vector base de nivel 0 con BbsI.",
  "Copy primers": "Copiar cebadores",
  "Download primers + PCR product (.gb)": "Descargar cebadores + producto de PCR (.gb)",
  "Structure check": "Comprobación de estructuras",

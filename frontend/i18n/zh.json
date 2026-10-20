@@ -186,7 +186,6 @@
  "About the codon optimization": "关于密码子优化",
  "About the biosecurity screening": "关于生物安保筛查",
  "How the primers are calculated": "引物的计算方式",
- "Make an existing sequence Level 0-compatible: PCR it with these primers, then clone the product into the Level 0 backbone with BbsI.": "让现有序列兼容 0 级:用这些引物进行 PCR,再用 BbsI 将产物克隆到 0 级骨架载体中。",
  "Copy primers": "复制引物",
  "Download primers + PCR product (.gb)": "下载引物 + PCR 产物 (.gb)",
  "Structure check": "结构检查",
