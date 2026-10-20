@@ -20,3 +20,9 @@ __pycache__/
 .venv/
 venv/
 .pytest_cache/
+
+# OpenDyslexic: copied from the npm package by scripts/copy-fonts.mjs
+frontend/fonts/opendyslexic/*.woff2
+
+# The curation workbook is kept on Zenodo, not in this repository (see encapsulin_selector/data/README.md)
+encapsulin_selector/data/*.xlsx

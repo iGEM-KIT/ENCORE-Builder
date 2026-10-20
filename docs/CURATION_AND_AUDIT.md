@@ -2,7 +2,7 @@
 
 ## Authoritative production workbook
 
-`encapsulin_selector/data/Open_Encapsulin_Databank.xlsx` is the **same workbook** provided separately as `ENCORE_Databank_Final_Curation_Audit_16_10_2026.xlsx`. This file is the input to `scripts/export-excel-to-json.py`.
+`Open_Encapsulin_Databank.xlsx` (archived on Zenodo, not stored in this repository, see [encapsulin_selector/data/README.md](../encapsulin_selector/data/README.md)) is the **same workbook** provided separately as `ENCORE_Databank_Final_Curation_Audit_16_10_2026.xlsx`. This file is the input to `scripts/export-excel-to-json.py`.
 
 This release has **74 candidates, 51 assemblies, 56 pore records, 74 genomic sequence links, 139 evidence entries, 181 citation links, 47 DOI index entries, 19 targeting-peptide records, 50 targeting-peptide to assembly links, and 24 approved Builder designs**. These are the counts of the JSON files on 19 October 2026. The baseline of the release on 16 October was 131 evidence entries, 154 citation links and 46 DOI index entries, so the sheet `RELEASE_AUDIT` can still show the older numbers. The release sheet `RELEASE_AUDIT` records these *baseline* counts with live Excel formulas. Baseline matching alone does **not** validate scientific correctness; the exporter provides stronger schema and data synchronization checks.
 
