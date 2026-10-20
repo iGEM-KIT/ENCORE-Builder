@@ -1,0 +1,38 @@
+{
+  "nanocompartment": "qther",
+  "cargoLabel": "LGB4",
+  "cargoSeq": "GGTGCTTTCACGGAAAAGCAAGAGGCTCTAGTTAGTTCTTCATTTGAGGCTTTCAAGGCAAATATTCCTCAGTATTCAGTAGTTTTCTATACATCAATTCTAGAAAAGGCACCCGCGGCGAAGGACCTATTTAGCTTCTTATCAAACGGAGTCGACCCCTCAAACCCAAAGCTTACTGGTCACGCAGAGAAATTATTCGGATTAGTACGTGACAGTGCTGGGCAGTTAAAAGCTAATGGCACGGTCGTCGCAGACGCCGCTCTTGGAAGTATACACGCACAGAAGGCAATTACTGACCCACAGTTCGTAGTGGTAAAAGAGGCGCTATTAAAGACCATAAAGGAAGCTGTAGGGGATAAGTGGTCGGATGAGTTATCGTCCGCATGGGAAGTAGCATACGACGAGTTGGCGGCGGCCATAAAGAAAGCCTTC",
+  "promoter": "GAL110",
+  "cargoSlots": {
+    "1": {
+      "kind": "marker",
+      "id": "spytag"
+    },
+    "2": {
+      "kind": "linker",
+      "id": "GSSS3"
+    },
+    "4": {
+      "kind": "ncs"
+    },
+    "5": {
+      "kind": "ncs"
+    }
+  },
+  "ncSlots": {
+    "1": {
+      "kind": "marker",
+      "id": "spycatcher"
+    },
+    "2": {
+      "kind": "linker",
+      "id": "GSSS3"
+    },
+    "4": {
+      "kind": "ncs"
+    },
+    "5": {
+      "kind": "ncs"
+    }
+  }
+}

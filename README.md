@@ -9,6 +9,11 @@ It runs on your own computer, inside a program called Docker. Nothing you type l
 computer. This page explains every way to start it, step by step. You do not need programming
 skills.
 
+**Who is it for?** For iGEM teams and labs that want to build an encapsulin cargo construct
+with Golden Gate cloning in yeast and do not want to plan every part, overhang and primer by
+hand. The Builder is meant for wet lab members without programming experience. The Open NC
+Database is meant for everyone who wants to compare encapsulin shells before choosing one.
+
 **Contents**
 
 1. [Which way is right for me?](#which-way-is-right-for-me)
@@ -18,9 +23,10 @@ skills.
 5. [Docker Desktop window](#using-the-docker-desktop-window)
 6. [Biosecurity screening is always included](#biosecurity-screening-is-always-included)
 7. [Using the software](#using-the-software)
-8. [Stopping, updating and cleaning up](#stopping-updating-and-cleaning-up)
-9. [Something does not work](#something-does-not-work)
-10. [For developers](#for-developers)
+8. [Reproduce the example](#reproduce-the-example)
+9. [Stopping, updating and cleaning up](#stopping-updating-and-cleaning-up)
+10. [Something does not work](#something-does-not-work)
+11. [For developers](#for-developers)
 
 ## Which way is right for me?
 
@@ -208,6 +214,48 @@ software itself**. On the start page, click the **"Before you start"** card: it 
 with all rules and notes (what the builder accepts, which combinations are allowed, how your
 own sequences are handled, how to read the results and what to order). Read it once before you
 start.
+
+## Reproduce the example
+
+You can check that your installation calculates correctly with one fixed example: the design of
+the construct that we also cloned in the lab (see the page Oxygen-Free Space of our wiki). It
+uses the shell of *Quasibacillus thermotolerans* (E-Qt) and the cargo LGB4. The cargo carries a
+SpyTag, a 3×(GSSS) linker and two NCS spacers. The shell carries a SpyCatcher, a 3×(GSSS) linker
+and two NCS spacers. The promoter is GAL1-10.
+
+**In the Builder:** choose the shell *Quasibacillus thermotolerans*, the cargo *LGB4* and the
+promoter *GAL1-10*. In the cargo module put the marker SpyTag in Type 0.1 and the linker 3×(GSSS)
+in Type 0.2. In the nanocompartment module put the marker SpyCatcher in Type 0.1 and the linker
+3×(GSSS) in Type 0.2. Leave Type 0.4 and 0.5 as NCS in both modules.
+
+**Without the web page** (needs Python 3 and the packages of `Biologik/requirements.txt`),
+from the project folder:
+
+```bash
+python3 -m Biologik.level0_design.cli design < docs/examples/oxygen-free-space-request.json
+```
+
+The request is the file [docs/examples/oxygen-free-space-request.json](docs/examples/oxygen-free-space-request.json).
+
+**What you should get:**
+
+| Result | Value |
+|---|---|
+| Cargo module (antisense) | SpyTag, 3×(GSSS), LGB4, NCS, NCS (Type 0.1 to 0.5) |
+| Promoter | GAL1-10 |
+| Nanocompartment module (sense) | SpyCatcher, 3×(GSSS), E-Qt, NCS, NCS (Type 0.1 to 0.5) |
+| Level 1 constructs | Level1_Cargo, Level1_Promoter, Level1_NC |
+| Junction overhangs of Level 2 | CCAA, CGTT, TGAT, AATG |
+| Level 2 insert | 2555 bp |
+| Level 2 plasmid (pESC-HIS) | 8274 bp |
+| Cargo primers | `GGTCTCNCCAAGAAGGCTTTCTTTATGGCCGCCG` and `GGTCTCNGCAAGGTGCTTTCACGGAAAAGCAAGAGG` |
+
+The result is the same on every run, because no part of this example is codon optimized with a
+random draw. If you give your own sequences, the codon optimization uses a weighted random draw,
+so the exact bases of those parts can differ between runs while the rules (no forbidden sites,
+same protein) stay the same. The test
+[tests/unit/biologik/test_reference_example.py](tests/unit/biologik/test_reference_example.py)
+runs this example on every push, so the numbers above stay correct.
 
 ## Stopping, updating and cleaning up
 
