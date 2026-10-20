@@ -9,8 +9,8 @@ info:
     the server starts per request and which can also be called directly from the command line:
     `python3 -m Biologik.level0_design.cli design < request.json`.
   license:
-    name: Apache 2.0
-    url: https://www.apache.org/licenses/LICENSE-2.0
+    name: MIT
+    url: https://opensource.org/licenses/MIT
 servers:
   - url: http://localhost:3000
 paths:
