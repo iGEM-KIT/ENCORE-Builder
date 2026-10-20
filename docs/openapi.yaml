@@ -162,6 +162,7 @@ components:
             properties:
               statusCode: { type: integer }
               statusMessage: { type: string }
+              message: { type: string }
   schemas:
     Slot:
       description: What sits in one of the slots Type 0.1, 0.2, 0.4 or 0.5.

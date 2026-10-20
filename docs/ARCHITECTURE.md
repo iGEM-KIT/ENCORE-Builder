@@ -58,3 +58,17 @@ flowchart LR
 
 Before step 1 the page sends every sequence you entered to `POST /api/cargo/screen`. The Builder
 does not calculate a construct when the screening container is not ready or flags a sequence.
+
+## Speed
+
+[scripts/benchmark_design.py](../scripts/benchmark_design.py) times the calculation of a design in the
+engine. Measured on an Apple M3 Pro (Python 3.13, 10 runs per case, median):
+
+| Case | Time |
+|---|---|
+| The README example (toolkit parts only) | 0.02 s |
+| The same construct with an own cargo of 500 amino acids (codon optimization and site check) | 0.29 s |
+
+A whole request to `POST /api/design` of the README example, including the start of the Python
+process, takes about 0.1 s. Codon optimization is the part that grows with the length of your own
+sequences. Run the script yourself with `python3 scripts/benchmark_design.py`.

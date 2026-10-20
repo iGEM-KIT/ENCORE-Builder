@@ -339,6 +339,70 @@ The main image alone (`docker build -t encore-builder .`, ENCORE-Builder and Ope
 but then it does not calculate any construct. Users should always start the Compose files so that the
 screening is included.
 
+### Calling the Builder from a script
+
+The Builder has a small HTTP interface, described in [docs/openapi.yaml](docs/openapi.yaml). With the
+software running on port 3000 (Way A or `pnpm dev`), a design of the example above looks like this:
+
+```bash
+curl -X POST http://localhost:3000/api/design \
+  -H "content-type: application/json" \
+  -d @docs/examples/oxygen-free-space-request.json
+```
+
+or from Python, with the standard library only:
+
+```python
+import json
+import urllib.request
+
+with open("docs/examples/oxygen-free-space-request.json") as f:
+    request = json.load(f)
+req = urllib.request.Request(
+    "http://localhost:3000/api/design",
+    data=json.dumps(request).encode(),
+    headers={"content-type": "application/json"},
+)
+design = json.load(urllib.request.urlopen(req))
+
+print(design["level2Construct"]["length"], "bp insert")           # 2555 bp insert
+for primer in design["primers"]:
+    print(primer["name"], primer["full"])
+```
+
+`GET /api/libraries` lists the ids that you can use (shells, cargos, linkers, markers, promoters).
+A request that cannot be calculated gets the status 400 and a message that says why. Add
+`"genbank": true` to the request to get a GenBank file in the field `genbank` of the answer.
+The same calculation runs without the web server:
+`python3 -m Biologik.level0_design.cli design < request.json`.
+
+### Adding a part
+
+The part files are plain JSON in
+[Biologik/level0_design/parts/](Biologik/level0_design/parts/README.md). No build and no restart is needed, the
+engine reads them fresh for every request.
+
+1. Copy `Biologik/level0_design/parts/level0_inserts/_template.json` to `<category>-<part>.json`
+   (for example `cargo-myprotein.json`).
+2. Fill in the fields. `sequence` is the bare part: sense strand, **without** start codon, stop codon,
+   overhangs and frame spacer, a multiple of 3 and free of BsaI and BbsI sites. The Builder adds ATG
+   and the stop codon where they are needed. `plasmids` lists the Level 0 plasmids that carry the part
+   (Type slot and site).
+3. What else depends on the kind of part:
+
+| Kind of part | Also needed |
+|---|---|
+| Cargo | nothing, it appears in the cargo list by itself |
+| Linker or surface marker | one line (id, label, description) in `_LINKER_META` or `_MARKER_META` in `Biologik/level0_design/data.py` |
+| Shell (nanocompartment) | one line in `NANOCOMPARTMENTS` in `data.py`, plus the file of its targeting peptide (`tp-...`) |
+| Promoter | a file in `Biologik/level0_design/parts/promoters/` with `label`, `desc`, `order` and `sequence` |
+
+4. Check it: `GET /api/libraries` must list the part, then run `python3 -m pytest -q`. The tests check
+   that every coding part is a multiple of 3 and that the finished constructs carry no BsaI or BbsI site.
+
+For a new encapsulin in the Open NC Database see
+[encapsulin_selector/data/README.md](encapsulin_selector/data/README.md).
+
 ### Publishing the Docker images
 
 The workflow [.github/workflows/publish-images.yml](.github/workflows/publish-images.yml)
