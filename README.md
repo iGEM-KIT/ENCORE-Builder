@@ -388,5 +388,12 @@ adding a new nanocompartment means: copy the template, fill in the fields,
 start `pnpm dev`. See
 [encapsulin_selector/data/README.md](encapsulin_selector/data/README.md).
 
+## License
+
+The code of this repository is released under the [MIT License](LICENSE).
+Third-party components (for example primer3-py, COMMEC, the Nuxt packages) keep
+their own licenses. The data of the Open NC Database come from UniProt, the
+PDB and the cited publications and stay under the terms of those sources.
+
 # Permission
 Some might encounter troubles while pushing it to the max. How weird.
