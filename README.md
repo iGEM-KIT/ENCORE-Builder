@@ -531,6 +531,17 @@ adding a new nanocompartment means: copy the template, fill in the fields,
 start `pnpm dev`. See
 [encapsulin_selector/data/README.md](encapsulin_selector/data/README.md).
 
+## Use of AI
+
+An AI coding assistant, Claude Code by Anthropic (model Claude Sonnet 5.5), helped to build this software. It was used to write and change
+program code, tests, documentation, the in-app guide and the texts of the interface, and to translate the interface into the seven other languages.
+Commits that were made with this help carry a `Co-Authored-By: Claude` line in the git history.
+
+* The design decisions, the scientific content (the curated data of the Open NC Database, the toolKIT parts and their sequences) and the
+  checks against the lab come from the team. The assistant did not produce experimental results.
+* The translations were written with the assistant and have not been proofread by native speakers. They can contain mistakes.
+* The team remains responsible for everything in this repository. Please open an issue if you find an error.
+
 ## License
 
 The code of this repository is released under the [MIT License](LICENSE), copyright 2026 iGEM-KIT (see [NOTICE](NOTICE)).
