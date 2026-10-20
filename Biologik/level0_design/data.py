@@ -73,7 +73,7 @@ NANOCOMPARTMENTS = [
     {"id": "tmari", "label": "Thermotoga maritima", "T": 1, "dia": "24 nm", "tp": "TP-Tm", "shell": "E-Tm"},
     {"id": "mxan", "label": "Myxococcus xanthus", "T": 3, "dia": "32 nm", "tp": "TP-Mx", "shell": "E-Mx"},
     {"id": "qther", "label": "Quasibacillus thermotolerans", "T": 4, "dia": "42 nm", "tp": "TP-Qt", "shell": "E-Qt"},
-    # The human vault is no encapsulin: no triangulation number, barrel of about 41 x 73 nm. Its targeting peptide is the intein INT.
+    # The human vault is no encapsulin: no triangulation number, barrel of about 41 x 73 nm. Its targeting peptide is the INT domain (vault-interacting domain).
     {"id": "mvp", "label": "Major vault protein (vault)", "T": None, "dia": "41 x 73 nm", "tp": "INT", "shell": "MVP"},
 ]
 for _nc in NANOCOMPARTMENTS:
@@ -137,7 +137,7 @@ INTEINS = [
      "desc": "INT", "slots": _slots("intein", "int"), "status": _status("intein", "int")}
 ] if _length("intein", "int") else []
 def _tp_entry(nc: dict) -> dict:
-    """Targeting peptide of a nanocompartment. For the vault it is the intein INT (a Level 0 part of the category intein), offered like the other targeting peptides in the cargo module only."""
+    """Targeting peptide of a nanocompartment. For the vault it is the INT domain (a Level 0 part of the category "intein", the old internal name), offered like the other targeting peptides in the cargo module only."""
     if nc["id"] == "mvp":
         slots, status = _slots("intein", "int"), _status("intein", "int")
         return {"id": nc["tp"], "label": f"Targeting peptide {nc['tp']}", "bp": _length("intein", "int") or 0,

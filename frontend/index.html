@@ -1750,7 +1750,7 @@ function enforceSlotRules(mod){
     const inner = n===2 || n===4;
     const noNcs = inner && blocksNcs(mod,n), needLnk = inner && needsLinker(mod,n), outer=LINKER_FOR[n];
     const otherTp = SLOT_NUMBERS.some(m=>m!==n && isTpPart(sl[m]));
-    const noTpHere = !!(state.nc && !state.nc.tp);                         // an own shell brings no targeting peptide; use "Use your own sequence" (the vault has the intein INT)
+    const noTpHere = !!(state.nc && !state.nc.tp);                         // an own shell brings no targeting peptide; use "Use your own sequence" (the vault has the INT domain)
     [...sel.options].forEach(o=>{
       const v=o.value;
       let off=false;
@@ -2808,7 +2808,7 @@ function openLevel1Modal(c){
     plasmid: pl, plasmidHeading: 'Cloned into the Level 1 backbone', ringSub: 'KanR · Level 1 acceptor',
     explain: isPromo
       ? `The promoter is ${c.isUser ? 'your own sequence, made by PCR (the primers are in the overview)' : 'a toolkit part'}, not assembled from Level 0 pieces: it is flanked by the Level 1 acceptor overhangs (ACAT … TTGT) and carries the two Level 2 overhangs ${c.level2Overhangs.n} / ${c.level2Overhangs.c} that join it to the cargo module and the NC module. BsaI replaces the lacZα stuffer of ${bb ? bb.id.split('-')[0] : 'the backbone'} with it; both BsaI sites are cut away with the stuffer, the two BbsI sites of the backbone stay for Level 2. Plasmid sequence = top strand 5′→3′.`
-      : `BsaI releases each Level 0 part together with its two 4-nt Level 1 overhangs. The five fragments ligate through the shared overhangs (${junctions.join(' · ')}) and fit between NLvl1 and CLvl1 of ${bb ? bb.id.split('-')[0] : 'the backbone'}: the lacZα stuffer and both BsaI sites are cut away, so this plasmid can no longer be cut by BsaI. The two BbsI sites of the backbone stay; BbsI later releases the module at its Level 2 overhangs (${c.level2Overhangs.n} … ${c.level2Overhangs.c}). Plasmid sequence = top strand 5′→3′${isCargo ? '; the cargo module sits on it as the reverse complement (antisense strand); the module above is shown rotated by 180°, the plasmid stays in backbone orientation' : ''}.`,
+      : `BsaI releases each Level 0 part together with its two 4-nt Level 1 overhangs. The five fragments ligate through the shared overhangs (${junctions.join(' · ')}) and fit between NLvl1 and CLvl1 of ${bb ? bb.id.split('-')[0] : 'the backbone'}: the lacZα stuffer and both BsaI sites are cut away, so this plasmid can no longer be cut by BsaI. The two BbsI sites of the backbone stay; BbsI later releases the module at its Level 2 overhangs (${c.level2Overhangs.n} … ${c.level2Overhangs.c}). Plasmid sequence = top strand 5′→3′${isCargo ? '; the cargo module sits on it as the reverse complement (antisense strand); the module above is shown as its reverse complement, the plasmid stays in backbone orientation' : ''}.`,
   });
   scrollAsmSeqTop();
 }

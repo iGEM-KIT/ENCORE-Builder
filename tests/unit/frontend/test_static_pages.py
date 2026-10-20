@@ -238,7 +238,7 @@ def test_the_pages_never_assume_a_remote_server():
 
 def test_the_guide_names_the_intein_as_the_targeting_peptide_of_the_vault_and_points_to_the_registry():
     guide = re.sub(r"<[^>]*>", " ", GUIDE.read_text(encoding="utf8"))
-    assert "intein INT" in guide and "MVP" in guide
+    assert "INT domain" in guide and "vault-interacting domain" in guide and "MVP" in guide
     assert "registry.igem.org" in GUIDE.read_text(encoding="utf8") and "Use your own sequence" in guide
     assert "has no targeting peptide of the toolkit either" not in guide
 

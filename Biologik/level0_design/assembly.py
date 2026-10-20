@@ -239,7 +239,7 @@ def rotated_view(module: dict) -> dict:
     for p in parts:
         feats.append(make_feature("CDS", _loc(p["start"], p["end"], p["strand"] == "antisense"), p["label"], p["note"]))
     feats.sort(key=lambda f: location_span(f["location"])[0])
-    definition = (f"{module['what']} (antisense strand module), shown rotated by 180 degrees relative to the Level 1 plasmid top "
+    definition = (f"{module['what']} (antisense strand module), shown as the reverse complement of the Level 1 plasmid top "
                   f"strand so the cargo reads 5'->3' left to right: Level 0 parts joined via BsaI overhangs, flanked by the "
                   f"reverse complements of CLvl1 and NLvl1." + (" " + " ".join(module["notes"]) if module["notes"] else ""))
     return {

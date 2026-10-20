@@ -1289,7 +1289,7 @@ LEVEL2_SLOT_VARIANTS = [
 def test_the_level2_insert_has_the_two_level2_overhangs_and_no_bbsi_or_bsai_site(nanocompartment, variant):
     from Biologik.level0_design.design import design_construct
     if 'intein' in str(LEVEL2_SLOT_VARIANTS[variant]) and nanocompartment != 'mvp':
-        pytest.skip('the intein INT is the targeting peptide of the vault and is offered only with the vault')
+        pytest.skip('the INT domain is the targeting peptide of the vault and is offered only with the vault')
     design = design_construct({'nanocompartment': nanocompartment, 'cargoSeq': _long_cargo(), 'cargoLabel': 'X', **LEVEL2_SLOT_VARIANTS[variant]})
     insert = design['level2Construct']['sequence']
     assert insert[:4] == 'CCAA' and insert[-4:] == 'AATG'

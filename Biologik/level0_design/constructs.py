@@ -86,7 +86,7 @@ def _toolkit_part(cfg: dict, nc: dict, site: str, n: int) -> Part:
         return Part(cfg["label"], found[0], found[1], False, "surface marker (toolkit part)", found[2])
     if kind == "intein":
         found = resolve_insert("intein", cfg["id"], site, n, "INT" + cfg["id"], cfg["bp"])
-        return Part(cfg["label"], found[0], found[1], False, "intein (toolkit part)", found[2])
+        return Part(cfg["label"], found[0], found[1], False, "INT domain (toolkit part)", found[2])
     if kind in COMBINED_NCS:
         a, b = COMBINED_NCS[kind]
         found = resolve_insert("ncs", "ncs", site, None, "NCS", 30, covers_slots=[a, b])
@@ -183,7 +183,7 @@ def _ordering_options(part: Part, built: dict, shown: dict, n: int, module: str,
 
 def _definition(label: str, adapter_id: str, antisense: bool, is_real: bool) -> str:
     site = "cargo" if antisense else "nanocompartment"
-    strand = ("antisense strand (cargo module); shown rotated 180 degrees relative to the Level 0 plasmid top strand"
+    strand = ("antisense strand (cargo module); shown as the reverse complement of the Level 0 plasmid top strand"
               if antisense else "sense strand")
     text = f"Level 0 construct for the {site} site: {label} in adapter {adapter_id} (BbsI). Sequence 5'->3' left to right, {strand}."
     return text if is_real else text + " PLACEHOLDER insert: the real sequence is not in the parts database yet."
@@ -216,7 +216,7 @@ def _build_construct(part: Part, module: str, n: int, codon: dict | None, backbo
                 "insertSequence": built["insert"]["sequence"]}
 
     shown = rotate_built(built) if antisense else built
-    orientation = ("antisense strand (cargo module): shown 5'->3' left to right, rotated 180° vs. the Level 0 plasmid top strand"
+    orientation = ("antisense strand (cargo module): shown 5'->3' left to right, as the reverse complement of the Level 0 plasmid top strand"
                    if antisense else "sense strand: as entered")
     features = _construct_features(shown, part, n, adapter_id, orientation, codon)
     primers, oligos = _ordering_options(part, built, shown, n, module, adapter_id, features, reoptimized)

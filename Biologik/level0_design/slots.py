@@ -119,7 +119,7 @@ def _slot_part(n: int, cfg: dict, tp_label: str = "TP") -> dict:
         return {"role": "surface-marker", "label": cfg["label"], "kind": "mark",
                 "note": "Surface marker", "bp": cfg["bp"], "surface": True}
     if kind == "intein":
-        return {"role": "intein", "label": cfg["label"], "kind": f"t{n}", "note": "Intein", "bp": cfg["bp"]}
+        return {"role": "intein", "label": cfg["label"], "kind": f"t{n}", "note": "INT domain", "bp": cfg["bp"]}
     if kind == "custom":
         return {"role": "custom-part", "label": cfg["label"], "kind": f"t{n}", "note": "Your sequence",
                 "bp": cfg["bp"], "isNew": True}
