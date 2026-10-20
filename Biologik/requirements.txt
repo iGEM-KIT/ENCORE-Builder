@@ -1,1 +1,1 @@
-primer3-py
+primer3-py==2.3.1
