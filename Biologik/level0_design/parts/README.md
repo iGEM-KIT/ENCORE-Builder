@@ -13,10 +13,12 @@ Every entry is a JSON file of its own, grouped by kind in a subfolder, exactly l
 | `type_overhangs/`   | the seven overhang adapters (source of the overhangs and the frame spacer) |
 
 The frame spacer is GC in every adapter, although the lab plasmids carry AT or TA at these two positions. This is a decision, not an
-oversight: in the reading frame the spacer forms the codon AGC, CGC, GGC or TGC (serine, arginine, glycine or cysteine), so no start or stop
-codon can arise at a junction between two parts. The amino acid at a junction can therefore differ from the lab plasmid. In the comparison
-with the cloned reference construct (Level 2, *Q. thermotolerans* shell, LGB4, SpyTag, 3×GSSS, SpyCatcher) this was the only difference,
-four bases of the frame spacers.
+oversight. The two spacer bases sit in one codon together with one neighbouring base (which one depends on the strand a module is
+read on, the cargo module is read on the antisense strand). With AT that codon can become ATG, with TA it can become TAA or TAG, so a
+start or stop codon can arise at a junction. GC cannot form any start or stop codon. An empirical check supports it: with TA in all
+spacers the cargo ORF got a premature stop codon in 84 of 120 test designs. The price of GC is that the amino acid at a junction can
+differ from the lab plasmid. In the comparison with the cloned reference construct (Level 2, *Q. thermotolerans* shell, LGB4, SpyTag,
+3×GSSS, SpyCatcher) this was the only difference, four bases of the frame spacers.
 
 The dropdowns of the software (catalogue metadata such as labels, T number, description) live in `data.py`; which parts really exist at
 which site and slot and what sequence they have comes from `level0_inserts/`.
