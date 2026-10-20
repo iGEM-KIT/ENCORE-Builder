@@ -16,17 +16,30 @@ Database is meant for everyone who wants to compare encapsulin shells before cho
 
 **Contents**
 
-1. [Which way is right for me?](#which-way-is-right-for-me)
-2. [Step 0: install Docker (all ways)](#step-0-install-docker-all-ways)
-3. [Way A: easiest, download one file](#way-a-easiest-download-one-file)
-4. [Way B: download the whole project and build it yourself](#way-b-download-the-whole-project-and-build-it-yourself)
-5. [Docker Desktop window](#using-the-docker-desktop-window)
-6. [Biosecurity screening is always included](#biosecurity-screening-is-always-included)
-7. [Using the software](#using-the-software)
-8. [Reproduce the example](#reproduce-the-example)
-9. [Stopping, updating and cleaning up](#stopping-updating-and-cleaning-up)
-10. [Something does not work](#something-does-not-work)
-11. [For developers](#for-developers)
+1. [Where the project lives](#where-the-project-lives)
+2. [Which way is right for me?](#which-way-is-right-for-me)
+3. [Step 0: install Docker (all ways)](#step-0-install-docker-all-ways)
+4. [Way A: easiest, download one file](#way-a-easiest-download-one-file)
+5. [Way B: download the whole project and build it yourself](#way-b-download-the-whole-project-and-build-it-yourself)
+6. [Docker Desktop window](#using-the-docker-desktop-window)
+7. [Biosecurity screening is always included](#biosecurity-screening-is-always-included)
+8. [Using the software](#using-the-software)
+9. [Reproduce the example](#reproduce-the-example)
+10. [Stopping, updating and cleaning up](#stopping-updating-and-cleaning-up)
+11. [Something does not work](#something-does-not-work)
+12. [For developers](#for-developers)
+
+## Where the project lives
+
+The project is published on two websites with the same files and this same README. Use the one you like, every step below works with both:
+
+| | Website | Address |
+|---|---|---|
+| GitHub | the team repository | [github.com/iGEM-KIT/ENCORE-Builder](https://github.com/iGEM-KIT/ENCORE-Builder) |
+| GitLab | the repository of the iGEM competition | [gitlab.igem.org/2026/software/kit/encore-software](https://gitlab.igem.org/2026/software/kit/encore-software) |
+
+The ready-made Docker images are stored on the GitHub Container Registry (`ghcr.io`). The file `docker-compose.pull.yml`
+points there, so it starts the same program whether you downloaded it from GitHub or from GitLab.
 
 ## Which way is right for me?
 
@@ -131,22 +144,33 @@ screening for you.
    Linux (WSL/Ubuntu). Docker Desktop finds it from there.
 2. Get the file `docker-compose.pull.yml` into that folder. It has to end in exactly `.yml`.
    Some browsers save a plain link as `.txt`, so use one of these two ways:
-   * **With the browser:** open
-     [the file on GitHub](https://github.com/iGEM-KIT/ENCORE-Builder/blob/main/docker-compose.pull.yml)
-     and click the **Download raw file** button (the download arrow at the top right of the file
-     view). Move the file into your folder.
+   * **With the browser:** open the file on
+     [GitHub](https://github.com/iGEM-KIT/ENCORE-Builder/blob/main/docker-compose.pull.yml) or on
+     [GitLab](https://gitlab.igem.org/2026/software/kit/encore-software/-/blob/main/docker-compose.pull.yml)
+     and click the download button (the download arrow at the top right of the file view, called
+     **Download raw file** on GitHub and **Download** on GitLab). Move the file into your folder.
    * **With the terminal:** open a terminal in your folder first (see above: right-click the
      folder), then run the command for your system. The file lands directly in that folder with
      the right name.
 
-     Mac and Linux:
+     Mac and Linux, from GitHub:
      ```bash
      curl -L -o docker-compose.pull.yml https://raw.githubusercontent.com/iGEM-KIT/ENCORE-Builder/main/docker-compose.pull.yml
      ```
 
-     Windows (PowerShell):
+     Mac and Linux, from GitLab:
+     ```bash
+     curl -L -o docker-compose.pull.yml https://gitlab.igem.org/2026/software/kit/encore-software/-/raw/main/docker-compose.pull.yml
+     ```
+
+     Windows (PowerShell), from GitHub:
      ```bash
      curl.exe -L -o docker-compose.pull.yml https://raw.githubusercontent.com/iGEM-KIT/ENCORE-Builder/main/docker-compose.pull.yml
+     ```
+
+     Windows (PowerShell), from GitLab:
+     ```bash
+     curl.exe -L -o docker-compose.pull.yml https://gitlab.igem.org/2026/software/kit/encore-software/-/raw/main/docker-compose.pull.yml
      ```
 
    Check the name: if the file is called `docker-compose.pull.yml.txt` (or `docker-compose.pull.txt`),
@@ -174,13 +198,18 @@ Choose this if you want to read or change the code, or if you prefer to build th
 yourself instead of trusting a ready-made image. Docker builds everything from the project files.
 
 1. Download the project. Without any extra software: open
-   [github.com/iGEM-KIT/ENCORE-Builder](https://github.com/iGEM-KIT/ENCORE-Builder), click the
-   green **Code** button, then **Download ZIP**, and unzip the file. If you know git, you can
-   instead run:
+   [GitHub](https://github.com/iGEM-KIT/ENCORE-Builder), click the green **Code** button, then
+   **Download ZIP**, or open [GitLab](https://gitlab.igem.org/2026/software/kit/encore-software),
+   click the blue **Code** button, then **zip** under **Download source code**. Unzip the file. If you know
+   git, you can instead run one of these:
    ```bash
    git clone https://github.com/iGEM-KIT/ENCORE-Builder.git
    ```
-2. Open a terminal in the unzipped folder `ENCORE-Builder` (see above: right-click the folder).
+   ```bash
+   git clone https://gitlab.igem.org/2026/software/kit/encore-software.git
+   ```
+   The unzipped folder is called `ENCORE-Builder` (GitHub) or `encore-software-main` (GitLab). Both work in the same way.
+2. Open a terminal in the unzipped folder (see above: right-click the folder).
 3. Build and start:
    ```bash
    docker compose up --build
@@ -306,7 +335,7 @@ above): the folder with `docker-compose.pull.yml` for Way A and the project fold
 | Windows asks about WSL 2 or virtualization, or Docker Desktop says "WSL needs updating" | Install WSL 2 as described in Step 0 (`wsl --install` in an administrator PowerShell, then restart). If Docker Desktop still complains, run `wsl --update` once and restart Docker Desktop. Virtualization may have to be enabled in the BIOS; the Docker documentation explains how. |
 
 Still stuck? Open an
-[issue on GitHub](https://github.com/iGEM-KIT/ENCORE-Builder/issues) and copy the last lines
+[issue on GitHub](https://github.com/iGEM-KIT/ENCORE-Builder/issues) (or on GitLab, if you work there) and copy the last lines
 from the terminal into it or send a mail to [Fese1000](https://github.com/Fese1000).
 
 ---
