@@ -1,6 +1,7 @@
 #!/bin/bash
 # Double-click start for Mac and Linux: starts the ENCORE-Builder from the ready-made images
-# (docker-compose.pull.yml) and opens it in the browser.
+# (docker-compose.pull.yml) and opens it in the browser. Every start first fetches the newest
+# images from Docker Hub, so starting again is also the update.
 cd "$(dirname "$0")" || exit 1
 
 pause_and_exit() {
@@ -20,6 +21,9 @@ if [ ! -f docker-compose.pull.yml ]; then
   curl -fL -o docker-compose.pull.yml \
     https://raw.githubusercontent.com/iGEM-KIT/ENCORE-Builder/main/docker-compose.pull.yml || pause_and_exit 1
 fi
+
+echo "Checking for a newer version ..."
+docker compose -f docker-compose.pull.yml pull || echo "Could not check for updates, using the version on this computer."
 
 echo "Starting the ENCORE-Builder. The first start takes several minutes."
 docker compose -f docker-compose.pull.yml up -d || pause_and_exit 1
