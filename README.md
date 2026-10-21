@@ -5,8 +5,7 @@ Golden Gate toolKIT. You put together a nanocompartment and a cargo, and the Bui
 all parts, primers or oligos to order and a finished Level 2 plasmid map. A second tool, the
 Open NC Database, helps you to find the matching shell first.
 
-It runs on your own computer, inside a program called Docker. Nothing you type leaves your
-computer. This page explains how to start it, step by step. You do not need programming
+It runs on your own computer, inside a program called Docker. This page explains how to start it, step by step. You do not need programming
 skills.
 
 **Who is it for?** For iGEM teams and labs that want to build an encapsulin cargo construct
