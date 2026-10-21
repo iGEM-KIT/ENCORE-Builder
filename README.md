@@ -90,10 +90,8 @@ The ready-made program is on Docker Hub, the app store of Docker. You pull it wi
 Docker Desktop. There is nothing to download from GitHub or GitLab. There are two images, because
 the Builder always runs together with the biosecurity screening:
 
-| Image | What it is |
-|---|---|
-| `igemkit/encore-builder` | the ENCORE-Builder and the Open NC Database |
-| `igemkit/encore-builder-commec` | the biosecurity screening |
+* `igemkit/encore-builder`: the ENCORE-Builder and the Open NC Database
+* `igemkit/encore-builder-commec`: the biosecurity screening
 
 1. Start **Docker Desktop** and wait for "Engine running".
 2. Click the search field at the top (or press Ctrl+K, on a Mac Cmd+K) and type `igemkit`.
@@ -105,36 +103,22 @@ the Builder always runs together with the biosecurity screening:
 ## Step 3: start the two containers
 
 Start the screening first, then the Builder. In the **Images** tab, click the **Run** button
-(triangle) at the end of the line of an image, open **Optional settings**, fill in exactly the fields
-named here and click **Run**.
+(triangle) at the end of the line of an image and open **Optional settings**.
 
-**First `igemkit/encore-builder-commec`:**
-
-| Field | Value |
-|---|---|
-| Host port | `8787` |
-| Volumes: Host path | `commec-db` |
-| Volumes: Container path | `/databases` |
-
-The volume keeps the screening databases (about 1.2 GB). They are downloaded once, on this first
-start, and stay available when you update later. If the field for the host path insists on a
-folder, click the folder button and create an empty folder named `commec-db` on your Desktop.
-
-**Then `igemkit/encore-builder`:**
-
-| Field | Value |
-|---|---|
-| Host port | `3000` |
-
-Then:
-
-1. Wait. The **first start takes several minutes**, because the screening container downloads its
+1. **`igemkit/encore-builder-commec`:** enter the host port `8787`. Under **Volumes** enter `commec-db`
+   as host path and `/databases` as container path (this keeps the screening databases of about 1.2 GB for
+   later updates). Click **Run**.
+2. **`igemkit/encore-builder`:** enter the host port `3000` and click **Run**.
+3. Wait. The **first start takes several minutes**, because the screening container downloads its
    databases once. Click `commec` in the **Containers** tab and open **Logs** to see what it does.
    Later starts take seconds.
-2. Open your web browser and go to **[http://localhost:3000](http://localhost:3000)**.
-3. In the top right the page shows **"Biosecurity screening: on"** with a green dot as soon as
+4. Open your web browser and go to **[http://localhost:3000](http://localhost:3000)**.
+5. In the top right the page shows **"Biosecurity screening: on"** with a green dot as soon as
    the screening is ready. Until then it says "off" and the Builder does not calculate a
    construct (it shows a message instead). Wait for the green dot before you calculate.
+
+If the volume field insists on a folder, click the folder button and create an empty folder named
+`commec-db` on your Desktop.
 
 To stop the program, see [Stopping, updating and cleaning up](#stopping-updating-and-cleaning-up).
 
