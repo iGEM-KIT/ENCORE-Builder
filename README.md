@@ -62,8 +62,8 @@ Skip this block on Mac and Linux.
    but you will rarely need it. When the window shows a prompt like `name@computer:~$`, the setup is done and you can
    close it.
 5. If the command fails or says that virtualization is off, switch on virtualization in the BIOS (it is called
-   "Intel VT-x", "AMD-V" or "SVM Mode", depending on the computer) and run the command again. WSL 2 needs Windows 10
-   (version 2004 or newer) or Windows 11.
+   "Intel VT-x", "AMD-V" or "SVM Mode", depending on the computer) and run the command again. Docker Desktop needs Windows 10
+   (version 21H2 or newer) or Windows 11.
 
 Now continue with Docker Desktop:
 
