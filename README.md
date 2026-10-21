@@ -202,14 +202,19 @@ containers there: the Builder and `commec` (the screening).
 ### Update to the newest version
 
 Docker Hub always holds the newest version under the tag `latest`. Your computer keeps the version
-it pulled, so you update by pulling again:
+it pulled, so you update by pulling again. **Usually only the Builder (`igemkit/encore-builder`) has to be
+updated.** The screening image (`igemkit/encore-builder-commec`) rarely changes, so you do not need to pull it
+each time. Update it only if a release note says so or if the screening does not work after an update.
 
-1. In the search field at the top type `igemkit` and click **Pull** on `igemkit/encore-builder`
-   (and on `igemkit/encore-builder-commec` if the screening changed). Docker only downloads what is new.
-2. In the **Containers** tab stop and **delete** the old Builder container (and `commec` if you pulled
-   it again). The screening databases are not lost, they live in the volume `commec-db`.
-3. Start the containers again with **Run** in the **Images** tab, exactly as in
-   [Step 3](#step-3-start-the-two-containers).
+1. In the search field at the top type `igemkit` and click **Pull** on `igemkit/encore-builder`. Docker only
+   downloads what is new.
+2. In the **Containers** tab stop and **delete** the old Builder container. Leave `commec` running; it keeps
+   working with the new Builder and its databases stay in the volume `commec-db`.
+3. Start the Builder again with **Run** in the **Images** tab, exactly as in
+   [Step 3](#step-3-start-the-two-containers) (host port `3000`).
+
+If you did pull `igemkit/encore-builder-commec` as well, stop and delete the `commec` container too and
+start it again before the Builder, as in Step 3.
 
 After an update, the **Images** tab shows the previous version of each image with the name `<none>`
 (the name moved to the new image). These old images are no longer used and **can safely be deleted**
