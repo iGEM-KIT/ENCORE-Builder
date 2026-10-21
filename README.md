@@ -54,8 +54,8 @@ install that before Docker Desktop. Skip this block on Mac and Linux.
    ```bash
    wsl --install
    ```
-3. Wait until it is finished, then **restart the computer**.
-4. After the restart a window opens and finishes the download of Linux (Ubuntu). Wait for it, then **create a user
+3. Wait until it is finished. Restart the computer only if Windows asks for it.
+4. A window opens and finishes the download of Linux (Ubuntu). Wait for it, then **create a user
    account**: type a user name and press Enter, then choose a password (nothing is shown while you type it) and
    repeat it. This account exists only on your computer for Linux, it is not an online account. Remember the password,
    but you will rarely need it. When the window shows a prompt like `name@computer:~$`, the setup is done and you can
