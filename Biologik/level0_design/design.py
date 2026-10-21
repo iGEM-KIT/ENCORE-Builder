@@ -92,7 +92,9 @@ def design_construct(decisions: dict = None):
     if not nc.get("tp") and any(cfg["kind"] == "tp" for cfg in cargo_slots.values()):
         raise ValueError(f"{'A custom' if nc.get('custom') else 'This'} nanocompartment has no targeting peptide; use your own sequence in that slot.")
 
-    if nc.get("id") != "mvp" and any(cfg["kind"] == "intein" for cfg in (*cargo_slots.values(), *nc_slots.values())):
+    if any(cfg["kind"] == "intein" for cfg in nc_slots.values()):
+        raise ValueError("The INT domain is a targeting peptide and can only be used in the cargo module, not in the nanocompartment module.")
+    if nc.get("id") != "mvp" and any(cfg["kind"] == "intein" for cfg in cargo_slots.values()):
         raise ValueError("The INT domain (vault-interacting domain) is the targeting peptide of the human vault; with this nanocompartment use your own sequence in that slot.")
 
     codon_report, cargo_codon = optimize_user_sequences(cargo, cargo_label, nc, cargo_slots, nc_slots)

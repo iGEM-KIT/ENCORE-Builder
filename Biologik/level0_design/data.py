@@ -130,11 +130,12 @@ SURFACE_MARKERS = [
     if _length("marker", pid)
 ]
 
-# INT (Type 0.1, cargo site) and the targeting peptides (cargo site only: C-terminal in Type 0.1 with stop codon, N-terminal
+# INT (cargo site only, never the nanocompartment site) and the targeting peptides (cargo site only: C-terminal in Type 0.1 with stop codon, N-terminal
 # in Type 0.5 with start codon), each with the slots where a Level 0 plasmid exists.
 INTEINS = [
     {"id": "int", "label": "INT", "aa": (_length("intein", "int") or 0) // 3, "bp": _length("intein", "int") or 0,
-     "desc": "INT", "slots": _slots("intein", "int"), "status": _status("intein", "int")}
+     "desc": "INT", "slots": {"nc": [], "cargo": _slots("intein", "int").get("cargo", [])},
+     "status": {"nc": {}, "cargo": (_status("intein", "int") or {}).get("cargo", {})}}
 ] if _length("intein", "int") else []
 def _tp_entry(nc: dict) -> dict:
     """Targeting peptide of a nanocompartment. For the vault it is the INT domain (a Level 0 part of the category "intein", the old internal name), offered like the other targeting peptides in the cargo module only."""
