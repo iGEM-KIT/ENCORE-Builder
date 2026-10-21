@@ -39,7 +39,7 @@ The project is published on two websites with the same files and this same READM
 | GitLab | the repository of the iGEM competition | [gitlab.igem.org/2026/software/kit/encore-software](https://gitlab.igem.org/2026/software/kit/encore-software) |
 
 * **Way A (ready-made images) works through GitHub only.** The file and the ready-made images both come from GitHub
-  (the images from the GitHub Container Registry, `ghcr.io`). The GitLab of iGEM has no container registry for this project, so it cannot
+  (the images from Docker Hub, `igemkit/...`, with a copy on the GitHub Container Registry, `ghcr.io`). The GitLab of iGEM has no container registry for this project, so it cannot
   provide the images.
 * **Way B (build it yourself) works with both websites.** You download the project files from GitHub or from GitLab and Docker builds
   everything on your computer.
@@ -53,7 +53,7 @@ the biosecurity screening. There is no way to run the Builder without the screen
 |---|---|---|
 | For whom | Everybody. Start here. | People who want to read or change the code |
 | You download | one small file | the whole project |
-| Where the program comes from | ready-made images from the GitHub Container Registry (GitHub only) | built on your computer from the project files (GitHub or GitLab) |
+| Where the program comes from | ready-made images from Docker Hub (the file comes from GitHub) | built on your computer from the project files (GitHub or GitLab) |
 | First start | a few minutes | 10 to 30 minutes |
 
 Both ways need Docker (Step 0). If you are unsure, take **Way A**.
@@ -183,6 +183,14 @@ are on GitLab, either open the file on GitHub with the links below or use [Way B
    the screening is ready. Until then it says "off" and the Builder does not calculate a
    construct (it shows a message instead). Wait for the green dot before you calculate.
 
+**Without typing anything:** if you have the project folder (for example from the ZIP in Way B), double-click
+`start.command` (Mac, Linux) or `start.bat` (Windows) instead of steps 3 and 4. The file starts
+Docker Compose with the ready-made images, downloads `docker-compose.pull.yml` if it is missing, waits until
+the Builder is up and opens your browser. Docker Desktop has to be running. Mac: if `start.command` was
+downloaded on its own, the Mac does not allow it to run; use the copy from the ZIP, or run
+`chmod +x start.command` once. Windows may show a blue "protected your PC" box: click **More info**,
+then **Run anyway**.
+
 To stop the program, see [Stopping, updating and cleaning up](#stopping-updating-and-cleaning-up).
 
 ## Way B: download the whole project and build it yourself
@@ -299,7 +307,7 @@ above): the folder with `docker-compose.pull.yml` for Way A and the project fold
 | Run in the background | containers started from the window already run in the background | add `-d` to the start command; stop it with the `down` command | same |
 | Update to the newest version | stop the project, then use the terminal command in the next column (a pull is needed) | `docker compose -f docker-compose.pull.yml pull`, then start again | `git pull` (or download the ZIP again), then `docker compose up --build` |
 | Remove the program but keep the screening databases | **Containers** tab, **Delete** (trash can) on the entry of the project | `docker compose -f docker-compose.pull.yml down` | `docker compose down` |
-| Remove everything, including the downloaded screening databases (frees about 5 GB) | delete the project in the **Containers** tab, then delete the two `ghcr.io/igem-kit/...` images in the **Images** tab and the volume ending in `commec-db` in the **Volumes** tab | `docker compose -f docker-compose.pull.yml down --volumes --rmi all` | `docker compose down --volumes --rmi all` |
+| Remove everything, including the downloaded screening databases (frees about 5 GB) | delete the project in the **Containers** tab, then delete the two `igemkit/...` images in the **Images** tab and the volume ending in `commec-db` in the **Volumes** tab | `docker compose -f docker-compose.pull.yml down --volumes --rmi all` | `docker compose down --volumes --rmi all` |
 
 ### After an update: old images and closing the terminal
 
@@ -431,11 +439,14 @@ For a new encapsulin in the Open NC Database see
 ### Publishing the Docker images
 
 The workflow [.github/workflows/publish-images.yml](.github/workflows/publish-images.yml)
-builds both images for `linux/amd64` and `linux/arm64` and pushes them to the GitHub Container
+builds both images for `linux/amd64` and `linux/arm64` and pushes them to Docker Hub and to the GitHub Container
 Registry on every push to `main`, on version tags (`v1.2.3`) and by hand from the Actions tab:
 
-* `ghcr.io/igem-kit/encore-builder` (ENCORE-Builder and Open NC Database)
-* `ghcr.io/igem-kit/encore-builder-commec` (biosecurity screening)
+* `igemkit/encore-builder` (ENCORE-Builder and Open NC Database)
+* `igemkit/encore-builder-commec` (biosecurity screening)
+
+Both are also published as `ghcr.io/igem-kit/...`. The workflow needs the repository secrets
+`DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` (a Docker Hub access token with Read & Write permission).
 
 `docker-compose.yml` has both `image:` and `build:` for every service, so
 `docker compose up --build` builds locally and plain `docker compose up` pulls;

@@ -1,9 +1,9 @@
 # One file, two ways to use it:
 #   docker compose up --build   builds both images from this repository
-#   docker compose up           pulls the ready-made images from ghcr.io (no build)
+#   docker compose up           pulls the ready-made images from Docker Hub (no build)
 services:
   app:
-    image: ghcr.io/igem-kit/encore-builder:latest
+    image: igemkit/encore-builder:latest
     build: .
     ports:
       - "3000:3000"
@@ -26,7 +26,7 @@ services:
   # commec 1.0.4 is used because it is the newest version that installs on every
   # platform (Windows, Linux, Mac incl. Apple Silicon), so no platform pin here.
   commec:
-    image: ghcr.io/igem-kit/encore-builder-commec:latest
+    image: igemkit/encore-builder-commec:latest
     build: ./commec-service
     ports:
       - "8787:8787"

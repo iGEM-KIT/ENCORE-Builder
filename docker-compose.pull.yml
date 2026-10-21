@@ -1,10 +1,10 @@
 # Download only this one file to run the ENCORE-Builder without the rest of the repository.
-# It pulls the ready-made images from the GitHub Container Registry; nothing is built.
+# It pulls the ready-made images from Docker Hub; nothing is built.
 #   docker compose -f docker-compose.pull.yml up
 # (name the file docker-compose.yml and plain `docker compose up` works as well)
 services:
   app:
-    image: ghcr.io/igem-kit/encore-builder:latest
+    image: igemkit/encore-builder:latest
     ports:
       - "3000:3000"
     restart: unless-stopped
@@ -16,7 +16,7 @@ services:
   # Biosecurity screening (COMMEC). Downloads its databases (about 1.2 GB) on the first start
   # into the volume below, so later starts are fast.
   commec:
-    image: ghcr.io/igem-kit/encore-builder-commec:latest
+    image: igemkit/encore-builder-commec:latest
     ports:
       - "8787:8787"
     environment:
