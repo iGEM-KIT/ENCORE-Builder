@@ -5,8 +5,8 @@ Golden Gate toolKIT. You put together a nanocompartment and a cargo, and the Bui
 all parts, primers or oligos to order and a finished Level 2 plasmid map. A second tool, the
 Open NC Database, helps you to find the matching shell first.
 
-It runs on your own computer, inside a program called Docker. This page explains how to start it, step by step. You do not need programming
-skills.
+It runs on your own computer, inside a program called Docker. This page explains how to start it,
+step by step. You do not need programming skills.
 
 **Who is it for?** For iGEM teams and labs that want to build an encapsulin cargo construct
 with Golden Gate cloning in yeast and do not want to plan every part, overhang and primer by
@@ -38,7 +38,7 @@ program you do not need either of them: the ready-made program is on
 | GitHub | the team repository | [github.com/iGEM-KIT/ENCORE-Builder](https://github.com/iGEM-KIT/ENCORE-Builder) |
 | GitLab | the repository of the iGEM competition | [gitlab.igem.org/2026/software/kit/encore-software](https://gitlab.igem.org/2026/software/kit/encore-software) |
 
-The Builder always runs **together with two containers**: the Builder (with the Open NC Database) and
+The program always consists of **two containers**: the Builder (with the Open NC Database) and
 the biosecurity screening. There is no way to use the Builder without the screening.
 
 ## Step 1: install Docker
@@ -46,8 +46,9 @@ the biosecurity screening. There is no way to use the Builder without the screen
 Docker is a free program that runs other programs in a protected box (a "container"), so that
 you do not have to install anything else. You only need to do this once.
 
-**Windows only: install WSL 2 first.** Docker Desktop on Windows runs on the Windows Subsystem for Linux (WSL 2), so
-install that before Docker Desktop. Skip this block on Mac and Linux.
+**Windows only: install WSL 2 first.** Docker Desktop on Windows needs the Windows Subsystem for Linux
+(WSL 2). The Docker installer often sets it up by itself, but installing it first avoids errors.
+Skip this block on Mac and Linux.
 
 1. Open the Start menu, type `PowerShell`, right-click **Windows PowerShell** and choose **Run as administrator**.
 2. Type this and press Enter:
@@ -121,7 +122,7 @@ If the volume field insists on a folder, click the folder button and create an e
 
 To stop the program, see [Stopping, updating and cleaning up](#stopping-updating-and-cleaning-up).
 
-**If you prefer the terminal.** The same thing in one command: download the file
+**If you prefer the terminal.** One command starts both containers: download the file
 [docker-compose.pull.yml](docker-compose.pull.yml), open a terminal in its folder and run:
 
 ```bash
@@ -139,14 +140,14 @@ Builder (`3000:3000`). Start `commec` before the Builder.
 Every gene sequence you enter yourself is automatically checked for known toxins, virulence
 factors and regulated pathogens
 ([COMMEC](https://github.com/ibbis-bio/common-mechanism) by IBBIS). If a sequence matches, a
-warning with a reason appears and the Builder does not build a construct, parts or an order list
-until you change or remove the flagged sequence. It is a helper check and does not replace the biosafety review of your institution.
+warning with a reason appears and the Builder gives you no construct, parts or order list
+until you change or remove the flagged sequence. It is an additional check and does not replace the biosafety review of your institution.
 
 ## Using the software
 
 Everything you need to know to use the software is explained in the **guide inside the
 software itself**. On the start page, click the **"Before you start"** card: it opens a guide
-with all rules and notes (what the builder accepts, which combinations are allowed, how your
+with all rules and notes (what the Builder accepts, which combinations are allowed, how your
 own sequences are handled, how to read the results and what to order). Read it once before you
 start.
 
@@ -185,8 +186,8 @@ runs this example on every push, so the numbers above stay correct.
 
 ## Stopping, updating and cleaning up
 
-Everything is done in the **Docker Desktop window**. The program consists of two containers,
-the Builder and `commec` (the screening), and you handle both.
+Everything is done in the **Docker Desktop window**. You start, stop and update both
+containers there: the Builder and `commec` (the screening).
 
 | I want to | What to do in Docker Desktop |
 |---|---|
@@ -221,16 +222,16 @@ After an update, the **Images** tab shows the previous version of each image wit
 | "Cannot connect to the Docker daemon" or "docker: command not found" | Docker Desktop is not running or not installed. Start Docker Desktop and wait for "Engine running". |
 | "failed to connect to the docker API at unix:///var/run/docker.sock" | Docker Desktop is not running yet, or the terminal uses the wrong Docker connection. Start Docker Desktop and wait for "Engine running". If the message stays, run `docker context use desktop-linux` once and try again. |
 | "port is already allocated" or "address already in use" | Something else uses port 3000. Stop the other program, or choose another **Host port** (for example `3001`) when you start the Builder in Step 3 and open that port instead. |
-| The page shows "The Builder cannot be reached" (or "Failed to fetch") | The browser cannot reach the Builder. In Docker Desktop open the **Containers** tab and check that the Builder is running (green); start it if not, wait a few seconds and reload the page. This also happens when the containers were restarted or updated while the page was still open. The screening container (`commec`) is not the cause: without it the Builder still calculates, only without the check. |
+| The page shows "The Builder cannot be reached" (or "Failed to fetch") | The browser cannot reach the Builder. In Docker Desktop open the **Containers** tab and check that the Builder is running (green); start it if not, wait a few seconds and reload the page. This also happens when the containers were restarted or updated while the page was still open. |
 | The header says "Biosecurity screening: off" | The screening container is still downloading its databases (first start only, a few minutes) or not running. As long as it says "off", the Builder does not calculate any construct. Check the **Containers** tab: the Builder and `commec` should both be green, and `commec` must have been started with the host port `8787`. |
 | The first start seems stuck | Click `commec` in the **Containers** tab and open **Logs**: as long as lines keep appearing, it is downloading. A slow internet connection makes it take longer. |
 | "no space left on device" | Free up disk space, or in Docker Desktop use Settings, Resources to give it more disk. |
 | It is very slow or crashes on the first start | Give Docker Desktop more memory (Settings, Resources, at least 4 GB). |
-| Windows asks about WSL 2 or virtualization, or Docker Desktop says "WSL needs updating" | Install WSL 2 as described in Step 1 (`wsl --install` in an administrator PowerShell, then restart). If Docker Desktop still complains, run `wsl --update` once and restart Docker Desktop. Virtualization may have to be enabled in the BIOS; the Docker documentation explains how. |
+| Windows asks about WSL 2 or virtualization, or Docker Desktop says "WSL needs updating" | Install WSL 2 as described in Step 1 (`wsl --install` in an administrator PowerShell, and restart if Windows asks for it). If Docker Desktop still complains, run `wsl --update` once and restart Docker Desktop. Virtualization may have to be enabled in the BIOS; the Docker documentation explains how. |
 
 Still stuck? Open an
 [issue on GitHub](https://github.com/iGEM-KIT/ENCORE-Builder/issues) (or on GitLab, if you work there) and copy the last lines
-from the Logs tab of the container into it or send a mail to [Fese1000](https://github.com/Fese1000).
+from the Logs tab of the container into it, or contact [Fese1000](https://github.com/Fese1000) on GitHub.
 
 ## Use of AI
 
