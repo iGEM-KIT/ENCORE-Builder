@@ -1,0 +1,36 @@
+# Runs all tests on every push to main (the only protected branch, the only one the iGEM runner builds).
+# The same two jobs as .github/workflows/tests.yml:
+#   python: the Biologik engine, the primer design, the commec-service wrapper, the data checks and the page checks
+#   node:   the server utilities (bridge to the Python engine, bridge to the screening container), the filters, the translations
+# The runner has little memory (about 1.8 GB), so the jobs run one after the other and install only what the tests need.
+# The Docker images are not built here; the GitLab project has no container registry. They are built on GitHub.
+default:
+  image: node:22-bookworm
+
+stages:
+  - test
+
+workflow:
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+python:
+  stage: test
+  variables:
+    PIP_BREAK_SYSTEM_PACKAGES: "1"
+    PIP_DISABLE_PIP_VERSION_CHECK: "1"
+  script:
+    # node is needed by the check that selector-data.js is up to date; the OpenDyslexic fonts come from the pinned npm package
+    - corepack enable
+    - pnpm install --frozen-lockfile --ignore-scripts
+    - node scripts/copy-fonts.mjs
+    - apt-get update -qq && apt-get install -y -qq --no-install-recommends python3-pip python3-dev build-essential > /dev/null
+    # sbol3 (pySBOL3) is only used by the test that reads the SBOL 3 export back
+    - pip install pytest sbol3==1.2.0.post0 -r Biologik/requirements.txt
+    - python3 -m pytest -q
+
+node:
+  stage: test
+  script:
+    - node --test tests/unit/server/biologik.test.mjs tests/unit/server/commec.test.mjs tests/unit/selector/builder-visibility.test.mjs tests/unit/selector/simple-filter.test.mjs tests/unit/selector/tp-slot-integration.test.mjs tests/unit/frontend/i18n.test.mjs tests/unit/frontend/sbol.test.mjs

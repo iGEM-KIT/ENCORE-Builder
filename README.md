@@ -238,6 +238,9 @@ Still stuck? Open an
 [issue on GitHub](https://github.com/iGEM-KIT/ENCORE-Builder/issues) (or on GitLab, if you work there) and copy the last lines
 from the Logs tab of the container into it, or contact [Fese1000](https://github.com/Fese1000) on GitHub.
 
+**For developers:** how it is built, how to run it without Docker, add a part and run the tests is in
+[docs/DEVELOPERS.md](docs/DEVELOPERS.md).
+
 ## Use of AI
 
 An AI coding assistant, Claude Code by Anthropic (model Claude Sonnet 5.5), helped to build this software. It was used to write and change
