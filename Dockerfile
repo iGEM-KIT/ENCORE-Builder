@@ -43,6 +43,10 @@ ENV PORT=3000
 # process cwd unless this is set; pin it explicitly since a container's cwd
 # is easy to get wrong.
 ENV BIOLOGIK_ROOT=/app
+# Where the screening container is expected. The Compose files override this with the
+# Compose service name; when both containers are started one by one in Docker Desktop
+# (each with its published port), the host name below reaches the screening container.
+ENV COMMEC_URL=http://host.docker.internal:8787
 
 EXPOSE 3000
 CMD ["node", ".output/server/index.mjs"]

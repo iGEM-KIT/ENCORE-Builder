@@ -18,28 +18,30 @@ Database is meant for everyone who wants to compare encapsulin shells before cho
 
 1. [Where the project lives](#where-the-project-lives)
 2. [Step 1: install Docker](#step-1-install-docker)
-3. [Step 2: download and start](#step-2-download-and-start)
-4. [Using the Docker Desktop window](#using-the-docker-desktop-window)
-5. [Biosecurity screening is always included](#biosecurity-screening-is-always-included)
-6. [Using the software](#using-the-software)
-7. [Reproduce the example](#reproduce-the-example)
-8. [Stopping, updating and cleaning up](#stopping-updating-and-cleaning-up)
-9. [Something does not work](#something-does-not-work)
-10. [For developers](#for-developers)
+3. [Step 2: get the program from Docker Hub](#step-2-get-the-program-from-docker-hub)
+4. [Step 3: start the two containers](#step-3-start-the-two-containers)
+5. [Using the Docker Desktop window](#using-the-docker-desktop-window)
+6. [Biosecurity screening is always included](#biosecurity-screening-is-always-included)
+7. [Using the software](#using-the-software)
+8. [Reproduce the example](#reproduce-the-example)
+9. [Stopping, updating and cleaning up](#stopping-updating-and-cleaning-up)
+10. [Something does not work](#something-does-not-work)
+11. [For developers](#for-developers)
 
 ## Where the project lives
 
-The project is published on two websites with the same files and this same README. Either one
-works for the download, because the program itself (the ready-made Docker images) always comes from
-Docker Hub (`igemkit/encore-builder` and `igemkit/encore-builder-commec`).
+The project is published on two websites with the same files and this same README. To use the
+program you do not need either of them: the ready-made program is on
+[Docker Hub](https://hub.docker.com/u/igemkit) (`igemkit/encore-builder` and
+`igemkit/encore-builder-commec`). The websites hold the source code.
 
 | | Website | Address |
 |---|---|---|
 | GitHub | the team repository | [github.com/iGEM-KIT/ENCORE-Builder](https://github.com/iGEM-KIT/ENCORE-Builder) |
 | GitLab | the repository of the iGEM competition | [gitlab.igem.org/2026/software/kit/encore-software](https://gitlab.igem.org/2026/software/kit/encore-software) |
 
-The Builder always starts **two containers together**: the Builder (with the Open NC Database) and
-the biosecurity screening. There is no way to run the Builder without the screening.
+The Builder always runs **together with two containers**: the Builder (with the Open NC Database) and
+the biosecurity screening. There is no way to use the Builder without the screening.
 
 ## Step 1: install Docker
 
@@ -83,39 +85,62 @@ Good to know before you start:
 * Memory: Docker Desktop should be allowed to use at least **4 GB** (Settings, Resources).
 * Internet: needed for the first start and for updates, afterwards the Builder works offline.
 
-## Step 2: download and start
+## Step 2: get the program from Docker Hub
 
-1. **Download the project.** Open [GitHub](https://github.com/iGEM-KIT/ENCORE-Builder) and click the
-   green **Code** button, then **Download ZIP**. On GitLab click the blue **Code** button, then
-   **zip** under **Download source code**.
-2. **Unzip it** (Windows: right-click the file, **Extract All**; Mac: double-click it). Put the
-   unzipped folder somewhere normal, for example on your Desktop. On Windows use a normal Windows
-   folder, not a folder inside Linux (WSL/Ubuntu).
-3. Start **Docker Desktop** and wait for "Engine running".
-4. **Double-click the start file** in the unzipped folder:
-   * Windows: `start.bat`. If a blue box says Windows protected your PC, click **More info**, then **Run anyway**.
-   * Mac: `start.command`. The first time, the Mac may say that it cannot check the file. Right-click
-     the file and choose **Open**, then **Open** again. On a newer Mac that does not offer this, open
-     Apple menu, System Settings, Privacy & Security and click **Open Anyway** next to the message about `start.command`.
-   * Linux: open a terminal in the folder and run `bash start.command`.
-5. Wait. The **first start takes several minutes**: Docker downloads the program, and the
-   screening container downloads its databases (about 1.2 GB) once. Lines of text keep scrolling
-   by; that is normal. Later starts take seconds.
-6. Your web browser opens by itself at **[http://localhost:3000](http://localhost:3000)**. If it does
-   not, open that address yourself.
-7. In the top right the page shows **"Biosecurity screening: on"** with a green dot as soon as
+The ready-made program is on Docker Hub, the app store of Docker. You pull it with a few clicks in
+Docker Desktop. There is nothing to download from GitHub or GitLab. There are two images, because
+the Builder always runs together with the biosecurity screening:
+
+| Image | What it is |
+|---|---|
+| `igemkit/encore-builder` | the ENCORE-Builder and the Open NC Database |
+| `igemkit/encore-builder-commec` | the biosecurity screening |
+
+1. Start **Docker Desktop** and wait for "Engine running".
+2. Click the search field at the top (or press Ctrl+K, on a Mac Cmd+K) and type `igemkit`.
+3. In the results find `igemkit/encore-builder-commec` and click **Pull**. Do the same for
+   `igemkit/encore-builder`. If you cannot find them, check that the **Images** or **Docker Hub** tab
+   of the search result is selected.
+4. Open the **Images** tab on the left. Both images are now in the list.
+
+## Step 3: start the two containers
+
+Start the screening first, then the Builder. In the **Images** tab, click the **Run** button
+(triangle) at the end of the line of an image, open **Optional settings**, fill in exactly the fields
+named here and click **Run**.
+
+**First `igemkit/encore-builder-commec`:**
+
+| Field | Value |
+|---|---|
+| Host port | `8787` |
+| Volumes: Host path | `commec-db` |
+| Volumes: Container path | `/databases` |
+
+The volume keeps the screening databases (about 1.2 GB). They are downloaded once, on this first
+start, and stay available when you update later. If the field for the host path insists on a
+folder, click the folder button and create an empty folder named `commec-db` on your Desktop.
+
+**Then `igemkit/encore-builder`:**
+
+| Field | Value |
+|---|---|
+| Host port | `3000` |
+
+Then:
+
+1. Wait. The **first start takes several minutes**, because the screening container downloads its
+   databases once. Click `commec` in the **Containers** tab and open **Logs** to see what it does.
+   Later starts take seconds.
+2. Open your web browser and go to **[http://localhost:3000](http://localhost:3000)**.
+3. In the top right the page shows **"Biosecurity screening: on"** with a green dot as soon as
    the screening is ready. Until then it says "off" and the Builder does not calculate a
    construct (it shows a message instead). Wait for the green dot before you calculate.
 
-You can close the start window when it says "Ready". The program keeps running in Docker Desktop.
-The start file does the same job every time: it fetches the newest version from Docker Hub,
-starts both containers and opens the page. So **starting again is also the update**.
-
 To stop the program, see [Stopping, updating and cleaning up](#stopping-updating-and-cleaning-up).
 
-**If you prefer the terminal.** Open a terminal inside the unzipped folder (Windows: click into the address
-bar of the folder in File Explorer, type `powershell.exe` and press Enter; Mac: drag the folder onto the Terminal icon
-in the Dock) and run:
+**If you prefer the terminal.** The same thing in one command: download the file
+[docker-compose.pull.yml](docker-compose.pull.yml), open a terminal in its folder and run:
 
 ```bash
 docker compose -f docker-compose.pull.yml up -d
@@ -123,9 +148,9 @@ docker compose -f docker-compose.pull.yml up -d
 
 ## Using the Docker Desktop window
 
-Docker Desktop shows the program as a project in the **Containers** tab after the first start.
-There you can start and stop both containers together with one button, read the logs and open
-the page with the port link next to `app`.
+Docker Desktop shows the two containers in the **Containers** tab. There you can start and stop each
+of them with one button, read the logs and open the page with the port link next to the
+Builder (`3000:3000`). Start `commec` before the Builder.
 
 ## Biosecurity screening is always included
 
@@ -187,38 +212,45 @@ runs this example on every push, so the numbers above stay correct.
 
 ## Stopping, updating and cleaning up
 
-Everything is easiest in the **Docker Desktop window**: open Docker Desktop and use the
-**Containers** tab. Both containers appear there together as one entry named after your folder
-(for example `encore-builder`), with the two containers `app` and `commec` inside.
+Everything is done in the **Docker Desktop window**. The program consists of two containers,
+the Builder and `commec` (the screening), and you handle both.
 
-| I want to | Docker Desktop window | Terminal (in the folder with the start file) |
-|---|---|---|
-| Stop | **Containers** tab, click the **Stop** button (square) on the entry of the project | `docker compose -f docker-compose.pull.yml down` |
-| Start again | double-click the start file, or in the **Containers** tab click the **Start** button (triangle) on the entry and wait for `app` and `commec` to turn green | `docker compose -f docker-compose.pull.yml up -d` |
-| Open the page | **Containers** tab, click the port link `3000:3000` next to `app` | open [http://localhost:3000](http://localhost:3000) |
-| Look at the logs | click `app` or `commec`, then the **Logs** tab | `docker compose -f docker-compose.pull.yml logs` |
-| Update to the newest version | double-click the start file again, it fetches the newest version from Docker Hub first | `docker compose -f docker-compose.pull.yml pull`, then start again |
-| Remove the program but keep the screening databases | **Containers** tab, **Delete** (trash can) on the entry of the project | `docker compose -f docker-compose.pull.yml down` |
-| Remove everything, including the downloaded screening databases (frees about 5 GB) | delete the project in the **Containers** tab, then delete the two `igemkit/...` images in the **Images** tab and the volume ending in `commec-db` in the **Volumes** tab | `docker compose -f docker-compose.pull.yml down --volumes --rmi all` |
+| I want to | What to do in Docker Desktop |
+|---|---|
+| Stop | **Containers** tab, click the **Stop** button (square) on both containers |
+| Start again | **Containers** tab, click the **Start** button (triangle) on `commec` first, then on the Builder, and wait until both are green |
+| Open the page | **Containers** tab, click the port link `3000:3000` next to the Builder, or open [http://localhost:3000](http://localhost:3000) |
+| Look at the logs | click the container, then the **Logs** tab |
+| Update to the newest version | see below |
+| Remove the program but keep the screening databases | **Containers** tab, **Delete** (trash can) on both containers |
+| Remove everything, including the downloaded screening databases (frees about 5 GB) | delete both containers in the **Containers** tab, then delete the two `igemkit/...` images in the **Images** tab and the volume `commec-db` in the **Volumes** tab |
 
-### After an update: old images
+### Update to the newest version
 
-After an update, Docker Desktop shows the previous version of each image in the **Images** tab
-with the name `<none>` (the name moved to the new image). These old images are no longer used and
-**can safely be deleted** (select them in the **Images** tab and click the trash can) to free
-disk space. The new images with the proper name stay.
+Docker Hub always holds the newest version under the tag `latest`. Your computer keeps the version
+it pulled, so you update by pulling again:
+
+1. In the search field at the top type `igemkit` and click **Pull** on `igemkit/encore-builder`
+   (and on `igemkit/encore-builder-commec` if the screening changed). Docker only downloads what is new.
+2. In the **Containers** tab stop and **delete** the old Builder container (and `commec` if you pulled
+   it again). The screening databases are not lost, they live in the volume `commec-db`.
+3. Start the containers again with **Run** in the **Images** tab, exactly as in
+   [Step 3](#step-3-start-the-two-containers).
+
+After an update, the **Images** tab shows the previous version of each image with the name `<none>`
+(the name moved to the new image). These old images are no longer used and **can safely be deleted**
+(select them and click the trash can) to free disk space.
 
 ## Something does not work
 
 | Problem | What to do |
 |---|---|
-| The start file says "Docker is not running" | Start Docker Desktop, wait for "Engine running" and double-click the start file again. |
 | "Cannot connect to the Docker daemon" or "docker: command not found" | Docker Desktop is not running or not installed. Start Docker Desktop and wait for "Engine running". |
 | "failed to connect to the docker API at unix:///var/run/docker.sock" | Docker Desktop is not running yet, or the terminal uses the wrong Docker connection. Start Docker Desktop and wait for "Engine running". If the message stays, run `docker context use desktop-linux` once and try again. |
-| "port is already allocated" or "address already in use" | Something else uses port 3000. Stop the other program, or change `"3000:3000"` in the file `docker-compose.pull.yml` to `"3001:3000"` and open port 3001. |
-| The page shows "The Builder cannot be reached" (or "Failed to fetch") | The browser cannot reach the Builder. In Docker Desktop open the **Containers** tab and check that `app` is running (green); start it if not, wait a few seconds and reload the page. This also happens when the containers were restarted or updated while the page was still open. The screening container (`commec`) is not the cause: without it the Builder still calculates, only without the check. |
-| The header says "Biosecurity screening: off" | The screening container is still downloading its databases (first start only, a few minutes) or not running. As long as it says "off", the Builder does not calculate any construct. Check the **Containers** tab: both `app` and `commec` should be green. |
-| The first start seems stuck | Watch the window of the start file: as long as lines keep appearing, it is downloading. A slow internet connection makes it take longer. |
+| "port is already allocated" or "address already in use" | Something else uses port 3000. Stop the other program, or choose another **Host port** (for example `3001`) when you start the Builder in Step 3 and open that port instead. |
+| The page shows "The Builder cannot be reached" (or "Failed to fetch") | The browser cannot reach the Builder. In Docker Desktop open the **Containers** tab and check that the Builder is running (green); start it if not, wait a few seconds and reload the page. This also happens when the containers were restarted or updated while the page was still open. The screening container (`commec`) is not the cause: without it the Builder still calculates, only without the check. |
+| The header says "Biosecurity screening: off" | The screening container is still downloading its databases (first start only, a few minutes) or not running. As long as it says "off", the Builder does not calculate any construct. Check the **Containers** tab: the Builder and `commec` should both be green, and `commec` must have been started with the host port `8787`. |
+| The first start seems stuck | Click `commec` in the **Containers** tab and open **Logs**: as long as lines keep appearing, it is downloading. A slow internet connection makes it take longer. |
 | "no space left on device" | Free up disk space, or in Docker Desktop use Settings, Resources to give it more disk. |
 | It is very slow or crashes on the first start | Give Docker Desktop more memory (Settings, Resources, at least 4 GB). |
 | Windows asks about WSL 2 or virtualization, or Docker Desktop says "WSL needs updating" | Install WSL 2 as described in Step 1 (`wsl --install` in an administrator PowerShell, then restart). If Docker Desktop still complains, run `wsl --update` once and restart Docker Desktop. Virtualization may have to be enabled in the BIOS; the Docker documentation explains how. |
@@ -260,7 +292,7 @@ screening is included.
 ### Calling the Builder from a script
 
 The Builder has a small HTTP interface, described in [docs/openapi.yaml](docs/openapi.yaml). With the
-software running on port 3000 (started with the start file or `pnpm dev`), a design of the example above looks like this:
+software running on port 3000 (started as in Step 3 or with `pnpm dev`), a design of the example above looks like this:
 
 ```bash
 curl -X POST http://localhost:3000/api/design \
@@ -337,8 +369,7 @@ Both are also published as `ghcr.io/igem-kit/...`. The workflow needs the reposi
 
 `docker-compose.yml` has both `image:` and `build:` for every service, so
 `docker compose up --build` builds both images from the source code (10 to 30 minutes) and plain
-`docker compose up` pulls them from Docker Hub; `docker-compose.pull.yml` is the image-only variant that
-the start files `start.command` and `start.bat` use.
+`docker compose up` pulls them from Docker Hub; `docker-compose.pull.yml` is the image-only variant for users who prefer the terminal.
 
 ### Running the tests
 
