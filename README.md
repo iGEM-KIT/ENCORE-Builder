@@ -180,15 +180,6 @@ promoter *GAL1-10*. In the cargo module put the marker SpyTag in Type 0.1 and th
 in Type 0.2. In the nanocompartment module put the marker SpyCatcher in Type 0.1 and the linker
 3×(GSSS) in Type 0.2. Leave Type 0.4 and 0.5 as NCS in both modules.
 
-**Without the web page** (needs Python 3 and the packages of `Biologik/requirements.txt`),
-from the project folder:
-
-```bash
-python3 -m Biologik.level0_design.cli design < docs/examples/oxygen-free-space-request.json
-```
-
-The request is the file [docs/examples/oxygen-free-space-request.json](docs/examples/oxygen-free-space-request.json).
-
 **What you should get:**
 
 | Result | Value |
