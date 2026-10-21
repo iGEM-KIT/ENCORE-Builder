@@ -601,7 +601,6 @@
  "A reported arrangement or structural state of a shell. One protein sequence can form different assemblies.": "已报道的外壳排布或结构状态。同一条蛋白质序列可以形成不同的组装体。",
  "EncA T=1 and T=3": "EncA T=1 和 T=3",
  "Wild Type (WT)": "野生型 (WT)",
- "The natural reference protein sequence, without the engineered shell changes documented for a particular variant.": "天然的参考蛋白质序列,不含针对特定变体所记录的外壳工程改造。",
  "Shown in green": "以绿色显示",
  "Engineered": "工程改造",
  "A protein intentionally altered by substitutions, deletions, insertions or tags compared with a reference.": "相对于参考序列,通过替换、缺失、插入或标签被有意改变的蛋白质。",
@@ -966,5 +965,7 @@
  "The part of a gene that is actually translated into protein, from the start codon to the stop. It is the commonest part type in our collection, because a shell protein, a cargo and a targeting peptide are all CDS parts.": "基因中真正被翻译成蛋白质的部分,从起始密码子到终止密码子。它是我们元件库中最常见的元件类型,因为外壳蛋白、货物和靶向肽都是 CDS 元件。",
  "How many subunits a shell is built from, and with it how big the shell is. T=1 shells are made of 60 subunits and measure around 24 nm, T=3 of 180, and T=4 of 240 at around 42 nm. Choosing a T number is mostly choosing how much room there is inside.": "外壳由多少个亚基构成,也就决定了外壳有多大。T=1 的外壳由 60 个亚基构成,直径约 24 nm;T=3 为 180 个;T=4 为 240 个,直径约 42 nm。选择 T 数,主要就是选择内部有多大的空间。",
  "The small openings in a shell. They decide what can pass in and out: small molecules may slip through while large ones stay where they are. How permeable encapsulins really are is still an open research question.": "外壳上的小开口。它们决定什么能进出:小分子可以通过,大分子则留在原处。封装蛋白的通透性究竟有多大,仍然是一个悬而未决的研究问题。",
- "Both the public archive of experimentally determined protein structures and the file format it uses. An entry is identified by a four-character code, such as 3HTB, and a .pdb file is what most structure tools read and write.": "它既指公开的、由实验测定的蛋白质结构档案库,也指它所用的文件格式。每个条目由一个四位字符的代码标识,例如 3HTB,而 .pdb 文件是大多数结构工具读取和写入的文件。"
+ "Both the public archive of experimentally determined protein structures and the file format it uses. An entry is identified by a four-character code, such as 3HTB, and a .pdb file is what most structure tools read and write.": "它既指公开的、由实验测定的蛋白质结构档案库,也指它所用的文件格式。每个条目由一个四位字符的代码标识,例如 3HTB,而 .pdb 文件是大多数结构工具读取和写入的文件。",
+ "The unmodified organism, the one nothing has been done to. It is the reference everything else is compared against.": "未经改造的生物体,即没有对它做过任何处理的那一个。它是其他一切进行比较的参照。",
+ "A difference only counts as a result if the wild type was grown and measured in the same run, which is why it appears beside the modified strains in our growth curves and on our plates.": "只有当野生型在同一轮实验中培养并测量时,差异才算作结果,因此在我们的生长曲线和平板上,野生型总是与改造菌株放在一起。"
 }
