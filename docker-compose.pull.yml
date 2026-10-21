@@ -6,7 +6,8 @@ services:
   app:
     image: igemkit/encore-builder:latest
     ports:
-      - "3000:3000"
+      # only this computer can open the page, not other devices in the network
+      - "127.0.0.1:3000:3000"
     restart: unless-stopped
     depends_on:
       - commec
@@ -17,8 +18,6 @@ services:
   # into the volume below, so later starts are fast.
   commec:
     image: igemkit/encore-builder-commec:latest
-    ports:
-      - "8787:8787"
     environment:
       - COMMEC_SKIP_TAXONOMY=true
     volumes:

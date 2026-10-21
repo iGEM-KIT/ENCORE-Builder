@@ -6,7 +6,8 @@ services:
     image: igemkit/encore-builder:latest
     build: .
     ports:
-      - "3000:3000"
+      # only this computer can open the page, not other devices in the network
+      - "127.0.0.1:3000:3000"
     restart: unless-stopped
     depends_on:
       - commec
@@ -28,8 +29,6 @@ services:
   commec:
     image: igemkit/encore-builder-commec:latest
     build: ./commec-service
-    ports:
-      - "8787:8787"
     environment:
       # Only the biorisk list is checked: without the NR/NT taxonomy databases the
       # taxonomy steps must be skipped, or commec errors.

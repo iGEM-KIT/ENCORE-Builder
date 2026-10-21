@@ -1,7 +1,7 @@
 # Optional sidecar for biosecurity screening via COMMEC ("Common
 # Mechanism", IBBIS: https://github.com/ibbis-bio/common-mechanism). Deliberately
-# NOT part of the main image: commec needs Conda and BLAST/HMMER; see
-# README.md "Biosecurity screening" for when/whether that is worth it.
+# NOT part of the main image: commec needs Conda and BLAST/HMMER, which do not fit
+# into the slim main image. See commec-service/README.md for the trade-offs.
 #
 # Version: commec 1.0.4, the newest version that installs on every platform (Windows and
 # Linux amd64, Mac and Linux arm64). commec itself is noarch, but 1.0.5 and 2.x need

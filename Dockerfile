@@ -48,5 +48,8 @@ ENV BIOLOGIK_ROOT=/app
 # (each with its published port), the host name below reaches the screening container.
 ENV COMMEC_URL=http://host.docker.internal:8787
 
+# The base image ships an unprivileged user; the app needs no root rights.
+USER node
+
 EXPOSE 3000
 CMD ["node", ".output/server/index.mjs"]
