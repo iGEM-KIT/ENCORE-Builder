@@ -1,7 +1,8 @@
 # Builds the two Docker images of the ENCORE-Builder for linux/amd64 and linux/arm64
-# and publishes them to the GitHub Container Registry (ghcr.io):
+# and publishes them to the GitHub Container Registry (ghcr.io) and to Docker Hub:
 #   ghcr.io/igem-kit/encore-builder          the builder (Nuxt server + Python engine)
 #   ghcr.io/igem-kit/encore-builder-commec   the biosecurity screening container
+#   igemkit/encore-builder, igemkit/encore-builder-commec   the same images on Docker Hub
 # Runs on every push to main, on version tags (v1.2.3) and by hand from the Actions tab.
 # After the first run, set both packages to "public" on GitHub (Packages > Package
 # settings > Change visibility) so that everybody can pull them without logging in.
@@ -41,11 +42,21 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      # Needs the repository secrets DOCKERHUB_USERNAME and DOCKERHUB_TOKEN (a Docker Hub
+      # access token with Read & Write permission).
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       # The owner has to be lower case in an image name (iGEM-KIT becomes igem-kit).
+      # Every image goes to both registries.
       - id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/${{ github.repository_owner }}/${{ matrix.name }}
+          images: |
+            ghcr.io/${{ github.repository_owner }}/${{ matrix.name }}
+            docker.io/igemkit/${{ matrix.name }}
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=semver,pattern={{version}}
